@@ -1,0 +1,1 @@
+# sonar-gh-pr-qualitygate
