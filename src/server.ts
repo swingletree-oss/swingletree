@@ -22,8 +22,8 @@ const githubWebhook = new GitHubWebhook(eventBus);
 const sonarWebhook = new SonarWebhook(eventBus);
 
 // bind webhooks to paths
-app.use("/webhook/github/", githubWebhook.webhook);
-app.use("/webhook/sonar/", sonarWebhook.webhook);
+app.post("/webhook/github/", githubWebhook.webhook);
+app.post("/webhook/sonar/", sonarWebhook.webhook);
 
 // kickstart everything
 app.listen(app.get("port"), () => {
