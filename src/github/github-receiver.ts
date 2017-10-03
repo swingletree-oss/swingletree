@@ -1,14 +1,14 @@
 "use strict";
 
+import { LOGGER } from "../logger";
 import { Response, Request, NextFunction } from "express";
 import { WebhookEventType, PullRequestWebhookAction, GitHubPullRequestGhWebhookEvent, GitHubGhWebhookEvent, GitHubPushGhWebhookEvent } from "./model/gh-webhook-event";
 import { CommitStatusEnum, GitHubCommitStatus } from "./model/commit-status";
 import { AppEvent } from "../models/events";
-import { Logger } from "../logger";
+
 import { EventEmitter } from "events";
 
 export class GitHubWebhook {
-  private logger = Logger.instance;
 
   eventEmitter: EventEmitter;
 
@@ -29,12 +29,13 @@ export class GitHubWebhook {
     return false;
   }
 
-  webhook(req: Request, res: Response) {
+ public webhook = (req: Request, res: Response) => {
     const webhookEvent: GitHubGhWebhookEvent = GitHubGhWebhookEvent.convert(req.body);
 
-    this.logger.info("received GitHub webhook event.");
+    LOGGER.info("received GitHub webhook event.");
 
     if (webhookEvent !== undefined && this.isWebhookEventRelevant(webhookEvent)) {
+      LOGGER.info("webhook event is relevant");
       this.eventEmitter.emit(AppEvent.analyzePR, webhookEvent);
       this.eventEmitter.emit(AppEvent.sendStatus, new GitHubCommitStatus(CommitStatusEnum.pending));
     } else {

@@ -17,10 +17,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // global event bus
 const eventBus = new EventEmitter();
 
+
 // application webhooks with plumbing
 const githubWebhook = new GitHubWebhook(eventBus);
 const sonarWebhook = new SonarWebhook(eventBus);
 
+console.log(eventBus);
 // bind webhooks to paths
 app.post("/webhook/github/", githubWebhook.webhook);
 app.post("/webhook/sonar/", sonarWebhook.webhook);

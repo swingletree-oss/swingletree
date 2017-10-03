@@ -26,7 +26,7 @@ export class SonarWebhook {
     return true; // TODO: check for analyze marker property in properties section // get target branch from there?
   }
 
-  webhook(req: Request, res: Response) {
+  public webhook = (req: Request, res: Response) => {
     const event = new SonarWebhookEvent(req.body);
 
     if (this.isWebhookEventRelevant(event)) {
