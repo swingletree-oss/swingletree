@@ -18,16 +18,16 @@ export enum PullRequestWebhookAction {
   reopened = "reopened"
 }
 
-export class GitHubWebhookEvent {
+export class GitHubGhWebhookEvent {
   eventType: WebhookEventType;
   repoName: string;
 
-  static convert(model: any): GitHubWebhookEvent {
+  static convert(model: any): GitHubGhWebhookEvent {
 
     if (model.type === WebhookEventType.pull_request) {
-      return new GitHubPullRequestWebhookEvent(model);
+      return new GitHubPullRequestGhWebhookEvent(model);
     } else if (model.type === WebhookEventType.push) {
-      return new GitHubPushWebhookEvent(model);
+      return new GitHubPushGhWebhookEvent(model);
     }
 
     return undefined;
@@ -39,7 +39,7 @@ export class GitHubWebhookEvent {
   }
 }
 
-export class GitHubPullRequestWebhookEvent extends GitHubWebhookEvent {
+export class GitHubPullRequestGhWebhookEvent extends GitHubGhWebhookEvent {
   targetLocation: GitHubLocation;
   sourceLocation: GitHubLocation;
   id: number;
@@ -67,7 +67,7 @@ export class GitHubPullRequestWebhookEvent extends GitHubWebhookEvent {
   }
 }
 
-export class GitHubPushWebhookEvent extends GitHubWebhookEvent {
+export class GitHubPushGhWebhookEvent extends GitHubGhWebhookEvent {
   sourceLocation: GitHubLocation;
   deleted: boolean;
 

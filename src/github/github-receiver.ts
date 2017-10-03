@@ -1,7 +1,7 @@
 "use strict";
 
 import { Response, Request, NextFunction } from "express";
-import { WebhookEventType, PullRequestWebhookAction, GitHubPullRequestWebhookEvent, GitHubWebhookEvent, GitHubPushWebhookEvent } from "./model/webhook-event";
+import { WebhookEventType, PullRequestWebhookAction, GitHubPullRequestGhWebhookEvent, GitHubGhWebhookEvent, GitHubPushGhWebhookEvent } from "./model/gh-webhook-event";
 import { CommitStatusEnum, GitHubCommitStatus } from "./model/commit-status";
 import { AppEvent } from "../models/events";
 import { Logger } from "../logger";
@@ -18,13 +18,13 @@ export class GitHubWebhook {
     this.eventEmitter = eventEmitter;
   }
 
-  private isWebhookEventRelevant(webhookEvent: GitHubWebhookEvent) {
-    if (webhookEvent instanceof GitHubPullRequestWebhookEvent) {
-      const event: GitHubPullRequestWebhookEvent = webhookEvent;
+  private isWebhookEventRelevant(webhookEvent: GitHubGhWebhookEvent) {
+    if (webhookEvent instanceof GitHubPullRequestGhWebhookEvent) {
+      const event: GitHubPullRequestGhWebhookEvent = webhookEvent;
 
       return event.action === PullRequestWebhookAction.opened ||
              event.action === PullRequestWebhookAction.reopened;
-    } else if (webhookEvent instanceof GitHubPushWebhookEvent) {
+    } else if (webhookEvent instanceof GitHubPushGhWebhookEvent) {
       return true;
     }
 
@@ -32,7 +32,7 @@ export class GitHubWebhook {
   }
 
   webhook(req: Request, res: Response) {
-    const webhookEvent: GitHubWebhookEvent = GitHubWebhookEvent.convert(req.body);
+    const webhookEvent: GitHubGhWebhookEvent = GitHubGhWebhookEvent.convert(req.body);
 
     this.logger.info("received GitHub webhook event.");
 
