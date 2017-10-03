@@ -5,14 +5,14 @@ import { Response, Request, NextFunction } from "express";
 import { AppEvent } from "../models/events";
 import { QualityGateStatus } from "./model/quality-gate";
 import { SonarWebhookEvent } from "./model/sonar-wehook-event";
+import { EventEmitter } from "events";
 
-import events = require("events");
 const unirest = require("unirest");
 
 export class SonarWebhook {
-  eventEmitter: any;
+  eventEmitter: EventEmitter;
 
-  constructor(eventEmitter: any) {
+  constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
   }
 

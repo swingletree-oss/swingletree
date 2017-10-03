@@ -1,17 +1,17 @@
 "use strict";
 
 import { Response, Request, NextFunction } from "express";
-import events = require("events");
 import { AppEvent } from "../models/events";
 import { GitHubCommitStatus, GitHubCommitStatusContainer } from "./model/commit-status";
+import { EventEmitter } from "events";
 
 const unirest = require("unirest");
 
 class EventProcessor {
-  eventEmitter: any;
+  eventEmitter: EventEmitter;
   apiEndpoint: string;
 
-  constructor(eventEmitter: any, apiEndpoint: string) {
+  constructor(eventEmitter: EventEmitter, apiEndpoint: string) {
     this.eventEmitter = eventEmitter;
     this.apiEndpoint = apiEndpoint;
     this.eventEmitter.on(AppEvent.sendStatus, this.sendStatus);

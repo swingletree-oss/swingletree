@@ -1,6 +1,9 @@
+import { GitHubWebhook } from "./github/github-receiver";
+import { SonarWebhook } from "./sonar/sonar-receiver";
 import * as express from "express";
 import * as compression from "compression";
 import * as bodyParser from "body-parser";
+import { EventEmitter } from "events";
 import * as path from "path";
 
 const app = express();
@@ -9,6 +12,14 @@ app.set("port", process.env.PORT || 3000);
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+const eventBus = new EventEmitter();
+
+const githubWebhook = new GitHubWebhook(eventBus);
+const sonarWebhook = new SonarWebhook(eventBus);
+
+app.use("/webhook/github/", githubWebhook.webhook);
+app.use("/webhook/sonar/", sonarWebhook.webhook);
 
 app.listen(app.get("port"), () => {
   console.log(("  App is running at http://localhost:%d in %s mode"), app.get("port"), app.get("env"));

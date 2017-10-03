@@ -8,8 +8,7 @@ import { SonarWebhookEvent } from "./model/sonar-wehook-event";
 import { GitHubCommitStatusContainer } from "../github/model/commit-status";
 
 import { SonarWebhook } from "./sonar-receiver";
-
-var EventEmitter = require('events').EventEmitter;
+import { EventEmitter } from "events";
 
 function generateHookData() {
   return Object.assign({}, require("../../test/base-sonar-webhook.json"));
