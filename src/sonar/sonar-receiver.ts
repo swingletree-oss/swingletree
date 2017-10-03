@@ -1,32 +1,55 @@
 "use strict";
 
+import { GitHubCommitStatusContainer, CommitStatusEnum, GitHubCommitStatus } from "../github/model/commit-status";
 import { Response, Request, NextFunction } from "express";
 import { AppEvent } from "../models/events";
+import { QualityGateStatus } from "./model/quality-gate";
 import { SonarWebhookEvent } from "./model/sonar-wehook-event";
 
 import events = require("events");
 const unirest = require("unirest");
 
-class SonarWebhook {
+export class SonarWebhook {
   eventEmitter: any;
-  apiEndpoint: string;
 
-  constructor(apiEndpoint: string) {
-    this.apiEndpoint = apiEndpoint;
-    this.eventEmitter = new events.EventEmitter();
+  constructor(eventEmitter: any) {
+    this.eventEmitter = eventEmitter;
   }
 
   private isWebhookEventRelevant(event: SonarWebhookEvent) {
     if (event.properties !== undefined) {
-      return event.properties.hasOwnProperty("sonar.analysis.branch") &&
-        event.properties.hasOwnProperty("sonar.analysis.commitId");
+      return event.properties.appAction === "respond" && //  TODO: find better name / use enum
+        event.properties.branch !== undefined &&
+        event.properties.commitId !== undefined &&
+        event.properties.repository !== undefined;
     }
     return true; // TODO: check for analyze marker property in properties section // get target branch from there?
   }
 
   webhook(req: Request, res: Response) {
-    const event = <SonarWebhookEvent>(req.body);
+    const event = new SonarWebhookEvent(req.body);
 
-    
+    if (this.isWebhookEventRelevant(event)) {
+      const commitStatusContainer = new GitHubCommitStatusContainer(event.properties.repository, event.properties.commitId);
+      let commitStatus: GitHubCommitStatus;
+
+      if (event.qualityGate.status === QualityGateStatus.OK) {
+        commitStatus = new GitHubCommitStatus(CommitStatusEnum.success);
+        commitStatus.description = "Quality gate passed.";
+      } else {
+        commitStatus = new GitHubCommitStatus(CommitStatusEnum.failure);
+        commitStatus.description = "Ouality gate failed.";
+      }
+
+      commitStatus.context = "GHPRQG"; // TODO: think of a cool name
+      commitStatus.target_url = event.serverUrl;
+
+      commitStatusContainer.payload = commitStatus;
+
+      this.eventEmitter.emit(AppEvent.sendStatus, commitStatusContainer);
+    } else {
+      this.eventEmitter.emit(AppEvent.webhookEventIgnored, "sonar");
+    }
+
   }
 }
