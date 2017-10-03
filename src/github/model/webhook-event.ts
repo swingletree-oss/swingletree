@@ -23,6 +23,7 @@ export class GitHubWebhookEvent {
   repoName: string;
 
   static convert(model: any): GitHubWebhookEvent {
+
     if (model.type === WebhookEventType.pull_request) {
       return new GitHubPullRequestWebhookEvent(model);
     } else if (model.type === WebhookEventType.push) {
@@ -41,7 +42,7 @@ export class GitHubWebhookEvent {
 export class GitHubPullRequestWebhookEvent extends GitHubWebhookEvent {
   targetLocation: GitHubLocation;
   sourceLocation: GitHubLocation;
-  id: string;
+  id: number;
   action: PullRequestWebhookAction;
   merged: boolean;
 
@@ -50,18 +51,19 @@ export class GitHubPullRequestWebhookEvent extends GitHubWebhookEvent {
 
     const eventPayload: any = webhookEvent.payload;
 
-    this.id = eventPayload.number;
-    this.merged = eventPayload.merged,
+    this.action = eventPayload.action;
+    this.id = eventPayload.pull_request.number;
+    this.merged = eventPayload.pull_request.merged;
 
     this.sourceLocation = new GitHubLocation();
-    this.sourceLocation.repositoryPath(eventPayload.head.repo.full_name)
-      .reference(eventPayload.head.ref)
-      .commitId(eventPayload.head.sha);
+    this.sourceLocation.repositoryPath(eventPayload.pull_request.head.repo.full_name)
+      .reference(eventPayload.pull_request.head.ref)
+      .commitId(eventPayload.pull_request.head.sha);
 
     this.targetLocation = new GitHubLocation();
-    this.targetLocation.repositoryPath(eventPayload.head.repo.full_name)
-      .reference(eventPayload.head.ref)
-      .commitId(eventPayload.head.sha);
+    this.targetLocation.repositoryPath(eventPayload.pull_request.head.repo.full_name)
+      .reference(eventPayload.pull_request.head.ref)
+      .commitId(eventPayload.pull_request.head.sha);
   }
 }
 
