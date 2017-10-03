@@ -11,8 +11,9 @@ class EventProcessor {
   eventEmitter: any;
   apiEndpoint: string;
 
-  constructor(eventEmitter: any) {
+  constructor(eventEmitter: any, apiEndpoint: string) {
     this.eventEmitter = eventEmitter;
+    this.apiEndpoint = apiEndpoint;
     this.eventEmitter.on(AppEvent.sendStatus, this.sendStatus);
   }
 
@@ -24,5 +25,7 @@ class EventProcessor {
         this.eventEmitter.emit(AppEvent.statusSent, status);
       }
     );
+
+    this.eventEmitter.emit(AppEvent.statusSent, this.apiEndpoint, status);
   }
 }
