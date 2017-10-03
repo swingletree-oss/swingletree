@@ -4,8 +4,7 @@ import { expect, assert } from 'chai';
 
 import { GitHubWebhook } from "./github-receiver";
 import { AppEvent } from "../models/events";
-
-var EventEmitter = require('events').EventEmitter;
+import { EventEmitter } from "events";
 
 function requestData() : any {
   return {

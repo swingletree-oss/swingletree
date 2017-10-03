@@ -5,16 +5,14 @@ import { WebhookEventType, PullRequestWebhookAction, GitHubPullRequestGhWebhookE
 import { CommitStatusEnum, GitHubCommitStatus } from "./model/commit-status";
 import { AppEvent } from "../models/events";
 import { Logger } from "../logger";
-
-import events = require("events");
-
+import { EventEmitter } from "events";
 
 export class GitHubWebhook {
   private logger = Logger.instance;
 
-  eventEmitter: any;
+  eventEmitter: EventEmitter;
 
-  constructor(eventEmitter: any) {
+  constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
   }
 
