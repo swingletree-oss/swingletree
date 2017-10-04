@@ -4,7 +4,7 @@ export enum QualityGateStatus {
 	OK = "OK"
 }
 
-export class QualityGate {
+export class SonarQualityGate {
 	conditions: Condition[];
 	name: string;
 	status: string;

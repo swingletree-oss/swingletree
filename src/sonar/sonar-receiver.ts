@@ -3,7 +3,7 @@
 import { GitHubGhCommitStatusContainer, CommitStatusEnum, GitHubGhCommitStatus } from "../github/model/gh-commit-status";
 import { Response, Request, NextFunction } from "express";
 import { AppEvent } from "../models/events";
-import { QualityGateStatus } from "./model/quality-gate";
+import { QualityGateStatus } from "./model/sonar-quality-gate";
 import { SonarWebhookEvent } from "./model/sonar-wehook-event";
 import { EventEmitter } from "events";
 
