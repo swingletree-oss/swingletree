@@ -6,6 +6,8 @@ import * as bodyParser from "body-parser";
 import { EventEmitter } from "events";
 import * as path from "path";
 
+import { LOGGER } from "./logger";
+
 const app = express();
 
 // express configuration
@@ -29,8 +31,7 @@ app.post("/webhook/sonar/", sonarWebhook.webhook);
 
 // kickstart everything
 app.listen(app.get("port"), () => {
-  console.log(("  App is running at http://localhost:%d in %s mode"), app.get("port"), app.get("env"));
-  console.log("  Press CTRL-C to stop\n");
+  LOGGER.info("listening on http://localhost:%d in %s mode", app.get("port"), app.get("env"));
 });
 
 module.exports = app;
