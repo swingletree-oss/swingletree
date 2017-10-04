@@ -3,7 +3,7 @@
 import { LOGGER } from "../logger";
 import { Response, Request, NextFunction } from "express";
 import { GitHubWebhookEventType, PullRequestWebhookAction, GitHubPullRequestGhWebhookEvent, GitHubWebhookEvent, GitHubPushGhWebhookEvent } from "./model/gh-webhook-event";
-import { CommitStatusEnum, GitHubCommitStatus } from "./model/commit-status";
+import { CommitStatusEnum, GitHubGhCommitStatus } from "./model/gh-commit-status";
 import { AppEvent } from "../models/events";
 
 import { EventEmitter } from "events";
@@ -37,7 +37,7 @@ export class GitHubWebhook {
 
 		if (webhookEvent !== undefined && this.isWebhookEventRelevant(webhookEvent)) {
 			this.eventEmitter.emit(AppEvent.analyzePR, webhookEvent);
-			this.eventEmitter.emit(AppEvent.sendStatus, new GitHubCommitStatus(CommitStatusEnum.pending));
+			this.eventEmitter.emit(AppEvent.sendStatus, new GitHubGhCommitStatus(CommitStatusEnum.pending));
 		} else {
 			this.eventEmitter.emit(AppEvent.webhookEventIgnored, "github");
 		}
