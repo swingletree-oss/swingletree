@@ -1,6 +1,6 @@
 "use strict";
 
-import { GitHubCommitStatusContainer, CommitStatusEnum, GitHubCommitStatus } from "../github/model/commit-status";
+import { GitHubGhCommitStatusContainer, CommitStatusEnum, GitHubGhCommitStatus } from "../github/model/gh-commit-status";
 import { Response, Request, NextFunction } from "express";
 import { AppEvent } from "../models/events";
 import { QualityGateStatus } from "./model/quality-gate";
@@ -30,14 +30,14 @@ export class SonarWebhook {
 		const event = new SonarWebhookEvent(req.body);
 
 		if (this.isWebhookEventRelevant(event)) {
-			const commitStatusContainer = new GitHubCommitStatusContainer(event.properties.repository, event.properties.commitId);
-			let commitStatus: GitHubCommitStatus;
+			const commitStatusContainer = new GitHubGhCommitStatusContainer(event.properties.repository, event.properties.commitId);
+			let commitStatus: GitHubGhCommitStatus;
 
 			if (event.qualityGate.status === QualityGateStatus.OK) {
-				commitStatus = new GitHubCommitStatus(CommitStatusEnum.success);
+				commitStatus = new GitHubGhCommitStatus(CommitStatusEnum.success);
 				commitStatus.description = "Quality gate passed.";
 			} else {
-				commitStatus = new GitHubCommitStatus(CommitStatusEnum.failure);
+				commitStatus = new GitHubGhCommitStatus(CommitStatusEnum.failure);
 				commitStatus.description = "Ouality gate failed.";
 			}
 

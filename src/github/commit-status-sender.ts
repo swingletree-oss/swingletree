@@ -2,7 +2,7 @@
 
 import { Response, Request, NextFunction } from "express";
 import { AppEvent } from "../models/events";
-import { GitHubCommitStatus, GitHubCommitStatusContainer } from "./model/commit-status";
+import { GitHubGhCommitStatus, GitHubGhCommitStatusContainer } from "./model/gh-commit-status";
 import { EventEmitter } from "events";
 
 const unirest = require("unirest");
@@ -17,7 +17,7 @@ class EventProcessor {
 		this.eventEmitter.on(AppEvent.sendStatus, this.sendStatus);
 	}
 
-	sendStatus(status: GitHubCommitStatusContainer) {
+	sendStatus(status: GitHubGhCommitStatusContainer) {
 		unirest.post(this.apiEndpoint + "/repos/" + status.repository + "/statuses/" + status.commitId)
 			.headers({ "Accept": "application/json", "Content-Type": "application/json" })
 			.send(event)

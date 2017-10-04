@@ -6,10 +6,10 @@ export enum CommitStatusEnum {
 	failure = "failure"
 }
 
-export class GitHubCommitStatusContainer {
+export class GitHubGhCommitStatusContainer {
 	commitId: string;
 	repository: string;
-	payload: GitHubCommitStatus;
+	payload: GitHubGhCommitStatus;
 
 	constructor(repository: string, commitId: string) {
 		this.commitId = commitId;
@@ -17,7 +17,7 @@ export class GitHubCommitStatusContainer {
 	}
 }
 
-export class GitHubCommitStatus {
+export class GitHubGhCommitStatus {
 	state: CommitStatusEnum;
 	target_url: string;
 	description: string;
