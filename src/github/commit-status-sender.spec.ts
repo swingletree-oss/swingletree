@@ -42,6 +42,6 @@ describe("CommitStatusSender", () => {
     });
     
 		
-		emitter.emit(AppEvent.sendStatus, "test", sinon);
+		emitter.emit(AppEvent.sendStatus, "test", {});
   });
 });
