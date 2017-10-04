@@ -2,7 +2,7 @@
 
 import { LOGGER } from "../logger";
 import { Response, Request, NextFunction } from "express";
-import { WebhookEventType, PullRequestWebhookAction, GitHubPullRequestGhWebhookEvent, GitHubGhWebhookEvent, GitHubPushGhWebhookEvent } from "./model/gh-webhook-event";
+import { GitHubWebhookEventType, PullRequestWebhookAction, GitHubPullRequestGhWebhookEvent, GitHubWebhookEvent, GitHubPushGhWebhookEvent } from "./model/gh-webhook-event";
 import { CommitStatusEnum, GitHubCommitStatus } from "./model/commit-status";
 import { AppEvent } from "../models/events";
 
@@ -16,12 +16,12 @@ export class GitHubWebhook {
     this.eventEmitter = eventEmitter;
   }
 
-  private isWebhookEventRelevant(webhookEvent: GitHubGhWebhookEvent) {
+  private isWebhookEventRelevant(webhookEvent: GitHubWebhookEvent) {
     if (webhookEvent instanceof GitHubPullRequestGhWebhookEvent) {
       const event: GitHubPullRequestGhWebhookEvent = webhookEvent;
 
       return event.action === PullRequestWebhookAction.opened ||
-             event.action === PullRequestWebhookAction.reopened;
+        event.action === PullRequestWebhookAction.reopened;
     } else if (webhookEvent instanceof GitHubPushGhWebhookEvent) {
       return true;
     }
@@ -29,13 +29,13 @@ export class GitHubWebhook {
     return false;
   }
 
- public webhook = (req: Request, res: Response) => {
-    const webhookEvent: GitHubGhWebhookEvent = GitHubGhWebhookEvent.convert(req.body);
+  public webhook = (req: Request, res: Response) => {
+    const eventType: GitHubWebhookEventType = <GitHubWebhookEventType>req.header("X-GitHub-Event");
+    const webhookEvent: GitHubWebhookEvent = GitHubWebhookEvent.convert(eventType, req.body);
 
-    LOGGER.info("received GitHub webhook event.");
+    LOGGER.info("received GitHub webhook \"%s\" event ", eventType);
 
     if (webhookEvent !== undefined && this.isWebhookEventRelevant(webhookEvent)) {
-      LOGGER.info("webhook event is relevant");
       this.eventEmitter.emit(AppEvent.analyzePR, webhookEvent);
       this.eventEmitter.emit(AppEvent.sendStatus, new GitHubCommitStatus(CommitStatusEnum.pending));
     } else {
