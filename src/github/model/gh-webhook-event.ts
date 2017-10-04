@@ -1,8 +1,8 @@
 "use strict";
 
-export enum WebhookEventType {
-  pull_request = "pull_request",
-  push = "push"
+export enum GitHubWebhookEventType {
+  PULL_REQUEST = "pull_request",
+  PUSH = "push"
 }
 
 export enum PullRequestWebhookAction {
@@ -18,28 +18,26 @@ export enum PullRequestWebhookAction {
   reopened = "reopened"
 }
 
-export class GitHubGhWebhookEvent {
-  eventType: WebhookEventType;
-  repoName: string;
+export class GitHubWebhookEvent {
+  eventType: GitHubWebhookEventType;
 
-  static convert(model: any): GitHubGhWebhookEvent {
+  static convert(eventType: GitHubWebhookEventType, model: any): GitHubWebhookEvent {
 
-    if (model.type === WebhookEventType.pull_request) {
+    if (eventType === GitHubWebhookEventType.PULL_REQUEST) {
       return new GitHubPullRequestGhWebhookEvent(model);
-    } else if (model.type === WebhookEventType.push) {
+    } else if (eventType === GitHubWebhookEventType.PUSH) {
       return new GitHubPushGhWebhookEvent(model);
     }
 
     return undefined;
   }
 
-  constructor(event: any) {
-    this.eventType = event.type;
-    this.repoName = event.repo.name;
+  constructor(eventType: GitHubWebhookEventType) {
+    this.eventType = eventType;
   }
 }
 
-export class GitHubPullRequestGhWebhookEvent extends GitHubGhWebhookEvent {
+export class GitHubPullRequestGhWebhookEvent extends GitHubWebhookEvent {
   targetLocation: GitHubLocation;
   sourceLocation: GitHubLocation;
   id: number;
@@ -47,39 +45,35 @@ export class GitHubPullRequestGhWebhookEvent extends GitHubGhWebhookEvent {
   merged: boolean;
 
   constructor(webhookEvent: any) {
-    super(webhookEvent);
+    super(GitHubWebhookEventType.PULL_REQUEST);
 
-    const eventPayload: any = webhookEvent.payload;
-
-    this.action = eventPayload.action;
-    this.id = eventPayload.pull_request.number;
-    this.merged = eventPayload.pull_request.merged;
+    this.action = webhookEvent.action;
+    this.id = webhookEvent.pull_request.number;
+    this.merged = webhookEvent.pull_request.merged;
 
     this.sourceLocation = new GitHubLocation();
-    this.sourceLocation.repositoryPath(eventPayload.pull_request.head.repo.full_name)
-      .reference(eventPayload.pull_request.head.ref)
-      .commitId(eventPayload.pull_request.head.sha);
+    this.sourceLocation.repositoryPath(webhookEvent.pull_request.head.repo.full_name)
+      .reference(webhookEvent.pull_request.head.ref)
+      .commitId(webhookEvent.pull_request.head.sha);
 
     this.targetLocation = new GitHubLocation();
-    this.targetLocation.repositoryPath(eventPayload.pull_request.head.repo.full_name)
-      .reference(eventPayload.pull_request.head.ref)
-      .commitId(eventPayload.pull_request.head.sha);
+    this.targetLocation.repositoryPath(webhookEvent.pull_request.head.repo.full_name)
+      .reference(webhookEvent.pull_request.head.ref)
+      .commitId(webhookEvent.pull_request.head.sha);
   }
 }
 
-export class GitHubPushGhWebhookEvent extends GitHubGhWebhookEvent {
+export class GitHubPushGhWebhookEvent extends GitHubWebhookEvent {
   sourceLocation: GitHubLocation;
   deleted: boolean;
 
   constructor(webhookEvent: any) {
-    super(webhookEvent);
-
-    const eventPayload: any = webhookEvent.payload;
+    super(GitHubWebhookEventType.PUSH);
 
     this.sourceLocation = new GitHubLocation();
-    this.sourceLocation.repositoryPath(eventPayload.repository.full_name)
-      .reference(eventPayload.ref)
-      .commitId(eventPayload.head_commit.id);
+    this.sourceLocation.repositoryPath(webhookEvent.repository.full_name)
+      .reference(webhookEvent.ref)
+      .commitId(webhookEvent.head_commit.id);
   }
 }
 
