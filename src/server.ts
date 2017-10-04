@@ -31,7 +31,7 @@ app.post("/webhook/sonar/", sonarWebhook.webhook);
 
 // kickstart everything
 app.listen(app.get("port"), () => {
-  LOGGER.info("listening on http://localhost:%d in %s mode", app.get("port"), app.get("env"));
+	LOGGER.info("listening on http://localhost:%d in %s mode", app.get("port"), app.get("env"));
 });
 
 module.exports = app;

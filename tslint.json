@@ -7,7 +7,7 @@
         ],
         "indent": [
             true,
-            "spaces"
+            "tabs"
         ],
         "one-line": [
             true,
