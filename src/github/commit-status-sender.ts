@@ -1,13 +1,12 @@
 "use strict";
 
-import { Response, Request, NextFunction } from "express";
 import { AppEvent } from "../models/events";
 import { GitHubGhCommitStatus, GitHubGhCommitStatusContainer } from "./model/gh-commit-status";
 import { EventEmitter } from "events";
 
 const unirest = require("unirest");
 
-class EventProcessor {
+export class CommitStatusSender {
 	eventEmitter: EventEmitter;
 	apiEndpoint: string;
 
@@ -17,15 +16,13 @@ class EventProcessor {
 		this.eventEmitter.on(AppEvent.sendStatus, this.sendStatus);
 	}
 
-	sendStatus(status: GitHubGhCommitStatusContainer) {
+	public sendStatus = (status: GitHubGhCommitStatusContainer) => {
 		unirest.post(this.apiEndpoint + "/repos/" + status.repository + "/statuses/" + status.commitId)
 			.headers({ "Accept": "application/json", "Content-Type": "application/json" })
-			.send(event)
+			.send(status.payload)
 			.end(function(response: any) {
-				this.eventEmitter.emit(AppEvent.statusSent, status);
+				this.eventEmitter.emit(AppEvent.statusSent, status, this.apiEndpoint);
 			}
-			);
-
-		this.eventEmitter.emit(AppEvent.statusSent, this.apiEndpoint, status);
+		);
 	}
 }
