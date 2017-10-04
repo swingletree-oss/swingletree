@@ -1,4 +1,4 @@
-import { QualityGate } from "./quality-gate";
+import { SonarQualityGate } from "./sonar-quality-gate";
 "use strict";
 
 export class SonarWebhookEvent {
@@ -6,7 +6,7 @@ export class SonarWebhookEvent {
 	project: Object;
 	properties: Properties;
 
-	qualityGate: QualityGate;
+	qualityGate: SonarQualityGate;
 
 	serverUrl: string;
 	status: string;
@@ -21,7 +21,7 @@ export class SonarWebhookEvent {
 		this.status = model.status;
 		this.taskId = model.taskId;
 
-		this.qualityGate = <QualityGate>model.qualityGate;
+		this.qualityGate = <SonarQualityGate>model.qualityGate;
 	}
 }
 
