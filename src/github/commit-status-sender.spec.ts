@@ -17,12 +17,16 @@ const sandbox = sinon.createSandbox();
 describe("CommitStatusSender", () => {
 	let unit: CommitStatusSender;
 	let emitter: EventEmitter;
+	let mockStatus: GitHubGhCommitStatusContainer;
+	let postStub: sinon.SinonSpy;
 	
   beforeEach(function () {
 		emitter = new EventEmitter();
 		unit = new CommitStatusSender(emitter, "testApi");
+		mockStatus = new GitHubGhCommitStatusContainer("testRepository", "testCommitId")
 		
-    sandbox.stub(unirest, 'post').returns({
+		
+    postStub = sandbox.stub(unirest, 'post').returns({
 			headers: sinon.stub().returnsThis,
 			end: sinon.stub().yieldsOn(unit),
 			send: sinon.stub().returnsThis
@@ -42,6 +46,17 @@ describe("CommitStatusSender", () => {
     });
     
 		
-		emitter.emit(AppEvent.sendStatus, "test", {});
+		emitter.emit(AppEvent.sendStatus, mockStatus);
+  });
+	
+	it("should send status to GitHub API endpoint", (done) => {
+    
+    emitter.on(AppEvent.statusSent, function (status, endpoint) {
+      sinon.assert.calledWith(postStub, "testApi/repos/testRepository/statuses/testCommitId");
+      done();
+    });
+    
+		
+		emitter.emit(AppEvent.sendStatus, mockStatus);
   });
 });
