@@ -10,36 +10,36 @@ import { EventEmitter } from "events";
 
 export class GitHubWebhook {
 
-  eventEmitter: EventEmitter;
+	eventEmitter: EventEmitter;
 
-  constructor(eventEmitter: EventEmitter) {
-    this.eventEmitter = eventEmitter;
-  }
+	constructor(eventEmitter: EventEmitter) {
+		this.eventEmitter = eventEmitter;
+	}
 
-  private isWebhookEventRelevant(webhookEvent: GitHubWebhookEvent) {
-    if (webhookEvent instanceof GitHubPullRequestGhWebhookEvent) {
-      const event: GitHubPullRequestGhWebhookEvent = webhookEvent;
+	private isWebhookEventRelevant(webhookEvent: GitHubWebhookEvent) {
+		if (webhookEvent instanceof GitHubPullRequestGhWebhookEvent) {
+			const event: GitHubPullRequestGhWebhookEvent = webhookEvent;
 
-      return event.action === PullRequestWebhookAction.opened ||
-        event.action === PullRequestWebhookAction.reopened;
-    } else if (webhookEvent instanceof GitHubPushGhWebhookEvent) {
-      return true;
-    }
+			return event.action === PullRequestWebhookAction.opened ||
+				event.action === PullRequestWebhookAction.reopened;
+		} else if (webhookEvent instanceof GitHubPushGhWebhookEvent) {
+			return true;
+		}
 
-    return false;
-  }
+		return false;
+	}
 
-  public webhook = (req: Request, res: Response) => {
-    const eventType: GitHubWebhookEventType = <GitHubWebhookEventType>req.header("X-GitHub-Event");
-    const webhookEvent: GitHubWebhookEvent = GitHubWebhookEvent.convert(eventType, req.body);
+	public webhook = (req: Request, res: Response) => {
+		const eventType: GitHubWebhookEventType = <GitHubWebhookEventType>req.header("X-GitHub-Event");
+		const webhookEvent: GitHubWebhookEvent = GitHubWebhookEvent.convert(eventType, req.body);
 
-    LOGGER.info("received GitHub webhook \"%s\" event ", eventType);
+		LOGGER.info("received GitHub webhook \"%s\" event ", eventType);
 
-    if (webhookEvent !== undefined && this.isWebhookEventRelevant(webhookEvent)) {
-      this.eventEmitter.emit(AppEvent.analyzePR, webhookEvent);
-      this.eventEmitter.emit(AppEvent.sendStatus, new GitHubCommitStatus(CommitStatusEnum.pending));
-    } else {
-      this.eventEmitter.emit(AppEvent.webhookEventIgnored, "github");
-    }
-  }
+		if (webhookEvent !== undefined && this.isWebhookEventRelevant(webhookEvent)) {
+			this.eventEmitter.emit(AppEvent.analyzePR, webhookEvent);
+			this.eventEmitter.emit(AppEvent.sendStatus, new GitHubCommitStatus(CommitStatusEnum.pending));
+		} else {
+			this.eventEmitter.emit(AppEvent.webhookEventIgnored, "github");
+		}
+	}
 }
