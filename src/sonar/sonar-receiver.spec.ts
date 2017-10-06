@@ -10,15 +10,20 @@ import { GitHubCommitStatusContainer } from "../github/model/commit-status";
 import { SonarWebhook } from "./sonar-receiver";
 import { EventEmitter } from "events";
 
-function generateHookData() {
-  return Object.assign({}, require("../../test/base-sonar-webhook.json"));
-}
 
 describe("Sonar Webhook", () => {
-  it("should send commit status event on relevant hook", (done) => {
-    let emitter = new EventEmitter();
+  let emitter: EventEmitter;
+  let unit: SonarWebhook;
+  let testData: any;
     
-    let testData = generateHookData();
+  beforeEach(function () {
+    emitter = new EventEmitter();
+    unit = new SonarWebhook(emitter);
+    testData = Object.assign({}, require("../../test/base-sonar-webhook.json"));
+  });
+  
+  
+  it("should send commit status event on relevant hook", (done) => {
     
     testData.properties = {
       "sonar.analysis.ghPrGate": "respond",
@@ -38,49 +43,34 @@ describe("Sonar Webhook", () => {
       done(new Error("webhook event was ignored."))
     });
 
-    let unit = new SonarWebhook(emitter);
     unit.webhook({
       body: testData
     });
   });
   
   it("should send ignored event on missing properties", (done) => {
-    let emitter = new EventEmitter();
-
-    let testData = generateHookData();
-    
     emitter.on(AppEvent.webhookEventIgnored, function (data) {
       expect(data).to.equal("sonar");
       done();
     });
 
-    let unit = new SonarWebhook(emitter);
     unit.webhook({
       body: testData
     });
   });
   
   it("should not send ignored event on empty properties", (done) => {
-    let emitter = new EventEmitter();
-
-    let testData = generateHookData();
-    
     emitter.on(AppEvent.webhookEventIgnored, function (data) {
       expect(data).to.equal("sonar");
       done();
     });
 
-    let unit = new SonarWebhook(emitter);
     unit.webhook({
       body: testData
     });
   });
   
   it("should not send ignored event on partially set properties", (done) => {
-    let emitter = new EventEmitter();
-
-    let testData = generateHookData();
-    
     testData.properties = {
       "sonar.analysis.branch": "testBranch",
       "sonar.analysis.commitId": "12345"
@@ -91,7 +81,6 @@ describe("Sonar Webhook", () => {
       done();
     });
 
-    let unit = new SonarWebhook(emitter);
     unit.webhook({
       body: testData
     });
