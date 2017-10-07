@@ -9,6 +9,7 @@ import { AppEvent } from "../app-events";
 import { EventEmitter } from "events";
 
 export class GitHubWebhook {
+	public static readonly IGNORE_ID = "github";
 
 	eventEmitter: EventEmitter;
 
@@ -57,13 +58,13 @@ export class GitHubWebhook {
 			}
 
 			if (this.isDeleteTrigger(webhookEvent)) {
-				this.eventEmitter.emit(AppEvent.webhookEventIgnored, "github");
+				this.eventEmitter.emit(AppEvent.webhookEventIgnored, GitHubWebhook.IGNORE_ID);
 				eventTriggered = true;
 			}
 		}
 
 		if (!eventTriggered) {
-			this.eventEmitter.emit(AppEvent.webhookEventIgnored, "github");
+			this.eventEmitter.emit(AppEvent.webhookEventIgnored, GitHubWebhook.IGNORE_ID);
 		}
 	}
 }

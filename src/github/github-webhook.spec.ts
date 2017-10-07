@@ -56,7 +56,7 @@ describe("GitHub Webhook", () => {
     pullRequestData.body.action = "closed";
     
     emitter.on(AppEvent.webhookEventIgnored, function (data) {
-      expect(data).to.equal("github");
+      expect(data).to.equal(GitHubWebhook.IGNORE_ID);
       done();
     });
 
@@ -68,7 +68,7 @@ describe("GitHub Webhook", () => {
     branchDeleteData.body.ref_type = "branch";
 		
     emitter.on(AppEvent.webhookEventIgnored, function (data) {
-      expect(data).to.equal("github");
+      expect(data).to.equal(GitHubWebhook.IGNORE_ID);
       done();
     });
 
@@ -80,7 +80,7 @@ describe("GitHub Webhook", () => {
     branchDeleteData.body.ref_type = "tag";
 		
     emitter.on(AppEvent.webhookEventIgnored, function (data) {
-      expect(data).to.equal("github");
+      expect(data).to.equal(GitHubWebhook.IGNORE_ID);
       done();
     });
 
@@ -91,7 +91,7 @@ describe("GitHub Webhook", () => {
     pullRequestData.header = sandbox.stub().withArgs("X-GitHub-Event").returns("some_other_type");
     
     emitter.on(AppEvent.webhookEventIgnored, function (data) {
-      expect(data).to.equal("github");
+      expect(data).to.equal(GitHubWebhook.IGNORE_ID);
       done();
     });
 
@@ -102,7 +102,7 @@ describe("GitHub Webhook", () => {
     pullRequestData.header = sandbox.stub().withArgs("X-GitHub-Event").returns(undefined);
     
     emitter.on(AppEvent.webhookEventIgnored, function (data) {
-      expect(data).to.equal("github");
+      expect(data).to.equal(GitHubWebhook.IGNORE_ID);
       done();
     });
 

@@ -50,7 +50,7 @@ describe("Sonar Webhook", () => {
   
   it("should send ignored event on missing properties", (done) => {
     emitter.on(AppEvent.webhookEventIgnored, function (data) {
-      expect(data).to.equal("sonar");
+      expect(data).to.equal(SonarWebhook.IGNORE_ID);
       done();
     });
 
@@ -61,7 +61,7 @@ describe("Sonar Webhook", () => {
   
   it("should not send ignored event on empty properties", (done) => {
     emitter.on(AppEvent.webhookEventIgnored, function (data) {
-      expect(data).to.equal("sonar");
+      expect(data).to.equal(SonarWebhook.IGNORE_ID);
       done();
     });
 
@@ -77,7 +77,7 @@ describe("Sonar Webhook", () => {
     };
     
     emitter.on(AppEvent.webhookEventIgnored, function (data) {
-      expect(data).to.equal("sonar");
+      expect(data).to.equal(SonarWebhook.IGNORE_ID);
       done();
     });
 
