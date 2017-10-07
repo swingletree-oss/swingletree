@@ -2,7 +2,8 @@
 
 export enum GitHubWebhookEventType {
 	PULL_REQUEST = "pull_request",
-	PUSH = "push"
+	PUSH = "push",
+	DELETE_BRANCH_TAG = "delete"
 }
 
 export enum PullRequestWebhookAction {
@@ -23,13 +24,17 @@ export class GitHubWebhookEvent {
 
 	static convert(eventType: GitHubWebhookEventType, model: any): GitHubWebhookEvent {
 
-		if (eventType === GitHubWebhookEventType.PULL_REQUEST) {
-			return new GitHubPullRequestGhWebhookEvent(model);
-		} else if (eventType === GitHubWebhookEventType.PUSH) {
-			return new GitHubPushGhWebhookEvent(model);
-		}
+		switch (eventType) {
+			case GitHubWebhookEventType.PULL_REQUEST:
+				return new GitHubPullRequestGhWebhookEvent(model);
+			case GitHubWebhookEventType.PUSH:
+				return new GitHubPushWebhookEvent(model);
+			case GitHubWebhookEventType.DELETE_BRANCH_TAG:
+				return new GitHubDeleteWebhookEvent(model);
 
-		return undefined;
+			default:
+				return undefined;
+		}
 	}
 
 	constructor(eventType: GitHubWebhookEventType) {
@@ -63,7 +68,21 @@ export class GitHubPullRequestGhWebhookEvent extends GitHubWebhookEvent {
 	}
 }
 
-export class GitHubPushGhWebhookEvent extends GitHubWebhookEvent {
+export class GitHubDeleteWebhookEvent extends GitHubWebhookEvent {
+	refType: string;
+	ref: string;
+	repositoryPath: string;
+
+	constructor(webhookEvent: any) {
+		super(GitHubWebhookEventType.DELETE_BRANCH_TAG);
+
+		this.refType = webhookEvent.ref_type;
+		this.ref = webhookEvent.ref;
+		this.repositoryPath = webhookEvent.repository.full_name;
+	}
+}
+
+export class GitHubPushWebhookEvent extends GitHubWebhookEvent {
 	sourceLocation: GitHubLocation;
 	deleted: boolean;
 
