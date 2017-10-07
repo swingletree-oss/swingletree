@@ -10,6 +10,8 @@ import { EventEmitter } from "events";
 const unirest = require("unirest");
 
 export class SonarWebhook {
+	public static readonly IGNORE_ID = "sonar";
+
 	eventEmitter: EventEmitter;
 
 	constructor(eventEmitter: EventEmitter) {
@@ -48,7 +50,7 @@ export class SonarWebhook {
 
 			this.eventEmitter.emit(AppEvent.sendStatus, commitStatusContainer);
 		} else {
-			this.eventEmitter.emit(AppEvent.webhookEventIgnored, "sonar");
+			this.eventEmitter.emit(AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
 		}
 
 	}
