@@ -43,8 +43,20 @@ describe("SonarProjectCleaner", () => {
 	
 		
   it("should send delete to api on deleteBranch event", (done) => {
-		emitter.on(AppEvent.sonarProjectDeleted, function (deletedId) {
+		emitter.on(AppEvent.sonarProjectDeleted, function (success, deletedId) {
 			sinon.assert.calledWith(postStub, "testApi/api/projects/delete")
+			expect(success).to.be.true;
+			done();
+    });
+				
+		emitter.emit(AppEvent.branchDeleted, projectId);
+  });
+	
+  it("should report failure on deletion error", (done) => {
+		unirestMock.end = sinon.stub().yieldsOn(unit, { error: true });
+		
+		emitter.on(AppEvent.sonarProjectDeleted, function (success, deletedId) {
+			expect(success).to.be.false;
 			done();
     });
 				
