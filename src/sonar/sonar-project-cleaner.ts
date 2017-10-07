@@ -25,9 +25,11 @@ export class SonarProjectCleaner {
 			.end(function(response: any) {
 				if (response.error) {
 					LOGGER.error("failed to delete sonar project %s", projectId);
+					this.eventEmitter.emit(AppEvent.sonarProjectDeleted, false, projectId);
+				} else {
+					LOGGER.info("deleted sonar project with key %s", projectId);
+					this.eventEmitter.emit(AppEvent.sonarProjectDeleted, true, projectId);
 				}
-
-				this.eventEmitter.emit(AppEvent.sonarProjectDeleted, projectId);
 			}
 		);
 	}
