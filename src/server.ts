@@ -24,7 +24,6 @@ const eventBus = new EventEmitter();
 const githubWebhook = new GitHubWebhook(eventBus);
 const sonarWebhook = new SonarWebhook(eventBus);
 
-console.log(eventBus);
 // bind webhooks to paths
 app.post("/webhook/github/", githubWebhook.webhook);
 app.post("/webhook/sonar/", sonarWebhook.webhook);
