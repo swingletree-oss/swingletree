@@ -1,3 +1,4 @@
+import { CommitStatusSender } from "./github/commit-status-sender";
 import { GitHubWebhook } from "./github/github-webhook";
 import { SonarWebhook } from "./sonar/sonar-webhook";
 import * as express from "express";
@@ -23,6 +24,7 @@ const eventBus = new EventEmitter();
 // application webhooks with plumbing
 const githubWebhook = new GitHubWebhook(eventBus);
 const sonarWebhook = new SonarWebhook(eventBus);
+const commitStatusSender = new CommitStatusSender(eventBus, process.env.GITHUB_API);
 
 // bind webhooks to paths
 app.post("/webhook/github/", githubWebhook.webhook);
