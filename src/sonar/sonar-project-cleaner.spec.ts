@@ -1,6 +1,6 @@
 "use strict";
 
-import { AppEvent } from "../models/events";
+import { AppEvent } from "../app-events";
 import { EventEmitter } from "events";
 import { SonarProjectCleaner } from "./sonar-project-cleaner";
 

@@ -1,6 +1,6 @@
 "use strict";
 
-import { AppEvent } from "../models/app-events";
+import { AppEvent } from "../app-events";
 import { GitHubGhCommitStatus, GitHubGhCommitStatusContainer } from "./model/gh-commit-status";
 import { EventEmitter } from "events";
 
