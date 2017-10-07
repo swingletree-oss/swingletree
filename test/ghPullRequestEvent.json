@@ -8,7 +8,7 @@
     "diff_url": "https://github.com/baxterthehacker/public-repo/pull/1.diff",
     "patch_url": "https://github.com/baxterthehacker/public-repo/pull/1.patch",
     "issue_url": "https://api.github.com/repos/baxterthehacker/public-repo/issues/1",
-    "number": 1,
+    "number": 1337,
     "state": "open",
     "locked": false,
     "title": "Update the README with new information",
