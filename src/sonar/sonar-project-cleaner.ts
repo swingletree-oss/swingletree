@@ -1,7 +1,7 @@
 "use strict";
 
 import { LOGGER } from "../logger";
-import { AppEvent } from "../models/events";
+import { AppEvent } from "../models/app-events";
 import { EventEmitter } from "events";
 
 const unirest = require("unirest");

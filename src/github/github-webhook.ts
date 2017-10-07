@@ -4,7 +4,7 @@ import { LOGGER } from "../logger";
 import { Response, Request, NextFunction } from "express";
 import { GitHubWebhookEventType, PullRequestWebhookAction, GitHubPullRequestGhWebhookEvent, GitHubWebhookEvent, GitHubPushWebhookEvent, GitHubDeleteWebhookEvent } from "./model/gh-webhook-event";
 import { CommitStatusEnum, GitHubGhCommitStatus } from "./model/gh-commit-status";
-import { AppEvent } from "../models/events";
+import { AppEvent } from "../models/app-events";
 
 import { EventEmitter } from "events";
 

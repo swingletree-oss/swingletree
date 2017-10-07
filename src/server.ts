@@ -1,5 +1,5 @@
-import { GitHubWebhook } from "./github/github-receiver";
-import { SonarWebhook } from "./sonar/sonar-receiver";
+import { GitHubWebhook } from "./github/github-webhook";
+import { SonarWebhook } from "./sonar/sonar-webhook";
 import * as express from "express";
 import * as compression from "compression";
 import * as bodyParser from "body-parser";
