@@ -10,33 +10,32 @@ import { EventEmitter } from "events";
 
 chai.use(require("sinon-chai"));
 
-function requestData() : any {
-  return {
-    body: {
-      action: "opened",
-      pull_request: {
-        "number": 1337,
-        merged: false,
-        head: {
-          repo: { full_name: "test/test" },
-          ref: "change",
-          sha: "abcdef"
-        },
-        base: {
-          repo: { full_name: "base/test" },
-          ref: "master",
-          sha: "123456"
-        }
-      }
-    }
-  }
-};
+const sandbox = sinon.createSandbox();
 
 describe("Webhook", () => {
+	let unit: GitHubWebhook;
+	let emitter: EventEmitter;
+	let pullRequestData: any;
+	let branchDeleteData: any;
+	
+  beforeEach(function () {
+		emitter = new EventEmitter();
+		unit = new GitHubWebhook(emitter);
+		
+		pullRequestData = { body: Object.assign({}, require("../../test/ghPullRequestEvent.json")) };
+		pullRequestData.header = function () {};
+		
+		branchDeleteData = { body: Object.assign({}, require("../../test/ghDeleteEvent.json")) };
+		branchDeleteData.header = function () {};
+  });
+	
+  afterEach(function () {
+    sandbox.restore();
+  });
+	
+	
   it("should send analyzePR event on open PRs", (done) => {
-    let emitter = new EventEmitter();
-    const testData = requestData();
-    testData.header = sinon.stub().withArgs("X-GitHub-Event").returns("pull_request");
+    pullRequestData.header = sandbox.stub().withArgs("X-GitHub-Event").returns("pull_request");
     
     emitter.on(AppEvent.analyzePR, function (data) {
       expect(data.id).to.equal(1337);
@@ -48,53 +47,65 @@ describe("Webhook", () => {
       done(new Error("webhook event was ignored."))
     });
 
-    let utt = new GitHubWebhook(emitter);
-    utt.webhook(testData);
+    unit.webhook(pullRequestData);
   });
   
   it("should send ignore event on closed PRs", (done) => {
-    let emitter = new EventEmitter();
-
-    let testData = requestData();
-    testData.header = sinon.stub().withArgs("X-GitHub-Event").returns("pull_request");
-    testData.body.action = "closed";
+    pullRequestData.header = sandbox.stub().withArgs("X-GitHub-Event").returns("pull_request");
+    pullRequestData.header = sandbox.stub().withArgs("X-GitHub-Event").returns("pull_request");
+    pullRequestData.body.action = "closed";
     
     emitter.on(AppEvent.webhookEventIgnored, function (data) {
       expect(data).to.equal("github");
       done();
     });
 
-    let utt = new GitHubWebhook(emitter);
-    utt.webhook(testData);
+    unit.webhook(pullRequestData);
+  });
+	
+  it("should send delete event on 'deleted' webhook events with ref type 'branch'", (done) => {
+    branchDeleteData.header = sandbox.stub().withArgs("X-GitHub-Event").returns("delete");
+    branchDeleteData.body.ref_type = "branch";
+		
+    emitter.on(AppEvent.webhookEventIgnored, function (data) {
+      expect(data).to.equal("github");
+      done();
+    });
+
+    unit.webhook(pullRequestData);
+  });
+	
+  it("should send ignore event on 'deleted' webhook events with ref type 'tag'", (done) => {
+    branchDeleteData.header = sandbox.stub().withArgs("X-GitHub-Event").returns("delete");
+    branchDeleteData.body.ref_type = "tag";
+		
+    emitter.on(AppEvent.webhookEventIgnored, function (data) {
+      expect(data).to.equal("github");
+      done();
+    });
+
+    unit.webhook(pullRequestData);
   });
   
   it("should send ignore event on irrelevant event type header values", (done) => {
-    let emitter = new EventEmitter();
-
-    let testData = requestData();
-    testData.header = sinon.stub().withArgs("X-GitHub-Event").returns("some_other_type");
+    pullRequestData.header = sandbox.stub().withArgs("X-GitHub-Event").returns("some_other_type");
     
     emitter.on(AppEvent.webhookEventIgnored, function (data) {
       expect(data).to.equal("github");
       done();
     });
 
-    let utt = new GitHubWebhook(emitter);
-    utt.webhook(testData);
+    unit.webhook(pullRequestData);
   });
   
   it("should send ignore event on missing event type header", (done) => {
-    let emitter = new EventEmitter();
-
-    let testData = requestData();
-    testData.header = sinon.stub().withArgs("X-GitHub-Event").returns(undefined);
+    pullRequestData.header = sandbox.stub().withArgs("X-GitHub-Event").returns(undefined);
     
     emitter.on(AppEvent.webhookEventIgnored, function (data) {
       expect(data).to.equal("github");
       done();
     });
 
-    let utt = new GitHubWebhook(emitter);
-    utt.webhook(testData);
+    unit.webhook(pullRequestData);
   });
 });
