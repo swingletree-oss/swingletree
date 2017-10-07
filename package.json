@@ -41,8 +41,7 @@
     "sinon-chai": "^2.14.0",
     "ts-mocha": "^1.0.3",
     "tslint": "^5.7.0",
-    "typescript": "^2.5.3",
-    "typings": "^2.1.1"
+    "typescript": "^2.5.3"
   },
   "author": "",
   "license": "GPL-3.0"
