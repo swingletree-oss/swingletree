@@ -4,8 +4,8 @@ import { expect, assert } from 'chai';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 
-import { GitHubWebhook } from "./github-receiver";
-import { AppEvent } from "../models/events";
+import { GitHubWebhook } from "./github-webhook";
+import { AppEvent } from "../app-events";
 import { EventEmitter } from "events";
 
 chai.use(require("sinon-chai"));
