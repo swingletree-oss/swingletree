@@ -13,7 +13,7 @@ chai.use(require("sinon-chai"));
 const unirest = require("unirest");
 const sandbox = sinon.createSandbox();
 
-describe("SonarProjectCleaner", () => {
+describe("Sonar Project Cleaner", () => {
 	let unit: SonarProjectCleaner;
 	let emitter: EventEmitter;
 	

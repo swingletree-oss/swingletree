@@ -12,7 +12,7 @@ chai.use(require("sinon-chai"));
 
 const sandbox = sinon.createSandbox();
 
-describe("Webhook", () => {
+describe("GitHub Webhook", () => {
 	let unit: GitHubWebhook;
 	let emitter: EventEmitter;
 	let pullRequestData: any;
