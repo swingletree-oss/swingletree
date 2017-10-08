@@ -6,6 +6,8 @@ import { EventEmitter } from "events";
 
 const unirest = require("unirest");
 
+/** Sends Commit Status Requests to GitHub
+ */
 export class CommitStatusSender {
 	private eventEmitter: EventEmitter;
 	private apiEndpoint: string;
@@ -16,7 +18,7 @@ export class CommitStatusSender {
 		this.eventEmitter.on(AppEvent.sendStatus, this.sendStatus);
 	}
 
-	public sendStatus = (status: GitHubGhCommitStatusContainer) => {
+	private sendStatus = (status: GitHubGhCommitStatusContainer) => {
 		unirest.post(this.apiEndpoint + "/repos/" + status.repository + "/statuses/" + status.commitId)
 			.headers({ "Accept": "application/json", "Content-Type": "application/json" })
 			.send(status.payload)

@@ -1,11 +1,15 @@
 "use strict";
 
+/** GitHub Webhook Event types provided by 'X-GitHub-Event' HTTP header
+ */
 export enum GitHubWebhookEventType {
 	PULL_REQUEST = "pull_request",
 	PUSH = "push",
 	DELETE_BRANCH_TAG = "delete"
 }
 
+/** Pull Request Event 'action' types
+ */
 export enum PullRequestWebhookAction {
 	assigned = "assigned",
 	unassigned = "unassigned",
@@ -19,6 +23,8 @@ export enum PullRequestWebhookAction {
 	reopened = "reopened"
 }
 
+/** Superclass of a GitHub Webhook event
+ */
 export class GitHubWebhookEvent {
 	eventType: GitHubWebhookEventType;
 
