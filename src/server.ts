@@ -6,6 +6,7 @@ import * as compression from "compression";
 import * as bodyParser from "body-parser";
 import { EventEmitter } from "events";
 import * as path from "path";
+import { Response, Request } from "express";
 
 import { LOGGER } from "./logger";
 
@@ -29,6 +30,12 @@ const commitStatusSender = new CommitStatusSender(eventBus, process.env.GITHUB_A
 // bind webhooks to paths
 app.post("/webhook/github/", githubWebhook.webhook);
 app.post("/webhook/sonar/", sonarWebhook.webhook);
+
+
+// health endpoint
+app.get("/health", (request: Request, response: Response) => {
+	response.sendStatus(200);
+});
 
 // kickstart everything
 app.listen(app.get("port"), () => {
