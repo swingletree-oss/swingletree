@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && npm run watch",
+    "start": "npm run build && nodemon dist/server.js",
     "build": "npm run build-ts && npm run tslint",
-    "serve": "nodemon dist/server.js",
     "test": "ts-mocha src/**/*.spec.ts",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
