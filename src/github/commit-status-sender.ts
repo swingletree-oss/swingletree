@@ -7,8 +7,8 @@ import { EventEmitter } from "events";
 const unirest = require("unirest");
 
 export class CommitStatusSender {
-	eventEmitter: EventEmitter;
-	apiEndpoint: string;
+	private eventEmitter: EventEmitter;
+	private apiEndpoint: string;
 
 	constructor(eventEmitter: EventEmitter, apiEndpoint: string) {
 		this.eventEmitter = eventEmitter;
