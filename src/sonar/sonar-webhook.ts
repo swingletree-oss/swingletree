@@ -9,6 +9,8 @@ import { EventEmitter } from "events";
 
 const unirest = require("unirest");
 
+/** Provides a Webhook for Sonar
+ */
 export class SonarWebhook {
 	public static readonly IGNORE_ID = "sonar";
 

@@ -8,6 +8,8 @@ import { AppEvent } from "../app-events";
 
 import { EventEmitter } from "events";
 
+/** Provides a GitHub Webhook
+ */
 export class GitHubWebhook {
 	public static readonly IGNORE_ID = "github";
 

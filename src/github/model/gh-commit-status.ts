@@ -1,11 +1,15 @@
 "use strict";
 
+/** GitHub Commit Status types
+ */
 export enum CommitStatusEnum {
 	success = "success",
 	pending = "pending",
 	failure = "failure"
 }
 
+/** Container for GitHub Commit Status
+ */
 export class GitHubGhCommitStatusContainer {
 	commitId: string;
 	repository: string;
@@ -17,6 +21,8 @@ export class GitHubGhCommitStatusContainer {
 	}
 }
 
+/** GitHub Commit Status request payload
+ */
 export class GitHubGhCommitStatus {
 	state: CommitStatusEnum;
 	target_url: string;

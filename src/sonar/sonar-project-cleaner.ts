@@ -18,7 +18,7 @@ export class SonarProjectCleaner {
 		this.eventEmitter.on(AppEvent.branchDeleted, this.cleanProject);
 	}
 
-	public cleanProject = (projectId: string) => {
+	private cleanProject = (projectId: string) => {
 		unirest.post(this.apiEndpoint + "/api/projects/delete")
 			.headers({ "Authorization": this.apiToken + ":" })
 			.queryString("project", projectId)
