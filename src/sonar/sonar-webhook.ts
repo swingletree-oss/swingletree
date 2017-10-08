@@ -12,7 +12,7 @@ const unirest = require("unirest");
 export class SonarWebhook {
 	public static readonly IGNORE_ID = "sonar";
 
-	eventEmitter: EventEmitter;
+	private eventEmitter: EventEmitter;
 
 	constructor(eventEmitter: EventEmitter) {
 		this.eventEmitter = eventEmitter;

@@ -11,7 +11,7 @@ import { EventEmitter } from "events";
 export class GitHubWebhook {
 	public static readonly IGNORE_ID = "github";
 
-	eventEmitter: EventEmitter;
+	private eventEmitter: EventEmitter;
 
 	constructor(eventEmitter: EventEmitter) {
 		this.eventEmitter = eventEmitter;

@@ -7,9 +7,9 @@ import { EventEmitter } from "events";
 const unirest = require("unirest");
 
 export class SonarProjectCleaner {
-	eventEmitter: EventEmitter;
-	apiEndpoint: string;
-	apiToken: string;
+	private eventEmitter: EventEmitter;
+	private apiEndpoint: string;
+	private apiToken: string;
 
 	constructor(eventEmitter: EventEmitter, apiEndpoint: string, apiToken: string) {
 		this.eventEmitter = eventEmitter;
