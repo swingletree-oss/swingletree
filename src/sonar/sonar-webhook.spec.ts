@@ -36,6 +36,7 @@ describe("Sonar Webhook", () => {
       expect(data.commitId).to.equal("12345");
       expect(data.repository).to.equal("testOrg/testRepo");
       expect(data.payload).to.not.be.undefined;
+			expect(data.payload.context).to.equal("swingletree");
       done();
     });
     

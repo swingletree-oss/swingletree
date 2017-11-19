@@ -45,7 +45,7 @@ export class SonarWebhook {
 				commitStatus.description = "Ouality gate failed.";
 			}
 
-			commitStatus.context = "GHPRQG"; // TODO: think of a cool name
+			commitStatus.context = "swingletree";
 			commitStatus.target_url = event.serverUrl;
 
 			commitStatusContainer.payload = commitStatus;
