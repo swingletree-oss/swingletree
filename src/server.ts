@@ -9,8 +9,12 @@ import * as path from "path";
 import { Response, Request } from "express";
 
 import { LOGGER } from "./logger";
+import { ConfigurationLoader } from "./configuration";
+import { GithubTokenFactory } from "./github/token/github-tokens";
 
 const app = express();
+const config = ConfigurationLoader.load();
+const githubTokenFactory = new GithubTokenFactory(config.github.appId, config.github.keyFile);
 
 // express configuration
 app.set("port", process.env.PORT || 3000);
@@ -25,7 +29,11 @@ const eventBus = new EventEmitter();
 // application webhooks with plumbing
 const githubWebhook = new GitHubWebhook(eventBus);
 const sonarWebhook = new SonarWebhook(eventBus);
-const commitStatusSender = new CommitStatusSender(eventBus, process.env.GITHUB_API);
+const commitStatusSender = new CommitStatusSender(
+	eventBus,
+	process.env.GITHUB_API,
+	config.github.
+);
 
 // bind webhooks to paths
 app.post("/webhook/github/", githubWebhook.webhook);
