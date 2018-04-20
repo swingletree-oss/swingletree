@@ -1,0 +1,4 @@
+github:
+  appId: # The AppId of your GitHub app instance (not installation!)
+  keyFile:  # the key file of your GitHub App (you retrieve this from the App settings page)
+  base: https://api.github.com # Github Api base url
