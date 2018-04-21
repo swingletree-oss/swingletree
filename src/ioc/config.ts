@@ -5,7 +5,11 @@ import { Container } from "inversify";
 import ConfigurationService from "../configuration";
 import CommitStatusSender from "../github/commit-status-sender";
 import Identifiers from "./identifiers";
-import { GithubClientService } from "../github/token/github-tokens";
+import GithubClientService from "../github/client/github-client";
+import EventBus from "../event-bus";
+import SwingletreeServer from "../swingletree";
+import SonarWebhook from "../sonar/sonar-webhook";
+import GithubWebhook, { GitHubWebhook } from "../github/github-webhook";
 
 const container = new Container();
 
@@ -16,7 +20,19 @@ container
 	.bind<CommitStatusSender>(Identifiers.CommitStatusService)
 	.to(CommitStatusSender);
 container
-	.bind<GithubTokenFactory>(Identifiers.GithubClientService)
+	.bind<GithubClientService>(Identifiers.GithubClientService)
 	.to(GithubClientService);
+container
+	.bind<EventBus>(Identifiers.EventBus)
+	.to(EventBus);
+container
+	.bind<SwingletreeServer>(Identifiers.SwingletreeServer)
+	.to(SwingletreeServer);
+container
+	.bind<SonarWebhook>(Identifiers.SonarWebhook)
+	.to(SonarWebhook);
+container
+	.bind<GitHubWebhook>(Identifiers.GithubWebhook)
+	.to(GithubWebhook);
 
 export default container;

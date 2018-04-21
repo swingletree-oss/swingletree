@@ -6,17 +6,23 @@ import { GitHubWebhookEventType, PullRequestWebhookAction, GitHubPullRequestGhWe
 import { CommitStatusEnum, GitHubGhCommitStatus } from "./model/gh-commit-status";
 import { AppEvent } from "../app-events";
 
-import { EventEmitter } from "events";
+import EventBus from "../event-bus";
+import Identifiers from "../ioc/identifiers";
+import { injectable } from "inversify";
+import { inject } from "inversify";
 
 /** Provides a GitHub Webhook
  */
-export class GitHubWebhook {
+@injectable()
+class GitHubWebhook {
 	public static readonly IGNORE_ID = "github";
 
-	private eventEmitter: EventEmitter;
+	private eventBus: EventBus;
 
-	constructor(eventEmitter: EventEmitter) {
-		this.eventEmitter = eventEmitter;
+	constructor(
+		@inject(Identifiers.EventBus) eventBus: EventBus
+	) {
+		this.eventBus = eventBus;
 	}
 
 	private isAnalyzeTrigger(webhookEvent: GitHubWebhookEvent): boolean {
@@ -34,16 +40,6 @@ export class GitHubWebhook {
 		return false;
 	}
 
-	private isDeleteTrigger(webhookEvent: GitHubWebhookEvent): boolean {
-		if (webhookEvent.eventType === GitHubWebhookEventType.DELETE_BRANCH_TAG) {
-			const deleteEvent = <GitHubDeleteWebhookEvent>webhookEvent;
-
-			return deleteEvent.refType === "branch" ;
-		}
-
-		return false;
-	}
-
 	public webhook = (req: Request, res: Response) => {
 		const eventType: GitHubWebhookEventType = <GitHubWebhookEventType>req.header("X-GitHub-Event");
 		const webhookEvent: GitHubWebhookEvent = GitHubWebhookEvent.convert(eventType, req.body);
@@ -54,19 +50,16 @@ export class GitHubWebhook {
 
 		if (webhookEvent !== undefined) {
 			if (this.isAnalyzeTrigger(webhookEvent)) {
-				this.eventEmitter.emit(AppEvent.analyzePR, webhookEvent);
-				this.eventEmitter.emit(AppEvent.sendStatus, new GitHubGhCommitStatus(CommitStatusEnum.pending));
-				eventTriggered = true;
-			}
-
-			if (this.isDeleteTrigger(webhookEvent)) {
-				this.eventEmitter.emit(AppEvent.webhookEventIgnored, GitHubWebhook.IGNORE_ID);
+				this.eventBus.get().emit(AppEvent.analyzePR, webhookEvent);
+				this.eventBus.get().emit(AppEvent.sendStatus, new GitHubGhCommitStatus(CommitStatusEnum.pending));
 				eventTriggered = true;
 			}
 		}
 
 		if (!eventTriggered) {
-			this.eventEmitter.emit(AppEvent.webhookEventIgnored, GitHubWebhook.IGNORE_ID);
+			this.eventBus.get().emit(AppEvent.webhookEventIgnored, GitHubWebhook.IGNORE_ID);
 		}
 	}
 }
+
+export default GitHubWebhook;

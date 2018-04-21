@@ -5,19 +5,29 @@ import { Response, Request, NextFunction } from "express";
 import { AppEvent } from "../app-events";
 import { QualityGateStatus } from "./model/sonar-quality-gate";
 import { SonarWebhookEvent } from "./model/sonar-wehook-event";
-import { EventEmitter } from "events";
+import { injectable } from "inversify/dts/annotation/injectable";
+import Identifiers from "../ioc/identifiers";
+import { inject } from "inversify/dts/annotation/inject";
+import EventBus from "../event-bus";
+import ConfigurationService from "../configuration";
 
 const unirest = require("unirest");
 
 /** Provides a Webhook for Sonar
  */
+@injectable()
 class SonarWebhook {
 	public static readonly IGNORE_ID = "sonar";
 
-	private eventEmitter: EventEmitter;
+	private eventBus: EventBus;
+	private configurationService: ConfigurationService;
 
-	constructor(eventEmitter: EventEmitter) {
-		this.eventEmitter = eventEmitter;
+	constructor(
+		@inject(Identifiers.EventBus) eventBus: EventBus,
+		@inject(Identifiers.ConfigurationService) configurationService: ConfigurationService
+	) {
+		this.eventBus = eventBus;
+		this.configurationService = configurationService;
 	}
 
 	private isWebhookEventRelevant(event: SonarWebhookEvent) {
@@ -42,17 +52,17 @@ class SonarWebhook {
 				commitStatus.description = "Quality gate passed.";
 			} else {
 				commitStatus = new GitHubGhCommitStatus(CommitStatusEnum.failure);
-				commitStatus.description = "Ouality gate failed.";
+				commitStatus.description = "Quality gate failed.";
 			}
 
-			commitStatus.context = "swingletree";
+			commitStatus.context = this.configurationService.get().context;
 			commitStatus.target_url = event.serverUrl;
 
 			commitStatusContainer.payload = commitStatus;
 
-			this.eventEmitter.emit(AppEvent.sendStatus, commitStatusContainer);
+			this.eventBus.get().emit(AppEvent.sendStatus, commitStatusContainer);
 		} else {
-			this.eventEmitter.emit(AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
+			this.eventBus.get().emit(AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
 		}
 
 	}
