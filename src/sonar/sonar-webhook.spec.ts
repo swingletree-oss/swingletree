@@ -59,8 +59,7 @@ describe("Sonar Webhook", () => {
 
 		sinon.assert.calledWith(emitMock, AppEvent.sendStatus, sinon.match({
 			commitId: "12345",
-			repository: "testOrg/testRepo",
-			context: "test"
+			repository: "testOrg/testRepo"
 		}));
 	});
 
