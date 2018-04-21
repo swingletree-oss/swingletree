@@ -1,16 +1,15 @@
 "use strict";
 
-import "reflect-metadata";
 import { expect, assert } from "chai";
 import * as chai from "chai";
 import * as sinon from "sinon";
+chai.use(require("sinon-chai"));
 
-import { GitHubWebhook } from "./github-webhook";
+import GitHubWebhook from "./github-webhook";
 import { AppEvent } from "../app-events";
 import EventBus from "../event-bus";
 import { emit } from "cluster";
 
-chai.use(require("sinon-chai"));
 
 const sandbox = sinon.createSandbox();
 

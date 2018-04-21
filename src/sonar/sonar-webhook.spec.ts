@@ -1,29 +1,49 @@
 "use strict";
 
-import { expect } from 'chai';
+import { expect, assert } from "chai";
+import * as chai from "chai";
+import * as sinon from "sinon";
+chai.use(require("sinon-chai"));
 
 import { Response, Request, NextFunction } from "express";
 import { AppEvent } from "../app-events";
 import { SonarWebhookEvent } from "./model/sonar-wehook-event";
-import { GitHubCommitStatusContainer } from "../github/model/commit-status";
+import { GitHubGhCommitStatusContainer } from "../github/model/gh-commit-status";
 
-import { SonarWebhook } from "./sonar-webhook";
+import SonarWebhook from "./sonar-webhook";
 import { EventEmitter } from "events";
 
 
 describe("Sonar Webhook", () => {
-	let emitter: EventEmitter;
-	let unit: SonarWebhook;
+	let uut: SonarWebhook;
 	let testData: any;
+	let eventBusMock: any;
+	let emitMock: any;
 
 	beforeEach(function () {
-		emitter = new EventEmitter();
-		unit = new SonarWebhook(emitter);
+		emitMock = sinon.stub();
+
+		const configurationMock: any = {
+			get: sinon.stub().returns({
+				context: "test"
+			})
+		};
+
+		eventBusMock = {
+			get: sinon.stub().returns(emitMock),
+			on: sinon.stub()
+		};
+
 		testData = Object.assign({}, require("../../test/base-sonar-webhook.json"));
+
+		uut = new SonarWebhook(
+			eventBusMock,
+			configurationMock
+		);
 	});
 
 
-	it("should send commit status event on relevant hook", (done) => {
+	it("should send commit status event on relevant hook", () => {
 
 		testData.properties = {
 			"sonar.analysis.ghPrGate": "respond",
@@ -32,43 +52,18 @@ describe("Sonar Webhook", () => {
 			"sonar.analysis.repository": "testOrg/testRepo"
 		};
 
-		emitter.on(AppEvent.sendStatus, function (data: GitHubCommitStatusContainer) {
-			expect(data.commitId).to.equal("12345");
-			expect(data.repository).to.equal("testOrg/testRepo");
-			expect(data.payload).to.not.be.undefined;
-			expect(data.payload.context).to.equal("swingletree");
-			done();
-		});
+		this.uut.webhook({ body: testData });
 
-		emitter.on(AppEvent.webhookEventIgnored, function () {
-			done(new Error("webhook event was ignored."))
-		});
-
-		unit.webhook({
-			body: testData
-		});
+		sinon.assert.calledWith(emitMock, AppEvent.sendStatus, sinon.match({
+			commitId: "12345",
+			repository: "testOrg/testRepo",
+			context: "test"
+		}));
 	});
 
 	it("should send ignored event on missing properties", (done) => {
-		emitter.on(AppEvent.webhookEventIgnored, function (data) {
-			expect(data).to.equal(SonarWebhook.IGNORE_ID);
-			done();
-		});
-
-		unit.webhook({
-			body: testData
-		});
-	});
-
-	it("should not send ignored event on empty properties", (done) => {
-		emitter.on(AppEvent.webhookEventIgnored, function (data) {
-			expect(data).to.equal(SonarWebhook.IGNORE_ID);
-			done();
-		});
-
-		unit.webhook({
-			body: testData
-		});
+		this.uut.webhook({ body: testData });
+		sinon.assert.calledWith(emitMock, AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
 	});
 
 	it("should not send ignored event on partially set properties", (done) => {
@@ -77,13 +72,7 @@ describe("Sonar Webhook", () => {
 			"sonar.analysis.commitId": "12345"
 		};
 
-		emitter.on(AppEvent.webhookEventIgnored, function (data) {
-			expect(data).to.equal(SonarWebhook.IGNORE_ID);
-			done();
-		});
-
-		unit.webhook({
-			body: testData
-		});
+		this.uut.webhook({ body: testData });
+		sinon.assert.calledWith(emitMock, AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
 	});
 });

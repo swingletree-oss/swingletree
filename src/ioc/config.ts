@@ -9,7 +9,7 @@ import GithubClientService from "../github/client/github-client";
 import EventBus from "../event-bus";
 import SwingletreeServer from "../swingletree";
 import SonarWebhook from "../sonar/sonar-webhook";
-import GithubWebhook, { GitHubWebhook } from "../github/github-webhook";
+import GithubWebhook from "../github/github-webhook";
 
 const container = new Container();
 
@@ -32,7 +32,7 @@ container
 	.bind<SonarWebhook>(Identifiers.SonarWebhook)
 	.to(SonarWebhook);
 container
-	.bind<GitHubWebhook>(Identifiers.GithubWebhook)
+	.bind<GithubWebhook>(Identifiers.GithubWebhook)
 	.to(GithubWebhook);
 
 export default container;

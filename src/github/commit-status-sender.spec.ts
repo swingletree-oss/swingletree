@@ -1,6 +1,5 @@
 "use strict";
 
-import "reflect-metadata";
 import { GitHubGhCommitStatus, GitHubGhCommitStatusContainer } from "./model/gh-commit-status";
 import CommitStatusSender from "./commit-status-sender";
 import { EventEmitter } from "events";
