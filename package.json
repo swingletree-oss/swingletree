@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && nodemon dist/server.js",
+    "start": "npm run build && nodemon dist/main.js",
     "build": "npm run build-ts && npm run tslint",
     "test": "ts-mocha src/**/*.spec.ts",
     "build-ts": "tsc",
