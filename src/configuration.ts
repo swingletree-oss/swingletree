@@ -1,14 +1,16 @@
 import * as yaml from "js-yaml";
+import { injectable } from "inversify";
 
-export class ConfigurationLoader {
-	private static readonly CONFIG_FILE = "swingletree.config.yaml";
-	private static config: Configuration;
+@injectable()
+class ConfigurationService {
+	private readonly CONFIG_FILE = "swingletree.config.yaml";
+	private config: Configuration;
 
-	public static load(): Configuration {
-		if (!this.config) {
-			this.config = yaml.load(this.CONFIG_FILE) as Configuration;
-		}
+	constructor() {
+		this.config = yaml.load(this.CONFIG_FILE) as Configuration;
+	}
 
+	public get(): Configuration {
 		return this.config;
 	}
 }
@@ -22,3 +24,5 @@ class GithubConfig {
 	public keyFile: string;
 	public baseUrl: string;
 }
+
+export default ConfigurationService;

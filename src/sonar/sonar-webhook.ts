@@ -11,7 +11,7 @@ const unirest = require("unirest");
 
 /** Provides a Webhook for Sonar
  */
-export class SonarWebhook {
+class SonarWebhook {
 	public static readonly IGNORE_ID = "sonar";
 
 	private eventEmitter: EventEmitter;
@@ -57,3 +57,5 @@ export class SonarWebhook {
 
 	}
 }
+
+export default SonarWebhook;
