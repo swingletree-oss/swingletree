@@ -13,8 +13,11 @@ import { GitHubGhCommitStatusContainer } from "../github/model/gh-commit-status"
 import SonarWebhook from "./sonar-webhook";
 import { EventEmitter } from "events";
 
+import EventBus from "../event-bus";
+import ConfigurationService from "../configuration";
 
 describe("Sonar Webhook", () => {
+
 	let uut: SonarWebhook;
 	let testData: any;
 	let eventBusMock: any;
@@ -30,15 +33,15 @@ describe("Sonar Webhook", () => {
 		};
 
 		eventBusMock = {
-			get: sinon.stub().returns(emitMock),
+			get: sinon.stub().returns({ emit: emitMock }),
 			on: sinon.stub()
 		};
 
 		testData = Object.assign({}, require("../../test/base-sonar-webhook.json"));
 
 		uut = new SonarWebhook(
-			eventBusMock,
-			configurationMock
+			eventBusMock as EventBus,
+			configurationMock as ConfigurationService
 		);
 	});
 
@@ -52,7 +55,7 @@ describe("Sonar Webhook", () => {
 			"sonar.analysis.repository": "testOrg/testRepo"
 		};
 
-		this.uut.webhook({ body: testData });
+		uut.webhook({ body: testData } as Request, undefined);
 
 		sinon.assert.calledWith(emitMock, AppEvent.sendStatus, sinon.match({
 			commitId: "12345",
@@ -61,18 +64,18 @@ describe("Sonar Webhook", () => {
 		}));
 	});
 
-	it("should send ignored event on missing properties", (done) => {
-		this.uut.webhook({ body: testData });
+	it("should send ignored event on missing properties", () => {
+		uut.webhook({ body: testData } as Request, undefined);
 		sinon.assert.calledWith(emitMock, AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
 	});
 
-	it("should not send ignored event on partially set properties", (done) => {
+	it("should not send ignored event on partially set properties", () => {
 		testData.properties = {
 			"sonar.analysis.branch": "testBranch",
 			"sonar.analysis.commitId": "12345"
 		};
 
-		this.uut.webhook({ body: testData });
+		uut.webhook({ body: testData } as Request, undefined);
 		sinon.assert.calledWith(emitMock, AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
 	});
 });
