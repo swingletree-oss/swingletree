@@ -2,8 +2,8 @@ import * as fs from "fs";
 import * as jwt from "jsonwebtoken";
 
 import Identifiers from "../../ioc/identifiers";
-import { inject } from "inversify/dts/annotation/inject";
-import { injectable } from "inversify/dts/annotation/injectable";
+import { inject } from "inversify";
+import { injectable } from "inversify";
 
 import ConfigurationService from "../../configuration";
 

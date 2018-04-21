@@ -9,8 +9,8 @@ import { Response, Request } from "express";
 
 import { LOGGER } from "./logger";
 import ConfigurationService from "./configuration";
-import { injectable } from "inversify/dts/annotation/injectable";
-import { inject } from "inversify/dts/annotation/inject";
+import { injectable } from "inversify";
+import { inject } from "inversify";
 import Identifiers from "./ioc/identifiers";
 import EventBus from "./event-bus";
 
