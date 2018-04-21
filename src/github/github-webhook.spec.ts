@@ -25,7 +25,7 @@ describe("GitHub Webhook", () => {
 		emitMock = sinon.stub();
 
 		eventBusMock = {
-			get: sinon.stub().returns(emitMock),
+			get: sinon.stub().returns({ emit: emitMock }),
 			on: sinon.stub()
 		};
 
@@ -43,10 +43,10 @@ describe("GitHub Webhook", () => {
 	});
 
 
-	it("should send analyzePR event on open PRs", (done) => {
+	it("should send analyzePR event on open PRs", () => {
 		pullRequestData.header = sandbox.stub().withArgs("X-GitHub-Event").returns("pull_request");
 
-		this.uut.webhook(pullRequestData);
+		uut.webhook(pullRequestData, undefined);
 
 		sinon.assert.calledWith(emitMock, AppEvent.analyzePR);
 		sinon.assert.calledWith(emitMock, AppEvent.sendStatus, sinon.match({
@@ -56,46 +56,46 @@ describe("GitHub Webhook", () => {
 
 	});
 
-	it("should send ignore event on closed PRs", (done) => {
+	it("should send ignore event on closed PRs", () => {
 		pullRequestData.header = sandbox.stub().withArgs("X-GitHub-Event").returns("pull_request");
 		pullRequestData.header = sandbox.stub().withArgs("X-GitHub-Event").returns("pull_request");
 		pullRequestData.body.action = "closed";
 
-		this.uut.webhook(pullRequestData);
+		uut.webhook(pullRequestData, undefined);
 
 		sinon.assert.calledWith(emitMock, AppEvent.webhookEventIgnored, GitHubWebhook.IGNORE_ID);
 	});
 
-	it("should send delete event on 'deleted' webhook events with ref type 'branch'", (done) => {
+	it("should send delete event on 'deleted' webhook events with ref type 'branch'", () => {
 		branchDeleteData.header = sandbox.stub().withArgs("X-GitHub-Event").returns("delete");
 		branchDeleteData.body.ref_type = "branch";
 
-		this.uut.webhook(pullRequestData);
+		uut.webhook(pullRequestData, undefined);
 
 		sinon.assert.calledWith(emitMock, AppEvent.webhookEventIgnored, GitHubWebhook.IGNORE_ID);
 	});
 
-	it("should send ignore event on 'deleted' webhook events with ref type 'tag'", (done) => {
+	it("should send ignore event on 'deleted' webhook events with ref type 'tag'", () => {
 		branchDeleteData.header = sandbox.stub().withArgs("X-GitHub-Event").returns("delete");
 		branchDeleteData.body.ref_type = "tag";
 
-		this.uut.webhook(pullRequestData);
+		uut.webhook(pullRequestData, undefined);
 
 		sinon.assert.calledWith(emitMock, AppEvent.webhookEventIgnored, GitHubWebhook.IGNORE_ID);
 	});
 
-	it("should send ignore event on irrelevant event type header values", (done) => {
+	it("should send ignore event on irrelevant event type header values", () => {
 		pullRequestData.header = sandbox.stub().withArgs("X-GitHub-Event").returns("some_other_type");
 
-		this.uut.webhook(pullRequestData);
+		uut.webhook(pullRequestData, undefined);
 
 		sinon.assert.calledWith(emitMock, AppEvent.webhookEventIgnored, GitHubWebhook.IGNORE_ID);
 	});
 
-	it("should send ignore event on missing event type header", (done) => {
+	it("should send ignore event on missing event type header", () => {
 		pullRequestData.header = sandbox.stub().withArgs("X-GitHub-Event").returns(undefined);
 
-		this.uut.webhook(pullRequestData);
+		uut.webhook(pullRequestData, undefined);
 
 		sinon.assert.calledWith(emitMock, AppEvent.webhookEventIgnored, GitHubWebhook.IGNORE_ID);
 	});
