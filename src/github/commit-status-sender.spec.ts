@@ -1,6 +1,6 @@
 "use strict";
 
-import { AppEvent } from "../app-events";
+import "reflect-metadata";
 import { GitHubGhCommitStatus, GitHubGhCommitStatusContainer } from "./model/gh-commit-status";
 import CommitStatusSender from "./commit-status-sender";
 import { EventEmitter } from "events";
@@ -12,31 +12,51 @@ import * as sinon from "sinon";
 chai.use(require("sinon-chai"));
 
 import GithubClientService from "./client/github-client";
+import { AppEvent } from "../app-events";
+import EventBus from "../event-bus";
+import { emit } from "cluster";
 
 const unirest = require("unirest");
 const sandbox = sinon.sandbox.create();
 
 describe("CommitStatusSender", () => {
-	let unit: CommitStatusSender;
-	let emitter: EventEmitter;
+	let uut: CommitStatusSender;
+
 	let mockStatus: GitHubGhCommitStatusContainer;
-	let postStub: sinon.SinonSpy;
-	let ghTokenFactoryMock: any;
+
+	let eventBusMock: any;
+	let configurationMock: any;
+	let githubClientMock: any;
+	let emitMock: any;
 
 	beforeEach(function () {
-		emitter = new EventEmitter();
-		ghTokenFactoryMock = {
-			createJWT: sinon.stub().returns("testToken")
+		emitMock = sinon.stub();
+
+		eventBusMock = {
+			get: sinon.stub().returns(emitMock),
+			on: sinon.stub()
 		};
 
-		unit = new CommitStatusSender(emitter, "testApi", ghTokenFactoryMock);
-		mockStatus = new GitHubGhCommitStatusContainer("testRepository", "testCommitId");
+		configurationMock = {
+			get: sinon.stub().returns({
+				context: "test"
+			})
+		};
 
-		postStub = sandbox.stub(unirest, "post").returns({
-			headers: sinon.stub().returnsThis,
-			end: sinon.stub().yieldsOn(unit),
-			send: sinon.stub().returnsThis
-		});
+		githubClientMock = {
+			getClient: sinon.stub().returns({
+				repos: {
+					createStatus: sinon.stub()
+				}
+			})
+		};
+
+		uut = new CommitStatusSender(
+			eventBusMock,
+			configurationMock,
+			githubClientMock
+		);
+		mockStatus = new GitHubGhCommitStatusContainer("testRepository", "testCommitId");
 	});
 
 	afterEach(function () {
@@ -44,25 +64,8 @@ describe("CommitStatusSender", () => {
 	});
 
 	it("should send commit status on matching event", (done) => {
-
-		emitter.on(AppEvent.statusSent, function (status, endpoint) {
-			expect(endpoint).to.equal("testApi");
-			expect(status).to.not.be.undefined;
-			done();
-		});
-
-
-		emitter.emit(AppEvent.sendStatus, mockStatus);
+		uut.sendStatus(mockStatus);
+		sinon.assert.calledWith(emitMock, AppEvent.statusSent);
 	});
 
-	it("should send status to GitHub API endpoint", (done) => {
-
-		emitter.on(AppEvent.statusSent, function (status, endpoint) {
-			sinon.assert.calledWith(postStub, "testApi/repos/testRepository/statuses/testCommitId");
-			done();
-		});
-
-
-		emitter.emit(AppEvent.sendStatus, mockStatus);
-	});
 });

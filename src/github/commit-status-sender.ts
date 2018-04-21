@@ -9,32 +9,31 @@ import { EventEmitter } from "events";
 import { injectable, inject } from "inversify";
 import Identifiers from "../ioc/identifiers";
 import ConfigurationService from "../configuration";
+import EventBus from "../event-bus";
 
 
 /** Sends Commit Status Requests to GitHub
  */
 @injectable()
 class CommitStatusSender {
-	private eventEmitter: EventEmitter;
-	private apiEndpoint: string;
-	private ghClient: any;
 
 	private configurationService: ConfigurationService;
 	private githubClientService: GithubClientService;
+	private eventBus: EventBus;
 
 	constructor(
-		eventEmitter: EventEmitter,
+		@inject(Identifiers.EventBus) eventBus: EventBus,
 		@inject(Identifiers.ConfigurationService) configurationService: ConfigurationService,
 		@inject(Identifiers.GithubClientService) githubClientService: GithubClientService
 	) {
-		this.eventEmitter = eventEmitter;
+		this.eventBus = eventBus;
 		this.configurationService = configurationService;
-		this.eventEmitter.on(AppEvent.sendStatus, this.sendStatus);
+		this.eventBus.get().on(AppEvent.sendStatus, this.sendStatus);
 
 		this.githubClientService = githubClientService;
 	}
 
-	private sendStatus = (status: GitHubGhCommitStatusContainer) => {
+	public sendStatus = (status: GitHubGhCommitStatusContainer) => {
 
 		const coordinates = status.repository.split("/");
 		const ghClient = this.githubClientService.getClient();
@@ -46,10 +45,10 @@ class CommitStatusSender {
 			state: status.payload.state,
 			target_url: status.payload.target_url,
 			description: status.payload.description,
-			context: "swingletree"
+			context: this.configurationService.get().context
 		})
 		.then(() => {
-			this.eventEmitter.emit(AppEvent.statusSent, status, this.apiEndpoint);
+			this.eventBus.get().emit(AppEvent.statusSent, status);
 		})
 		.catch((error: any) => {
 			LOGGER.error("could not persist status for %s", status.repository);

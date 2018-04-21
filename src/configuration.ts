@@ -17,12 +17,20 @@ class ConfigurationService {
 
 class Configuration {
 	public github: GithubConfig;
+	public sonar: SonarConfig;
+
+	public context: string;
 }
 
 class GithubConfig {
 	public appId: number;
 	public keyFile: string;
 	public baseUrl: string;
+}
+
+class SonarConfig {
+	public token: string;
+	public base: string;
 }
 
 export default ConfigurationService;
