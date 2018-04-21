@@ -2,7 +2,7 @@
 
 import { AppEvent } from "../app-events";
 import { GitHubGhCommitStatus, GitHubGhCommitStatusContainer } from "./model/gh-commit-status";
-import { CommitStatusSender } from "./commit-status-sender";
+import CommitStatusSender from "./commit-status-sender";
 import { EventEmitter } from "events";
 
 import { expect, assert } from "chai";
@@ -10,6 +10,8 @@ import * as chai from "chai";
 import * as sinon from "sinon";
 
 chai.use(require("sinon-chai"));
+
+import GithubClientService from "./client/github-client";
 
 const unirest = require("unirest");
 const sandbox = sinon.sandbox.create();
@@ -19,12 +21,16 @@ describe("CommitStatusSender", () => {
 	let emitter: EventEmitter;
 	let mockStatus: GitHubGhCommitStatusContainer;
 	let postStub: sinon.SinonSpy;
+	let ghTokenFactoryMock: any;
 
 	beforeEach(function () {
 		emitter = new EventEmitter();
-		unit = new CommitStatusSender(emitter, "testApi");
-		mockStatus = new GitHubGhCommitStatusContainer("testRepository", "testCommitId")
+		ghTokenFactoryMock = {
+			createJWT: sinon.stub().returns("testToken")
+		};
 
+		unit = new CommitStatusSender(emitter, "testApi", ghTokenFactoryMock);
+		mockStatus = new GitHubGhCommitStatusContainer("testRepository", "testCommitId");
 
 		postStub = sandbox.stub(unirest, "post").returns({
 			headers: sinon.stub().returnsThis,

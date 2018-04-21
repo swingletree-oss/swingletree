@@ -4,40 +4,42 @@ import { LOGGER } from "../logger";
 
 import { AppEvent } from "../app-events";
 import { GitHubGhCommitStatus, GitHubGhCommitStatusContainer } from "./model/gh-commit-status";
-import { GithubTokenFactory } from "./token/github-tokens";
+import GithubClientService from "./client/github-client";
 import { EventEmitter } from "events";
+import { injectable, inject } from "inversify";
+import Identifiers from "../ioc/identifiers";
+import ConfigurationService from "../configuration";
 
-const Octokit = require("@octokit/rest");
 
 /** Sends Commit Status Requests to GitHub
  */
-export class CommitStatusSender {
+@injectable()
+class CommitStatusSender {
 	private eventEmitter: EventEmitter;
 	private apiEndpoint: string;
 	private ghClient: any;
-	private tokenFactory: GithubTokenFactory;
 
-	constructor(eventEmitter: EventEmitter, apiEndpoint: string, tokenFactory: GithubTokenFactory) {
+	private configurationService: ConfigurationService;
+	private githubClientService: GithubClientService;
+
+	constructor(
+		eventEmitter: EventEmitter,
+		@inject(Identifiers.ConfigurationService) configurationService: ConfigurationService,
+		@inject(Identifiers.GithubClientService) githubClientService: GithubClientService
+	) {
 		this.eventEmitter = eventEmitter;
-		this.apiEndpoint = apiEndpoint;
+		this.configurationService = configurationService;
 		this.eventEmitter.on(AppEvent.sendStatus, this.sendStatus);
-		this.ghClient = Octokit({
-			baseUrl: apiEndpoint
-		});
 
-		this.tokenFactory = tokenFactory;
+		this.githubClientService = githubClientService;
 	}
 
 	private sendStatus = (status: GitHubGhCommitStatusContainer) => {
 
 		const coordinates = status.repository.split("/");
+		const ghClient = this.githubClientService.getClient();
 
-		this.ghClient.authenticate({
-			type: "integration",
-			token: this.tokenFactory.createJWT()
-		});
-
-		this.ghClient.repos.createStatus({
+		ghClient.repos.createStatus({
 			owner: coordinates[0],
 			repo: coordinates[1],
 			sha: status.commitId,
@@ -55,3 +57,5 @@ export class CommitStatusSender {
 		});
 	}
 }
+
+export default CommitStatusSender;
