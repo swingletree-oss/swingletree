@@ -3,5 +3,7 @@ import SwingletreeServer from "./swingletree";
 import container from "./ioc/config";
 import Identifiers from "./ioc/identifiers";
 
-// Composition root
-let swingletree = container.get<SwingletreeServer>(Identifiers.SwingletreeServer);
+const express = require("express");
+
+const swingletree = container.get<SwingletreeServer>(Identifiers.SwingletreeServer);
+swingletree.run(express());

@@ -5,9 +5,9 @@ import { Response, Request, NextFunction } from "express";
 import { AppEvent } from "../app-events";
 import { QualityGateStatus } from "./model/sonar-quality-gate";
 import { SonarWebhookEvent } from "./model/sonar-wehook-event";
-import { injectable } from "inversify/dts/annotation/injectable";
+import { injectable } from "inversify";
 import Identifiers from "../ioc/identifiers";
-import { inject } from "inversify/dts/annotation/inject";
+import { inject } from "inversify";
 import EventBus from "../event-bus";
 import ConfigurationService from "../configuration";
 
