@@ -33,27 +33,20 @@ class CommitStatusSender {
 		this.githubClientService = githubClientService;
 	}
 
-	public sendStatus = (status: GitHubGhCommitStatusContainer) => {
-
-		const coordinates = status.repository.split("/");
-		const ghClient = this.githubClientService.getClient();
-
-		ghClient.repos.createStatus({
-			owner: coordinates[0],
-			repo: coordinates[1],
-			sha: status.commitId,
-			state: status.payload.state,
-			target_url: status.payload.target_url,
-			description: status.payload.description,
-			context: this.configurationService.get().context
-		})
-		.then(() => {
-			this.eventBus.get().emit(AppEvent.statusSent, status);
-		})
-		.catch((error: any) => {
-			LOGGER.error("could not persist status for %s", status.repository);
-			LOGGER.error(error);
-		});
+	public sendStatus(status: GitHubGhCommitStatusContainer): Promise<void> {
+		return new Promise<void>((resolve, reject) => {
+			this.githubClientService.createCommitStatus(status)
+				.then(() => {
+					this.eventBus.get().emit(AppEvent.statusSent, status);
+					resolve();
+				})
+				.catch((error: any) => {
+					LOGGER.error("could not persist status for %s", status.repository);
+					LOGGER.error(error);
+					reject();
+				});
+			}
+		);
 	}
 }
 

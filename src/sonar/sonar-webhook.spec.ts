@@ -33,8 +33,7 @@ describe("Sonar Webhook", () => {
 		};
 
 		eventBusMock = {
-			get: sinon.stub().returns({ emit: emitMock }),
-			on: sinon.stub()
+			get: sinon.stub().returns({ emit: emitMock, on: sinon.stub() })
 		};
 
 		testData = Object.assign({}, require("../../test/base-sonar-webhook.json"));

@@ -1,6 +1,6 @@
 "use strict";
 
-import { GitHubGhCommitStatus, GitHubGhCommitStatusContainer } from "./model/gh-commit-status";
+import { GitHubGhCommitStatus, GitHubGhCommitStatusContainer, CommitStatusEnum } from "./model/gh-commit-status";
 import CommitStatusSender from "./commit-status-sender";
 import { EventEmitter } from "events";
 
@@ -9,6 +9,7 @@ import * as chai from "chai";
 import * as sinon from "sinon";
 
 chai.use(require("sinon-chai"));
+chai.use(require("chai-as-promised"));
 
 import GithubClientService from "./client/github-client";
 import { AppEvent } from "../app-events";
@@ -32,8 +33,7 @@ describe("CommitStatusSender", () => {
 		emitMock = sinon.stub();
 
 		eventBusMock = {
-			get: sinon.stub().returns(emitMock),
-			on: sinon.stub()
+			get: sinon.stub().returns({ emit: emitMock, on: sinon.stub() })
 		};
 
 		configurationMock = {
@@ -43,11 +43,7 @@ describe("CommitStatusSender", () => {
 		};
 
 		githubClientMock = {
-			getClient: sinon.stub().returns({
-				repos: {
-					createStatus: sinon.stub()
-				}
-			})
+			createCommitStatus: sinon.stub()
 		};
 
 		uut = new CommitStatusSender(
@@ -63,8 +59,16 @@ describe("CommitStatusSender", () => {
 	});
 
 	it("should send commit status on matching event", (done) => {
-		uut.sendStatus(mockStatus);
-		sinon.assert.calledWith(emitMock, AppEvent.statusSent);
+		mockStatus.payload = new GitHubGhCommitStatus(CommitStatusEnum.pending);
+		githubClientMock.createCommitStatus.resolves();
+		uut.sendStatus(mockStatus)
+			.then(() => {
+				sinon.assert.calledWith(emitMock, AppEvent.statusSent);
+				done();
+			})
+			.catch(() => {
+				throw new Error();
+			});
 	});
 
 });
