@@ -25,8 +25,7 @@ describe("GitHub Webhook", () => {
 		emitMock = sinon.stub();
 
 		eventBusMock = {
-			get: sinon.stub().returns({ emit: emitMock }),
-			on: sinon.stub()
+			get: sinon.stub().returns({ emit: emitMock, on: sinon.stub() })
 		};
 
 		uut = new GitHubWebhook(eventBusMock);
@@ -49,11 +48,16 @@ describe("GitHub Webhook", () => {
 		uut.webhook(pullRequestData, undefined);
 
 		sinon.assert.calledWith(emitMock, AppEvent.analyzePR);
-		sinon.assert.calledWith(emitMock, AppEvent.sendStatus, sinon.match({
-			id: 1337,
-			merge: false
-		}));
+	});
 
+	it("should send sendStatus pending event on open PRs", () => {
+		pullRequestData.header = sandbox.stub().withArgs("X-GitHub-Event").returns("pull_request");
+
+		uut.webhook(pullRequestData, undefined);
+
+		sinon.assert.calledWith(emitMock, AppEvent.sendStatus, sinon.match({
+			state: "pending"
+		}));
 	});
 
 	it("should send ignore event on closed PRs", () => {
