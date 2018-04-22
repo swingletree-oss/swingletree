@@ -10,4 +10,6 @@ Swingletree gives you the possibility to automatically block pull requests on fa
 
 ## Integration
 
+Swingletree integrates into SonarQube and GitHub using Webhooks. No need to install plugins on your SonarQube instance.
+
 ## Installation
