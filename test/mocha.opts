@@ -1,1 +1,2 @@
 --require reflect-metadata
+--require ./test/mocha.env.js
