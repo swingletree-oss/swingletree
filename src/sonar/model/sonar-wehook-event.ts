@@ -35,6 +35,5 @@ class Properties {
 		this.branch = properties["sonar.analysis.branch"];
 		this.commitId = properties["sonar.analysis.commitId"];
 		this.repository = properties["sonar.analysis.repository"];
-		this.appAction = properties["sonar.analysis.ghPrGate"];
 	}
 }

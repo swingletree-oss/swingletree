@@ -7,7 +7,6 @@ import { CommitStatusEnum, GitHubGhCommitStatus } from "./model/gh-commit-status
 import { AppEvent } from "../app-events";
 
 import EventBus from "../event-bus";
-import Identifiers from "../ioc/identifiers";
 import { injectable } from "inversify";
 import { inject } from "inversify";
 
@@ -20,7 +19,7 @@ class GitHubWebhook {
 	private eventBus: EventBus;
 
 	constructor(
-		@inject(Identifiers.EventBus) eventBus: EventBus
+		@inject(EventBus) eventBus: EventBus
 	) {
 		this.eventBus = eventBus;
 	}
@@ -50,14 +49,14 @@ class GitHubWebhook {
 
 		if (webhookEvent !== undefined) {
 			if (this.isAnalyzeTrigger(webhookEvent)) {
-				this.eventBus.get().emit(AppEvent.analyzePR, webhookEvent);
-				this.eventBus.get().emit(AppEvent.sendStatus, new GitHubGhCommitStatus(CommitStatusEnum.pending));
+				this.eventBus.emit(AppEvent.analyzePR, webhookEvent);
+				this.eventBus.emit(AppEvent.sendStatus, new GitHubGhCommitStatus(CommitStatusEnum.pending));
 				eventTriggered = true;
 			}
 		}
 
 		if (!eventTriggered) {
-			this.eventBus.get().emit(AppEvent.webhookEventIgnored, GitHubWebhook.IGNORE_ID);
+			this.eventBus.emit(AppEvent.webhookEventIgnored, GitHubWebhook.IGNORE_ID);
 		}
 
 		res.sendStatus(204);

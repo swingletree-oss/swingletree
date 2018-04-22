@@ -27,13 +27,12 @@ describe("CommitStatusSender", () => {
 	let eventBusMock: any;
 	let configurationMock: any;
 	let githubClientMock: any;
-	let emitMock: any;
 
 	beforeEach(function () {
-		emitMock = sinon.stub();
 
 		eventBusMock = {
-			get: sinon.stub().returns({ emit: emitMock, on: sinon.stub() })
+			emit: sinon.stub(),
+			register: sinon.stub()
 		};
 
 		configurationMock = {
@@ -63,7 +62,7 @@ describe("CommitStatusSender", () => {
 		githubClientMock.createCommitStatus.resolves();
 		uut.sendStatus(mockStatus)
 			.then(() => {
-				sinon.assert.calledWith(emitMock, AppEvent.statusSent);
+				sinon.assert.calledWith(eventBusMock.emit, AppEvent.statusSent);
 				done();
 			})
 			.catch(() => {

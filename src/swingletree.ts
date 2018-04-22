@@ -11,7 +11,6 @@ import { LOGGER } from "./logger";
 import ConfigurationService from "./configuration";
 import { injectable } from "inversify";
 import { inject } from "inversify";
-import Identifiers from "./ioc/identifiers";
 import EventBus from "./event-bus";
 
 @injectable()
@@ -21,9 +20,9 @@ class SwingletreeServer {
 	private sonarWebhook: SonarWebhook;
 
 	constructor(
-		@inject(Identifiers.GithubWebhook) githubWebhook: GithubWebhook,
-		@inject(Identifiers.SonarWebhook) sonarWebhook: SonarWebhook,
-		@inject(Identifiers.ConfigurationService) configurationService: ConfigurationService
+		@inject(GithubWebhook) githubWebhook: GithubWebhook,
+		@inject(SonarWebhook) sonarWebhook: SonarWebhook,
+		@inject(ConfigurationService) configurationService: ConfigurationService
 	) {
 		this.githubWebhook = githubWebhook;
 		this.sonarWebhook = sonarWebhook;

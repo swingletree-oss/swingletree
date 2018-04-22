@@ -3,11 +3,13 @@ import { injectable } from "inversify";
 
 @injectable()
 class ConfigurationService {
-	private readonly CONFIG_FILE = "swingletree.config.yaml";
+	private readonly CONFIG_FILE = "./swingletree.conf.yaml";
 	private config: Configuration;
 
 	constructor() {
-		this.config = yaml.load(this.CONFIG_FILE) as Configuration;
+		this.config = yaml.safeLoad(
+			require("fs").readFileSync(this.CONFIG_FILE)
+		) as Configuration;
 	}
 
 	public get(): Configuration {
@@ -25,7 +27,7 @@ class Configuration {
 class GithubConfig {
 	public appId: number;
 	public keyFile: string;
-	public baseUrl: string;
+	public base: string;
 }
 
 class SonarConfig {

@@ -7,7 +7,6 @@ import { GitHubGhCommitStatus, GitHubGhCommitStatusContainer } from "./model/gh-
 import GithubClientService from "./client/github-client";
 import { EventEmitter } from "events";
 import { injectable, inject } from "inversify";
-import Identifiers from "../ioc/identifiers";
 import ConfigurationService from "../configuration";
 import EventBus from "../event-bus";
 
@@ -22,22 +21,25 @@ class CommitStatusSender {
 	private eventBus: EventBus;
 
 	constructor(
-		@inject(Identifiers.EventBus) eventBus: EventBus,
-		@inject(Identifiers.ConfigurationService) configurationService: ConfigurationService,
-		@inject(Identifiers.GithubClientService) githubClientService: GithubClientService
+		@inject(EventBus) eventBus: EventBus,
+		@inject(ConfigurationService) configurationService: ConfigurationService,
+		@inject(GithubClientService) githubClientService: GithubClientService
 	) {
 		this.eventBus = eventBus;
 		this.configurationService = configurationService;
-		this.eventBus.get().on(AppEvent.sendStatus, this.sendStatus);
+
+		this.eventBus.register(AppEvent.sendStatus, this.sendStatus, this);
 
 		this.githubClientService = githubClientService;
 	}
 
 	public sendStatus(status: GitHubGhCommitStatusContainer): Promise<void> {
+
 		return new Promise<void>((resolve, reject) => {
 			this.githubClientService.createCommitStatus(status)
 				.then(() => {
-					this.eventBus.get().emit(AppEvent.statusSent, status);
+					this.eventBus.emit(AppEvent.statusSent, status);
+					LOGGER.info("commit status update was sent to github");
 					resolve();
 				})
 				.catch((error: any) => {
