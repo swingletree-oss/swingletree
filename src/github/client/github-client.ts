@@ -1,7 +1,6 @@
 import * as fs from "fs";
 import * as jwt from "jsonwebtoken";
 
-import Identifiers from "../../ioc/identifiers";
 import { inject } from "inversify";
 import { injectable } from "inversify";
 
@@ -16,14 +15,15 @@ class GithubClientService {
 	private key: string;
 
 	constructor(
-		@inject(Identifiers.ConfigurationService) configurationService: ConfigurationService
+		@inject(ConfigurationService) configurationService: ConfigurationService
 	) {
 		this.key = fs.readFileSync(configurationService.get().github.keyFile).toString();
+		this.configurationService = configurationService;
 	}
 
-	private getClient(): any {
+	private async getClient(): Promise<any> {
 		const ghClient = Octokit({
-			baseUrl: this.configurationService.get().github.baseUrl
+			baseUrl: this.configurationService.get().github.base
 		});
 
 		ghClient.authenticate({
@@ -31,21 +31,41 @@ class GithubClientService {
 			token: this.createJWT()
 		});
 
-		return ghClient;
+		return new Promise<any>((resolve, reject) => {
+			ghClient.apps.createInstallationToken({
+				installation_id: this.configurationService.get().github.appId
+			})
+			.then((response: any) => {
+				ghClient.authenticate({
+					type: "token",
+					token: response.token
+				});
+
+				resolve(ghClient);
+			})
+			.catch((err: any) => {
+				reject(err);
+			});
+		});
 	}
 
 	public createCommitStatus(status: GitHubGhCommitStatusContainer): Promise<void> {
-		const coordinates = status.repository.split("/");
-		const client = this.getClient();
 
-		return client.repos.createStatus({
-			owner: coordinates[0],
-			repo: coordinates[1],
-			sha: status.commitId,
-			state: status.payload.state,
-			target_url: status.payload.target_url,
-			description: status.payload.description,
-			context: this.configurationService.get().context
+		return new Promise<void>(async (resolve, reject) => {
+			const coordinates = status.repository.split("/");
+			const client = await this.getClient();
+
+			client.repos.createStatus({
+				owner: coordinates[0],
+				repo: coordinates[1],
+				sha: status.commitId,
+				state: status.payload.state,
+				target_url: status.payload.target_url,
+				description: status.payload.description,
+				context: this.configurationService.get().context
+			})
+			.then(resolve)
+			.catch(reject);
 		});
 	}
 
@@ -54,7 +74,7 @@ class GithubClientService {
 			iss: this.configurationService.get().github.appId
 		};
 
-		const token = jwt.sign(payload, this.key, { expiresIn: "1m", algorithm: "RS256"});
+		const token = jwt.sign(payload, this.key, { expiresIn: "3m", algorithm: "RS256"});
 		return token;
 	}
 }
