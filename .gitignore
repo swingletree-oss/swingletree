@@ -60,3 +60,4 @@ typings/
 /.settings
 /dist
 /.project
+/gh-app.pem

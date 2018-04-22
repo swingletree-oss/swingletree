@@ -59,6 +59,8 @@ class GitHubWebhook {
 		if (!eventTriggered) {
 			this.eventBus.get().emit(AppEvent.webhookEventIgnored, GitHubWebhook.IGNORE_ID);
 		}
+
+		res.sendStatus(204);
 	}
 }
 
