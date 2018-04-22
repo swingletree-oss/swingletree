@@ -65,6 +65,7 @@ class SonarWebhook {
 			this.eventBus.get().emit(AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
 		}
 
+		res.sendStatus(204);
 	}
 }
 
