@@ -5,6 +5,9 @@
         "name": "Example"
     },
     "properties": {
+    	"sonar.analysis.branch": "test",
+    	"sonar.analysis.commitId": "7b5d2ab53f06bb7866570d5e53d00e850c7ad08a",
+    	"sonar.analysis.repository": "error418-test/swingletree-test"
     },
     "qualityGate": {
         "conditions": [

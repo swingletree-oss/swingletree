@@ -6,7 +6,6 @@ import { AppEvent } from "../app-events";
 import { QualityGateStatus } from "./model/sonar-quality-gate";
 import { SonarWebhookEvent } from "./model/sonar-wehook-event";
 import { injectable } from "inversify";
-import Identifiers from "../ioc/identifiers";
 import { inject } from "inversify";
 import EventBus from "../event-bus";
 import ConfigurationService from "../configuration";
@@ -23,8 +22,8 @@ class SonarWebhook {
 	private configurationService: ConfigurationService;
 
 	constructor(
-		@inject(Identifiers.EventBus) eventBus: EventBus,
-		@inject(Identifiers.ConfigurationService) configurationService: ConfigurationService
+		@inject(EventBus) eventBus: EventBus,
+		@inject(ConfigurationService) configurationService: ConfigurationService
 	) {
 		this.eventBus = eventBus;
 		this.configurationService = configurationService;
@@ -32,8 +31,7 @@ class SonarWebhook {
 
 	private isWebhookEventRelevant(event: SonarWebhookEvent) {
 		if (event.properties !== undefined) {
-			return event.properties.appAction === "respond" && //  TODO: find better name / use enum
-				event.properties.branch !== undefined &&
+			return event.properties.branch !== undefined &&
 				event.properties.commitId !== undefined &&
 				event.properties.repository !== undefined;
 		}
@@ -60,9 +58,9 @@ class SonarWebhook {
 
 			commitStatusContainer.payload = commitStatus;
 
-			this.eventBus.get().emit(AppEvent.sendStatus, commitStatusContainer);
+			this.eventBus.emit(AppEvent.sendStatus, commitStatusContainer);
 		} else {
-			this.eventBus.get().emit(AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
+			this.eventBus.emit(AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
 		}
 
 		res.sendStatus(204);

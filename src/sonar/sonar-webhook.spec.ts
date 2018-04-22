@@ -21,10 +21,9 @@ describe("Sonar Webhook", () => {
 	let uut: SonarWebhook;
 	let testData: any;
 	let eventBusMock: any;
-	let emitMock: any;
+	let responseMock: any;
 
 	beforeEach(function () {
-		emitMock = sinon.stub();
 
 		const configurationMock: any = {
 			get: sinon.stub().returns({
@@ -32,8 +31,11 @@ describe("Sonar Webhook", () => {
 			})
 		};
 
+		responseMock = {sendStatus: sinon.stub()};
+
 		eventBusMock = {
-			get: sinon.stub().returns({ emit: emitMock, on: sinon.stub() })
+			emit: sinon.stub(),
+			register: sinon.stub()
 		};
 
 		testData = Object.assign({}, require("../../test/base-sonar-webhook.json"));
@@ -54,17 +56,17 @@ describe("Sonar Webhook", () => {
 			"sonar.analysis.repository": "testOrg/testRepo"
 		};
 
-		uut.webhook({ body: testData } as Request, undefined);
+		uut.webhook({ body: testData } as Request, responseMock);
 
-		sinon.assert.calledWith(emitMock, AppEvent.sendStatus, sinon.match({
+		sinon.assert.calledWith(eventBusMock.emit, AppEvent.sendStatus, sinon.match({
 			commitId: "12345",
 			repository: "testOrg/testRepo"
 		}));
 	});
 
 	it("should send ignored event on missing properties", () => {
-		uut.webhook({ body: testData } as Request, undefined);
-		sinon.assert.calledWith(emitMock, AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
+		uut.webhook({ body: testData } as Request, responseMock);
+		sinon.assert.calledWith(eventBusMock.emit, AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
 	});
 
 	it("should not send ignored event on partially set properties", () => {
@@ -73,7 +75,7 @@ describe("Sonar Webhook", () => {
 			"sonar.analysis.commitId": "12345"
 		};
 
-		uut.webhook({ body: testData } as Request, undefined);
-		sinon.assert.calledWith(emitMock, AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
+		uut.webhook({ body: testData } as Request, responseMock);
+		sinon.assert.calledWith(eventBusMock.emit, AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
 	});
 });
