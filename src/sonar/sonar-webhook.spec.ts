@@ -39,6 +39,8 @@ describe("Sonar Webhook", () => {
 		};
 
 		testData = Object.assign({}, require("../../test/base-sonar-webhook.json"));
+		// reset test data properties for test cases
+		testData.properties = {};
 
 		uut = new SonarWebhook(
 			eventBusMock as EventBus,
