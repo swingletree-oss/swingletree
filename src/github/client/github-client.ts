@@ -7,6 +7,8 @@ import { injectable } from "inversify";
 import ConfigurationService from "../../configuration";
 import { GitHubGhCommitStatusContainer } from "../model/gh-commit-status";
 
+import { Installation } from "./installation";
+
 const Octokit = require("@octokit/rest");
 
 @injectable()
@@ -31,14 +33,18 @@ class GithubClientService {
 			token: this.createJWT()
 		});
 
+		const installations: Installation[] = (await ghClient.apps.getInstallations()).data;
+		// TODO: find installation by login compare
+		const installation: Installation = installations[0];
+
 		return new Promise<any>((resolve, reject) => {
 			ghClient.apps.createInstallationToken({
-				installation_id: this.configurationService.get().github.appId
+				installation_id: installation.id
 			})
 			.then((response: any) => {
 				ghClient.authenticate({
 					type: "token",
-					token: response.token
+					token: response.data.token
 				});
 
 				resolve(ghClient);
@@ -71,7 +77,7 @@ class GithubClientService {
 
 	private createJWT(): string {
 		const payload = {
-			iss: this.configurationService.get().github.appId
+			iss: "" + this.configurationService.get().github.appId
 		};
 
 		const token = jwt.sign(payload, this.key, { expiresIn: "3m", algorithm: "RS256"});
