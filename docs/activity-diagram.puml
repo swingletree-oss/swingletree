@@ -1,0 +1,10 @@
+@startuml
+  GitHub -> Swingletree : webhook
+  Swingletree -> GitHub : pending status
+  GitHub --> SonarQube : trigger
+  activate SonarQube
+  SonarQube -> Swingletree : webhook
+  note right: run Quality gate analysis
+  deactivate SonarQube
+  Swingletree -> GitHub : update commit status
+@enduml
