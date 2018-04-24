@@ -61,6 +61,7 @@ class GitHubWebhook {
 
 		res.sendStatus(204);
 	}
+
 }
 
 export default GitHubWebhook;

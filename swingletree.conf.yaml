@@ -1,10 +1,15 @@
 github:
-  appId: # The AppId of your GitHub app instance (not installation!)
-  keyFile:  # the key file of your GitHub App (you retrieve this from the App settings page)
-  base: https://api.github.com # Github Api base url
+  appId: 00000 # The AppId of your GitHub app instance (not installation!)
+  keyFile: gh-app.pem # the key file of your GitHub App (you retrieve this from the App settings page)
+  base: http://localhost:4000 # Github Api base url
+  webhookSecret: changeme
 
 sonar:
   token:
   base:
+
+storage:
+  database:
+  password:
 
 context: swingletree

@@ -20,7 +20,7 @@ class ConfigurationService {
 class Configuration {
 	public github: GithubConfig;
 	public sonar: SonarConfig;
-
+	public storage: StorageConfig;
 	public context: string;
 }
 
@@ -28,6 +28,11 @@ class GithubConfig {
 	public appId: number;
 	public keyFile: string;
 	public base: string;
+}
+
+class StorageConfig {
+	public database: string;
+	public password: string;
 }
 
 class SonarConfig {
