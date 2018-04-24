@@ -2,7 +2,6 @@
 
 import { GitHubGhCommitStatus, GitHubGhCommitStatusContainer, CommitStatusEnum } from "./model/gh-commit-status";
 import CommitStatusSender from "./commit-status-sender";
-import { EventEmitter } from "events";
 
 import { expect, assert } from "chai";
 import * as chai from "chai";

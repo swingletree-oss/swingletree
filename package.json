@@ -17,11 +17,13 @@
     "@octokit/rest": "^15.2.6",
     "@types/js-yaml": "^3.11.1",
     "@types/jsonwebtoken": "^7.2.6",
+    "@types/redis": "^2.8.6",
     "body-parser": "^1.18.2",
     "compression": "^1.7.1",
     "express": "^4.16.1",
     "inversify": "^4.13.0",
     "jsonwebtoken": "^8.2.1",
+    "redis": "^2.8.0",
     "reflect-metadata": "^0.1.12",
     "unirest": "^0.5.1",
     "winston": "^2.4.0"

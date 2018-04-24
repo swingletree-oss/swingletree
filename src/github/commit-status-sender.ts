@@ -5,7 +5,6 @@ import { LOGGER } from "../logger";
 import { AppEvent } from "../app-events";
 import { GitHubGhCommitStatus, GitHubGhCommitStatusContainer } from "./model/gh-commit-status";
 import GithubClientService from "./client/github-client";
-import { EventEmitter } from "events";
 import { injectable, inject } from "inversify";
 import ConfigurationService from "../configuration";
 import EventBus from "../event-bus";

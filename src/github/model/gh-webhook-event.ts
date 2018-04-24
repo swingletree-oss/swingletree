@@ -5,7 +5,8 @@
 export enum GitHubWebhookEventType {
 	PULL_REQUEST = "pull_request",
 	PUSH = "push",
-	DELETE_BRANCH_TAG = "delete"
+	DELETE_BRANCH_TAG = "delete",
+	INSTALLATION = "installation"
 }
 
 /** Pull Request Event 'action' types
@@ -37,6 +38,8 @@ export class GitHubWebhookEvent {
 				return new GitHubPushWebhookEvent(model);
 			case GitHubWebhookEventType.DELETE_BRANCH_TAG:
 				return new GitHubDeleteWebhookEvent(model);
+			case GitHubWebhookEventType.INSTALLATION:
+				return new GhInstallation(model);
 
 			default:
 				return undefined;
@@ -45,6 +48,20 @@ export class GitHubWebhookEvent {
 
 	constructor(eventType: GitHubWebhookEventType) {
 		this.eventType = eventType;
+	}
+}
+
+export class GhInstallation extends GitHubWebhookEvent {
+	installationId: number;
+	applicationId: number;
+	login: string;
+
+	constructor(webhookEvent: any) {
+		super(GitHubWebhookEventType.INSTALLATION);
+
+		this.installationId = webhookEvent.installation.id;
+		this.applicationId = webhookEvent.installation.app_id;
+		this.login = webhookEvent.installation.account.login;
 	}
 }
 
