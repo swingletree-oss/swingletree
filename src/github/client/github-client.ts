@@ -8,22 +8,42 @@ import ConfigurationService from "../../configuration";
 import { GitHubGhCommitStatusContainer } from "../model/gh-commit-status";
 
 import { Installation } from "./installation";
+import InstallationStorage from "./installation-storage";
+import TokenStorage from "./token-storage";
 
 const Octokit = require("@octokit/rest");
 
 @injectable()
 class GithubClientService {
 	private configurationService: ConfigurationService;
+	private installationStorage: InstallationStorage;
+	private tokenStorage: TokenStorage;
 	private key: string;
 
 	constructor(
-		@inject(ConfigurationService) configurationService: ConfigurationService
+		@inject(ConfigurationService) configurationService: ConfigurationService,
+		@inject(TokenStorage) tokenStorage: TokenStorage,
+		@inject(InstallationStorage) installationStorage: InstallationStorage
 	) {
 		this.key = fs.readFileSync(configurationService.get().github.keyFile).toString();
 		this.configurationService = configurationService;
+		this.tokenStorage = tokenStorage;
+		this.installationStorage = installationStorage;
 	}
 
-	private async getClient(): Promise<any> {
+	private async checkInstallations(ghClient: any, login: string) {
+		const installationId = await this.installationStorage.exists(login);
+		if (installationId) {
+			const installations: Installation[] = (await ghClient.apps.getInstallations()).data;
+			// TODO: find installation by login compare
+			installations.forEach((inst: Installation) => {
+				this.installationStorage.store(login, inst.id);
+			});
+			const installation: Installation = installations[0];
+		}
+	}
+
+	private async getClient(login: string): Promise<any> {
 		const ghClient = Octokit({
 			baseUrl: this.configurationService.get().github.base
 		});
@@ -32,10 +52,6 @@ class GithubClientService {
 			type: "integration",
 			token: this.createJWT()
 		});
-
-		const installations: Installation[] = (await ghClient.apps.getInstallations()).data;
-		// TODO: find installation by login compare
-		const installation: Installation = installations[0];
 
 		return new Promise<any>((resolve, reject) => {
 			ghClient.apps.createInstallationToken({
