@@ -3,12 +3,12 @@
 import { LOGGER } from "../logger";
 
 import { AppEvent } from "../app-events";
-import { GitHubGhCommitStatus, GitHubGhCommitStatusContainer } from "./model/gh-commit-status";
+import { GithubCommitStatus, GithubCommitStatusContainer } from "./model/gh-commit-status";
 import GithubClientService from "./client/github-client";
 import { injectable, inject } from "inversify";
 import EventBus from "../event-bus";
 import InstallationStorage from "./client/installation-storage";
-import { GhInstallation } from "./model/gh-webhook-event";
+import { GithubInstallation } from "./model/gh-webhook-event";
 
 
 /** Sends Commit Status Requests to GitHub
@@ -29,7 +29,7 @@ class GhAppInstallationHandler {
 		this.installationStorage = installationStorage;
 	}
 
-	public appInstalled(installation: GhInstallation) {
+	public appInstalled(installation: GithubInstallation) {
 		LOGGER.info("login %s was registered", installation.login);
 		this.installationStorage.store(installation.login, installation.installationId);
 	}

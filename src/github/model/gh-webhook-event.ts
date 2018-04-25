@@ -2,7 +2,7 @@
 
 /** GitHub Webhook Event types provided by 'X-GitHub-Event' HTTP header
  */
-export enum GitHubWebhookEventType {
+export enum GithubWebhookEventType {
 	PULL_REQUEST = "pull_request",
 	PUSH = "push",
 	DELETE_BRANCH_TAG = "delete",
@@ -14,6 +14,7 @@ export enum GitHubWebhookEventType {
 export enum PullRequestWebhookAction {
 	assigned = "assigned",
 	unassigned = "unassigned",
+	synchronize = "synchronize",
 	review_requested = "review_requested",
 	review_request_removed = "review_request_removed",
 	labeled = "labeled",
@@ -26,38 +27,38 @@ export enum PullRequestWebhookAction {
 
 /** Superclass of a GitHub Webhook event
  */
-export class GitHubWebhookEvent {
-	eventType: GitHubWebhookEventType;
+export class GithubWebhookEvent {
+	eventType: GithubWebhookEventType;
 
-	static convert(eventType: GitHubWebhookEventType, model: any): GitHubWebhookEvent {
+	static convert(eventType: GithubWebhookEventType, model: any): GithubWebhookEvent {
 
 		switch (eventType) {
-			case GitHubWebhookEventType.PULL_REQUEST:
-				return new GitHubPullRequestGhWebhookEvent(model);
-			case GitHubWebhookEventType.PUSH:
-				return new GitHubPushWebhookEvent(model);
-			case GitHubWebhookEventType.DELETE_BRANCH_TAG:
-				return new GitHubDeleteWebhookEvent(model);
-			case GitHubWebhookEventType.INSTALLATION:
-				return new GhInstallation(model.installation);
+			case GithubWebhookEventType.PULL_REQUEST:
+				return new GithubPullRequestGhWebhookEvent(model);
+			case GithubWebhookEventType.PUSH:
+				return new GithubPushWebhookEvent(model);
+			case GithubWebhookEventType.DELETE_BRANCH_TAG:
+				return new GithubDeleteWebhookEvent(model);
+			case GithubWebhookEventType.INSTALLATION:
+				return new GithubInstallation(model.installation);
 
 			default:
 				return undefined;
 		}
 	}
 
-	constructor(eventType: GitHubWebhookEventType) {
+	constructor(eventType: GithubWebhookEventType) {
 		this.eventType = eventType;
 	}
 }
 
-export class GhInstallation extends GitHubWebhookEvent {
+export class GithubInstallation extends GithubWebhookEvent {
 	installationId: number;
 	applicationId: number;
 	login: string;
 
 	constructor(installation: any) {
-		super(GitHubWebhookEventType.INSTALLATION);
+		super(GithubWebhookEventType.INSTALLATION);
 
 		this.installationId = installation.id;
 		this.applicationId = installation.app_id;
@@ -65,39 +66,39 @@ export class GhInstallation extends GitHubWebhookEvent {
 	}
 }
 
-export class GitHubPullRequestGhWebhookEvent extends GitHubWebhookEvent {
-	targetLocation: GitHubLocation;
-	sourceLocation: GitHubLocation;
+export class GithubPullRequestGhWebhookEvent extends GithubWebhookEvent {
+	targetLocation: GithubLocation;
+	sourceLocation: GithubLocation;
 	id: number;
 	action: PullRequestWebhookAction;
 	merged: boolean;
 
 	constructor(webhookEvent: any) {
-		super(GitHubWebhookEventType.PULL_REQUEST);
+		super(GithubWebhookEventType.PULL_REQUEST);
 
 		this.action = webhookEvent.action;
 		this.id = webhookEvent.pull_request.number;
 		this.merged = webhookEvent.pull_request.merged;
 
-		this.sourceLocation = new GitHubLocation();
+		this.sourceLocation = new GithubLocation();
 		this.sourceLocation.repositoryPath(webhookEvent.pull_request.head.repo.full_name)
 			.reference(webhookEvent.pull_request.head.ref)
 			.commitId(webhookEvent.pull_request.head.sha);
 
-		this.targetLocation = new GitHubLocation();
+		this.targetLocation = new GithubLocation();
 		this.targetLocation.repositoryPath(webhookEvent.pull_request.head.repo.full_name)
 			.reference(webhookEvent.pull_request.head.ref)
 			.commitId(webhookEvent.pull_request.head.sha);
 	}
 }
 
-export class GitHubDeleteWebhookEvent extends GitHubWebhookEvent {
+export class GithubDeleteWebhookEvent extends GithubWebhookEvent {
 	refType: string;
 	ref: string;
 	repositoryPath: string;
 
 	constructor(webhookEvent: any) {
-		super(GitHubWebhookEventType.DELETE_BRANCH_TAG);
+		super(GithubWebhookEventType.DELETE_BRANCH_TAG);
 
 		this.refType = webhookEvent.ref_type;
 		this.ref = webhookEvent.ref;
@@ -105,36 +106,36 @@ export class GitHubDeleteWebhookEvent extends GitHubWebhookEvent {
 	}
 }
 
-export class GitHubPushWebhookEvent extends GitHubWebhookEvent {
-	sourceLocation: GitHubLocation;
+export class GithubPushWebhookEvent extends GithubWebhookEvent {
+	sourceLocation: GithubLocation;
 	deleted: boolean;
 
 	constructor(webhookEvent: any) {
-		super(GitHubWebhookEventType.PUSH);
+		super(GithubWebhookEventType.PUSH);
 
-		this.sourceLocation = new GitHubLocation();
+		this.sourceLocation = new GithubLocation();
 		this.sourceLocation.repositoryPath(webhookEvent.repository.full_name)
 			.reference(webhookEvent.ref)
 			.commitId(webhookEvent.head_commit.id);
 	}
 }
 
-export class GitHubLocation {
+export class GithubLocation {
 	repo: string;
 	ref: string;
 	sha: string;
 
-	repositoryPath(path: string): GitHubLocation {
+	repositoryPath(path: string): GithubLocation {
 		this.repo = path;
 		return this;
 	}
 
-	reference(ref: string): GitHubLocation {
+	reference(ref: string): GithubLocation {
 		this.ref = ref;
 		return this;
 	}
 
-	commitId(sha: string): GitHubLocation {
+	commitId(sha: string): GithubLocation {
 		this.sha = sha;
 		return this;
 	}
