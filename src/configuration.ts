@@ -28,6 +28,7 @@ class GithubConfig {
 	public appId: number;
 	public keyFile: string;
 	public base: string;
+	public webhookSecret: string;
 }
 
 class StorageConfig {
