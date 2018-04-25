@@ -9,7 +9,8 @@
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist",
+    "outDir": "bin",
+    "rootDir": "src",
     "baseUrl": ".",
     "paths": {
       "*": [

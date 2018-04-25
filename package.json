@@ -4,14 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && nodemon dist/main.js",
+    "start": "npm run build && nodemon bin/main.js",
     "build": "npm run build-ts && npm run tslint",
     "test": "ts-mocha src/**/*.spec.ts",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "debug": "npm run build && npm run watch-debug",
-    "watch-debug": "nodemon --inspect dist/main.js"
+    "watch-debug": "nodemon --inspect bin/main.js"
   },
   "dependencies": {
     "@octokit/rest": "^15.2.6",

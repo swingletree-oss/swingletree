@@ -39,7 +39,7 @@ export class GitHubWebhookEvent {
 			case GitHubWebhookEventType.DELETE_BRANCH_TAG:
 				return new GitHubDeleteWebhookEvent(model);
 			case GitHubWebhookEventType.INSTALLATION:
-				return new GhInstallation(model);
+				return new GhInstallation(model.installation);
 
 			default:
 				return undefined;
@@ -56,12 +56,12 @@ export class GhInstallation extends GitHubWebhookEvent {
 	applicationId: number;
 	login: string;
 
-	constructor(webhookEvent: any) {
+	constructor(installation: any) {
 		super(GitHubWebhookEventType.INSTALLATION);
 
-		this.installationId = webhookEvent.installation.id;
-		this.applicationId = webhookEvent.installation.app_id;
-		this.login = webhookEvent.installation.account.login;
+		this.installationId = installation.id;
+		this.applicationId = installation.app_id;
+		this.login = installation.account.login;
 	}
 }
 
