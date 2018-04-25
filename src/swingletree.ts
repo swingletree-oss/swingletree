@@ -29,7 +29,7 @@ class SwingletreeServer {
 		this.configurationService = configurationService;
 	}
 
-	public run(app: any) {
+	public run(app: express.Application) {
 		// express configuration
 		app.set("port", process.env.PORT || 3000);
 		app.use(compression());
@@ -37,7 +37,7 @@ class SwingletreeServer {
 		app.use(bodyParser.urlencoded({ extended: true }));
 
 		// bind webhooks to paths
-		app.post("/webhook/github/", this.githubWebhook.webhook);
+		app.use("/webhook/github", this.githubWebhook.getRoute());
 		app.post("/webhook/sonar/", this.sonarWebhook.webhook);
 
 

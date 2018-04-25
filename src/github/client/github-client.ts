@@ -7,9 +7,9 @@ import { injectable } from "inversify";
 import ConfigurationService from "../../configuration";
 import { GitHubGhCommitStatusContainer } from "../model/gh-commit-status";
 
-import { Installation } from "./installation";
 import InstallationStorage from "./installation-storage";
 import TokenStorage from "./token-storage";
+import { GhInstallation } from "../model/gh-webhook-event";
 
 const Octokit = require("@octokit/rest");
 
@@ -31,19 +31,24 @@ class GithubClientService {
 		this.installationStorage = installationStorage;
 	}
 
-	private async checkInstallations(ghClient: any, login: string) {
-		const installationId = await this.installationStorage.exists(login);
-		if (installationId) {
-			const installations: Installation[] = (await ghClient.apps.getInstallations()).data;
-			// TODO: find installation by login compare
-			installations.forEach((inst: Installation) => {
-				this.installationStorage.store(login, inst.id);
-			});
-			const installation: Installation = installations[0];
-		}
+	public getInstallations(): Promise<GhInstallation[]> {
+		return new Promise<GhInstallation[]>((resolve, reject) => {
+			const client = this.getClient();
+
+			client.apps.getInstallations()
+			.then((data: any) => {
+					const result: GhInstallation[] = [];
+
+					data.installations.forEach((instItem: any) => {
+						result.push(new GhInstallation(instItem));
+					});
+
+					resolve(result);
+				});
+		});
 	}
 
-	private async getClient(login: string): Promise<any> {
+	private getClient(): any {
 		const ghClient = Octokit({
 			baseUrl: this.configurationService.get().github.base
 		});
@@ -53,9 +58,28 @@ class GithubClientService {
 			token: this.createJWT()
 		});
 
+		return ghClient;
+	}
+
+	private async getGhAppClient(login: string): Promise<any> {
+		const ghClient = Octokit({
+			baseUrl: this.configurationService.get().github.base
+		});
+
+		ghClient.authenticate({
+			type: "integration",
+			token: this.createJWT()
+		});
+
+		const installationId = await this.installationStorage.getInstallationId(login);
+
 		return new Promise<any>((resolve, reject) => {
+			if (!installationId) {
+				reject("installation id was not found for login " + login);
+			}
+
 			ghClient.apps.createInstallationToken({
-				installation_id: installation.id
+				installation_id: installationId
 			})
 			.then((response: any) => {
 				ghClient.authenticate({
@@ -75,7 +99,7 @@ class GithubClientService {
 
 		return new Promise<void>(async (resolve, reject) => {
 			const coordinates = status.repository.split("/");
-			const client = await this.getClient();
+			const client = await this.getGhAppClient(status.repository.split("/")[0]);
 
 			client.repos.createStatus({
 				owner: coordinates[0],
@@ -93,7 +117,7 @@ class GithubClientService {
 
 	private createJWT(): string {
 		const payload = {
-			iss: "" + this.configurationService.get().github.appId
+			iss: this.configurationService.get().github.appId.toString()
 		};
 
 		const token = jwt.sign(payload, this.key, { expiresIn: "3m", algorithm: "RS256"});
