@@ -36,12 +36,13 @@ class GithubClientService {
 			const client = this.getClient();
 
 			client.apps.getInstallations()
-			.then((data: any) => {
+			.then((response: any) => {
 					const result: GhInstallation[] = [];
 
-					data.installations.forEach((instItem: any) => {
-						result.push(new GhInstallation(instItem));
-					});
+					let instItem: any;
+					for (instItem in response.data) {
+						result.push(new GhInstallation(response.data[instItem]));
+					}
 
 					resolve(result);
 				});

@@ -46,7 +46,11 @@ class TokenStorage {
 			});
 		});
 	}
+}
 
+class BearerToken {
+	public token: string;
+	public expires: string;
 }
 
 export default TokenStorage;
