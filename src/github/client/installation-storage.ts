@@ -36,7 +36,7 @@ class InstallationStorage {
 
 	public getInstallationId(login: string): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
-			this.client.hget(login, "token", (err, value) => {
+			this.client.get(login, (err, value) => {
 				if (err) {
 					reject(err);
 				} else {
