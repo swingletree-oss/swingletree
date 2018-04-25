@@ -2,8 +2,8 @@
 
 import { LOGGER } from "../logger";
 import { Router, Request, Response, NextFunction } from "express";
-import { GitHubWebhookEventType, PullRequestWebhookAction, GitHubPullRequestGhWebhookEvent, GitHubWebhookEvent, GitHubPushWebhookEvent, GitHubDeleteWebhookEvent } from "./model/gh-webhook-event";
-import { CommitStatusEnum, GitHubGhCommitStatus } from "./model/gh-commit-status";
+import { GithubWebhookEventType, PullRequestWebhookAction, GithubPullRequestGhWebhookEvent, GithubWebhookEvent, GithubPushWebhookEvent, GithubDeleteWebhookEvent } from "./model/gh-webhook-event";
+import { CommitStatusEnum, GithubCommitStatus } from "./model/gh-commit-status";
 import { AppEvent } from "../app-events";
 
 import EventBus from "../event-bus";
@@ -16,7 +16,7 @@ const GithubWebHookHandler = require("express-github-webhook");
 /** Provides a GitHub Webhook
  */
 @injectable()
-class GitHubWebhook {
+class GithubWebhook {
 	public static readonly IGNORE_ID = "github";
 	private eventBus: EventBus;
 	private configService: ConfigurationService;
@@ -29,14 +29,16 @@ class GitHubWebhook {
 		this.configService = configService;
 	}
 
-	private isAnalyzeTrigger(webhookEvent: GitHubWebhookEvent): boolean {
-		if (webhookEvent.eventType === GitHubWebhookEventType.PUSH || webhookEvent.eventType === GitHubWebhookEventType.PULL_REQUEST) {
-			if (webhookEvent instanceof GitHubPullRequestGhWebhookEvent) {
-				const event: GitHubPullRequestGhWebhookEvent = webhookEvent;
+	private isAnalyzeTrigger(webhookEvent: GithubWebhookEvent): boolean {
+		if (webhookEvent.eventType === GithubWebhookEventType.PUSH ||
+			webhookEvent.eventType === GithubWebhookEventType.PULL_REQUEST) {
+			if (webhookEvent instanceof GithubPullRequestGhWebhookEvent) {
+				const event: GithubPullRequestGhWebhookEvent = webhookEvent;
 
 				return event.action === PullRequestWebhookAction.opened ||
-				event.action === PullRequestWebhookAction.reopened;
-			} else if (webhookEvent instanceof GitHubPushWebhookEvent) {
+						event.action === PullRequestWebhookAction.reopened ||
+						event.action === PullRequestWebhookAction.synchronize;
+			} else if (webhookEvent instanceof GithubPushWebhookEvent) {
 				return true;
 			}
 		}
@@ -47,7 +49,6 @@ class GitHubWebhook {
 	public getRoute(): Router {
 		const webhookHandler = GithubWebHookHandler({ path: "/", secret: this.configService.get().github.webhookSecret });
 
-		// Now could handle following events
 		webhookHandler.on("*", this.ghEventHandler.bind(this));
 
 		webhookHandler.on("error", function (err: any, req: any, res: any) {
@@ -60,9 +61,9 @@ class GitHubWebhook {
 		return router;
 	}
 
-	public ghEventHandler (event: string, repo: string, data: GitHubWebhookEvent) {
-		const eventType: GitHubWebhookEventType = event as GitHubWebhookEventType;
-		const webhookEvent: GitHubWebhookEvent = GitHubWebhookEvent.convert(eventType, data);
+	public ghEventHandler (event: string, repo: string, data: GithubWebhookEvent) {
+		const eventType: GithubWebhookEventType = event as GithubWebhookEventType;
+		const webhookEvent: GithubWebhookEvent = GithubWebhookEvent.convert(eventType, data);
 
 		let eventTriggered: boolean = false;
 
@@ -71,13 +72,15 @@ class GitHubWebhook {
 		if (webhookEvent !== undefined) {
 			if (this.isAnalyzeTrigger(webhookEvent)) {
 				this.eventBus.emit(AppEvent.analyzePR, webhookEvent);
-				this.eventBus.emit(AppEvent.sendStatus, new GitHubGhCommitStatus(CommitStatusEnum.pending));
+				this.eventBus.emit(AppEvent.sendStatus, new GithubCommitStatus(CommitStatusEnum.pending));
 				eventTriggered = true;
-			} else if (webhookEvent.eventType == GitHubWebhookEventType.INSTALLATION) {
+			} else if (webhookEvent.eventType == GithubWebhookEventType.INSTALLATION) {
 				this.eventBus.emit(AppEvent.appInstalled, webhookEvent);
+			} else {
+				LOGGER.info("webhook event was ignored.");
 			}
 		}
 	}
 }
 
-export default GitHubWebhook;
+export default GithubWebhook;

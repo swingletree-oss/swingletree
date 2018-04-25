@@ -3,7 +3,7 @@
 import { LOGGER } from "../logger";
 
 import { AppEvent } from "../app-events";
-import { GitHubGhCommitStatus, GitHubGhCommitStatusContainer } from "./model/gh-commit-status";
+import { GithubCommitStatus, GithubCommitStatusContainer } from "./model/gh-commit-status";
 import GithubClientService from "./client/github-client";
 import { injectable, inject } from "inversify";
 import ConfigurationService from "../configuration";
@@ -32,7 +32,7 @@ class CommitStatusSender {
 		this.githubClientService = githubClientService;
 	}
 
-	public sendStatus(status: GitHubGhCommitStatusContainer): Promise<void> {
+	public sendStatus(status: GithubCommitStatusContainer): Promise<void> {
 
 		return new Promise<void>((resolve, reject) => {
 			this.githubClientService.createCommitStatus(status)

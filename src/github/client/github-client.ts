@@ -5,11 +5,11 @@ import { inject } from "inversify";
 import { injectable } from "inversify";
 
 import ConfigurationService from "../../configuration";
-import { GitHubGhCommitStatusContainer } from "../model/gh-commit-status";
+import { GithubCommitStatusContainer } from "../model/gh-commit-status";
 
 import InstallationStorage from "./installation-storage";
 import TokenStorage from "./token-storage";
-import { GhInstallation } from "../model/gh-webhook-event";
+import { GithubInstallation } from "../model/gh-webhook-event";
 
 const Octokit = require("@octokit/rest");
 
@@ -31,17 +31,17 @@ class GithubClientService {
 		this.installationStorage = installationStorage;
 	}
 
-	public getInstallations(): Promise<GhInstallation[]> {
-		return new Promise<GhInstallation[]>((resolve, reject) => {
+	public getInstallations(): Promise<GithubInstallation[]> {
+		return new Promise<GithubInstallation[]>((resolve, reject) => {
 			const client = this.getClient();
 
 			client.apps.getInstallations()
 			.then((response: any) => {
-					const result: GhInstallation[] = [];
+					const result: GithubInstallation[] = [];
 
 					let instItem: any;
 					for (instItem in response.data) {
-						result.push(new GhInstallation(response.data[instItem]));
+						result.push(new GithubInstallation(response.data[instItem]));
 					}
 
 					resolve(result);
@@ -96,7 +96,7 @@ class GithubClientService {
 		});
 	}
 
-	public createCommitStatus(status: GitHubGhCommitStatusContainer): Promise<void> {
+	public createCommitStatus(status: GithubCommitStatusContainer): Promise<void> {
 
 		return new Promise<void>(async (resolve, reject) => {
 			const coordinates = status.repository.split("/");

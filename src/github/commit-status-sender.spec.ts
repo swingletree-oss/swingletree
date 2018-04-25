@@ -1,6 +1,6 @@
 "use strict";
 
-import { GitHubGhCommitStatus, GitHubGhCommitStatusContainer, CommitStatusEnum } from "./model/gh-commit-status";
+import { GithubCommitStatus, GithubCommitStatusContainer, CommitStatusEnum } from "./model/gh-commit-status";
 import CommitStatusSender from "./commit-status-sender";
 
 import { expect, assert } from "chai";
@@ -21,7 +21,7 @@ const sandbox = sinon.sandbox.create();
 describe("CommitStatusSender", () => {
 	let uut: CommitStatusSender;
 
-	let mockStatus: GitHubGhCommitStatusContainer;
+	let mockStatus: GithubCommitStatusContainer;
 
 	let eventBusMock: any;
 	let configurationMock: any;
@@ -49,7 +49,7 @@ describe("CommitStatusSender", () => {
 			configurationMock,
 			githubClientMock
 		);
-		mockStatus = new GitHubGhCommitStatusContainer("testRepository", "testCommitId");
+		mockStatus = new GithubCommitStatusContainer("testRepository", "testCommitId");
 	});
 
 	afterEach(function () {
@@ -57,7 +57,7 @@ describe("CommitStatusSender", () => {
 	});
 
 	it("should send commit status on matching event", (done) => {
-		mockStatus.payload = new GitHubGhCommitStatus(CommitStatusEnum.pending);
+		mockStatus.payload = new GithubCommitStatus(CommitStatusEnum.pending);
 		githubClientMock.createCommitStatus.resolves();
 		uut.sendStatus(mockStatus)
 			.then(() => {
