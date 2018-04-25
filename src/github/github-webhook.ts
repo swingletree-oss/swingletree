@@ -48,7 +48,7 @@ class GitHubWebhook {
 		const webhookHandler = GithubWebHookHandler({ path: "/", secret: this.configService.get().github.webhookSecret });
 
 		// Now could handle following events
-		webhookHandler.on("*", this.ghEventHandler);
+		webhookHandler.on("*", this.ghEventHandler.bind(this));
 
 		webhookHandler.on("error", function (err: any, req: any, res: any) {
 			LOGGER.warn("failed to process webhook call. " + err);
@@ -62,7 +62,7 @@ class GitHubWebhook {
 
 	public ghEventHandler (event: string, repo: string, data: GitHubWebhookEvent) {
 		const eventType: GitHubWebhookEventType = event as GitHubWebhookEventType;
-		const webhookEvent: GitHubWebhookEvent = GitHubWebhookEvent.convert(eventType, event);
+		const webhookEvent: GitHubWebhookEvent = GitHubWebhookEvent.convert(eventType, data);
 
 		let eventTriggered: boolean = false;
 
@@ -73,11 +73,9 @@ class GitHubWebhook {
 				this.eventBus.emit(AppEvent.analyzePR, webhookEvent);
 				this.eventBus.emit(AppEvent.sendStatus, new GitHubGhCommitStatus(CommitStatusEnum.pending));
 				eventTriggered = true;
+			} else if (webhookEvent.eventType == GitHubWebhookEventType.INSTALLATION) {
+				this.eventBus.emit(AppEvent.appInstalled, webhookEvent);
 			}
-		}
-
-		if (!eventTriggered) {
-			this.eventBus.emit(AppEvent.webhookEventIgnored, GitHubWebhook.IGNORE_ID);
 		}
 	}
 }
