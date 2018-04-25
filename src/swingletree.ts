@@ -14,7 +14,7 @@ import { LOGGER } from "./logger";
 import EventBus from "./event-bus";
 import InstallationStorage from "./github/client/installation-storage";
 import GithubClientService from "./github/client/github-client";
-import { GhInstallation } from "./github/model/gh-webhook-event";
+import { GithubInstallation } from "./github/model/gh-webhook-event";
 import { AppEvent } from "./app-events";
 
 @injectable()
@@ -59,8 +59,8 @@ class SwingletreeServer {
 
 		// update installation cache data
 		this.clientService.getInstallations()
-			.then((installations: GhInstallation[]) => {
-				installations.forEach((installation: GhInstallation) => {
+			.then((installations: GithubInstallation[]) => {
+				installations.forEach((installation: GithubInstallation) => {
 					this.eventBus.emit(AppEvent.appInstalled, installation);
 				});
 			})
