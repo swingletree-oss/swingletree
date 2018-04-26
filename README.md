@@ -19,9 +19,7 @@ This section covers the prerequisites and the installation of Swingletree. If yo
 ### Prerequisites
 
 * NodeJS 8 or later
-
-
-
+* A redis database
 
 ## Configuration
 
