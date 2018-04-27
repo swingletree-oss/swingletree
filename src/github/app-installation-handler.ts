@@ -22,11 +22,10 @@ class GhAppInstallationHandler {
 		@inject(EventBus) eventBus: EventBus,
 		@inject(InstallationStorage) installationStorage: InstallationStorage
 	) {
+		this.installationStorage = installationStorage;
 		this.eventBus = eventBus;
 
 		this.eventBus.register(AppEvent.appInstalled, this.appInstalled, this);
-
-		this.installationStorage = installationStorage;
 	}
 
 	public appInstalled(installation: GithubInstallation) {

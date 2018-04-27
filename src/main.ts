@@ -10,7 +10,7 @@ const express = require("express");
 
 const swingletree = container.get<SwingletreeServer>(SwingletreeServer);
 
-// initialize event handlers
+// initialize dangling event handlers
 container.get<CommitStatusSender>(CommitStatusSender);
 container.get<GhAppInstallationHandler>(GhAppInstallationHandler);
 
