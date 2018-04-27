@@ -22,18 +22,6 @@ class InstallationStorage {
 		this.client.set(login, installationId.toString());
 	}
 
-	public exists(login: string): Promise<boolean> {
-		return new Promise<boolean>((resolve, reject) => {
-				this.client.exists(login, (err, value) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(value > 0);
-				}
-			});
-		});
-	}
-
 	public getInstallationId(login: string): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
 			this.client.get(login, (err, value) => {
