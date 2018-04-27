@@ -6,3 +6,4 @@ services:
     - "3000:3000"
   redis:
     image: redis
+    command: --requirepass ${REDIS_PASS}
