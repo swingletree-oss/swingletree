@@ -18,23 +18,21 @@ class TokenStorage {
 		this.client.select(2);
 	}
 
+	/** Stores a bearer token
+	 *
+	 * @param login github organization or user name
+	 * @param token bearer token
+	 */
 	public store(login: string, token: BearerToken) {
 		const ttl = (new Date(token.expires)).getTime() - Date.now();
 		this.client.set(login, token.token, "PX", ttl);
 	}
 
-	public exists(login: string): Promise<boolean> {
-		return new Promise<boolean>((resolve, reject) => {
-				this.client.exists(login, (err, value) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(value > 0);
-				}
-			});
-		});
-	}
-
+	/** Gets the bearer token for a user, if available
+	 *
+	 * @param login github organization or user name
+	 * @returns bearer token as string (if available), otherwise null
+	 */
 	public getToken(login: string): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
 			this.client.get(login, (err, value) => {

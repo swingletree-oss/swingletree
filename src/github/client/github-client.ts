@@ -10,6 +10,7 @@ import { GithubCommitStatusContainer } from "../model/gh-commit-status";
 import InstallationStorage from "./installation-storage";
 import TokenStorage from "./token-storage";
 import { GithubInstallation } from "../model/gh-webhook-event";
+import { LOGGER } from "../../logger";
 
 const Octokit = require("@octokit/rest");
 
@@ -49,53 +50,6 @@ class GithubClientService {
 		});
 	}
 
-	private getClient(): any {
-		const ghClient = Octokit({
-			baseUrl: this.configurationService.get().github.base
-		});
-
-		ghClient.authenticate({
-			type: "integration",
-			token: this.createJWT()
-		});
-
-		return ghClient;
-	}
-
-	private async getGhAppClient(login: string): Promise<any> {
-		const ghClient = Octokit({
-			baseUrl: this.configurationService.get().github.base
-		});
-
-		ghClient.authenticate({
-			type: "integration",
-			token: this.createJWT()
-		});
-
-		const installationId = await this.installationStorage.getInstallationId(login);
-
-		return new Promise<any>((resolve, reject) => {
-			if (!installationId) {
-				reject("installation id was not found for login " + login);
-			}
-
-			ghClient.apps.createInstallationToken({
-				installation_id: installationId
-			})
-			.then((response: any) => {
-				ghClient.authenticate({
-					type: "token",
-					token: response.data.token
-				});
-
-				resolve(ghClient);
-			})
-			.catch((err: any) => {
-				reject(err);
-			});
-		});
-	}
-
 	public createCommitStatus(status: GithubCommitStatusContainer): Promise<void> {
 
 		return new Promise<void>(async (resolve, reject) => {
@@ -124,6 +78,60 @@ class GithubClientService {
 		const token = jwt.sign(payload, this.key, { expiresIn: "3m", algorithm: "RS256"});
 		return token;
 	}
+
+	private getClient(): any {
+		const ghClient = Octokit({
+			baseUrl: this.configurationService.get().github.base
+		});
+
+		ghClient.authenticate({
+			type: "integration",
+			token: this.createJWT()
+		});
+
+		return ghClient;
+	}
+
+	private async getGhAppClient(login: string): Promise<any> {
+		const ghClient = Octokit({
+			baseUrl: this.configurationService.get().github.base
+		});
+
+		const installationId = await this.installationStorage.getInstallationId(login);
+		if (!installationId) {
+			return Promise.reject("installation id was not found for login " + login);
+		}
+
+		let bearerToken = await this.tokenStorage.getToken(login);
+		if (!bearerToken) {
+			LOGGER.info("bearer for %s seems to have reached ttl. requesting new bearer.", login);
+			try {
+				ghClient.authenticate({
+					type: "integration",
+					token: this.createJWT()
+				});
+
+				const bearerRequest = await ghClient.apps.createInstallationToken({
+					installation_id: installationId
+				});
+
+				this.tokenStorage.store(login, bearerRequest.data);
+				bearerToken = bearerRequest.data.token;
+			} catch (err) {
+				return Promise.reject(err);
+			}
+		}
+
+		return new Promise<any>((resolve, reject) => {
+			ghClient.authenticate({
+				type: "token",
+				token: bearerToken
+			});
+
+			resolve(ghClient);
+		});
+	}
+
 }
 
 export default GithubClientService;
