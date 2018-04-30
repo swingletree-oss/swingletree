@@ -23,6 +23,22 @@ Swingletree will request a permission to modify your repositories' commit status
 
 > ![Commit Status](./docs/commit-status.png)
 
+### SonarQube Analyze Parameters
+
+Swingletree needs some context when receiving webhook events from SonarQube. Therefore some parameters need to be set when running a SonarQube Analysis.
+
+* `sonar.analysis.branch`, containing the name of the branch
+* `sonar.analysis.commitId`, containing the commit id
+* `sonar.analysis.repository`, containing the full repository path
+
+You can set the parameters when invoking the `sonar-scanner`. For example:
+
+```
+sonar-scanner \
+    -Dsonar.analysis.branch=dev \
+    -Dsonar.analysis.commitId=628f5175ada0d685fd7164baa7c6382c1f25cab4 \
+    -Dsonar.analysis.repository=error418/swingletree
+```
 
 ## Installation
 
