@@ -36,7 +36,7 @@ This section covers the prerequisites and the installation of Swingletree. If yo
 
 ## Configuration
 
-Swingletree is configured using a configuration file named `swingletree.conf.yml`.
+Swingletree is configured using a configuration file named `swingletree.conf.yaml` or via environment variables when using docker.
 
 ## Build
 
