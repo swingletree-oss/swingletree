@@ -32,11 +32,13 @@ This section covers the prerequisites and the installation of Swingletree. If yo
 
 ## Configuration
 
+Swingletree is configured using a configuration file named `swingletree.conf.yml`.
+
 ## Build
 
 Swingletree is built using a build container. By running `docker build .` you can start building Swingletree along with its container image. In case you need to use a npm registry proxy you can override the default NPM registry by defining the docker build argument `NPM_REGISTRY` (for example `docker build --build-arg NPM_REGISTRY=http://my.npm.registry/` ). Be aware that you will download the npm dependencies for each build.
 
-If you don't want to get all that fancy and just want to build Swingletree without its image you can still run a plain `npm build`.
+If you don't want to get all that fancy and just want to build Swingletree without its image you can still run a plain `npm run build`.
 
 ## Run
 
