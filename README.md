@@ -33,6 +33,7 @@ This section covers the prerequisites and the installation of Swingletree. If yo
 * NodeJS 8 or later
 * A redis database
 
+
 ## Configuration
 
 Swingletree is configured using a configuration file named `swingletree.conf.yml`.
@@ -45,6 +46,8 @@ If you don't want to get all that fancy and just want to build Swingletree witho
 
 ## Run
 
+Swingletree can be run from source or by using Docker.
+
 ### Running with Docker
 
 Start Swingletree and a Redis database by running
@@ -52,3 +55,10 @@ Start Swingletree and a Redis database by running
 ```
 docker-compose up
 ```
+
+#### Environment Variables
+
+
+### Running from source
+
+Start swingletree by installing your dependencies with `npm i --production` and run the application by `npm start` 
