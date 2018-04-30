@@ -1,5 +1,4 @@
-
-echo $GH_APP_PEM > ./gh-app.pem
+printf $GH_APP_PEM > ./gh-app.pem
 
 if [ -z ${CONFIG+x} ]; then
     echo "INFO: container swingletree configuration will be used"

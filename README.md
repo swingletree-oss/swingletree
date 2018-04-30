@@ -72,6 +72,8 @@ Start Swingletree and a Redis database by running
 docker-compose up
 ```
 
+You will need to pass the environment variables to configure your Swingletree instance.
+
 #### Environment Variables
 
 | Variable      | Description    |
