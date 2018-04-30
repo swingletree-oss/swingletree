@@ -36,7 +36,7 @@ This section covers the prerequisites and the installation of Swingletree. If yo
 
 ## Configuration
 
-Swingletree is configured using a configuration file named `swingletree.conf.yaml` or via environment variables when using docker.
+Swingletree is configured using a configuration file named `swingletree.conf.yaml` or via environment variables when using docker (see [Section Run](#run)).
 
 ## Build
 
@@ -57,6 +57,11 @@ docker-compose up
 ```
 
 #### Environment Variables
+
+| Variable      | Description    |
+| ------------- | -------------  |
+| GH_APP_PEM    | Variable contents will be written to `./gh-app.pem` on startup  |
+| CONFIG        | If set the variable contents will be written to `./swingletree.conf.yaml` on startup. This needs to be a plain string.  |
 
 
 ### Running from source
