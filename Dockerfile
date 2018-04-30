@@ -8,7 +8,7 @@ WORKDIR /usr/src/swingletree
 
 RUN npm set registry "${NPM_REGISTRY}"
 RUN npm i -g npm@6
-RUN npm ci
+RUN npm ci --production
 RUN npm run build
 
 # swingletree container image
