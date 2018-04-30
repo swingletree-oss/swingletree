@@ -8,8 +8,7 @@ chai.use(require("sinon-chai"));
 import GithubWebhook from "./github-webhook";
 import { AppEvent } from "../app-events";
 import EventBus from "../event-bus";
-import { emit } from "cluster";
-import ConfigurationService from "../configuration";
+import { ConfigurationService } from "../configuration";
 import { GithubWebhookEventType } from "./model/gh-webhook-event";
 
 

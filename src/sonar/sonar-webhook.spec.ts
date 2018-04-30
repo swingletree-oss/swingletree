@@ -14,7 +14,7 @@ import SonarWebhook from "./sonar-webhook";
 import { EventEmitter } from "events";
 
 import EventBus from "../event-bus";
-import ConfigurationService from "../configuration";
+import { ConfigurationService } from "../configuration";
 
 describe("Sonar Webhook", () => {
 

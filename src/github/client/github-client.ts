@@ -4,7 +4,7 @@ import * as jwt from "jsonwebtoken";
 import { inject } from "inversify";
 import { injectable } from "inversify";
 
-import ConfigurationService from "../../configuration";
+import { ConfigurationService } from "../../configuration";
 import { GithubCommitStatusContainer } from "../model/gh-commit-status";
 
 import InstallationStorage from "./installation-storage";

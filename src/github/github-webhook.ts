@@ -9,7 +9,7 @@ import { AppEvent } from "../app-events";
 import EventBus from "../event-bus";
 import { injectable } from "inversify";
 import { inject } from "inversify";
-import ConfigurationService from "../configuration";
+import { ConfigurationService } from "../configuration";
 
 const GithubWebHookHandler = require("express-github-webhook");
 

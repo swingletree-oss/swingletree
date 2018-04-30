@@ -8,7 +8,7 @@ import { SonarWebhookEvent } from "./model/sonar-wehook-event";
 import { injectable } from "inversify";
 import { inject } from "inversify";
 import EventBus from "../event-bus";
-import ConfigurationService from "../configuration";
+import { ConfigurationService } from "../configuration";
 
 
 /** Provides a Webhook for Sonar

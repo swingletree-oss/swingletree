@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run build && nodemon bin/main.js",
     "build": "npm run build-ts && npm run tslint",
-    "test": "ts-mocha src/**/*.spec.ts",
+    "test": "ts-mocha 'src/**/*.spec.ts'",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "tslint": "tslint -c tslint.json -p tsconfig.json",

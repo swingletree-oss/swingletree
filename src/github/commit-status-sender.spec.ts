@@ -13,11 +13,10 @@ chai.use(require("chai-as-promised"));
 import GithubClientService from "./client/github-client";
 import { AppEvent } from "../app-events";
 import EventBus from "../event-bus";
-import { emit } from "cluster";
 
 const sandbox = sinon.sandbox.create();
 
-describe("CommitStatusSender", () => {
+describe("Commit Status Sender", () => {
 	let uut: CommitStatusSender;
 
 	let mockStatus: GithubCommitStatusContainer;

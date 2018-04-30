@@ -6,7 +6,7 @@ import { AppEvent } from "../app-events";
 import { GithubCommitStatus, GithubCommitStatusContainer } from "./model/gh-commit-status";
 import GithubClientService from "./client/github-client";
 import { injectable, inject } from "inversify";
-import ConfigurationService from "../configuration";
+import { ConfigurationService } from "../configuration";
 import EventBus from "../event-bus";
 
 

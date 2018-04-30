@@ -14,7 +14,7 @@ import { GithubWebhookEventType } from "./model/gh-webhook-event";
 
 const sandbox = sinon.sandbox.create();
 
-describe("CommitStatusSender", () => {
+describe("App installation handler", () => {
 	let uut: GhAppInstallationHandler;
 
 	let eventBusMock: any;

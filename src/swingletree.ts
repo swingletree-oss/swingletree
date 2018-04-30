@@ -3,7 +3,7 @@ import * as compression from "compression";
 import * as bodyParser from "body-parser";
 import * as path from "path";
 import { Response, Request } from "express";
-import ConfigurationService from "./configuration";
+import { ConfigurationService } from "./configuration";
 import { injectable } from "inversify";
 
 import CommitStatusSender from "./github/commit-status-sender";
