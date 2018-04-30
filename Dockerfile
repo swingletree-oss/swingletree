@@ -16,7 +16,12 @@ FROM node:8-alpine
 
 ENV REDIS_HOST "http://redis"
 
-COPY --from=build /usr/src/swingletree/bin .
-COPY --from=build /usr/src/swingletree/node_modules .
+RUN mkdir /opt/swingletree
+WORKDIR /opt/swingletree
 
-ENTRYPOINT [ "node", "main.js" ]
+COPY --from=build /usr/src/swingletree/bin .
+COPY --from=build /usr/src/swingletree/node_modules ./node_modules
+COPY swingletree.conf.yaml .
+COPY docker/entrypoint.sh .
+
+ENTRYPOINT [ "/bin/sh", "entrypoint.sh" ]
