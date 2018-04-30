@@ -1,6 +1,6 @@
 # Swingletree
 
-> Be aware Swingletree is still under development. Some edges may be still rough and sharp.
+> Be aware Swingletree is under development. Some edges may be still rough and sharp.
 
 Utilize SonarQube Quality Gates inside your GitHub Pull Requests.
 
