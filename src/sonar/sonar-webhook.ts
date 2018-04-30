@@ -10,7 +10,6 @@ import { inject } from "inversify";
 import EventBus from "../event-bus";
 import ConfigurationService from "../configuration";
 
-const unirest = require("unirest");
 
 /** Provides a Webhook for Sonar
  */

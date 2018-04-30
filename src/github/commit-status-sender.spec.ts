@@ -15,7 +15,6 @@ import { AppEvent } from "../app-events";
 import EventBus from "../event-bus";
 import { emit } from "cluster";
 
-const unirest = require("unirest");
 const sandbox = sinon.sandbox.create();
 
 describe("CommitStatusSender", () => {
