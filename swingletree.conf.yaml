@@ -1,15 +1,17 @@
+context: swingletree # this will appear as the commit status context
+
+# storage configuration
+storage:
+  database: localhost # database host
+  password: # database password
+
+# GitHub specific configuration
 github:
   appId: 00000 # The AppId of your GitHub app instance (not installation!)
   keyFile: gh-app.pem # the key file of your GitHub App (you retrieve this from the App settings page)
   base: http://localhost:4000 # Github Api base url
-  webhookSecret: changeme
+  webhookSecret: # this is the webhook secret. You should set it.
 
+# SonarQube specific configuration
 sonar:
-  token:
-  base:
-
-storage:
-  database:
-  password:
-
-context: swingletree
+  base: # list of sonarqube instances allowed to send webhook events
