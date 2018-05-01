@@ -80,6 +80,11 @@ You will need to pass the environment variables to configure your Swingletree in
 | ------------- | -------------  |
 | GH_APP_PEM    | Variable contents will be written to `./gh-app.pem` on startup  |
 | CONFIG        | If set the variable contents will be written to `./swingletree.conf.yaml` on startup. This needs to be a plain string.  |
+| GITHUB_APPID  | Configures the GitHub Application ID |
+| GITHUB_BASE   | Configures the GitHub API base URL  |
+| GITHUB_SECRET | Configures the GitHub webhook secret  |
+| DATABASE_HOST | Configures the Redis database host  |
+| DATABASE_PASSWORD | Configures the Redis database password to use for authentication |
 
 
 ### Running from source
