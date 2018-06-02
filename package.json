@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": ">=8"
+  },
   "scripts": {
     "start": "npm run build && nodemon bin/main.js",
     "build": "npm run build-ts && npm run tslint",
@@ -41,7 +44,7 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "eslint": "^4.19.1",
-    "mocha": "^3.5.2",
+    "mocha": "^5.2.0",
     "nodemon": "^1.17.3",
     "sinon": "^4.5.0",
     "sinon-chai": "^2.14.0",
