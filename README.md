@@ -9,7 +9,7 @@ Utilize SonarQube Quality Gates inside your GitHub Pull Requests.
 
 Tracking your code quality across you branches is a good thing - especially when it comes to approving pull requests.
 
-Swingletree gives you the possibility to automatically block pull requests on failing quality gates performed by the SonarQube branch plugin.
+Swingletree gives you the possibility to automatically block pull requests on failing quality gates performed by the [SonarQube Branch Plugin](https://docs.sonarqube.org/display/PLUG/Branch+Plugin).
 
 ## Integration
 
