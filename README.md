@@ -52,7 +52,25 @@ This section covers the prerequisites and the installation of Swingletree. If yo
 
 ## Configuration
 
-Swingletree is configured using a configuration file named `swingletree.conf.yaml` or via environment variables when using docker (see [Section Run](#run)).
+Swingletree is configured using a configuration file named `swingletree.conf.yaml` or via environment variables, which are listed and described below.
+
+### Environment Variables
+
+| Variable              | Description                                         |
+| --------------------- | --------------------------------------------------- |
+| `GH_APP_PEM`          | Variable contents will be written to `./gh-app.pem` on startup  |
+| `CONFIG`              | If set the variable contents will be written to `./swingletree.conf.yaml` on startup. This needs to be a plain string.  |
+| `GITHUB_APPID`        | Configures the GitHub Application ID |
+| `GITHUB_BASE`         | Configures the GitHub API base URL  |
+| `GITHUB_SECRET`       | Configures the GitHub webhook secret  |
+| `DATABASE_HOST`       | Configures the Redis database host  |
+| `DATABASE_PASSWORD`   | Configures the Redis database password to use for authentication |
+
+### GitHub App Key
+
+You will notice that a file named `gh-app.pem` (by default) is required on startup. Swingletree needs this file to authenticate with GitHub. In order to obtain this file, you will need to create a GitHub App on Github.com (or your GitHub Enterprise instance). Follow the instructions on this [GitHub Guide][create-gh-app] to create one.
+
+After the GitHub App is created, you can download the key from the App configuration page.
 
 ## Build
 
@@ -72,21 +90,10 @@ Start Swingletree and a Redis database by running
 docker-compose up
 ```
 
-You will need to pass the environment variables to configure your Swingletree instance.
-
-#### Environment Variables
-
-| Variable              | Description    |
-| --------------------- | -------------  |
-| `GH_APP_PEM`          | Variable contents will be written to `./gh-app.pem` on startup  |
-| `CONFIG`              | If set the variable contents will be written to `./swingletree.conf.yaml` on startup. This needs to be a plain string.  |
-| `GITHUB_APPID`        | Configures the GitHub Application ID |
-| `GITHUB_BASE`         | Configures the GitHub API base URL  |
-| `GITHUB_SECRET`       | Configures the GitHub webhook secret  |
-| `DATABASE_HOST`       | Configures the Redis database host  |
-| `DATABASE_PASSWORD`   | Configures the Redis database password to use for authentication |
-
+You will need to configure your Swingletree instance via [environment variables](#environment-variables).
 
 ### Running from source
 
 Start swingletree by installing your dependencies with `npm i --production` and run the application by `npm start`
+
+[create-gh-app]: https://developer.github.com/apps/building-github-apps/creating-a-github-app/
