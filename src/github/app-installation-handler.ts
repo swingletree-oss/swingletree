@@ -11,7 +11,7 @@ import InstallationStorage from "./client/installation-storage";
 import { GithubInstallation } from "./model/gh-webhook-event";
 
 
-/** Sends Commit Status Requests to GitHub
+/** Handles GitHub-App installation notices sent by GitHub
  */
 @injectable()
 class GhAppInstallationHandler {
