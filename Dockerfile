@@ -16,7 +16,7 @@ FROM node:8-alpine
 
 ENV REDIS_HOST "http://redis"
 
-RUN mkdir /opt/swingletree
+RUN mkdir -p /opt/swingletree
 WORKDIR /opt/swingletree
 
 # add build artifacts from builder image
