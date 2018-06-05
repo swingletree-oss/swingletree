@@ -7,8 +7,7 @@ COPY . /usr/src/swingletree
 WORKDIR /usr/src/swingletree
 
 RUN npm set registry "${NPM_REGISTRY}"
-RUN npm i -g npm@6
-RUN npm ci
+RUN npm i
 RUN npm run build
 RUN npm prune --production
 
@@ -20,9 +19,15 @@ ENV REDIS_HOST "http://redis"
 RUN mkdir /opt/swingletree
 WORKDIR /opt/swingletree
 
+# add build artifacts from builder image
 COPY --from=build /usr/src/swingletree/bin .
 COPY --from=build /usr/src/swingletree/node_modules ./node_modules
+
+# add misc files like views or configurations
+COPY views .
 COPY swingletree.conf.yaml .
+
+# add entrypoint script
 COPY docker/entrypoint.sh .
 
 ENTRYPOINT [ "/bin/sh", "entrypoint.sh" ]
