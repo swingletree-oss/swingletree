@@ -23,7 +23,17 @@ Swingletree will request a permission to modify your repositories' commit status
 
 > ![Commit Status](./docs/commit-status.png)
 
-### SonarQube Analyze Parameters
+### Webhook URLs
+
+Following webhook handlers are listening for events:
+
+| Type      | Path                      |
+| --------- | ------------------------- |
+| SonarQube | webhook/sonar             |
+| GitHub    | webhook/github            |
+
+
+### SonarQube Analysis Parameters
 
 Swingletree needs some context when receiving webhook events from SonarQube. Therefore some parameters need to be set when running a SonarQube Analysis.
 
@@ -59,18 +69,30 @@ Swingletree is configured using a configuration file named `swingletree.conf.yam
 | Variable              | Description                                         |
 | --------------------- | --------------------------------------------------- |
 | `GH_APP_PEM`          | Variable contents will be written to `./gh-app.pem` on startup  |
-| `CONFIG`              | If set the variable contents will be written to `./swingletree.conf.yaml` on startup. This needs to be a plain string.  |
+| `CONFIG`              | If set the variable contents will be written to `./swingletree.conf.yaml` on startup. This needs to be a plain string. |
 | `GITHUB_APPID`        | Configures the GitHub Application ID |
 | `GITHUB_BASE`         | Configures the GitHub API base URL  |
 | `GITHUB_SECRET`       | Configures the GitHub webhook secret  |
 | `DATABASE_HOST`       | Configures the Redis database host  |
 | `DATABASE_PASSWORD`   | Configures the Redis database password to use for authentication |
 
+### GitHub App Configuration
+
+In case you want to run your own Swingletree you will need to create a GitHub App on Github.com (or your GitHub Enterprise instance). Follow the instructions on this [GitHub Guide][create-gh-app] to create one.
+
 ### GitHub App Key
 
-You will notice that a file named `gh-app.pem` (by default) is required on startup. Swingletree needs this file to authenticate with GitHub. In order to obtain this file, you will need to create a GitHub App on Github.com (or your GitHub Enterprise instance). Follow the instructions on this [GitHub Guide][create-gh-app] to create one.
+You will notice that a file named `gh-app.pem` (by default) is required on startup. Swingletree needs this file to authenticate with GitHub.
 
-After the GitHub App is created, you can download the key from the App configuration page.
+After you have created your GitHub App, you can download the key from the App configuration page.
+
+### Permissions
+
+When creating your GitHub App you will need to specify the permissions required by the App.
+
+Read and Write access are required for:
+
+* Commit Statuses
 
 ## Build
 
