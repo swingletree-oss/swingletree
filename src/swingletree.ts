@@ -51,6 +51,11 @@ class SwingletreeServer {
 		app.use("/webhook/github", this.githubWebhook.getRoute());
 		app.post("/webhook/sonar/", this.sonarWebhook.webhook);
 
+		// sites
+		app.set("view engine", "pug");
+		app.get("/", (req, res) => {
+			res.render("index");
+		});
 
 		// health endpoint
 		app.get("/health", (request: Request, response: Response) => {
