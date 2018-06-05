@@ -84,7 +84,7 @@ In case you want to run your own Swingletree you will need to create a GitHub Ap
 
 You will notice that a private key file named `gh-app.pem` (by default) is required on startup. Swingletree needs this file to authenticate with GitHub.
 
-After you have created your GitHub App, you can download the key from the App configuration page.
+After you have created your GitHub App, you can generate and download the key from the App configuration page.
 
 ### Permissions
 
