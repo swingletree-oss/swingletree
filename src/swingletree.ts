@@ -49,7 +49,7 @@ class SwingletreeServer {
 
 		// bind webhooks to paths
 		app.use("/webhook/github", this.githubWebhook.getRoute());
-		app.post("/webhook/sonar/", this.sonarWebhook.webhook);
+		app.use("/webhook/sonar/", this.sonarWebhook.getRoute());
 
 		// sites
 		app.set("view engine", "pug");

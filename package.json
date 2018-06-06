@@ -28,6 +28,7 @@
     "body-parser": "^1.18.2",
     "compression": "^1.7.2",
     "express": "^4.16.3",
+    "express-basic-auth": "^1.1.5",
     "express-github-webhook": "^1.0.6",
     "inversify": "^4.13.0",
     "js-yaml": "^3.11.0",

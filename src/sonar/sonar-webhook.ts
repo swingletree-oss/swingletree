@@ -1,7 +1,7 @@
 "use strict";
 
 import { GithubCommitStatusContainer, CommitStatusEnum, GithubCommitStatus } from "../github/model/gh-commit-status";
-import { Response, Request, NextFunction } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { AppEvent } from "../app-events";
 import { QualityGateStatus } from "./model/sonar-quality-gate";
 import { SonarWebhookEvent } from "./model/sonar-wehook-event";
@@ -9,6 +9,7 @@ import { injectable } from "inversify";
 import { inject } from "inversify";
 import EventBus from "../event-bus";
 import { ConfigurationService } from "../configuration";
+import * as basicAuth from "express-basic-auth";
 import { LOGGER } from "../logger";
 
 
@@ -36,6 +37,24 @@ class SonarWebhook {
 				event.properties.repository !== undefined;
 		}
 		return true; // TODO: check for analyze marker property in properties section // get target branch from there?
+	}
+
+	public getRoute(): Router {
+		const router = Router();
+		const secret = this.configurationService.get().sonar.secret;
+
+		if (secret && secret.trim().length > 0) {
+			router.use(basicAuth({
+					users: { "webhook": secret }
+				})
+			);
+		} else {
+			LOGGER.warn("SonarQube webhook is not protected. Consider setting a sonar secret in the Swingletree configuration.");
+		}
+
+		router.post("/", this.webhook);
+
+		return router;
 	}
 
 	public webhook = (req: Request, res: Response) => {

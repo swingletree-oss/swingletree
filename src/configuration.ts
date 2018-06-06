@@ -61,9 +61,11 @@ export class StorageConfig {
 export class SonarConfig {
 	public readonly token: string;
 	public readonly base: string;
+	public readonly secret: string;
 
 	constructor(model: SonarConfig) {
 		this.token = process.env["SONAR_TOKEN"] || model.token;
 		this.base = process.env["SONAR_BASE"] || model.base;
+		this.secret = process.env["SONAR_SECRET"] || model.secret;
 	}
 }
