@@ -50,6 +50,10 @@ sonar-scanner \
     -Dsonar.analysis.repository=error418/swingletree
 ```
 
+### SonarQube Webhook security
+
+SonarQube webhooks can be configured using basic authentication. You can set the secret via environment variable or configuration file. The webhook will be unprotected, if no value is set.
+
 ## Installation
 
 This section covers the prerequisites and the installation of Swingletree. If you want to run Swingletree as a Docker container you can skip to the section [Running with Docker](#running-with-docker) 
@@ -75,6 +79,7 @@ Swingletree is configured using a configuration file named `swingletree.conf.yam
 | `GITHUB_SECRET`       | Configures the GitHub webhook secret  |
 | `DATABASE_HOST`       | Configures the Redis database host  |
 | `DATABASE_PASSWORD`   | Configures the Redis database password to use for authentication |
+| `SONAR_SECRET`        | Configures the Basic Authentication password for the SonarQube webhook.
 
 ### GitHub App Configuration
 
