@@ -26,24 +26,29 @@ describe("Configuration", () => {
 		it("should use default configuration when no env vars are set", () => {
 			uut = new SonarConfig({
 				base: "base",
-				token: "token"
+				token: "token",
+				secret: "test"
 			});
 
 			expect(uut.base).to.be.equal("base");
 			expect(uut.token).to.be.equal("token");
+			expect(uut.secret).to.be.equal("test");
 		});
 
 		it("should prioritize environment variables", () => {
 			process.env["SONAR_BASE"] = "envBase";
 			process.env["SONAR_TOKEN"] = "envToken";
+			process.env["SONAR_SECRET"] = "envSecret";
 
 			uut = new SonarConfig({
 				base: "base",
-				token: "token"
+				token: "token",
+				secret: "test"
 			});
 
 			expect(uut.base).to.be.equal("envBase");
 			expect(uut.token).to.be.equal("envToken");
+			expect(uut.secret).to.be.equal("envSecret");
 		});
 	});
 

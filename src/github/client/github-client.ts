@@ -53,8 +53,12 @@ class GithubClientService {
 	public createCommitStatus(status: GithubCommitStatusContainer): Promise<void> {
 
 		return new Promise<void>(async (resolve, reject) => {
+			if (!status.repository) {
+				reject("Repository target is not set");
+			}
+
 			const coordinates = status.repository.split("/");
-			const client = await this.getGhAppClient(status.repository.split("/")[0]);
+			const client = await this.getGhAppClient(coordinates[0]);
 
 			client.repos.createStatus({
 				owner: coordinates[0],
