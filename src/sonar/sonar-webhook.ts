@@ -9,6 +9,7 @@ import { injectable } from "inversify";
 import { inject } from "inversify";
 import EventBus from "../event-bus";
 import { ConfigurationService } from "../configuration";
+import { LOGGER } from "../logger";
 
 
 /** Provides a Webhook for Sonar
@@ -38,6 +39,8 @@ class SonarWebhook {
 	}
 
 	public webhook = (req: Request, res: Response) => {
+		LOGGER.info("received SonarQube webhook event");
+
 		const event = new SonarWebhookEvent(req.body);
 
 		if (this.isWebhookEventRelevant(event)) {
