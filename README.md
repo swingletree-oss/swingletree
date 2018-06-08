@@ -37,7 +37,6 @@ Following webhook handlers are listening for events:
 
 Swingletree needs some context when receiving webhook events from SonarQube. Therefore some parameters need to be set when running a SonarQube Analysis.
 
-* `sonar.analysis.branch`, containing the name of the branch
 * `sonar.analysis.commitId`, containing the commit id
 * `sonar.analysis.repository`, containing the full repository path
 
