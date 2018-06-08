@@ -31,11 +31,10 @@ class SonarWebhook {
 
 	private isWebhookEventRelevant(event: SonarWebhookEvent) {
 		if (event.properties !== undefined) {
-			return event.properties.branch !== undefined &&
-				event.properties.commitId !== undefined &&
+			return event.properties.commitId !== undefined &&
 				event.properties.repository !== undefined;
 		}
-		return true; // TODO: check for analyze marker property in properties section // get target branch from there?
+		return false;
 	}
 
 	private authenticationMiddleware(secret: string) {

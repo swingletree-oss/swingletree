@@ -26,13 +26,11 @@ export class SonarWebhookEvent {
 }
 
 class Properties {
-	branch: string;
 	commitId: string;
 	repository: string;
 	appAction: string;
 
 	constructor(properties: any) {
-		this.branch = properties["sonar.analysis.branch"];
 		this.commitId = properties["sonar.analysis.commitId"];
 		this.repository = properties["sonar.analysis.repository"];
 	}
