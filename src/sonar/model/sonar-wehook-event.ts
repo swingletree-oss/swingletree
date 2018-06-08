@@ -8,6 +8,7 @@ export class SonarWebhookEvent {
 
 	qualityGate: SonarQualityGate;
 
+	dashboardUrl: string;
 	serverUrl: string;
 	status: string;
 	taskId: string;
@@ -22,6 +23,12 @@ export class SonarWebhookEvent {
 		this.taskId = model.taskId;
 
 		this.qualityGate = <SonarQualityGate>model.qualityGate;
+
+		if (model.branch) {
+			this.dashboardUrl = model.branch.url;
+		} else {
+			this.dashboardUrl = (model.project) ? model.project.url : model.serverUrl;
+		}
 	}
 }
 

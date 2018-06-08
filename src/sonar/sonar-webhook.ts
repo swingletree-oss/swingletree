@@ -80,7 +80,7 @@ class SonarWebhook {
 			}
 
 			commitStatus.context = this.configurationService.get().context;
-			commitStatus.target_url = event.serverUrl;
+			commitStatus.target_url = event.dashboardUrl;
 
 			commitStatusContainer.payload = commitStatus;
 
