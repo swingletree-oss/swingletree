@@ -24,8 +24,8 @@ class TokenStorage {
 	 * @param token bearer token
 	 */
 	public store(login: string, token: BearerToken) {
-		const ttl = (new Date(token.expires)).getTime() - Date.now();
-		this.client.set(login, token.token, "PX", ttl);
+		const ttl = (new Date(token.expires_at)).getTime() - Date.now();
+		this.client.set(login, token.token, "PX", Math.floor(ttl / 1000));
 	}
 
 	/** Gets the bearer token for a user, if available
@@ -48,7 +48,7 @@ class TokenStorage {
 
 class BearerToken {
 	public token: string;
-	public expires: string;
+	public expires_at: string;
 }
 
 export default TokenStorage;
