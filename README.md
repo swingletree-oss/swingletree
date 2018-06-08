@@ -44,7 +44,6 @@ You can set the parameters when invoking the `sonar-scanner`. For example:
 
 ```
 sonar-scanner \
-    -Dsonar.analysis.branch=dev \
     -Dsonar.analysis.commitId=628f5175ada0d685fd7164baa7c6382c1f25cab4 \
     -Dsonar.analysis.repository=error418/swingletree
 ```
