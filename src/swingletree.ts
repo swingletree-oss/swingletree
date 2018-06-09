@@ -2,7 +2,7 @@ import * as express from "express";
 import * as compression from "compression";
 import * as bodyParser from "body-parser";
 import * as path from "path";
-import { Response, Request } from "express";
+import { Response, Request, NextFunction } from "express";
 import { ConfigurationService } from "./configuration";
 import { injectable } from "inversify";
 
@@ -60,6 +60,15 @@ class SwingletreeServer {
 		// health endpoint
 		app.get("/health", (request: Request, response: Response) => {
 			response.sendStatus(200);
+		});
+
+		// error handling
+		app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+			// only provide error details in development mode
+			const visibleError = req.app.get("env") === "development" ? err : {};
+
+			res.status(err.status || 500);
+			res.send(visibleError);
 		});
 
 		// update installation cache data
