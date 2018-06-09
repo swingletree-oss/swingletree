@@ -46,7 +46,8 @@ class GithubClientService {
 					}
 
 					resolve(result);
-				});
+				})
+			.catch(reject);
 		});
 	}
 
