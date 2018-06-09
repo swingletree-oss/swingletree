@@ -2,6 +2,20 @@ extends base
 
 block content
     div(class="container")
-        div(class="jumbotron")
-            h1 Hi, there!
-            p(class="lead") Your Swingletree is ready to go.
+        div(class="row")
+            div(class="jumbotron col-md-9")
+                h1 Hi, there!
+                p(class="lead") Your Swingletree is ready to go.
+
+            div(class="col-md-3")
+                div(class={"card text-white": true, "bg-danger": unhealthy > 0, "bg-success": unhealthy == 0})
+                    div(class="card-header")
+                        if unhealthy > 0
+                            i(class="fas fa-exclamation-triangle mr-2")
+                        else
+                            i(class="fas fa-check-circle mr-2")
+                        span Database clients
+                    if unhealthy > 0
+                        div(class="card-body")
+                            p(class="card-text") 
+                                    span #{unhealthy} of #{connections} failing

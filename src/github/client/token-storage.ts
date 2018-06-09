@@ -2,20 +2,17 @@ import { RedisClient, ClientOpts } from "redis";
 import { ConfigurationService } from "../../configuration";
 import { inject } from "inversify";
 import { injectable } from "inversify";
+import { LOGGER } from "../../logger";
+import RedisClientFactory, { DATABASE_INDEX } from "../../redis-client";
 
 @injectable()
 class TokenStorage {
 	private client: RedisClient;
 
 	constructor(
-		@inject(ConfigurationService) configService: ConfigurationService
+		@inject(RedisClientFactory) redisClientFactory: RedisClientFactory
 	) {
-		this.client = new RedisClient({
-			host: configService.get().storage.database
-		});
-
-		this.client.auth(configService.get().storage.password);
-		this.client.select(2);
+		this.client = redisClientFactory.createClient(DATABASE_INDEX.TOKEN_STORAGE);
 	}
 
 	/** Stores a bearer token

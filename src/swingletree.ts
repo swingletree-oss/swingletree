@@ -15,6 +15,7 @@ import EventBus from "./event-bus";
 import InstallationStorage from "./github/client/installation-storage";
 import GithubClientService from "./github/client/github-client";
 import { GithubInstallation } from "./github/model/gh-webhook-event";
+import PageRoutes from "./pages/page-routes";
 import { AppEvent } from "./app-events";
 
 @injectable()
@@ -25,19 +26,22 @@ class SwingletreeServer {
 	private installationStorage: InstallationStorage;
 	private clientService: GithubClientService;
 	private eventBus: EventBus;
+	private pageRoutes: PageRoutes;
 
 	constructor(
 		@inject(GithubWebhook) githubWebhook: GithubWebhook,
 		@inject(SonarWebhook) sonarWebhook: SonarWebhook,
 		@inject(ConfigurationService) configurationService: ConfigurationService,
 		@inject(GithubClientService) clientService: GithubClientService,
-		@inject(EventBus) eventBus: EventBus
+		@inject(EventBus) eventBus: EventBus,
+		@inject(PageRoutes) pageRoutes: PageRoutes
 	) {
 		this.githubWebhook = githubWebhook;
 		this.sonarWebhook = sonarWebhook;
 		this.configurationService = configurationService;
 		this.clientService = clientService;
 		this.eventBus = eventBus;
+		this.pageRoutes = pageRoutes;
 	}
 
 	public run(app: express.Application) {
@@ -51,11 +55,9 @@ class SwingletreeServer {
 		app.use("/webhook/github", this.githubWebhook.getRoute());
 		app.use("/webhook/sonar", this.sonarWebhook.getRoute());
 
-		// sites
+		// set rendering engine
 		app.set("view engine", "pug");
-		app.get("/", (req, res) => {
-			res.render("index");
-		});
+		app.use("/", this.pageRoutes.getRoute());
 
 		// health endpoint
 		app.get("/health", (request: Request, response: Response) => {

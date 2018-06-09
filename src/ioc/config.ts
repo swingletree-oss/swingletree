@@ -12,6 +12,8 @@ import GithubWebhook from "../github/github-webhook";
 import TokenStorage from "../github/client/token-storage";
 import InstallationStorage from "../github/client/installation-storage";
 import GhAppInstallationHandler from "../github/app-installation-handler";
+import RedisClientFactory from "../redis-client";
+import PageRoutes from "../pages/page-routes";
 
 
 const container = new Container();
@@ -26,5 +28,7 @@ container.bind<GithubWebhook>(GithubWebhook).toSelf().inSingletonScope();
 container.bind<TokenStorage>(TokenStorage).toSelf().inSingletonScope();
 container.bind<InstallationStorage>(InstallationStorage).toSelf().inSingletonScope();
 container.bind<GhAppInstallationHandler>(GhAppInstallationHandler).toSelf().inSingletonScope();
+container.bind<RedisClientFactory>(RedisClientFactory).toSelf().inSingletonScope();
+container.bind<PageRoutes>(PageRoutes).toSelf().inSingletonScope();
 
 export default container;
