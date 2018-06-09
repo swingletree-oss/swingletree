@@ -14,6 +14,7 @@ RUN npm prune --production
 # swingletree container image
 FROM node:8-alpine
 
+ENV NODE_ENV "production"
 ENV REDIS_HOST "http://redis"
 
 RUN mkdir -p /opt/swingletree
