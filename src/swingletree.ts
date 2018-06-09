@@ -79,7 +79,7 @@ class SwingletreeServer {
 				});
 			})
 			.catch((err) => {
-				LOGGER.warn("could not update installation cache" + err);
+				LOGGER.warn("could not update installation cache: " + err.message);
 			});
 
 		// kickstart everything
