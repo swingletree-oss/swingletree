@@ -1,7 +1,8 @@
 "use strict";
 
 export enum QualityGateStatus {
-	OK = "OK"
+	OK = "OK",
+	NO_VALUE = "NO_VALUE"
 }
 
 export class SonarQualityGate {
