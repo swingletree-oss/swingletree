@@ -13,13 +13,15 @@ chai.use(require("chai-as-promised"));
 import GithubClientService from "./client/github-client";
 import { AppEvent } from "../app-events";
 import EventBus from "../event-bus";
+import { SonarWebhookEvent } from "../sonar/model/sonar-wehook-event";
+import { SonarQualityGate } from "../sonar/model/sonar-quality-gate";
 
 const sandbox = sinon.sandbox.create();
 
 describe("Commit Status Sender", () => {
 	let uut: CommitStatusSender;
 
-	let mockStatus: GithubCommitStatusContainer;
+	let mockEvent: SonarWebhookEvent;
 
 	let eventBusMock: any;
 	let configurationMock: any;
@@ -47,7 +49,8 @@ describe("Commit Status Sender", () => {
 			configurationMock,
 			githubClientMock
 		);
-		mockStatus = new GithubCommitStatusContainer("testRepository", "testCommitId");
+
+		mockEvent = new SonarWebhookEvent(Object.assign({}, require("../../test/base-sonar-webhook.json")));
 	});
 
 	afterEach(function () {
@@ -55,15 +58,31 @@ describe("Commit Status Sender", () => {
 	});
 
 	it("should send commit status on matching event", (done) => {
-		mockStatus.payload = new GithubCommitStatus(CommitStatusEnum.pending);
 		githubClientMock.createCommitStatus.resolves();
-		uut.sendStatus(mockStatus)
+		uut.sendStatus(mockEvent)
 			.then(() => {
 				sinon.assert.calledWith(eventBusMock.emit, AppEvent.statusSent);
 				done();
 			})
 			.catch(() => {
 				throw new Error();
+			});
+	});
+
+	it("should send failure commit status when quality gate failed", (done) => {
+		const qualityGate = new SonarQualityGate();
+		mockEvent = new SonarWebhookEvent(Object.assign({}, require("../../test/base-sonar-webhook-failed.json")));
+
+		githubClientMock.createCommitStatus.resolves();
+		uut.sendStatus(mockEvent)
+			.then(() => {
+				sinon.assert.calledWith(eventBusMock.emit, AppEvent.statusSent,
+					sinon.match.has("payload", sinon.match.has("description", "Quality gate failed with 1 violations."))
+						.and(sinon.match.has("payload", sinon.match.has("state", "failure"))));
+				done();
+			})
+			.catch((err) => {
+				done(err);
 			});
 	});
 
