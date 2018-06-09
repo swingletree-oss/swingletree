@@ -5,5 +5,6 @@ export enum AppEvent {
 	webhookEventIgnored = "ignored-webhook-event",
 	branchDeleted = "github-branch-deleted",
 	sonarProjectDeleted = "sonar-project-deleted",
-	appInstalled = "swingletree-app-installed"
+	appInstalled = "swingletree-app-installed",
+	sonarAnalysisComplete = "sonar-analysis:complete"
 }

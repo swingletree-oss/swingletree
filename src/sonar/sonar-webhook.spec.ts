@@ -52,17 +52,14 @@ describe("Sonar Webhook", () => {
 	it("should send commit status event on relevant hook", () => {
 
 		testData.properties = {
-			"sonar.analysis.ghPrGate": "respond",
-			"sonar.analysis.branch": "testBranch",
 			"sonar.analysis.commitId": "12345",
 			"sonar.analysis.repository": "testOrg/testRepo"
 		};
 
 		uut.webhook({ body: testData } as Request, responseMock);
 
-		sinon.assert.calledWith(eventBusMock.emit, AppEvent.sendStatus, sinon.match({
-			commitId: "12345",
-			repository: "testOrg/testRepo"
+		sinon.assert.calledWith(eventBusMock.emit, AppEvent.sonarAnalysisComplete, sinon.match((val) => {
+			return val.properties.commitId == "12345" && val.properties.repository == "testOrg/testRepo";
 		}));
 	});
 
@@ -73,7 +70,6 @@ describe("Sonar Webhook", () => {
 
 	it("should not send ignored event on partially set properties", () => {
 		testData.properties = {
-			"sonar.analysis.branch": "testBranch",
 			"sonar.analysis.commitId": "12345"
 		};
 

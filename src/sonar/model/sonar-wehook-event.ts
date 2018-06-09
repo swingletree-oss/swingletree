@@ -13,16 +13,14 @@ export class SonarWebhookEvent {
 	status: string;
 	taskId: string;
 
-	constructor(model: any) {
-		this.analysedAt = model.analysedAt;
-		this.project = model.project;
+	statusSuccess: boolean;
+
+	constructor(model: any = {}) {
+		Object.assign(this, model);
+
 		this.properties = new Properties(model.properties);
-
-		this.serverUrl = model.serverUrl;
-		this.status = model.status;
-		this.taskId = model.taskId;
-
-		this.qualityGate = <SonarQualityGate>model.qualityGate;
+		this.qualityGate = new SonarQualityGate(model.qualityGate);
+		this.statusSuccess = this.qualityGate.status === "OK";
 
 		if (model.branch) {
 			this.dashboardUrl = model.branch.url;

@@ -3,8 +3,9 @@
 import { LOGGER } from "../logger";
 
 import { AppEvent } from "../app-events";
-import { GithubCommitStatus, GithubCommitStatusContainer } from "./model/gh-commit-status";
+import { GithubCommitStatus, GithubCommitStatusContainer, CommitStatusEnum } from "./model/gh-commit-status";
 import GithubClientService from "./client/github-client";
+import { SonarWebhookEvent } from "../sonar/model/sonar-wehook-event";
 import { injectable, inject } from "inversify";
 import { ConfigurationService } from "../configuration";
 import EventBus from "../event-bus";
@@ -32,17 +33,34 @@ class CommitStatusSender {
 		this.githubClientService = githubClientService;
 	}
 
-	public sendStatus(status: GithubCommitStatusContainer): Promise<void> {
+	public sendStatus(analysisEvent: SonarWebhookEvent): Promise<void> {
+
+		const commitStatusContainer = new GithubCommitStatusContainer(analysisEvent.properties.repository, analysisEvent.properties.commitId);
+		let commitStatus: GithubCommitStatus;
+
+		if (analysisEvent.statusSuccess) {
+			commitStatus = new GithubCommitStatus(CommitStatusEnum.success);
+			commitStatus.description = "Quality gate passed.";
+		} else {
+			commitStatus = new GithubCommitStatus(CommitStatusEnum.failure);
+			commitStatus.description = "Quality gate failed with " + analysisEvent.qualityGate.getFailureCount() + " violations.";
+		}
+
+		commitStatus.context = this.configurationService.get().context;
+		commitStatus.target_url = analysisEvent.dashboardUrl;
+
+		commitStatusContainer.payload = commitStatus;
+
 
 		return new Promise<void>((resolve, reject) => {
-			this.githubClientService.createCommitStatus(status)
+			this.githubClientService.createCommitStatus(commitStatusContainer)
 				.then(() => {
-					this.eventBus.emit(AppEvent.statusSent, status);
+					this.eventBus.emit(AppEvent.statusSent, commitStatusContainer);
 					LOGGER.info("commit status update was sent to github");
 					resolve();
 				})
 				.catch((error: any) => {
-					LOGGER.error("could not persist status for %s", status.repository);
+					LOGGER.error("could not persist status for %s with commit id %s", commitStatusContainer.repository, commitStatusContainer.commitId);
 					LOGGER.error(error);
 					reject();
 				});

@@ -68,23 +68,7 @@ class SonarWebhook {
 		const event = new SonarWebhookEvent(req.body);
 
 		if (this.isWebhookEventRelevant(event)) {
-			const commitStatusContainer = new GithubCommitStatusContainer(event.properties.repository, event.properties.commitId);
-			let commitStatus: GithubCommitStatus;
-
-			if (event.qualityGate.status === QualityGateStatus.OK) {
-				commitStatus = new GithubCommitStatus(CommitStatusEnum.success);
-				commitStatus.description = "Quality gate passed.";
-			} else {
-				commitStatus = new GithubCommitStatus(CommitStatusEnum.failure);
-				commitStatus.description = "Quality gate failed.";
-			}
-
-			commitStatus.context = this.configurationService.get().context;
-			commitStatus.target_url = event.dashboardUrl;
-
-			commitStatusContainer.payload = commitStatus;
-
-			this.eventBus.emit(AppEvent.sendStatus, commitStatusContainer);
+			this.eventBus.emit(AppEvent.sonarAnalysisComplete, event);
 		} else {
 			this.eventBus.emit(AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
 		}

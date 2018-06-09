@@ -30,7 +30,7 @@
                 "metric": "new_reliability_rating",
                 "onLeakPeriod": true,
                 "operator": "GREATER_THAN",
-                "status": "OK",
+                "status": "FAILED",
                 "value": "1"
             },
             {
@@ -40,19 +40,12 @@
                 "operator": "GREATER_THAN",
                 "status": "OK",
                 "value": "1"
-            },
-            {
-                "errorThreshold": "80",
-                "metric": "new_coverage",
-                "onLeakPeriod": true,
-                "operator": "LESS_THAN",
-                "status": "NO_VALUE"
             }
         ],
         "name": "SonarQube way",
-        "status": "OK"
+        "status": "FAILED"
     },
     "serverUrl": "http://localhost:9000",
-    "status": "SUCCESS",
+    "status": "FAILED",
     "taskId": "AVh21JS2JepAEhwQ-b3u"
 }
