@@ -77,7 +77,8 @@ Swingletree is configured using a configuration file named `swingletree.conf.yam
 | `GITHUB_SECRET`       | Configures the GitHub webhook secret  |
 | `DATABASE_HOST`       | Configures the Redis database host  |
 | `DATABASE_PASSWORD`   | Configures the Redis database password to use for authentication |
-| `SONAR_SECRET`        | Configures the Basic Authentication password for the SonarQube webhook.
+| `SONAR_SECRET`        | Configures the Basic Authentication password for the SonarQube webhook. |
+| `PORT`                | Configures the port Swingletree is listening on |
 
 ### GitHub App Configuration
 
