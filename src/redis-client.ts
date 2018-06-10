@@ -38,9 +38,14 @@ class RedisClientFactory {
 
 		client.on("error", function (err) {
 			if (err.code == "ECONNREFUSED") {
-
+				LOGGER.error("Redis client for index %i has trouble connecting to the database: %s", databaseIndex, err.message);
+			} else {
+				LOGGER.error("database error for index %i! %s", databaseIndex, err.message);
 			}
-			LOGGER.error("database error! %s", err);
+		});
+
+		client.on("ready", () => {
+			LOGGER.info("Redis client for database index %i is connected and ready.", databaseIndex);
 		});
 
 		client.auth(this.configService.get().storage.password);
