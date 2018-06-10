@@ -33,7 +33,10 @@ class RedisClientFactory {
 
 	public createClient(databaseIndex = 0): RedisClient {
 		const client = new RedisClient({
-			host: this.configService.get().storage.database
+			host: this.configService.get().storage.database,
+			retry_strategy: (options) => {
+				return 5000;
+			}
 		});
 
 		client.on("error", function (err) {
