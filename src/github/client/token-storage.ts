@@ -22,7 +22,11 @@ class TokenStorage {
 	 */
 	public store(login: string, token: BearerToken) {
 		const ttl = (new Date(token.expires_at)).getTime() - Date.now();
-		this.client.set(login, token.token, "PX", Math.floor(ttl / 1000));
+		this.client.set(login, token.token, "PX", ttl, (err) => {
+			if (err) {
+				LOGGER.warn("failed to persist token for login %s: %s", login, err);
+			}
+		});
 	}
 
 	/** Gets the bearer token for a user, if available
