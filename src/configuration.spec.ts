@@ -60,7 +60,8 @@ describe("Configuration", () => {
 				base: "base",
 				webhookSecret: "secret",
 				appId: 101,
-				keyFile: "testfile"
+				keyFile: "testfile",
+				pendingCommitStatus: false
 			});
 
 			expect(uut.base).to.be.equal("base");
@@ -78,7 +79,8 @@ describe("Configuration", () => {
 				base: "base",
 				webhookSecret: "secret",
 				appId: 101,
-				keyFile: "testfile"
+				keyFile: "testfile",
+				pendingCommitStatus: false
 			});
 
 			expect(uut.base).to.be.equal("envBase");

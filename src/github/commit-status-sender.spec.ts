@@ -28,8 +28,13 @@ describe("Commit Status Sender", () => {
 	let eventBusMock: any;
 	let configurationMock: any;
 	let githubClientMock: any;
+	let githubMockConfig: any;
 
 	beforeEach(function () {
+
+		githubMockConfig = {
+			pendingCommitStatus: true
+		};
 
 		eventBusMock = {
 			emit: sinon.stub(),
@@ -38,7 +43,8 @@ describe("Commit Status Sender", () => {
 
 		configurationMock = {
 			get: sinon.stub().returns({
-				context: "test"
+				context: "test",
+				github: githubMockConfig
 			})
 		};
 
@@ -70,6 +76,19 @@ describe("Commit Status Sender", () => {
 
 	it("should register to SonarQube analysis complete event", () => {
 		sinon.assert.calledWith(eventBusMock.register, AppEvent.sonarAnalysisComplete);
+	});
+
+	it("should not register to github push events if pendingCommitStatus should be ignored", () => {
+		eventBusMock.register.reset();
+
+		githubMockConfig.pendingCommitStatus = false;
+
+		uut = new CommitStatusSender(
+			eventBusMock,
+			configurationMock,
+			githubClientMock
+		);
+		sinon.assert.neverCalledWith(eventBusMock.register, AppEvent.githubPushEvent);
 	});
 
 	it("should send pending commit status on matching event", (done) => {

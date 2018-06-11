@@ -39,12 +39,14 @@ export class GithubConfig {
 	public readonly keyFile: string;
 	public readonly base: string;
 	public readonly webhookSecret: string;
+	public readonly pendingCommitStatus: boolean;
 
 	constructor(model: GithubConfig) {
 		this.appId = Number(process.env["GITHUB_APPID"] || model.appId);
 		this.keyFile = model.keyFile;
 		this.base = process.env["GITHUB_BASE"] || model.base;
 		this.webhookSecret = process.env["GITHUB_SECRET"] || model.webhookSecret;
+		this.pendingCommitStatus = model.pendingCommitStatus;
 	}
 }
 

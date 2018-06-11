@@ -29,7 +29,10 @@ class CommitStatusSender {
 		this.configurationService = configurationService;
 
 		this.eventBus.register(AppEvent.sonarAnalysisComplete, this.sendAnalysisStatus, this);
-		this.eventBus.register(AppEvent.githubPushEvent, this.sendPendingStatus, this);
+
+		if (configurationService.get().github.pendingCommitStatus) {
+			this.eventBus.register(AppEvent.githubPushEvent, this.sendPendingStatus, this);
+		}
 
 		this.githubClientService = githubClientService;
 	}
