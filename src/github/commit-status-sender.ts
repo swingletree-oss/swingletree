@@ -28,7 +28,7 @@ class CommitStatusSender {
 		this.eventBus = eventBus;
 		this.configurationService = configurationService;
 
-		this.eventBus.register(AppEvent.sendStatus, this.sendStatus, this);
+		this.eventBus.register(AppEvent.sonarAnalysisComplete, this.sendStatus, this);
 
 		this.githubClientService = githubClientService;
 	}

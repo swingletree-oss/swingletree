@@ -57,16 +57,19 @@ describe("Commit Status Sender", () => {
 		sandbox.restore();
 	});
 
+	it("should register to SonarQube analysis complete event", () => {
+		sinon.assert.calledWith(eventBusMock.register, AppEvent.sonarAnalysisComplete);
+	});
+
 	it("should send commit status on matching event", (done) => {
 		githubClientMock.createCommitStatus.resolves();
+
 		uut.sendStatus(mockEvent)
 			.then(() => {
 				sinon.assert.calledWith(eventBusMock.emit, AppEvent.statusSent);
 				done();
 			})
-			.catch(() => {
-				throw new Error();
-			});
+			.catch(done);
 	});
 
 	it("should send failure commit status when quality gate failed", (done) => {
