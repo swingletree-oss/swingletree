@@ -26,6 +26,7 @@ COPY --from=build /usr/src/swingletree/node_modules ./node_modules
 
 # add misc files like views or configurations
 COPY views ./views
+COPY static ./static
 COPY swingletree.conf.yaml .
 
 # add entrypoint script
