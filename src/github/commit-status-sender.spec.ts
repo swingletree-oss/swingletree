@@ -15,6 +15,7 @@ import { AppEvent } from "../app-events";
 import EventBus from "../event-bus";
 import { SonarWebhookEvent } from "../sonar/model/sonar-wehook-event";
 import { SonarQualityGate } from "../sonar/model/sonar-quality-gate";
+import { GithubPushWebhookEvent } from "./model/gh-webhook-event";
 
 const sandbox = sinon.sandbox.create();
 
@@ -22,6 +23,7 @@ describe("Commit Status Sender", () => {
 	let uut: CommitStatusSender;
 
 	let mockEvent: SonarWebhookEvent;
+	let mockPushEvent: GithubPushWebhookEvent;
 
 	let eventBusMock: any;
 	let configurationMock: any;
@@ -51,6 +53,15 @@ describe("Commit Status Sender", () => {
 		);
 
 		mockEvent = new SonarWebhookEvent(Object.assign({}, require("../../test/base-sonar-webhook.json")));
+		mockPushEvent = new GithubPushWebhookEvent({
+			repository: {
+				full_name: "test/test-repo"
+			},
+			ref: "test",
+			head_commit: {
+				id: "00000"
+			}
+		});
 	});
 
 	afterEach(function () {
@@ -61,10 +72,21 @@ describe("Commit Status Sender", () => {
 		sinon.assert.calledWith(eventBusMock.register, AppEvent.sonarAnalysisComplete);
 	});
 
+	it("should send pending commit status on matching event", (done) => {
+		githubClientMock.createCommitStatus.resolves();
+
+		uut.sendAnalysisStatus(mockEvent)
+			.then(() => {
+				sinon.assert.calledWith(eventBusMock.emit, AppEvent.statusSent);
+				done();
+			})
+			.catch(done);
+	});
+
 	it("should send commit status on matching event", (done) => {
 		githubClientMock.createCommitStatus.resolves();
 
-		uut.sendStatus(mockEvent)
+		uut.sendAnalysisStatus(mockEvent)
 			.then(() => {
 				sinon.assert.calledWith(eventBusMock.emit, AppEvent.statusSent);
 				done();
@@ -77,7 +99,7 @@ describe("Commit Status Sender", () => {
 		mockEvent = new SonarWebhookEvent(Object.assign({}, require("../../test/base-sonar-webhook-failed.json")));
 
 		githubClientMock.createCommitStatus.resolves();
-		uut.sendStatus(mockEvent)
+		uut.sendAnalysisStatus(mockEvent)
 			.then(() => {
 				sinon.assert.calledWith(eventBusMock.emit, AppEvent.statusSent,
 					sinon.match.has("payload", sinon.match.has("description", "Quality gate failed with 1 violations."))

@@ -1,6 +1,6 @@
 export enum AppEvent {
-	analyzePR = "analyze-pull-request",
 	statusSent = "send-github-commit-status-complete",
+	githubPushEvent = "github:push",
 	webhookEventIgnored = "ignored-webhook-event",
 	branchDeleted = "github-branch-deleted",
 	sonarProjectDeleted = "sonar-project-deleted",

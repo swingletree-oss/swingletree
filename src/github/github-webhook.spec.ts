@@ -7,10 +7,7 @@ chai.use(require("sinon-chai"));
 
 import GithubWebhook from "./github-webhook";
 import { AppEvent } from "../app-events";
-import EventBus from "../event-bus";
-import { ConfigurationService } from "../configuration";
 import { GithubWebhookEventType } from "./model/gh-webhook-event";
-
 
 const sandbox = sinon.createSandbox();
 
@@ -38,7 +35,7 @@ describe("GitHub Webhook", () => {
 
 		uut = new GithubWebhook(eventBusMock, configurationMock);
 
-		pullRequestData = Object.assign({}, require("../../test/ghPullRequestEvent.json"));
+		pullRequestData = Object.assign({}, require("../../test/ghPushEvent.json"));
 
 		branchDeleteData = { body: Object.assign({}, require("../../test/ghDeleteEvent.json")) };
 		branchDeleteData.header = function () {};
@@ -49,26 +46,10 @@ describe("GitHub Webhook", () => {
 	});
 
 
-	it("should send analyzePR event on open PRs", () => {
-		uut.ghEventHandler(GithubWebhookEventType.PULL_REQUEST, "test/repo", pullRequestData);
+	it("should send sendStatus pending event on GitHub push event", () => {
+		uut.ghEventHandler(GithubWebhookEventType.PUSH, "test/repo", pullRequestData);
 
-		sinon.assert.calledWith(eventBusMock.emit, AppEvent.analyzePR);
-	});
-
-	it("should send sendStatus pending event on open PRs", () => {
-		uut.ghEventHandler(GithubWebhookEventType.PULL_REQUEST, "test/repo", pullRequestData);
-
-		sinon.assert.calledWith(eventBusMock.emit, AppEvent.sendStatus, sinon.match({
-			state: "pending"
-		}));
-	});
-
-	it("should ignore event on closed PRs", () => {
-		pullRequestData.action = "closed";
-
-		uut.ghEventHandler(GithubWebhookEventType.PULL_REQUEST, "test/repo", pullRequestData);
-
-		sinon.assert.neverCalledWith(eventBusMock.emit, AppEvent.sendStatus, sinon.match.any);
+		sinon.assert.calledWith(eventBusMock.emit, AppEvent.githubPushEvent);
 	});
 
 });

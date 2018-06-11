@@ -1,7 +1,7 @@
 "use strict";
 
 import { LOGGER } from "../logger";
-
+import { GithubWebhookEventType, GithubWebhookEvent, GithubPushWebhookEvent } from "./model/gh-webhook-event";
 import { AppEvent } from "../app-events";
 import { GithubCommitStatus, GithubCommitStatusContainer, CommitStatusEnum } from "./model/gh-commit-status";
 import GithubClientService from "./client/github-client";
@@ -28,12 +28,40 @@ class CommitStatusSender {
 		this.eventBus = eventBus;
 		this.configurationService = configurationService;
 
-		this.eventBus.register(AppEvent.sonarAnalysisComplete, this.sendStatus, this);
+		this.eventBus.register(AppEvent.sonarAnalysisComplete, this.sendAnalysisStatus, this);
+		this.eventBus.register(AppEvent.githubPushEvent, this.sendPendingStatus, this);
 
 		this.githubClientService = githubClientService;
 	}
 
-	public sendStatus(analysisEvent: SonarWebhookEvent): Promise<void> {
+	public sendPendingStatus(githubEvent: GithubWebhookEvent): Promise<void> {
+		if (githubEvent.eventType == GithubWebhookEventType.PUSH) {
+			const event = githubEvent as GithubPushWebhookEvent;
+			const commitStatusContainer = new GithubCommitStatusContainer(event.sourceLocation.repo, event.sourceLocation.ref);
+
+			const commitStatus = new GithubCommitStatus(CommitStatusEnum.pending);
+			commitStatus.context = this.configurationService.get().context;
+
+			commitStatusContainer.payload = commitStatus;
+
+			return new Promise<void>((resolve, reject) => {
+				this.githubClientService.createCommitStatus(commitStatusContainer)
+					.then(() => {
+						this.eventBus.emit(AppEvent.statusSent, commitStatusContainer);
+						LOGGER.info("commit status update was sent to github");
+						resolve();
+					})
+					.catch((error: any) => {
+						LOGGER.error("could not persist status for %s with commit id %s", commitStatusContainer.repository, commitStatusContainer.commitId);
+						LOGGER.error(error);
+						reject();
+					});
+				}
+			);
+		}
+	}
+
+	public sendAnalysisStatus(analysisEvent: SonarWebhookEvent): Promise<void> {
 
 		const commitStatusContainer = new GithubCommitStatusContainer(analysisEvent.properties.repository, analysisEvent.properties.commitId);
 		let commitStatus: GithubCommitStatus;

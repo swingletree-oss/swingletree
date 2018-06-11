@@ -1,9 +1,8 @@
 "use strict";
 
 import { LOGGER } from "../logger";
-import { Router, Request, Response, NextFunction } from "express";
-import { GithubWebhookEventType, PullRequestWebhookAction, GithubPullRequestGhWebhookEvent, GithubWebhookEvent, GithubPushWebhookEvent, GithubDeleteWebhookEvent } from "./model/gh-webhook-event";
-import { CommitStatusEnum, GithubCommitStatus } from "./model/gh-commit-status";
+import { Router } from "express";
+import { GithubWebhookEventType, GithubWebhookEvent } from "./model/gh-webhook-event";
 import { AppEvent } from "../app-events";
 
 import EventBus from "../event-bus";
@@ -29,23 +28,6 @@ class GithubWebhook {
 		this.configService = configService;
 	}
 
-	private isAnalyzeTrigger(webhookEvent: GithubWebhookEvent): boolean {
-		if (webhookEvent.eventType === GithubWebhookEventType.PUSH ||
-			webhookEvent.eventType === GithubWebhookEventType.PULL_REQUEST) {
-			if (webhookEvent instanceof GithubPullRequestGhWebhookEvent) {
-				const event: GithubPullRequestGhWebhookEvent = webhookEvent;
-
-				return event.action === PullRequestWebhookAction.opened ||
-						event.action === PullRequestWebhookAction.reopened ||
-						event.action === PullRequestWebhookAction.synchronize;
-			} else if (webhookEvent instanceof GithubPushWebhookEvent) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	public getRoute(): Router {
 		const webhookHandler = GithubWebHookHandler({ path: "/", secret: this.configService.get().github.webhookSecret });
 
@@ -62,23 +44,14 @@ class GithubWebhook {
 	}
 
 	public ghEventHandler (event: string, repo: string, data: GithubWebhookEvent) {
-		const eventType: GithubWebhookEventType = event as GithubWebhookEventType;
-		const webhookEvent: GithubWebhookEvent = GithubWebhookEvent.convert(eventType, data);
+		LOGGER.info("received GitHub webhook \"%s\" event ", event);
 
-		let eventTriggered: boolean = false;
-
-		LOGGER.info("received GitHub webhook \"%s\" event ", eventType);
-
-		if (webhookEvent !== undefined) {
-			if (this.isAnalyzeTrigger(webhookEvent)) {
-				this.eventBus.emit(AppEvent.analyzePR, webhookEvent);
-				this.eventBus.emit(AppEvent.sendStatus, new GithubCommitStatus(CommitStatusEnum.pending));
-				eventTriggered = true;
-			} else if (webhookEvent.eventType == GithubWebhookEventType.INSTALLATION) {
-				this.eventBus.emit(AppEvent.appInstalled, webhookEvent);
-			} else {
-				LOGGER.info("webhook event was ignored.");
-			}
+		if (event === GithubWebhookEventType.PUSH) {
+			this.eventBus.emit(AppEvent.githubPushEvent, GithubWebhookEvent.convert(event, data));
+		} else if (event == GithubWebhookEventType.INSTALLATION) {
+			this.eventBus.emit(AppEvent.appInstalled, GithubWebhookEvent.convert(event, data));
+		} else {
+			LOGGER.info("%s webhook event was ignored.", event);
 		}
 	}
 }
