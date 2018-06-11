@@ -16,16 +16,12 @@ describe("GitHub Webhook", () => {
 
 	let eventBusMock: any;
 	let pullRequestData: any;
-	let branchDeleteData: any;
-	let responseMock: any;
 
 	beforeEach(function () {
 		eventBusMock = {
 			emit: sinon.stub(),
 			register: sinon.stub()
 		};
-
-		responseMock = {sendStatus: sinon.stub()};
 
 		const configurationMock: any = {
 			get: sinon.stub().returns({
@@ -36,9 +32,6 @@ describe("GitHub Webhook", () => {
 		uut = new GithubWebhook(eventBusMock, configurationMock);
 
 		pullRequestData = Object.assign({}, require("../../test/ghPushEvent.json"));
-
-		branchDeleteData = { body: Object.assign({}, require("../../test/ghDeleteEvent.json")) };
-		branchDeleteData.header = function () {};
 	});
 
 	afterEach(function () {
