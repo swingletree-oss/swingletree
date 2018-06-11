@@ -27,11 +27,13 @@ Swingletree will request a permission to modify your repositories' commit status
 
 Following webhook handlers are listening for events:
 
-| Type      | Path                      |
-| --------- | ------------------------- |
-| SonarQube | webhook/sonar             |
-| GitHub    | webhook/github            |
+| Type      | Path                      |           |
+| --------- | ------------------------- | --------- |
+| SonarQube | webhook/sonar             | required  |
+| GitHub    | webhook/github            | optional  |
 
+If you do not care about setting a `pending` commit status on GitHub `push` events
+you can skip adding Swingletree as a GitHub organization or repository webhook.
 
 ### SonarQube Analysis Parameters
 
@@ -79,6 +81,7 @@ Swingletree is configured using a configuration file named `swingletree.conf.yam
 | `DATABASE_PASSWORD`   | Configures the Redis database password to use for authentication |
 | `SONAR_SECRET`        | Configures the Basic Authentication password for the SonarQube webhook. |
 | `PORT`                | Configures the port Swingletree is listening on |
+| `LOG_LEVEL`           | Log level. Defaults to `info`
 
 ### GitHub App Configuration
 
