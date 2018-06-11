@@ -15,5 +15,5 @@ github:
 
 # SonarQube specific configuration
 sonar:
-  base: # list of sonarqube instances allowed to send webhook events
   secret: # basic auth password protecting the webhook
+  logWebhookEvents: false # log SonarQube webhook event requests on debug level

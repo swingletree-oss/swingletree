@@ -27,7 +27,10 @@ describe("Sonar Webhook", () => {
 
 		const configurationMock: any = {
 			get: sinon.stub().returns({
-				context: "test"
+				context: "test",
+				sonar: {
+					logWebhookEvents: false
+				}
 			})
 		};
 

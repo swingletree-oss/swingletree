@@ -65,6 +65,10 @@ class SonarWebhook {
 	public webhook = (req: Request, res: Response) => {
 		LOGGER.info("received SonarQube webhook event");
 
+		if (this.configurationService.get().sonar.logWebhookEvents) {
+			LOGGER.debug(JSON.stringify(req.body));
+		}
+
 		const event = new SonarWebhookEvent(req.body);
 
 		if (this.isWebhookEventRelevant(event)) {

@@ -27,7 +27,8 @@ describe("Configuration", () => {
 			uut = new SonarConfig({
 				base: "base",
 				token: "token",
-				secret: "test"
+				secret: "test",
+				logWebhookEvents: false
 			});
 
 			expect(uut.base).to.be.equal("base");
@@ -43,7 +44,8 @@ describe("Configuration", () => {
 			uut = new SonarConfig({
 				base: "base",
 				token: "token",
-				secret: "test"
+				secret: "test",
+				logWebhookEvents: false
 			});
 
 			expect(uut.base).to.be.equal("envBase");
