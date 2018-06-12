@@ -32,7 +32,7 @@ Following webhook handlers are listening for events:
 | SonarQube | webhook/sonar             | required  |
 | GitHub    | webhook/github            | optional  |
 
-If you do not care about setting a `pending` commit status on GitHub `push` events
+If you do not care about setting a `pending` commit status on GitHub `push` events,
 you can skip adding Swingletree as a GitHub organization or repository webhook.
 
 ### SonarQube Analysis Parameters
