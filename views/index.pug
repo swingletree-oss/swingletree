@@ -10,7 +10,12 @@ block content
 
                     hr
 
-                    p For more information about what to do next you can take a look into the project's #[a(href="https://github.com/error418/swingletree/blob/master/README.md") Readme].
+                    if appPublicPage
+                        p To install Swingletree to your GitHub organization click #[i Install] in the menu.
+                    else
+                        p To install Swingletree to your GitHub organization visit the Swingletree GitHub app public page of your GitHub instance.
+
+                    p For more technical details of what Swingletree does you can take a look at #[a(href="https://github.com/error418/swingletree/blob/master/README.md") Swingletree's readme].
 
             div(class="col-md-3")
                 div(class="card bg-light")

@@ -22,14 +22,20 @@ html
 
     body(style="padding-top:5rem")
         nav(class="navbar navbar-dark bg-dark fixed-top")
-            a(class="navbar-brand" href="#")
-                img(src="./static/icon.svg" width="30" height="30" class="mr-2 d-inline-block align-top" alt="")
-                .
-                    Swingletree
+            div(class="container")
+                a(class="navbar-brand" href="#")
+                    img(src="./static/icon.svg" width="30" height="30" class="mr-2 d-inline-block align-top" alt="")
+                    .
+                        Swingletree
 
-            ul(class="navbar-nav")
-                a(class="nav-link" href="https://github.com/error418/swingletree")
-                    i(class="fab fa-github")
+                if appPublicPage
+                    ul(class="navbar-nav mr-auto")
+                        li(class="nav-item")
+                            a(class="nav-link" href=appPublicPage) Install
+
+                ul(class="navbar-nav")
+                    a(class="nav-link" href="https://github.com/error418/swingletree")
+                        i(class="fab fa-github")
         
         block content
 

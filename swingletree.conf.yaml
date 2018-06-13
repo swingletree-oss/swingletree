@@ -12,6 +12,7 @@ github:
   base: http://api.github.com # Github Api base url
   webhookSecret: # this is the webhook secret. You should set it.
   pendingCommitStatus: false # if set to true, Swingletree will send a "pending" commit status to github when receiving push events
+  appPublicPage: # the GitHub App public page. Will be referenced in the Swingletree landing page.
 
 # SonarQube specific configuration
 sonar:

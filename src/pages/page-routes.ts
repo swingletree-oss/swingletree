@@ -25,11 +25,18 @@ class PageRoutes {
 	public getRoute(): Router {
 		const router = Router();
 
-		// index page
+		// set locals for all pages
+		router.use("/", (req: Request, res: Response, next: NextFunction) => {
+			res.locals.appPublicPage = this.configService.get().github.appPublicPage;
+			next();
+		});
+
+		// index page route
 		router.get("/", (req, res) => {
+			console.log(this.configService.get().github.appPublicPage);
 			res.render("index", {
 				unhealthy: this.redisClientFactory.unhealthyConnectionCount(),
-				connections: this.redisClientFactory.connectionCount()
+				connections: this.redisClientFactory.connectionCount(),
 			});
 		});
 

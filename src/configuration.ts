@@ -40,6 +40,7 @@ export class GithubConfig {
 	public readonly base: string;
 	public readonly webhookSecret: string;
 	public readonly pendingCommitStatus: boolean;
+	public readonly appPublicPage: string;
 
 	constructor(model: GithubConfig) {
 		this.appId = Number(process.env["GITHUB_APPID"] || model.appId);
@@ -47,6 +48,7 @@ export class GithubConfig {
 		this.base = process.env["GITHUB_BASE"] || model.base;
 		this.webhookSecret = process.env["GITHUB_SECRET"] || model.webhookSecret;
 		this.pendingCommitStatus = model.pendingCommitStatus;
+		this.appPublicPage = process.env["GITHUB_APP_PAGE"] || model.appPublicPage;
 	}
 }
 
