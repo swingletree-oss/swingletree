@@ -21,21 +21,25 @@ html
         meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
 
     body(style="padding-top:5rem")
-        nav(class="navbar navbar-dark bg-dark fixed-top")
+        nav(class="navbar navbar-expand-md navbar-dark bg-dark fixed-top")
             div(class="container")
-                a(class="navbar-brand" href="#")
+                a(class="navbar-brand mr-3" href="#")
                     img(src="./static/icon.svg" width="30" height="30" class="mr-2 d-inline-block align-top" alt="")
                     .
                         Swingletree
 
-                if appPublicPage
-                    ul(class="navbar-nav mr-auto")
-                        li(class="nav-item")
-                            a(class="nav-link" href=appPublicPage) Install
-
-                ul(class="navbar-nav")
-                    a(class="nav-link" href="https://github.com/error418/swingletree")
-                        i(class="fab fa-github")
+                div(class="navbar-nav mr-auto")
+                    if appPublicPage
+                        a(class="nav-item nav-link" href=appPublicPage + "/installations/new")
+                            i(class="fas fa-fw mr-1 fa-plus")
+                            .
+                                Install
+                
+                div(class="navbar-nav")
+                        a(class="nav-item nav-link" href="https://github.com/error418/swingletree")
+                            i(class="fab fa-fw mr-1 fa-github")
+                            .
+                                GitHub
         
         block content
 
