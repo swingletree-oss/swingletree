@@ -33,7 +33,6 @@ class PageRoutes {
 
 		// index page route
 		router.get("/", (req, res) => {
-			console.log(this.configService.get().github.appPublicPage);
 			res.render("index", {
 				unhealthy: this.redisClientFactory.unhealthyConnectionCount(),
 				connections: this.redisClientFactory.connectionCount(),
