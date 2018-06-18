@@ -87,7 +87,7 @@ class CommitStatusSender {
 			this.githubClientService.createCommitStatus(commitStatusContainer)
 				.then(() => {
 					this.eventBus.emit(AppEvent.statusSent, commitStatusContainer);
-					LOGGER.info("commit status update was sent to github");
+					LOGGER.info("commit status update (%s) was sent to github", commitStatus.state);
 					resolve();
 				})
 				.catch((error: any) => {
