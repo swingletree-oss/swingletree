@@ -5,9 +5,7 @@ import * as express from "express";
 import { injectable } from "inversify";
 import { inject } from "inversify";
 import { ConfigurationService } from "../configuration";
-import * as BasicAuth from "basic-auth";
-import RedisClientFactory, { DATABASE_INDEX } from "../redis-client";
-import { LOGGER } from "../logger";
+import RedisClientFactory from "../redis-client";
 
 @injectable()
 class PageRoutes {
