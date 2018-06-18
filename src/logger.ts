@@ -6,3 +6,5 @@ export const LOGGER: winston.LoggerInstance = new (winston.Logger)(
 		transports: [new (winston.transports.Console)()]
 	}
 );
+
+LOGGER.info("Logger log level set to %s", LOGGER.level.toUpperCase());
