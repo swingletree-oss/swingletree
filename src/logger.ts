@@ -5,7 +5,7 @@ export const LOGGER: winston.LoggerInstance = new (winston.Logger)(
 		level: process.env.LOG_LEVEL || "info",
 		transports: [new (winston.transports.Console)({
 			timestamp: true,
-			colorize: true
+			colorize: process.env.LOG_DISABLE_COLORS != "true"
 		})],
 	}
 );

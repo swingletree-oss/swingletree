@@ -72,6 +72,7 @@ Swingletree is configured using a configuration file named `swingletree.conf.yam
 | `SONAR_SECRET`        | Enables and sets the Basic Authentication password for the SonarQube webhook. |
 | `PORT`                | Sets the port Swingletree is listening on. Defaults to `3000` |
 | `LOG_LEVEL`           | Sets the log level. Defaults to `info` |
+| `LOG_DISABLE_COLORS`  | Disables colors in log messages if set to `true`. Defaults to `false` |
 | `CONFIG`              | (not recommended) If set the variable contents will be written to `./swingletree.conf.yaml` on startup. This needs to be a plain string. |
 
 ### GitHub App Configuration
