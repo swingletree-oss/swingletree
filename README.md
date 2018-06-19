@@ -75,7 +75,6 @@ Swingletree is configured using a configuration file named `swingletree.conf.yam
 | `PORT`                | Sets the port Swingletree is listening on.                    | `3000`  |
 | `LOG_LEVEL`           | Sets the log level.                                           | `info`  |
 | `LOG_DISABLE_COLORS`  | Disables colors in log messages if set to `true`.             | `false` |
-| `CONFIG`              | (not recommended) If set the variable contents will be written to `./swingletree.conf.yaml` on startup. This needs to be a plain string. | *none* |
 
 ### GitHub App Configuration
 
