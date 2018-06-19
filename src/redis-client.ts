@@ -51,7 +51,11 @@ class RedisClientFactory {
 			LOGGER.info("Redis client for database index %i is connected and ready.", databaseIndex);
 		});
 
-		client.auth(this.configService.get().storage.password);
+		// set authentication if available
+		if (this.configService.get().storage.password) {
+			client.auth(this.configService.get().storage.password);
+		}
+
 		client.select(databaseIndex);
 
 		this.registeredClients.push(client);
