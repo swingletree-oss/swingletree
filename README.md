@@ -1,5 +1,7 @@
+
 # Swingletree
 
+<img src="static/icon.svg" width="55" align="right">
 Enforce SonarQube Quality Gates inside your GitHub Pull Requests.
 
 
@@ -7,7 +9,7 @@ Enforce SonarQube Quality Gates inside your GitHub Pull Requests.
 
 Tracking your code quality across your branches is a good thing - especially when it comes to approving pull requests.
 
-Swingletree gives you the possibility to block pull requests on failing quality gates performed by the [SonarQube Branch Plugin][sonar-branch-plugin]. The commit status is also updated, if findings are marked as, for example, `false-positive` or `won't fix` in SonarQube.
+Swingletree gives you the possibility to block pull requests on failing quality gates performed by the [SonarQube Branch Plugin][sonar-branch-plugin]. The commit status is also updated as soon as findings are marked as, for example, `false-positive` or `won't fix` in SonarQube.
 
 ## Integration
 
@@ -60,20 +62,20 @@ Swingletree is configured using a configuration file named `swingletree.conf.yam
 
 ### Environment Variables
 
-| Variable              | Description                                         |
-| --------------------- | --------------------------------------------------- |
-| `GH_APP_PEM`          | Variable contents will be written to `./gh-app.pem` on startup  |
-| `GITHUB_APPID`        | Configures the GitHub Application ID |
-| `GITHUB_BASE`         | Configures the GitHub API base URL  |
-| `GITHUB_SECRET`       | Configures the GitHub webhook secret  |
-| `GITHUB_APP_PAGE`     | *(optional)* Points to the GitHub App public page. The value can be found on the GitHub App configuration page. |
-| `DATABASE_HOST`       | Sets the Redis database host  |
-| `DATABASE_PASSWORD`   | Sets the Redis database password to use for authentication |
-| `SONAR_SECRET`        | Enables and sets the Basic Authentication password for the SonarQube webhook. |
-| `PORT`                | Sets the port Swingletree is listening on. Defaults to `3000` |
-| `LOG_LEVEL`           | Sets the log level. Defaults to `info` |
-| `LOG_DISABLE_COLORS`  | Disables colors in log messages if set to `true`. Defaults to `false` |
-| `CONFIG`              | (not recommended) If set the variable contents will be written to `./swingletree.conf.yaml` on startup. This needs to be a plain string. |
+| Variable              | Description                                                   | Default |
+| --------------------- | ------------------------------------------------------------- | ------- |
+| `GH_APP_PEM`          | Contents will be written to `./gh-app.pem` on startup         | *none*  |
+| `GITHUB_APPID`        | Configures the GitHub Application ID                          | *none*  |
+| `GITHUB_BASE`         | Configures the GitHub API base URL                            | *none*  |
+| `GITHUB_SECRET`       | Configures the GitHub webhook secret                          | *none*  |
+| `GITHUB_APP_PAGE`     | *(optional)* Points to the GitHub App public page. The value can be found on the GitHub App configuration page. | *none* |
+| `DATABASE_HOST`       | Sets the Redis database host                                  | *none*  |
+| `DATABASE_PASSWORD`   | Sets the Redis database password to use for authentication    | *none*  |
+| `SONAR_SECRET`        | Enables and sets the Basic Authentication password for the SonarQube webhook. | *none* |
+| `PORT`                | Sets the port Swingletree is listening on.                    | `3000`  |
+| `LOG_LEVEL`           | Sets the log level.                                           | `info`  |
+| `LOG_DISABLE_COLORS`  | Disables colors in log messages if set to `true`.             | `false` |
+| `CONFIG`              | (not recommended) If set the variable contents will be written to `./swingletree.conf.yaml` on startup. This needs to be a plain string. | *none* |
 
 ### GitHub App Configuration
 
