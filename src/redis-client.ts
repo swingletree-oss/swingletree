@@ -14,6 +14,10 @@ class RedisClientFactory {
 	) {
 		this.configService = configService;
 		this.registeredClients = [];
+
+		if (!configService.get().storage.password) {
+			LOGGER.warn("Redis client is configured to use no authentication. Please consider securing the database.");
+		}
 	}
 
 	public unhealthyConnectionCount() {
