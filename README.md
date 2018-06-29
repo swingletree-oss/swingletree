@@ -102,7 +102,7 @@ This may be useful in case you have repositories inside your organization, which
 
 | Type      | Path            | Content Type       |            |                          |
 | --------- | --------------- | ------------------ | ---------- | ------------------------ |
-| SonarQube | webhook/sonar   |                    | required   | [How-to][sonar-webhook]  |
+| SonarQube | webhook/sonar   | *not configurable* | required   | [How-to][sonar-webhook]  |
 | GitHub    | webhook/github  | `application/json` | *optional* | [How-to][github-webhook] |
 
 #### SonarQube Webhook security
