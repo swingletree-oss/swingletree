@@ -101,7 +101,7 @@ If you do not care about setting a `pending` commit status on GitHub `push` even
 This may be useful in case you have repositories inside your organization, which do not utilize SonarQube in their build pipelines.
 
 | Type      | Path            | Content Type       |            |                          |
-| --------- | --------------- | ------------------ | ---------- | ------------------------ |
+| --------- | --------------- | :----------------: | :--------: | ------------------------ |
 | SonarQube | webhook/sonar   | *not configurable* | required   | [How-to][sonar-webhook]  |
 | GitHub    | webhook/github  | `application/json` | *optional* | [How-to][github-webhook] |
 
