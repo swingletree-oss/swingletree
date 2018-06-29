@@ -42,6 +42,8 @@ To be able to run Swingletree following prerequisites must be met:
 * NodeJS 8 or later
 * Redis 4 or later
 
+Pick one of the following ways to launch Swingletree:
+
 ### Running with Docker
 
 Swingletree comes with an `docker-compose` file, which should mainly be used for development purposes.
