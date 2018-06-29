@@ -32,7 +32,6 @@ Follow these steps to set up Swingletree
 3. [Configure SonarQube](#configure-sonarqube)
 4. [Configure Sonar Scanner](#configure-sonar-scanner)
 
----
 
 ## Install Swingletree
 
@@ -54,8 +53,6 @@ You will still need to configure your Swingletree instance via [environment vari
 
 Swingletree is built using a build container. By running `docker build .` you can start building Swingletree along with its container image. In case you need to use a npm registry proxy you can override the default NPM registry by defining the docker build argument `NPM_REGISTRY` (for example `docker build --build-arg NPM_REGISTRY=http://my.npm.registry/` ). Be aware that you will download the npm dependencies for each build.
 
-
----
 
 ## Configure Swingletree
 
@@ -93,7 +90,6 @@ When creating your GitHub App you will need to specify the permissions required 
 
 Read and Write access are required for `Commit Statuses`
 
----
 
 ## Configure SonarQube
 
@@ -110,8 +106,6 @@ This may be useful in case you have repositories inside your organization, which
 #### SonarQube Webhook security
 
 Swingletree's SonarQube webhook can be configured to be protected by basic authentication. You can set the secret via environment variable or inside the configuration file. If you do not configure this value, the webhook can be used without providing authentication. Keep in mind you should use `https` (by using for example a reverse proxy) to protect your credentials.
-
----
 
 ## Configure Sonar Scaner
 
