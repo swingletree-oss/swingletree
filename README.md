@@ -111,9 +111,7 @@ Swingletree's SonarQube webhook can be configured to be protected by basic authe
 
 ## Configure Sonar Scaner
 
-### SonarQube Analysis Parameters
-
-Swingletree needs some context when receiving webhook events from SonarQube. Therefore some additional parameters need to be set when running a `sonar-scanner` during your CI build.
+Swingletree needs some context when receiving webhook events from SonarQube. Therefore some additional analysis properties need to be set when running a `sonar-scanner` during your CI build.
 
 * `sonar.analysis.commitId`, containing the commit id
 * `sonar.analysis.repository`, containing the full repository path
