@@ -81,7 +81,11 @@
      inkscape:object-nodes="true">
     <inkscape:grid
        type="xygrid"
-       id="grid3770" />
+       id="grid3770"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
   </sodipodi:namedview>
   <metadata
      id="metadata2990">
@@ -91,7 +95,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -111,7 +115,7 @@
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc" />
     <path
-       style="fill:url(#linearGradient5251);fill-opacity:1;fill-rule:evenodd;stroke:none;opacity:0.97622901"
+       style="fill:url(#linearGradient5251);fill-opacity:1;fill-rule:evenodd;stroke:none;opacity:0.5"
        d="M 56,4 54,51 32,60 32,4 z"
        id="rect3424-9-7"
        inkscape:connector-curvature="0"
