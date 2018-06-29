@@ -30,8 +30,9 @@ Follow these steps to set up Swingletree
 1. [Install Swingletree](#install-swingletree)
 2. [Configure Swingletree](#configure-swingletree)
 3. [Configure SonarQube](#configure-sonarqube)
-4. [Configure Build Jobs](#configure-build-jobs)
+4. [Configure Sonar Scanner](#configure-sonar-scanner)
 
+---
 
 ## Install Swingletree
 
@@ -52,6 +53,9 @@ You will still need to configure your Swingletree instance via [environment vari
 ### Building a Docker image
 
 Swingletree is built using a build container. By running `docker build .` you can start building Swingletree along with its container image. In case you need to use a npm registry proxy you can override the default NPM registry by defining the docker build argument `NPM_REGISTRY` (for example `docker build --build-arg NPM_REGISTRY=http://my.npm.registry/` ). Be aware that you will download the npm dependencies for each build.
+
+
+---
 
 ## Configure Swingletree
 
@@ -89,6 +93,8 @@ When creating your GitHub App you will need to specify the permissions required 
 
 Read and Write access are required for `Commit Statuses`
 
+---
+
 ## Configure SonarQube
 
 Swingletree publishes webhook endpoints for SonarQube and GitHub webhook events.
@@ -105,11 +111,13 @@ This may be useful in case you have repositories inside your organization, which
 
 Swingletree's SonarQube webhook can be configured to be protected by basic authentication. You can set the secret via environment variable or inside the configuration file. If you do not configure this value, the webhook can be used without providing authentication. Keep in mind you should use `https` (by using for example a reverse proxy) to protect your credentials.
 
-## Configure Build Jobs
+---
+
+## Configure Sonar Scaner
 
 ### SonarQube Analysis Parameters
 
-Swingletree needs some context when receiving webhook events from SonarQube. Therefore some parameters need to be set when running a SonarQube analysis during your CI build.
+Swingletree needs some context when receiving webhook events from SonarQube. Therefore some additional parameters need to be set when running a `sonar-scanner` during your CI build.
 
 * `sonar.analysis.commitId`, containing the commit id
 * `sonar.analysis.repository`, containing the full repository path
@@ -121,7 +129,6 @@ sonar-scanner \
     -Dsonar.analysis.commitId=628f5175ada0d685fd7164baa7c6382c1f25cab4 \
     -Dsonar.analysis.repository=error418/swingletree
 ```
-
 
 
 [create-gh-app]: https://developer.github.com/apps/building-github-apps/creating-a-github-app/
