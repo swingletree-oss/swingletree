@@ -26,11 +26,11 @@
        id="linearGradient5243"
        osb:paint="gradient">
       <stop
-         style="stop-color:#a5bbc3;stop-opacity:1;"
+         id="stop5253"
          offset="0"
-         id="stop5245" />
+         style="stop-color:#778f97;stop-opacity:1;" />
       <stop
-         style="stop-color:#49636c;stop-opacity:0;"
+         style="stop-color:#ffffff;stop-opacity:0;"
          offset="1"
          id="stop5247" />
     </linearGradient>
@@ -38,11 +38,12 @@
        inkscape:collect="always"
        xlink:href="#linearGradient5243"
        id="linearGradient5251"
-       x1="53"
-       y1="44"
-       x2="33"
-       y2="44"
-       gradientUnits="userSpaceOnUse" />
+       x1="56"
+       y1="29.916279"
+       x2="7.818645"
+       y2="29.916279"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.99242424,0,0,0.69805195,0.42424242,18.116883)" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -51,9 +52,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.5"
-     inkscape:cx="67.493566"
-     inkscape:cy="-11.56493"
+     inkscape:zoom="3.8890873"
+     inkscape:cx="12.903971"
+     inkscape:cy="-21.038122"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:document-units="px"
@@ -114,11 +115,11 @@
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc" />
     <path
-       style="fill:url(#linearGradient5251);fill-opacity:1.0;fill-rule:evenodd;stroke:none;opacity:1"
-       d="M 56,4 54,51 32,60 32,4 z"
+       style="fill:url(#linearGradient5251);fill-opacity:1;fill-rule:evenodd;stroke:none"
+       d="M 56,20.909091 54.015152,53.717532 32.181818,60 9.0456261,51.247507 8.1836553,20.766355 z"
        id="rect3424-9-7"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccc" />
+       sodipodi:nodetypes="cccccc" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="M 18,16 18,4"
