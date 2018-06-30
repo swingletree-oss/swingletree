@@ -1,4 +1,4 @@
 branch: "master"
 noCI: true
-dryRun: true
+dryRun: false
 npmPublish: false
