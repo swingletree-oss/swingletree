@@ -1,3 +1,8 @@
 node_modules
+dist
+bin
 .git
 .vscode
+.codeclimate.yml
+.gitignore
+.travis.yml
