@@ -1,9 +1,8 @@
-
-# Swingletree
+# Swingletree [![Maintainability](https://api.codeclimate.com/v1/badges/e792e95e2c8e96e98b24/maintainability)](https://codeclimate.com/github/error418/swingletree/maintainability)
 
 <img src="static/icon.svg" width="55" align="right">
-Enforce SonarQube Quality Gates inside your GitHub Pull Requests.
 
+Enforce SonarQube Quality Gates inside your GitHub Pull Requests.
 
 Tracking your code quality across your branches is a good thing - especially when it comes to approving pull requests.
 
