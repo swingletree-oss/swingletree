@@ -1,0 +1,6 @@
+version: "2"
+plugins:
+  nodesecurity:
+    enabled: true
+  eslint:
+    enabled: true
