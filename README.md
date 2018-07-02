@@ -45,6 +45,8 @@ Pick one of the following ways to launch Swingletree:
 
 ### Running with Docker
 
+Images of this repository are hosted in the dockerhub repository [werkbank/swingletree](dockerhub-repo). 
+
 Swingletree comes with an `docker-compose` file, which should mainly be used for development purposes.
 Start Swingletree and a Redis database by running `docker-compose up` in the Swingletree directory.
 
@@ -123,6 +125,7 @@ sonar-scanner \
     -Dsonar.analysis.repository=error418/swingletree
 ```
 
+[dockerhub-repo]: https://hub.docker.com/r/werkbank/swingletree/tags/
 
 [create-gh-app]: https://developer.github.com/apps/building-github-apps/creating-a-github-app/
 [sonar-webhook]: https://docs.sonarqube.org/display/SONAR/Webhooks
