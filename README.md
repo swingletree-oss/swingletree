@@ -1,4 +1,4 @@
-# Swingletree [![Maintainability](https://api.codeclimate.com/v1/badges/e792e95e2c8e96e98b24/maintainability)](https://codeclimate.com/github/error418/swingletree/maintainability)
+# Swingletree [![Maintainability](https://api.codeclimate.com/v1/badges/e792e95e2c8e96e98b24/maintainability)][code-climate] [![Docker Automated build](https://img.shields.io/docker/automated/werkbank/swingletree.svg)][dockerhub-repo]
 
 <img src="static/icon.svg" width="55" align="right">
 
@@ -45,7 +45,7 @@ Pick one of the following ways to launch Swingletree:
 
 ### Running with Docker
 
-Images of this repository are hosted in the dockerhub repository [werkbank/swingletree][dockerhub-repo]. 
+Images of Swingletree are built and hosted in the dockerhub repository [werkbank/swingletree][dockerhub-repo]. 
 
 Swingletree comes with an `docker-compose` file, which should mainly be used for development purposes.
 Start Swingletree and a Redis database by running `docker-compose up` in the Swingletree directory.
@@ -125,6 +125,7 @@ sonar-scanner \
     -Dsonar.analysis.repository=error418/swingletree
 ```
 
+[code-climate]: https://codeclimate.com/github/error418/swingletree/maintainability
 [dockerhub-repo]: https://hub.docker.com/r/werkbank/swingletree/tags/
 
 [create-gh-app]: https://developer.github.com/apps/building-github-apps/creating-a-github-app/
