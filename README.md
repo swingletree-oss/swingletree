@@ -45,7 +45,7 @@ Pick one of the following ways to launch Swingletree:
 
 ### Running with Docker
 
-Images of this repository are hosted in the dockerhub repository [werkbank/swingletree](dockerhub-repo). 
+Images of this repository are hosted in the dockerhub repository [werkbank/swingletree][dockerhub-repo]. 
 
 Swingletree comes with an `docker-compose` file, which should mainly be used for development purposes.
 Start Swingletree and a Redis database by running `docker-compose up` in the Swingletree directory.
