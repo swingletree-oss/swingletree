@@ -13,6 +13,8 @@ export class SonarWebhookEvent {
 	status: string;
 	taskId: string;
 
+	branch: Branch;
+
 	statusSuccess: boolean;
 
 	constructor(model: any = {}) {
@@ -29,6 +31,13 @@ export class SonarWebhookEvent {
 		}
 	}
 }
+
+type Branch = {
+	name: string;
+	type?: string;
+	isMain?: boolean;
+	url?: string;
+};
 
 class Properties {
 	commitId: string;

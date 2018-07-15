@@ -91,20 +91,16 @@ After you have created your GitHub App, you can generate and download the key fr
 
 When creating your GitHub App you will need to specify the permissions required by the App. If the permissions are not granted, Swingletree will not be able to operate properly.
 
-Read and Write access are required for `Commit Statuses`
+Read and Write access are required for `Checks`
 
 
 ## Configure SonarQube
 
-Swingletree publishes webhook endpoints for SonarQube and GitHub webhook events.
-
-If you do not care about setting a `pending` commit status on GitHub `push` events, you can skip adding Swingletree as a GitHub organization (or repository) webhook.
-This may be useful in case you have repositories inside your organization, which do not utilize SonarQube in their build pipelines.
+Swingletree publishes webhook endpoints for SonarQube and events.
 
 | Type      | Path            | Content Type       |            |                          |
 | --------- | --------------- | :----------------: | :--------: | ------------------------ |
 | SonarQube | webhook/sonar   | *not configurable* | required   | [How-to][sonar-webhook]  |
-| GitHub    | webhook/github  | `application/json` | *optional* | [How-to][github-webhook] |
 
 #### SonarQube Webhook security
 

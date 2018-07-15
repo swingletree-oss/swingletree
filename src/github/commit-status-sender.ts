@@ -9,6 +9,7 @@ import { SonarWebhookEvent } from "../sonar/model/sonar-wehook-event";
 import { injectable, inject } from "inversify";
 import { ConfigurationService } from "../configuration";
 import EventBus from "../event-bus";
+import { ChecksCreateParams } from "@octokit/rest";
 
 
 /** Sends Commit Status Requests to GitHub
@@ -38,6 +39,10 @@ class CommitStatusSender {
 	}
 
 	public sendPendingStatus(githubEvent: GithubWebhookEvent): Promise<void> {
+		if (githubEvent.eventType == GithubWebhookEventType.CHECK_RUN) {
+
+		}
+
 		if (githubEvent.eventType == GithubWebhookEventType.PUSH) {
 			const event = githubEvent as GithubPushWebhookEvent;
 			const commitStatusContainer = new GithubCommitStatusContainer(event.sourceLocation.repo, event.sourceLocation.ref);
@@ -82,9 +87,13 @@ class CommitStatusSender {
 
 		commitStatusContainer.payload = commitStatus;
 
+		const githubCheck: ChecksCreateParams = {
+			
+		}
+
 
 		return new Promise<void>((resolve, reject) => {
-			this.githubClientService.createCommitStatus(commitStatusContainer)
+			this.githubClientService.createCheckStatus(commitStatusContainer)
 				.then(() => {
 					this.eventBus.emit(AppEvent.statusSent, commitStatusContainer);
 					LOGGER.info("commit status update (%s) was sent to github", commitStatus.state);

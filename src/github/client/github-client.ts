@@ -12,7 +12,8 @@ import TokenStorage from "./token-storage";
 import { GithubInstallation } from "../model/gh-webhook-event";
 import { LOGGER } from "../../logger";
 
-const Octokit = require("@octokit/rest");
+import * as Github from "@octokit/rest";
+import { AuthJWT, AuthUserToken, ChecksCreateParams } from "@octokit/rest";
 
 @injectable()
 class GithubClientService {
@@ -20,6 +21,8 @@ class GithubClientService {
 	private installationStorage: InstallationStorage;
 	private tokenStorage: TokenStorage;
 	private key: string;
+
+	private githubOptions: Github.Options;
 
 	constructor(
 		@inject(ConfigurationService) configurationService: ConfigurationService,
@@ -30,6 +33,10 @@ class GithubClientService {
 		this.configurationService = configurationService;
 		this.tokenStorage = tokenStorage;
 		this.installationStorage = installationStorage;
+
+		this.githubOptions = {
+			baseUrl: this.configurationService.get().github.base
+		};
 	}
 
 	public getInstallations(): Promise<GithubInstallation[]> {
@@ -75,6 +82,38 @@ class GithubClientService {
 		});
 	}
 
+	public createCheckStatus(createParams: ChecksCreateParams): Promise<void> {
+
+		return new Promise<void>(async (resolve, reject) => {
+			if (!status.repository) {
+				reject("Repository target is not set");
+			}
+
+			const coordinates = status.repository.split("/");
+			const client = await this.getGhAppClient(coordinates[0]);
+
+			const checkParams: ChecksCreateParams = {
+				owner: coordinates[0],
+				repo: coordinates[1],
+				name: this.configurationService.get().context,
+				head_sha: status.commitId,
+				head_branch: ,
+				details_url: status.payload.target_url,
+				conclusion: "neutral"
+			};
+
+			checkParams.output = {
+				title: "title of check run",
+				summary: "summary of check run",
+				text: "details (optional)"
+			};
+
+			client.checks.create(checkParams)
+			.then(resolve)
+			.catch(reject);
+		});
+	}
+
 	private createJWT(): string {
 		const payload = {
 			iss: this.configurationService.get().github.appId.toString()
@@ -85,22 +124,20 @@ class GithubClientService {
 	}
 
 	private getClient(): any {
-		const ghClient = Octokit({
-			baseUrl: this.configurationService.get().github.base
-		});
+		const ghClient = new Github(this.githubOptions);
 
-		ghClient.authenticate({
-			type: "integration",
+		const auth: AuthJWT = {
+			type: "app",
 			token: this.createJWT()
-		});
+		};
+
+		ghClient.authenticate(auth);
 
 		return ghClient;
 	}
 
 	private async getGhAppClient(login: string): Promise<any> {
-		const ghClient = Octokit({
-			baseUrl: this.configurationService.get().github.base
-		});
+		const ghClient = new Github(this.githubOptions);
 
 		const installationId = await this.installationStorage.getInstallationId(login);
 		if (!installationId) {
@@ -111,10 +148,11 @@ class GithubClientService {
 		if (!bearerToken) {
 			LOGGER.info("bearer for %s seems to have reached ttl. requesting new bearer.", login);
 			try {
-				ghClient.authenticate({
-					type: "integration",
+				const auth: AuthJWT = {
+					type: "app",
 					token: this.createJWT()
-				});
+				};
+				ghClient.authenticate(auth);
 
 				const bearerRequest = await ghClient.apps.createInstallationToken({
 					installation_id: installationId
@@ -128,10 +166,11 @@ class GithubClientService {
 		}
 
 		return new Promise<any>((resolve, reject) => {
-			ghClient.authenticate({
+			const auth: AuthUserToken = {
 				type: "token",
 				token: bearerToken
-			});
+			};
+			ghClient.authenticate(auth);
 
 			resolve(ghClient);
 		});
