@@ -1,7 +1,6 @@
 "use strict";
 
 import { LOGGER } from "../logger";
-import { GithubWebhookEventType, GithubWebhookEvent, GithubPushWebhookEvent } from "./model/gh-webhook-event";
 import { AppEvent } from "../app-events";
 import { CommitStatusEnum } from "./model/gh-commit-status";
 import GithubClientService from "./client/github-client";
@@ -10,6 +9,7 @@ import { injectable, inject } from "inversify";
 import { ConfigurationService } from "../configuration";
 import EventBus from "../event-bus";
 import { ChecksCreateParams } from "@octokit/rest";
+import { QualityGateStatus } from "../sonar/model/sonar-quality-gate";
 
 
 /** Sends Commit Status Requests to GitHub
@@ -41,11 +41,18 @@ class CommitStatusSender {
 			name: this.configurationService.get().context,
 			owner: this.configurationService.get().context,
 			repo: analysisEvent.properties.repository,
-			conclusion: CommitStatusEnum.success ? "success" : "action_required",
+			conclusion: analysisEvent.qualityGate.status == QualityGateStatus.OK ? "success" : "action_required",
 			completed_at: analysisEvent.analysedAt.toISOString(),
 			head_sha: analysisEvent.properties.commitId,
 		};
 
+		// TODO: add and populate output property for Sonar issues
+		if (analysisEvent.qualityGate.status != QualityGateStatus.OK) {
+			githubCheck.output = {
+				title: analysisEvent.qualityGate.name,
+				summary: analysisEvent.qualityGate.status
+			};
+		}
 
 		return new Promise<void>((resolve, reject) => {
 			this.githubClientService.createCheckStatus(githubCheck)
