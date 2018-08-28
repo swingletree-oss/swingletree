@@ -31,7 +31,11 @@ type SonarIssue = {
 	status: "OPEN" | "REOPENED" | "CONFIRMED" | "RESOLVED" | "CLOSED";
 	resolution: string;
 	severity: "BLOCKER" | "CRITICAL" | "MAJOR" | "MINOR" | "INFO";
+	type: string;
 	message: string;
+	effort: string;
+	debt: string;
+	tags: string[];
 	line: number;
 	author: string;
 	creationDate: Date;
@@ -43,6 +47,6 @@ type SonarIssueResponse = {
 	securityExclusions: boolean;
 	maxResultsReached: boolean;
 	paging: SonarPaging;
-	issues: SonarIssue;
+	issues: SonarIssue[];
 	components: Component[];
 };

@@ -85,30 +85,11 @@ class GithubClientService {
 	public createCheckStatus(createParams: ChecksCreateParams): Promise<void> {
 
 		return new Promise<void>(async (resolve, reject) => {
-			if (!status.repository) {
-				reject("Repository target is not set");
-			}
 
-			const coordinates = status.repository.split("/");
+			const coordinates = createParams.repo.split("/");
 			const client = await this.getGhAppClient(coordinates[0]);
 
-			const checkParams: ChecksCreateParams = {
-				owner: coordinates[0],
-				repo: coordinates[1],
-				name: this.configurationService.get().context,
-				head_sha: status.commitId,
-				head_branch: ,
-				details_url: status.payload.target_url,
-				conclusion: "neutral"
-			};
-
-			checkParams.output = {
-				title: "title of check run",
-				summary: "summary of check run",
-				text: "details (optional)"
-			};
-
-			client.checks.create(checkParams)
+			client.checks.create(createParams)
 			.then(resolve)
 			.catch(reject);
 		});
