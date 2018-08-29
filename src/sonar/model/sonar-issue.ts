@@ -1,29 +1,38 @@
 "use strict";
 
-type SonarPaging = {
+export interface SonarPaging {
 	pageIndex: number;
 	pageSize: number;
 	total: number;
-	pages: number;
-};
+}
 
-type Comment = {
+export interface Comment {
 	key: string;
 	login: string;
 	htmlText: string;
 	createdAt: Date;
-};
+}
 
-type Component = {
+export interface Component {
 	key: string;
 	enabled?: boolean;
 	qualifier: string;
 	name: string;
 	longName: string;
 	path?: string;
-};
+}
 
-type SonarIssue = {
+export interface SonarIssueQuery {
+	componentKey?: string;
+	assigned?: boolean;
+	languages?: string;
+	p?: number;
+	ps?: number;
+	resolved?: boolean;
+	statuses?: string;
+}
+
+export interface SonarIssue {
 	key: string;
 	component: string;
 	project: string;
@@ -41,12 +50,12 @@ type SonarIssue = {
 	creationDate: Date;
 	updateDate: Date;
 	comments: Comment[];
-};
+}
 
-type SonarIssueResponse = {
+export interface SonarIssueResponse {
 	securityExclusions: boolean;
 	maxResultsReached: boolean;
 	paging: SonarPaging;
 	issues: SonarIssue[];
 	components: Component[];
-};
+}

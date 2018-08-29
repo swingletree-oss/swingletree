@@ -42,7 +42,7 @@ class CommitStatusSender {
 			owner: this.configurationService.get().context,
 			repo: analysisEvent.properties.repository,
 			conclusion: analysisEvent.qualityGate.status == QualityGateStatus.OK ? "success" : "action_required",
-			completed_at: analysisEvent.analysedAt.toISOString(),
+			completed_at: new Date(analysisEvent.analysedAt).toISOString(),
 			head_sha: analysisEvent.properties.commitId,
 		};
 

@@ -2,8 +2,10 @@
 
 import { injectable, inject } from "inversify";
 import { ConfigurationService } from "../../configuration";
+import { LOGGER } from "../../logger";
 
 import * as request from "request";
+import { SonarIssueResponse, SonarIssueQuery, SonarIssue } from "../model/sonar-issue";
 
 @injectable()
 export class SonarClient {
@@ -16,7 +18,10 @@ export class SonarClient {
 	}
 
 	private async getIssue(projectKey: string, page = 1): Promise<SonarIssueResponse> {
-		const queryParams = {
+		LOGGER.debug("retrieve page %s for project %s", page, projectKey);
+
+		const queryParams: SonarIssueQuery = {
+			componentKey: projectKey,
 			statuses: "OPEN,CONFIRMED,REOPENED",
 			resolved: false,
 			p: page,
@@ -30,6 +35,7 @@ export class SonarClient {
 			}
 		};
 
+
 		return new Promise<SonarIssueResponse>((resolve, reject) => {
 			request(
 				this.configurationService.get().sonar.base + "/api/issues/search",
@@ -38,14 +44,21 @@ export class SonarClient {
 					if (error) {
 						reject(error);
 					}
+
+					if (response.statusCode != 200) {
+						reject("Received HTTP status code " + response.statusCode);
+					}
+
+					LOGGER.info(JSON.stringify(response));
+					LOGGER.info(body);
 					resolve(JSON.parse(body) as SonarIssueResponse);
 				}
 			);
 		});
 	}
 
-	private pagingNecessary(response: SonarIssueResponse): boolean {
-		return response.paging.pageSize * response.paging.pageIndex >= response.paging.total;
+	public pagingNecessary(response: SonarIssueResponse): boolean {
+		return response.paging.pageSize * response.paging.pageIndex < response.paging.total;
 	}
 
 	public getIssues(projectKey: string): Promise<SonarIssue[]> {
@@ -54,11 +67,16 @@ export class SonarClient {
 
 			let page = 0;
 			let issuePage;
-			do {
-				issuePage = await this.getIssue(projectKey, page + 1);
-				issues.concat(issuePage.issues);
-				page = issuePage.paging.pageIndex;
-			} while (this.pagingNecessary(issuePage));
+			try {
+				do {
+					issuePage = await this.getIssue(projectKey, page + 1);
+					issues.concat(issuePage.issues);
+					page = issuePage.paging.pageIndex;
+				} while (this.pagingNecessary(issuePage));
+			} catch (err) {
+				LOGGER.warn("an error occured while paginating through issues of project %s. Skipping issue collection", projectKey);
+				reject(err);
+			}
 
 			resolve(issues);
 		});
