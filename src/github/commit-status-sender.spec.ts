@@ -49,7 +49,7 @@ describe("Commit Status Sender", () => {
 		};
 
 		githubClientMock = {
-			createCommitStatus: sinon.stub()
+			createCheckStatus: sinon.stub()
 		};
 
 		uut = new CommitStatusSender(
@@ -92,7 +92,7 @@ describe("Commit Status Sender", () => {
 	});
 
 	it("should send pending commit status on matching event", (done) => {
-		githubClientMock.createCommitStatus.resolves();
+		githubClientMock.createCheckStatus.resolves();
 
 		uut.sendAnalysisStatus(mockEvent)
 			.then(() => {
@@ -103,7 +103,7 @@ describe("Commit Status Sender", () => {
 	});
 
 	it("should send commit status on matching event", (done) => {
-		githubClientMock.createCommitStatus.resolves();
+		githubClientMock.createCheckStatus.resolves();
 
 		uut.sendAnalysisStatus(mockEvent)
 			.then(() => {
@@ -117,12 +117,11 @@ describe("Commit Status Sender", () => {
 		const qualityGate = new SonarQualityGate();
 		mockEvent = new SonarWebhookEvent(Object.assign({}, require("../../test/base-sonar-webhook-failed.json")));
 
-		githubClientMock.createCommitStatus.resolves();
+		githubClientMock.createCheckStatus.resolves();
 		uut.sendAnalysisStatus(mockEvent)
 			.then(() => {
 				sinon.assert.calledWith(eventBusMock.emit, AppEvent.statusSent,
-					sinon.match.has("payload", sinon.match.has("description", "Quality gate failed with 1 violations."))
-						.and(sinon.match.has("payload", sinon.match.has("state", "failure"))));
+					sinon.match.has("conclusion", "action_required"));
 				done();
 			})
 			.catch((err) => {
