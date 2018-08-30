@@ -38,7 +38,7 @@ describe("Sonar Client", () => {
 			pageSize: 1,
 			total: 100
 		};
-		chai.assert.isTrue(uut.pagingNecessary({paging: paging} as any));
+		chai.assert.isTrue(uut.pagingNecessary(paging));
 	});
 
 	it("should not page too much", () => {
@@ -47,7 +47,7 @@ describe("Sonar Client", () => {
 			pageSize: 1,
 			total: 3
 		};
-		chai.assert.isFalse(uut.pagingNecessary({paging: paging} as any));
+		chai.assert.isFalse(uut.pagingNecessary(paging));
 	});
 
 });

@@ -5,7 +5,7 @@ import { ConfigurationService } from "../../configuration";
 import { LOGGER } from "../../logger";
 
 import * as request from "request";
-import { SonarIssueResponse, SonarIssueQuery, SonarIssue } from "../model/sonar-issue";
+import { SonarIssueResponse, SonarIssueQuery, SonarIssue, SonarPaging } from "../model/sonar-issue";
 
 @injectable()
 export class SonarClient {
@@ -24,17 +24,19 @@ export class SonarClient {
 			componentKey: projectKey,
 			statuses: "OPEN,CONFIRMED,REOPENED",
 			resolved: false,
-			p: page,
-			ps: 1
+			p: page
 		};
 
 		const options: request.CoreOptions = {
 			qs: queryParams,
-			auth: {
-				username: this.configurationService.get().sonar.token
-			}
 		};
 
+		// add auth to options, if sonar token is available
+		if (this.configurationService.get().sonar.token) {
+			options.auth = {
+				username: this.configurationService.get().sonar.token
+			};
+		}
 
 		return new Promise<SonarIssueResponse>((resolve, reject) => {
 			request(
@@ -57,8 +59,8 @@ export class SonarClient {
 		});
 	}
 
-	public pagingNecessary(response: SonarIssueResponse): boolean {
-		return response.paging.pageSize * response.paging.pageIndex < response.paging.total;
+	public pagingNecessary(paging: SonarPaging): boolean {
+		return paging.pageSize * paging.pageIndex < paging.total;
 	}
 
 	public getIssues(projectKey: string): Promise<SonarIssue[]> {
@@ -72,7 +74,7 @@ export class SonarClient {
 					issuePage = await this.getIssue(projectKey, page + 1);
 					issues.concat(issuePage.issues);
 					page = issuePage.paging.pageIndex;
-				} while (this.pagingNecessary(issuePage));
+				} while (this.pagingNecessary(issuePage.paging));
 			} catch (err) {
 				LOGGER.warn("an error occured while paginating through issues of project %s. Skipping issue collection", projectKey);
 				reject(err);
