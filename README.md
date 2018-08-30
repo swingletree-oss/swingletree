@@ -72,10 +72,12 @@ Swingletree is configured using a configuration file named `swingletree.conf.yam
 | `GITHUB_APP_PAGE`     | *(optional)* Points to the GitHub App public page. The value can be found on the GitHub App configuration page. | *none* |
 | `DATABASE_HOST`       | Sets the Redis database host                                  | *none*  |
 | `DATABASE_PASSWORD`   | Sets the Redis database password to use for authentication    | *none*  |
-| `SONAR_SECRET`        | Enables and sets the Basic Authentication password for the SonarQube webhook. | *none* |
 | `PORT`                | Sets the port Swingletree is listening on.                    | `3000`  |
 | `LOG_LEVEL`           | Sets the log level.                                           | `info`  |
 | `LOG_DISABLE_COLORS`  | Disables colors in log messages if set to `true`.             | `false` |
+| `SONAR_SECRET`        | Enables and sets the Basic Authentication password for the Swingletree SonarQube webhook. | *none* |
+| `SONAR_BASE`          | SonarQube base url (for example `http://sonarhost:9000`)      | *none*  |
+| `SONAR_TOKEN`         | SonarQube API token                                           | *none*  |
 
 ### GitHub App Configuration
 
