@@ -1,5 +1,6 @@
 import * as yaml from "js-yaml";
 import { injectable } from "inversify";
+import { LOGGER } from "./logger";
 
 @injectable()
 export class ConfigurationService {
@@ -7,6 +8,7 @@ export class ConfigurationService {
 	private config: Configuration;
 
 	constructor() {
+		LOGGER.info("loading configuration file %s", this.CONFIG_FILE);
 		this.config = new Configuration(
 			yaml.safeLoad(
 				require("fs").readFileSync(this.CONFIG_FILE)
