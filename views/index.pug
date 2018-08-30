@@ -3,7 +3,7 @@ extends base
 block content
     div(class="container")
         div(class="row")
-            div(class="col-md-9")
+            div(class="col-md-12")
                 div(class="jumbotron")
                     h1 Hi, there!
                     p(class="lead") Your Swingletree is ready to go.
@@ -16,15 +16,3 @@ block content
                         p To install Swingletree to your GitHub organization visit the Swingletree GitHub app public page of your GitHub instance.
 
                     p For more technical details of what Swingletree does you can take a look at #[a(href="https://github.com/error418/swingletree/blob/master/README.md") Swingletree's readme].
-
-            div(class="col-md-3")
-                div(class="card bg-light")
-                    div(class="card-header") Service Health
-                    div(class="card-body")
-                        ul(class="list-unstyled")
-                            li(data-toggle="tooltip" data-placement="right" title=unhealthy + " of " + connections + " failing")
-                                if unhealthy > 0
-                                    i(class="fas fa-database mr-2 text-danger")
-                                else
-                                    i(class="fas fa-database mr-2 text-success")
-                                span Database

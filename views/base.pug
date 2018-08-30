@@ -2,7 +2,7 @@ doctype html
 html
     head
         title Swingletree
-        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous")
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous")
 
         link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/solid.css" integrity="sha384-Rw5qeepMFvJVEZdSo1nDQD5B6wX0m7c5Z/pLNvjkB14W6Yki1hKbSEQaX9ffUbWe" crossorigin="anonymous")
         link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/brands.css" integrity="sha384-VGCZwiSnlHXYDojsRqeMn3IVvdzTx5JEuHgqZ3bYLCLUBV8rvihHApoA1Aso2TZA" crossorigin="anonymous")
@@ -20,6 +20,9 @@ html
 
         meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
 
+        style
+            include assets/main.css
+
     body(style="padding-top:5rem")
         nav(class="navbar navbar-expand-md navbar-dark bg-dark fixed-top")
             div(class="container")
@@ -28,22 +31,34 @@ html
                     .
                         Swingletree
 
-                div(class="navbar-nav mr-auto")
+                ul(class="navbar-nav mr-auto")
                     if appPublicPage
-                        a(class="nav-item nav-link" href=appPublicPage + "/installations/new")
-                            i(class="fas fa-fw mr-1 fa-plus")
-                            .
-                                Install
+                        li(class="nav-item")
+                            a(class="nav-link" href=appPublicPage + "/installations/new")
+                                i(class="fas fa-fw mr-1 fa-plus")
+                                .
+                                    Install
                 
-                div(class="navbar-nav")
-                        a(class="nav-item nav-link" href="https://github.com/error418/swingletree")
+                ul(class="navbar-nav")
+                    if unhealthy > 0
+                        li(class="nav-item")
+                            a(class="nav-link" data-toggle="popover" data-placement="bottom" title="Service information")
+                                i(class="fas fa-fw mr-1 fa-exclamation-circle text-warning")
+                                span(id="health-po-content" style="display:none")
+                                    ul(class="list-unstyled" style="margin:0px")
+                                        li 
+                                            i(class="fas fa-fw mr-1 fa-exclamation text-danger")
+                                            .
+                                                #{unhealthy} of #{connections} database connections failing
+                    li(class="nav-item")
+                        a(class="nav-link" href="https://github.com/error418/swingletree")
                             i(class="fab fa-fw mr-1 fa-github")
                             .
                                 GitHub
+                        
         
         block content
 
         script(src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous")
-        script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous")
-        script $(function () { $('[data-toggle="tooltip"]').tooltip() })
+        script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js" integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl" crossorigin="anonymous")
+        script $(function () { $('[data-toggle="tooltip"]').tooltip(); $('[data-toggle="popover"]').popover({content: $('#health-po-content').html(), html: true}) });
