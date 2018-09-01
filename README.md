@@ -108,7 +108,7 @@ Swingletree publishes webhook endpoints for SonarQube and events.
 
 Swingletree's SonarQube webhook can be configured to be protected by basic authentication. You can set the secret via environment variable or inside the configuration file. If you do not configure this value, the webhook can be used without providing authentication. Keep in mind you should use `https` (by using for example a reverse proxy) to protect your credentials.
 
-## Configure Sonar Scaner
+## Configure Sonar Scanner
 
 Swingletree needs some context when receiving webhook events from SonarQube. Therefore some additional analysis properties need to be set when running a `sonar-scanner` during your CI build.
 
