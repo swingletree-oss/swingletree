@@ -2,8 +2,8 @@ import { SonarQualityGate } from "./sonar-quality-gate";
 "use strict";
 
 export class SonarWebhookEvent {
-	analysedAt: Date;
-	project: Object;
+	analysedAt: string;
+	project: string;
 	properties: Properties;
 
 	qualityGate: SonarQualityGate;
@@ -32,12 +32,12 @@ export class SonarWebhookEvent {
 	}
 }
 
-type Branch = {
+interface Branch {
 	name: string;
 	type?: string;
 	isMain?: boolean;
 	url?: string;
-};
+}
 
 class Properties {
 	commitId: string;

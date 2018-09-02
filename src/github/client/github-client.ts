@@ -13,6 +13,7 @@ import { LOGGER } from "../../logger";
 import * as Github from "@octokit/rest";
 import { AuthJWT, AuthUserToken, ChecksCreateParams } from "@octokit/rest";
 import { GithubInstallation } from "../model/gh-webhook-event";
+import { ClientResponse } from "http";
 
 @injectable()
 class GithubClientService {
@@ -42,7 +43,7 @@ class GithubClientService {
 		return new Promise<GithubInstallation[]>((resolve, reject) => {
 			const client = this.getClient();
 
-			client.apps.getInstallations()
+			client.apps.getInstallations({})
 			.then((response: any) => {
 					const result: GithubInstallation[] = [];
 
@@ -57,16 +58,29 @@ class GithubClientService {
 		});
 	}
 
-	public createCheckStatus(createParams: ChecksCreateParams): Promise<void> {
+	public createCheckStatus(createParams: ChecksCreateParams): Promise<Github.Response<Github.CreateResponse>> {
 
-		return new Promise<void>(async (resolve, reject) => {
+		return new Promise<Github.Response<Github.CreateResponse>>(async (resolve, reject) => {
 
-			const coordinates = createParams.repo.split("/");
-			const client = await this.getGhAppClient(coordinates[0]);
+			const client = await this.getGhAppClient(createParams.owner);
 
 			client.checks.create(createParams)
 			.then(resolve)
 			.catch(reject);
+		});
+	}
+
+	public getCheckSuiteForRef(repo: string, ref: string): Promise<void> {
+		return new Promise<void>(async (resolve, reject) => {
+			const coordinates = repo.split("/");
+			const client = await this.getGhAppClient(coordinates[0]);
+
+			client.checks.listSuitesForRef({
+				app_id: this.configurationService.get().github.appId,
+				owner: coordinates[0],
+				repo: coordinates[1],
+				ref: ref
+			});
 		});
 	}
 
@@ -79,7 +93,7 @@ class GithubClientService {
 		return token;
 	}
 
-	private getClient(): any {
+	private getClient(): Github {
 		const ghClient = new Github(this.githubOptions);
 
 		const auth: AuthJWT = {
@@ -92,7 +106,7 @@ class GithubClientService {
 		return ghClient;
 	}
 
-	private async getGhAppClient(login: string): Promise<any> {
+	private async getGhAppClient(login: string): Promise<Github> {
 		const ghClient = new Github(this.githubOptions);
 
 		const installationId = await this.installationStorage.getInstallationId(login);

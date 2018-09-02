@@ -62,7 +62,7 @@ class SonarWebhook {
 	}
 
 	public webhook = (req: Request, res: Response) => {
-		LOGGER.info("received SonarQube webhook event");
+		LOGGER.debug("received SonarQube webhook event");
 
 		if (this.configurationService.get().sonar.logWebhookEvents) {
 			LOGGER.debug(JSON.stringify(req.body));
@@ -73,6 +73,7 @@ class SonarWebhook {
 		if (this.isWebhookEventRelevant(event)) {
 			this.eventBus.emit(AppEvent.sonarAnalysisComplete, event);
 		} else {
+			LOGGER.debug("SonarQube webhook data did not contain repo and/or commit-sha data. This event will be ignored.");
 			this.eventBus.emit(AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
 		}
 

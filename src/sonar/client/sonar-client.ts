@@ -17,15 +17,10 @@ export class SonarClient {
 		this.configurationService = configurationService;
 	}
 
-	private async getIssue(projectKey: string, page = 1): Promise<SonarIssueResponse> {
-		LOGGER.debug("retrieve page %s for project %s", page, projectKey);
+	private async getIssue(queryParams: SonarIssueQuery, page = 1): Promise<SonarIssueResponse> {
+		LOGGER.debug("retrieve page %s for project %s", page, queryParams.componentKey);
 
-		const queryParams: SonarIssueQuery = {
-			componentKey: projectKey,
-			statuses: "OPEN,CONFIRMED,REOPENED",
-			resolved: false,
-			p: page
-		};
+		queryParams.p = page;
 
 		const options: request.CoreOptions = {
 			qs: queryParams,
@@ -51,8 +46,6 @@ export class SonarClient {
 						reject("Received HTTP status code " + response.statusCode);
 					}
 
-					LOGGER.info(JSON.stringify(response));
-					LOGGER.info(body);
 					resolve(JSON.parse(body) as SonarIssueResponse);
 				}
 			);
@@ -63,22 +56,31 @@ export class SonarClient {
 		return paging.pageSize * paging.pageIndex < paging.total;
 	}
 
-	public getIssues(projectKey: string): Promise<SonarIssue[]> {
+	public getIssues(projectKey: string, createdAt: string): Promise<SonarIssue[]> {
 		return new Promise<SonarIssue[]>(async (resolve, reject) => {
-			const issues: SonarIssue[] = [];
+			let issues: SonarIssue[] = [];
+
+			const query: SonarIssueQuery = {
+				componentKey: projectKey,
+				createdAt: createdAt,
+				statuses: "OPEN,CONFIRMED,REOPENED",
+				resolved: false
+			};
 
 			let page = 0;
 			let issuePage;
 			try {
 				do {
-					issuePage = await this.getIssue(projectKey, page + 1);
-					issues.concat(issuePage.issues);
+					issuePage = await this.getIssue(query, page + 1);
+					issues = issues.concat(issuePage.issues);
 					page = issuePage.paging.pageIndex;
 				} while (this.pagingNecessary(issuePage.paging));
 			} catch (err) {
-				LOGGER.warn("an error occured while paginating through issues of project %s. Skipping issue collection", projectKey);
+				LOGGER.error("an error occured while paginating through issues of project %s. Skipping issue collection", projectKey, err);
 				reject(err);
 			}
+
+			console.log(issues);
 
 			resolve(issues);
 		});

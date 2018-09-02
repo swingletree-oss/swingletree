@@ -30,6 +30,7 @@ export interface SonarIssueQuery {
 	ps?: number;
 	resolved?: boolean;
 	statuses?: string;
+	createdAt: string;
 }
 
 export interface SonarIssue {
