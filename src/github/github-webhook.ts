@@ -29,6 +29,10 @@ class GithubWebhook {
 	}
 
 	public getRoute(): Router {
+		if (!this.configService.get().github.webhookSecret) {
+			LOGGER.warn("GitHub webhook is not protected. Consider setting a webhook secret in the Swingletree configuration.");
+		}
+
 		const webhookHandler = GithubWebHookHandler({ path: "/", secret: this.configService.get().github.webhookSecret });
 
 		webhookHandler.on("*", this.ghEventHandler.bind(this));
