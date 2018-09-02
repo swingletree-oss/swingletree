@@ -2,7 +2,7 @@
 
 import { LOGGER } from "../logger";
 import { Router } from "express";
-import { GithubWebhookEventType, GithubWebhookEvent } from "./model/gh-webhook-event";
+import { GithubWebhookEventType, GithubWebhookEvent, GithubInstallationWebhook, GithubCheckSuiteWebhook } from "./model/gh-webhook-event";
 import { AppEvent } from "../app-events";
 
 import EventBus from "../event-bus";
@@ -35,7 +35,7 @@ class GithubWebhook {
 
 		const webhookHandler = GithubWebHookHandler({ path: "/", secret: this.configService.get().github.webhookSecret });
 
-		webhookHandler.on("*", this.ghEventHandler.bind(this));
+		webhookHandler.on(GithubWebhookEventType.INSTALLATION, this.installationHandler.bind(this));
 
 		webhookHandler.on("error", function (err: any, req: any, res: any) {
 			LOGGER.warn("failed to process webhook call. " + err);
@@ -47,17 +47,16 @@ class GithubWebhook {
 		return router;
 	}
 
-	public ghEventHandler (event: string, repo: string, data: GithubWebhookEvent) {
-		LOGGER.info("received GitHub webhook \"%s\" event ", event);
+	public installationHandler(repo: string, data: GithubInstallationWebhook) {
+		LOGGER.info("received GitHub webhook installation event");
 
-		if (event === GithubWebhookEventType.PUSH) {
-			this.eventBus.emit(AppEvent.githubPushEvent, GithubWebhookEvent.convert(event, data));
-		} else if (event == GithubWebhookEventType.INSTALLATION) {
-			this.eventBus.emit(AppEvent.appInstalled, GithubWebhookEvent.convert(event, data));
-		} else {
-			LOGGER.info("%s webhook event was ignored.", event);
+		try {
+			this.eventBus.emit(AppEvent.appInstalled, data.installation);
+		} catch (err) {
+			LOGGER.error("failed to emit installation event through event bus", err);
 		}
 	}
+
 }
 
 export default GithubWebhook;

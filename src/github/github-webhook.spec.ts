@@ -40,9 +40,9 @@ describe("GitHub Webhook", () => {
 
 
 	it("should send sendStatus pending event on GitHub push event", () => {
-		uut.ghEventHandler(GithubWebhookEventType.PUSH, "test/repo", pullRequestData);
+		uut.installationHandler(GithubWebhookEventType.INSTALLATION, "test/repo", pullRequestData);
 
-		sinon.assert.calledWith(eventBusMock.emit, AppEvent.githubPushEvent);
+		sinon.assert.calledWith(eventBusMock.emit, AppEvent.appInstalled);
 	});
 
 });

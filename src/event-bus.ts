@@ -12,12 +12,12 @@ class EventBus {
 	}
 
 	public emit(appEvent: AppEvent, eventArgument: any) {
-		LOGGER.info("app event %s emitted", appEvent);
+		LOGGER.debug("app event %s emitted", appEvent);
 		this.eventBus.emit(appEvent, eventArgument);
 	}
 
 	public register(appEvent: AppEvent, handler: Function, context: any) {
-		LOGGER.info("handler for %s registered.", appEvent);
+		LOGGER.debug("handler for %s registered.", appEvent);
 		this.eventBus.on(appEvent, this.handlerWrapper(handler, context));
 	}
 

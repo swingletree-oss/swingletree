@@ -103,6 +103,7 @@ Swingletree publishes webhook endpoints for SonarQube and events.
 | Type      | Path            | Content Type       |            |                          |
 | --------- | --------------- | :----------------: | :--------: | ------------------------ |
 | SonarQube | webhook/sonar   | *not configurable* | required   | [How-to][sonar-webhook]  |
+| GitHub    | webhook/github  | application/json   | required   |                          |
 
 #### SonarQube Webhook security
 

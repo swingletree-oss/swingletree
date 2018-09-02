@@ -9,11 +9,11 @@ import { GithubCommitStatusContainer } from "../model/gh-commit-status";
 
 import InstallationStorage from "./installation-storage";
 import TokenStorage from "./token-storage";
-import { GithubInstallation } from "../model/gh-webhook-event";
 import { LOGGER } from "../../logger";
 
 import * as Github from "@octokit/rest";
 import { AuthJWT, AuthUserToken, ChecksCreateParams } from "@octokit/rest";
+import { GithubInstallation } from "../model/gh-webhook-event";
 
 @injectable()
 class GithubClientService {
@@ -49,7 +49,7 @@ class GithubClientService {
 
 					let instItem: any;
 					for (instItem in response.data) {
-						result.push(new GithubInstallation(response.data[instItem]));
+						result.push(response.data[instItem]);
 					}
 
 					resolve(result);

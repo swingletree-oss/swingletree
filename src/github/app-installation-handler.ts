@@ -8,7 +8,8 @@ import GithubClientService from "./client/github-client";
 import { injectable, inject } from "inversify";
 import EventBus from "../event-bus";
 import InstallationStorage from "./client/installation-storage";
-import { GithubInstallation } from "./model/gh-webhook-event";
+import { GithubInstallation, GithubInstallationWebhook } from "./model/gh-webhook-event";
+import { GetInstallationsResponseItem } from "@octokit/rest";
 
 
 /** Handles GitHub-App installation notices sent by GitHub
@@ -28,9 +29,9 @@ class GhAppInstallationHandler {
 		this.eventBus.register(AppEvent.appInstalled, this.appInstalled, this);
 	}
 
-	public appInstalled(installation: GithubInstallation) {
-		LOGGER.info("login %s was registered", installation.login);
-		this.installationStorage.store(installation.login, installation.installationId);
+	public appInstalled(installation: GetInstallationsResponseItem | any) {
+		LOGGER.info("new installation for login %s was registered", installation.account.login);
+		this.installationStorage.store(installation.account.login, installation.id);
 	}
 }
 

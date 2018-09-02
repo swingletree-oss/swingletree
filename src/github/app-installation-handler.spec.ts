@@ -45,12 +45,15 @@ describe("App installation handler", () => {
 	});
 
 	it("should store installation metadata", () => {
-		uut.appInstalled({
-			login: "login",
-			applicationId: 321,
-			eventType: GithubWebhookEventType.INSTALLATION,
-			installationId: 123
-		});
+		const data = {
+			account: {
+				login: "login"
+			},
+			app_id: 321,
+			id: 123
+		};
+
+		uut.appInstalled(data);
 
 		sinon.assert.calledWith(installationStorage.store, "login", 123);
 	});

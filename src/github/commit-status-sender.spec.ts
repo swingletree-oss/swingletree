@@ -59,7 +59,7 @@ describe("Commit Status Sender", () => {
 		);
 
 		mockEvent = new SonarWebhookEvent(Object.assign({}, require("../../test/base-sonar-webhook.json")));
-		mockPushEvent = new GithubPushWebhookEvent({
+		mockPushEvent = {
 			repository: {
 				full_name: "test/test-repo"
 			},
@@ -67,7 +67,7 @@ describe("Commit Status Sender", () => {
 			head_commit: {
 				id: "00000"
 			}
-		});
+		};
 	});
 
 	afterEach(function () {
