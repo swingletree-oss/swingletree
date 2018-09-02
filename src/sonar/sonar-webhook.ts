@@ -1,6 +1,5 @@
 "use strict";
 
-import { GithubCommitStatusContainer, CommitStatusEnum, GithubCommitStatus } from "../github/model/gh-commit-status";
 import { Router, Request, Response, NextFunction } from "express";
 import { AppEvent } from "../app-events";
 import { QualityGateStatus } from "./model/sonar-quality-gate";

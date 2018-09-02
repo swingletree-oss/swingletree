@@ -5,7 +5,6 @@ import { inject } from "inversify";
 import { injectable } from "inversify";
 
 import { ConfigurationService } from "../../configuration";
-import { GithubCommitStatusContainer } from "../model/gh-commit-status";
 
 import InstallationStorage from "./installation-storage";
 import TokenStorage from "./token-storage";
@@ -54,30 +53,6 @@ class GithubClientService {
 
 					resolve(result);
 				})
-			.catch(reject);
-		});
-	}
-
-	public createCommitStatus(status: GithubCommitStatusContainer): Promise<void> {
-
-		return new Promise<void>(async (resolve, reject) => {
-			if (!status.repository) {
-				reject("Repository target is not set");
-			}
-
-			const coordinates = status.repository.split("/");
-			const client = await this.getGhAppClient(coordinates[0]);
-
-			client.repos.createStatus({
-				owner: coordinates[0],
-				repo: coordinates[1],
-				sha: status.commitId,
-				state: status.payload.state,
-				target_url: status.payload.target_url,
-				description: status.payload.description,
-				context: this.configurationService.get().context
-			})
-			.then(resolve)
 			.catch(reject);
 		});
 	}

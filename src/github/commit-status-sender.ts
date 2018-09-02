@@ -2,7 +2,6 @@
 
 import { LOGGER } from "../logger";
 import { AppEvent } from "../app-events";
-import { CommitStatusEnum } from "./model/gh-commit-status";
 import GithubClientService from "./client/github-client";
 import { SonarWebhookEvent } from "../sonar/model/sonar-wehook-event";
 import { injectable, inject } from "inversify";

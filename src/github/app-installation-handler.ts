@@ -3,7 +3,6 @@
 import { LOGGER } from "../logger";
 
 import { AppEvent } from "../app-events";
-import { GithubCommitStatus } from "./model/gh-commit-status";
 import GithubClientService from "./client/github-client";
 import { injectable, inject } from "inversify";
 import EventBus from "../event-bus";
