@@ -52,7 +52,7 @@ class RedisClientFactory {
 		});
 
 		client.on("ready", () => {
-			LOGGER.info("Redis client for database index %i is connected and ready.", databaseIndex);
+			LOGGER.debug("Redis client for database index %i is connected and ready.", databaseIndex);
 		});
 
 		// set authentication if available
