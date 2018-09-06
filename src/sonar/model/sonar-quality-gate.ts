@@ -29,7 +29,7 @@ export class SonarQualityGate {
 	}
 }
 
-interface Condition {
+export interface Condition {
 	errorThreshold: string;
 	metric: string;
 	onLeakPeriod: boolean;

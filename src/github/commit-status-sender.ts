@@ -10,6 +10,7 @@ import EventBus from "../event-bus";
 import { ChecksCreateParams } from "@octokit/rest";
 import { QualityGateStatus } from "../sonar/model/sonar-quality-gate";
 import { SonarClient } from "../sonar/client/sonar-client";
+import { CheckRunOutput } from "./check-run-output";
 
 
 /** Sends Commit Status Requests to GitHub
@@ -46,6 +47,7 @@ class CommitStatusSender {
 			owner: coordinates[0],
 			repo: coordinates[1],
 			conclusion: analysisEvent.qualityGate.status == QualityGateStatus.OK ? "success" : "action_required",
+			started_at: new Date(analysisEvent.analysedAt).toISOString(),
 			completed_at: new Date(analysisEvent.analysedAt).toISOString(),
 			head_sha: analysisEvent.properties.commitId,
 			details_url: analysisEvent.serverUrl
@@ -54,8 +56,9 @@ class CommitStatusSender {
 		return new Promise<void>(async (resolve, reject) => {
 			if (analysisEvent.qualityGate.status != QualityGateStatus.OK) {
 				githubCheck.output = {
-					title: analysisEvent.qualityGate.name,
-					summary: analysisEvent.qualityGate.status
+					title: `Sonar Quality Gate ${analysisEvent.qualityGate.name}`,
+					summary: `Quality gate status: ${analysisEvent.qualityGate.status}`,
+					text: CheckRunOutput.getMarkdown(analysisEvent.qualityGate.conditions)
 				};
 
 				githubCheck.output.annotations = [];
@@ -69,7 +72,7 @@ class CommitStatusSender {
 				};
 
 				try {
-					const issues = await this.sonarClient.getIssues(analysisEvent.project, analysisEvent.analysedAt);
+					const issues = await this.sonarClient.getIssues(analysisEvent.project.key, analysisEvent.analysedAt);
 
 					issues.forEach((item) => {
 						const path = item.component.split(":").splice(2).join(":");
