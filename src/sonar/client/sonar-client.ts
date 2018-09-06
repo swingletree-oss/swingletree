@@ -80,8 +80,6 @@ export class SonarClient {
 				reject(err);
 			}
 
-			console.log(issues);
-
 			resolve(issues);
 		});
 	}
