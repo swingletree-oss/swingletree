@@ -78,7 +78,7 @@ class CommitStatusSender {
 							start_line: item.line || 0,
 							end_line: item.line || 0,
 							message: item.message,
-							annotation_level: severityMap[item.severity],
+							annotation_level: severityMap[item.severity] || "notice",
 						});
 					});
 					LOGGER.debug("annotating %s issues to check result", githubCheck.output.annotations.length);
