@@ -2,7 +2,7 @@
 
 import { LOGGER } from "../logger";
 import { Router } from "express";
-import { GithubWebhookEventType, GithubWebhookEvent, GithubInstallationWebhook, GithubCheckSuiteWebhook } from "./model/gh-webhook-event";
+import { GithubWebhookEventType, GithubInstallationWebhook } from "./model/gh-webhook-event";
 import { AppEvent } from "../app-events";
 
 import EventBus from "../event-bus";

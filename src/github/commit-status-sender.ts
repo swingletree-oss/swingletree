@@ -72,14 +72,13 @@ class CommitStatusSender {
 					const issues = await this.sonarClient.getIssues(analysisEvent.project, analysisEvent.analysedAt);
 
 					issues.forEach((item) => {
-						const path = item.component.split(":").splice(0, 2).join(":");
+						const path = item.component.split(":").splice(2).join(":");
 						githubCheck.output.annotations.push({
 							path: path,
 							start_line: item.line || 0,
 							end_line: item.line || 0,
 							message: item.message,
 							annotation_level: severityMap[item.severity],
-							blob_href: item.component
 						});
 					});
 					LOGGER.debug("annotating %s issues to check result", githubCheck.output.annotations.length);

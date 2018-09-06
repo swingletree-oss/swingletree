@@ -1,4 +1,4 @@
-import { RedisClient, ClientOpts } from "redis";
+import { RedisClient } from "redis";
 import { ConfigurationService } from "./configuration";
 import { inject } from "inversify";
 import { injectable } from "inversify";

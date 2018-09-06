@@ -1,18 +1,14 @@
 import * as express from "express";
 import * as compression from "compression";
 import * as bodyParser from "body-parser";
-import * as path from "path";
 import { Response, Request, NextFunction } from "express";
-import { ConfigurationService } from "./configuration";
 import { injectable } from "inversify";
 
-import CommitStatusSender from "./github/commit-status-sender";
 import GithubWebhook from "./github/github-webhook";
 import SonarWebhook from "./sonar/sonar-webhook";
 import { inject } from "inversify";
 import { LOGGER } from "./logger";
 import EventBus from "./event-bus";
-import InstallationStorage from "./github/client/installation-storage";
 import GithubClientService from "./github/client/github-client";
 import { GithubInstallation } from "./github/model/gh-webhook-event";
 import PageRoutes from "./pages/page-routes";
@@ -20,10 +16,8 @@ import { AppEvent } from "./app-events";
 
 @injectable()
 class SwingletreeServer {
-	private configurationService: ConfigurationService;
 	private githubWebhook: GithubWebhook;
 	private sonarWebhook: SonarWebhook;
-	private installationStorage: InstallationStorage;
 	private clientService: GithubClientService;
 	private eventBus: EventBus;
 	private pageRoutes: PageRoutes;
@@ -31,14 +25,12 @@ class SwingletreeServer {
 	constructor(
 		@inject(GithubWebhook) githubWebhook: GithubWebhook,
 		@inject(SonarWebhook) sonarWebhook: SonarWebhook,
-		@inject(ConfigurationService) configurationService: ConfigurationService,
 		@inject(GithubClientService) clientService: GithubClientService,
 		@inject(EventBus) eventBus: EventBus,
 		@inject(PageRoutes) pageRoutes: PageRoutes
 	) {
 		this.githubWebhook = githubWebhook;
 		this.sonarWebhook = sonarWebhook;
-		this.configurationService = configurationService;
 		this.clientService = clientService;
 		this.eventBus = eventBus;
 		this.pageRoutes = pageRoutes;

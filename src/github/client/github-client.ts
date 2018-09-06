@@ -13,7 +13,6 @@ import { LOGGER } from "../../logger";
 import * as Github from "@octokit/rest";
 import { AuthJWT, AuthUserToken, ChecksCreateParams } from "@octokit/rest";
 import { GithubInstallation } from "../model/gh-webhook-event";
-import { ClientResponse } from "http";
 
 @injectable()
 class GithubClientService {

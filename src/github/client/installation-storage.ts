@@ -1,8 +1,6 @@
-import { RedisClient, ClientOpts } from "redis";
-import { ConfigurationService } from "../../configuration";
+import { RedisClient } from "redis";
 import { inject } from "inversify";
 import { injectable } from "inversify";
-import { LOGGER } from "../../logger";
 import RedisClientFactory, { DATABASE_INDEX } from "../../redis-client";
 
 @injectable()

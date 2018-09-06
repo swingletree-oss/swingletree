@@ -2,7 +2,6 @@
 
 import { Router, Request, Response, NextFunction } from "express";
 import { AppEvent } from "../app-events";
-import { QualityGateStatus } from "./model/sonar-quality-gate";
 import { SonarWebhookEvent } from "./model/sonar-wehook-event";
 import { injectable } from "inversify";
 import { inject } from "inversify";
