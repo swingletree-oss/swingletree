@@ -78,8 +78,8 @@ class CommitStatusSender {
 						const path = item.component.split(":").splice(2).join(":");
 						githubCheck.output.annotations.push({
 							path: path,
-							start_line: item.line || 0,
-							end_line: item.line || 0,
+							start_line: item.line || 1,
+							end_line: item.line || 1,
 							message: item.message,
 							annotation_level: severityMap[item.severity] || "notice",
 						});
