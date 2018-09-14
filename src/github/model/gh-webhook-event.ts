@@ -1,4 +1,4 @@
-import { GetInstallationsResponseItem } from "@octokit/rest";
+import { AppsGetInstallationsResponse } from "@octokit/rest";
 
 "use strict";
 
@@ -18,10 +18,10 @@ export interface GithubWebhookEvent {
 
 export interface GithubInstallationWebhook extends GithubWebhookEvent {
 	action: "created" | "deleted";
-	installation: GetInstallationsResponseItem;
+	installation: AppsGetInstallationsResponse;
 }
 
-export interface GithubInstallation extends GetInstallationsResponseItem {
+export interface GithubInstallation extends AppsGetInstallationsResponse {
 
 }
 

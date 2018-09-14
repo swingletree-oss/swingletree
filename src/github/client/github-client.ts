@@ -57,9 +57,9 @@ class GithubClientService {
 		});
 	}
 
-	public createCheckStatus(createParams: ChecksCreateParams): Promise<Github.Response<Github.CreateResponse>> {
+	public createCheckStatus(createParams: ChecksCreateParams): Promise<Github.Response<Github.ChecksCreateResponse>> {
 
-		return new Promise<Github.Response<Github.CreateResponse>>(async (resolve, reject) => {
+		return new Promise<Github.Response<Github.ChecksCreateResponse>>(async (resolve, reject) => {
 
 			const client = await this.getGhAppClient(createParams.owner);
 

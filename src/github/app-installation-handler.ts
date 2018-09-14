@@ -6,7 +6,7 @@ import { AppEvent } from "../app-events";
 import { injectable, inject } from "inversify";
 import EventBus from "../event-bus";
 import InstallationStorage from "./client/installation-storage";
-import { GetInstallationsResponseItem } from "@octokit/rest";
+import { AppsGetInstallationsResponse } from "@octokit/rest";
 
 
 /** Handles GitHub-App installation notices sent by GitHub
@@ -26,7 +26,7 @@ class GhAppInstallationHandler {
 		this.eventBus.register(AppEvent.appInstalled, this.appInstalled, this);
 	}
 
-	public appInstalled(installation: GetInstallationsResponseItem | any) {
+	public appInstalled(installation: AppsGetInstallationsResponse | any) {
 		LOGGER.info("new installation for login %s was registered", installation.account.login);
 		this.installationStorage.store(installation.account.login, installation.id);
 	}
