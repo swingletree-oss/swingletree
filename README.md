@@ -129,6 +129,17 @@ sonar-scanner \
     -Dsonar.analysis.repository=error418/swingletree
 ```
 
+Of course these values (at least `commitId`) need to be acquired dynamically on each build. Sonar Scanner plugins for Build Management tools like Gradle offer configuration properties to set extra scanner properties:
+
+```groovy
+sonarqube {
+    properties {
+        property "sonar.analysis.commitId", commitId
+        property "sonar.analysis.repository", repository
+    }
+}
+```
+
 [code-climate]: https://codeclimate.com/github/error418/swingletree/maintainability
 [dockerhub-repo]: https://hub.docker.com/r/werkbank/swingletree/tags/
 
