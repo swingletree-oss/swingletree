@@ -14,12 +14,17 @@ Swingletree uses [SonarQube webhooks][sonar-webhook]. No need to install and upd
 
 ![Activity Diagram](./docs/swingletree-flow.png)
 
-Swingletree integrates itself as a GitHub App, which spares you some configuration work and does not require a technical user.
-Teams will only need to install Swingletree as a GitHub App on GitHub organizations they intend to use it.
+Swingletree integrates itself as a GitHub App, which spares you some configuration work and does not require a technical user. It will use the GitHub checks API to attach SonarQube information to your Pull Requests.
 
-Swingletree will request a permission to modify your repositories' commit statuses to be able to attach the SonarQube analysis status.
+<details><summary>Click to expand Demo screenshots</summary>
+<p>
 
-> ![Commit Status](./docs/commit-status.png)
+> ![Commit Status](./docs/pull-request-files.png)
+
+> ![Commit Status](./docs/swingletree-check-run.png)
+
+</p>
+</details>
 
 
 # Setting up Swingletree
@@ -103,7 +108,7 @@ Swingletree publishes webhook endpoints for SonarQube and events.
 | Type      | Path            | Content Type       |            |                          |
 | --------- | --------------- | :----------------: | :--------: | ------------------------ |
 | SonarQube | webhook/sonar   | *not configurable* | required   | [How-to][sonar-webhook]  |
-| GitHub    | webhook/github  | application/json   | required   |                          |
+| GitHub    | webhook/github  | application/json   | required   | Configured in GitHub App |
 
 #### SonarQube Webhook security
 
