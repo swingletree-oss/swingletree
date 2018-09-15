@@ -1,13 +1,10 @@
 @startuml Swingletree flow
-  GitHub -> Swingletree : webhook event
-  Swingletree -> GitHub : set pending status
   GitHub --> CI : trigger build
   activate CI
   CI --> SonarQube: analysis data
   deactivate CI
   activate SonarQube
   SonarQube -> Swingletree : webhook event
-  note right: run Quality gate analysis
   deactivate SonarQube
-  Swingletree -> GitHub : update commit status
+  Swingletree -> GitHub : update check run status
 @enduml
