@@ -7,7 +7,7 @@ import { SonarWebhookEvent } from "../sonar/model/sonar-wehook-event";
 import { injectable, inject } from "inversify";
 import { ConfigurationService } from "../configuration";
 import EventBus from "../event-bus";
-import { ChecksCreateParams } from "@octokit/rest";
+import { ChecksCreateParams, ChecksCreateParamsOutputAnnotations } from "@octokit/rest";
 import { QualityGateStatus } from "../sonar/model/sonar-quality-gate";
 import { SonarClient } from "../sonar/client/sonar-client";
 import { CheckRunOutput } from "./check-run-output";
@@ -22,6 +22,14 @@ class CommitStatusSender {
 	private githubClientService: GithubClientService;
 	private eventBus: EventBus;
 	private sonarClient: SonarClient;
+
+	private readonly severityMap: any = {
+		"BLOCKER": "failure",
+		"CRITICAL": "failure",
+		"MAJOR": "failure",
+		"MINOR": "warning",
+		"INFO": "notice"
+	};
 
 	constructor(
 		@inject(EventBus) eventBus: EventBus,
@@ -56,33 +64,36 @@ class CommitStatusSender {
 		return new Promise<void>(async (resolve, reject) => {
 			if (analysisEvent.qualityGate.status != QualityGateStatus.OK) {
 				githubCheck.output = {
-					title: `Sonar Quality Gate ${analysisEvent.qualityGate.name}`,
-					summary: `Quality gate status: ${analysisEvent.qualityGate.status}`,
+					title: `Sonar Quality Gate "${analysisEvent.qualityGate.name}"`,
+					summary: `Quality gate status: *${analysisEvent.qualityGate.status}*`,
 					text: CheckRunOutput.getMarkdown(analysisEvent.qualityGate.conditions)
 				};
 
 				githubCheck.output.annotations = [];
-
-				const severityMap: any = {
-					"BLOCKER": "failure",
-					"CRITICAL": "failure",
-					"MAJOR": "failure",
-					"MINOR": "warning",
-					"INFO": "notice"
-				};
 
 				try {
 					const issues = await this.sonarClient.getIssues(analysisEvent.project.key, analysisEvent.analysedAt);
 
 					issues.forEach((item) => {
 						const path = item.component.split(":").splice(2).join(":");
-						githubCheck.output.annotations.push({
+						const annotation: ChecksCreateParamsOutputAnnotations = {
 							path: path,
 							start_line: item.line || 1,
 							end_line: item.line || 1,
+							title: `${item.severity} ${item.type} (${item.rule})`,
 							message: item.message,
-							annotation_level: severityMap[item.severity] || "notice",
-						});
+							annotation_level: this.severityMap[item.severity] || "notice",
+						};
+
+						// set text range, if available
+						if (item.textRange) {
+							annotation.start_line = item.textRange.startLine;
+							annotation.end_line = item.textRange.endLine;
+							annotation.start_column = item.textRange.startOffset;
+							annotation.end_column = item.textRange.endOffset;
+						}
+
+						githubCheck.output.annotations.push(annotation);
 					});
 					LOGGER.debug("annotating %s issues to check result", githubCheck.output.annotations.length);
 				} catch (err) {

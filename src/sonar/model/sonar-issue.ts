@@ -47,10 +47,19 @@ export interface SonarIssue {
 	debt: string;
 	tags: string[];
 	line: number;
+	hash?: string;
+	textRange?: SonarTextRange;
 	author: string;
 	creationDate: Date;
 	updateDate: Date;
 	comments: Comment[];
+}
+
+export interface SonarTextRange {
+	startLine: number;
+	endLine: number;
+	startOffset?: number;
+	endOffset?: number;
 }
 
 export interface SonarIssueResponse {
