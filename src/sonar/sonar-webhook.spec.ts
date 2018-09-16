@@ -8,7 +8,6 @@ chai.use(require("sinon-chai"));
 import { Response, Request, NextFunction } from "express";
 import { AppEvent } from "../app-events";
 import { SonarWebhookEvent } from "./model/sonar-wehook-event";
-import { GithubCommitStatusContainer } from "../github/model/gh-commit-status";
 
 import SonarWebhook from "./sonar-webhook";
 import { EventEmitter } from "events";
