@@ -10,7 +10,7 @@ import EventBus from "../event-bus";
 import { ChecksCreateParams, ChecksCreateParamsOutputAnnotations } from "@octokit/rest";
 import { QualityGateStatus } from "../sonar/model/sonar-quality-gate";
 import { SonarClient } from "../sonar/client/sonar-client";
-import { CheckRunOutput } from "./check-run-output";
+import { TemplateEngine, Templates } from "../template/template-engine";
 
 
 /** Sends Commit Status Requests to GitHub
@@ -22,6 +22,7 @@ class CommitStatusSender {
 	private githubClientService: GithubClientService;
 	private eventBus: EventBus;
 	private sonarClient: SonarClient;
+	private templateEngine: TemplateEngine;
 
 	private readonly severityMap: any = {
 		"BLOCKER": "failure",
@@ -35,11 +36,13 @@ class CommitStatusSender {
 		@inject(EventBus) eventBus: EventBus,
 		@inject(ConfigurationService) configurationService: ConfigurationService,
 		@inject(GithubClientService) githubClientService: GithubClientService,
-		@inject(SonarClient) sonarClient: SonarClient
+		@inject(SonarClient) sonarClient: SonarClient,
+		@inject(TemplateEngine) templateEngine: TemplateEngine
 	) {
 		this.eventBus = eventBus;
 		this.configurationService = configurationService;
 		this.sonarClient = sonarClient;
+		this.templateEngine = templateEngine;
 
 		this.eventBus.register(AppEvent.sonarAnalysisComplete, this.sendAnalysisStatus, this);
 
@@ -65,8 +68,7 @@ class CommitStatusSender {
 			if (analysisEvent.qualityGate.status != QualityGateStatus.OK) {
 				githubCheck.output = {
 					title: `Sonar Quality Gate "${analysisEvent.qualityGate.name}"`,
-					summary: `Quality gate status: *${analysisEvent.qualityGate.status}*`,
-					text: CheckRunOutput.getMarkdown(analysisEvent.qualityGate.conditions)
+					summary: this.templateEngine.template(Templates.CHECK_RUN_SUMMARY, analysisEvent)
 				};
 
 				githubCheck.output.annotations = [];

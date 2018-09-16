@@ -27,6 +27,7 @@ describe("Commit Status Sender", () => {
 	let githubClientMock: any;
 	let githubMockConfig: any;
 	let sonarClientMock: any;
+	let templateEngineMock: any;
 
 	beforeEach(function () {
 
@@ -46,6 +47,10 @@ describe("Commit Status Sender", () => {
 			})
 		};
 
+		templateEngineMock = {
+			template: sinon.stub().returns("mocked template")
+		};
+
 		sonarClientMock = {
 			getIssues: sinon.stub()
 		};
@@ -58,7 +63,8 @@ describe("Commit Status Sender", () => {
 			eventBusMock,
 			configurationMock,
 			githubClientMock,
-			sonarClientMock
+			sonarClientMock,
+			templateEngineMock
 		);
 
 		mockEvent = new SonarWebhookEvent(Object.assign({}, require("../../test/base-sonar-webhook.json")));
@@ -81,7 +87,8 @@ describe("Commit Status Sender", () => {
 			eventBusMock,
 			configurationMock,
 			githubClientMock,
-			sonarClientMock
+			sonarClientMock,
+			templateEngineMock
 		);
 		sinon.assert.neverCalledWith(eventBusMock.register, AppEvent.githubPushEvent);
 	});
