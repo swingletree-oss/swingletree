@@ -1,1 +1,30 @@
-theme: jekyll-theme-minimal
+remote_theme: error418/Twenty-Jekyll-Theme
+
+title: Swingletree
+enableHeader: false
+email: 
+description: >- # this means to ignore newlines until "baseurl:"
+  Enforce SonarQube Quality Gates inside your GitHub Pull Requests.
+baseurl: "/swingletree/" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
+github_username:  error418/swingletree
+
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-feed
+  - jekyll-remote-theme
+  
+
+# Exclude from processing.
+# The following items will not be processed, by default. Create a custom list
+# to override the default setting.
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - activity-diagram.puml
