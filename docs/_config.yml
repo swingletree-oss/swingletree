@@ -4,10 +4,11 @@ title: Swingletree
 enableHeader: false
 email: 
 description: >- # this means to ignore newlines until "baseurl:"
-  Enforce SonarQube Quality Gates inside your GitHub Pull Requests.
+  Integrate SonarQube into GitHub Pull Requests
 baseurl: "/swingletree/" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  error418/swingletree
+github: https://github.com/error418/swingletree
 
 # Build settings
 markdown: kramdown
