@@ -74,6 +74,7 @@ Swingletree is configured using a configuration file named `swingletree.conf.yam
 | `GITHUB_APPID`        | Configures the GitHub Application ID                          | *none*  |
 | `GITHUB_BASE`         | Configures the GitHub API base URL                            | *none*  |
 | `GITHUB_SECRET`       | Configures the GitHub webhook secret                          | *none*  |
+| `GITHUB_KEY_FILE`     | A path pointing to the GitHub App private key file            | *none*  |
 | `GITHUB_APP_PAGE`     | *(optional)* Points to the GitHub App public page. The value can be found on the GitHub App configuration page. | *none* |
 | `DATABASE_HOST`       | Sets the Redis database host                                  | *none*  |
 | `DATABASE_PASSWORD`   | Sets the Redis database password to use for authentication    | *none*  |

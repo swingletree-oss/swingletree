@@ -46,7 +46,7 @@ export class GithubConfig {
 
 	constructor(model: GithubConfig) {
 		this.appId = Number(process.env["GITHUB_APPID"] || model.appId);
-		this.keyFile = model.keyFile;
+		this.keyFile = process.env["GITHUB_KEY_FILE"] || model.keyFile;
 		this.base = process.env["GITHUB_BASE"] || model.base;
 		this.webhookSecret = process.env["GITHUB_SECRET"] || model.webhookSecret;
 		this.pendingCommitStatus = model.pendingCommitStatus;

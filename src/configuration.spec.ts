@@ -77,6 +77,7 @@ describe("Configuration", () => {
 			process.env["GITHUB_BASE"] = "envBase";
 			process.env["GITHUB_SECRET"] = "envSecret";
 			process.env["GITHUB_APPID"] = "1337";
+			process.env["GITHUB_KEY_FILE"] = "some other key file";
 
 			uut = new GithubConfig({
 				base: "base",
@@ -90,6 +91,7 @@ describe("Configuration", () => {
 			expect(uut.base).to.be.equal("envBase");
 			expect(uut.webhookSecret).to.be.equal("envSecret");
 			expect(uut.appId).to.be.equal(1337);
+			expect(uut.keyFile).to.be.equal("some other key file");
 		});
 	});
 
