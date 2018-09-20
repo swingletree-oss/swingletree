@@ -56,7 +56,8 @@ describe("Commit Status Sender", () => {
 		};
 
 		githubClientMock = {
-			createCheckStatus: sinon.stub()
+			createCheckStatus: sinon.stub(),
+			isOrganizationKnown: sinon.stub().resolves(true)
 		};
 
 		uut = new CommitStatusSender(

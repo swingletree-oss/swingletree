@@ -71,7 +71,7 @@ class CommitStatusSender {
 			started_at: new Date(analysisEvent.analysedAt).toISOString(),
 			completed_at: new Date(analysisEvent.analysedAt).toISOString(),
 			head_sha: analysisEvent.properties.commitId,
-			details_url: analysisEvent.serverUrl
+			details_url: analysisEvent.dashboardUrl
 		};
 
 		return new Promise<void>(async (resolve, reject) => {
