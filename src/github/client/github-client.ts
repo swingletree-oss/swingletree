@@ -60,26 +60,23 @@ class GithubClientService {
 	public createCheckStatus(createParams: ChecksCreateParams): Promise<Github.Response<Github.ChecksCreateResponse>> {
 
 		return new Promise<Github.Response<Github.ChecksCreateResponse>>(async (resolve, reject) => {
-
-			const client = await this.getGhAppClient(createParams.owner);
-
-			client.checks.create(createParams)
-			.then(resolve)
-			.catch(reject);
+			this.getGhAppClient(createParams.owner)
+				.then((client) => {
+					client.checks.create(createParams)
+						.then(resolve)
+						.catch(reject);
+				})
+				.catch((err) => {
+					reject(`check status creation failed. ${err}`);
+				});
 		});
 	}
 
-	public getCheckSuiteForRef(repo: string, ref: string): Promise<void> {
-		return new Promise<void>(async (resolve, reject) => {
-			const coordinates = repo.split("/");
-			const client = await this.getGhAppClient(coordinates[0]);
-
-			client.checks.listSuitesForRef({
-				app_id: this.configurationService.get().github.appId,
-				owner: coordinates[0],
-				repo: coordinates[1],
-				ref: ref
-			});
+	public isOrganizationKnown(login: string): Promise<boolean> {
+		return new Promise<boolean>((resolve, reject) => {
+			this.installationStorage.getInstallationId(login)
+				.then((value) => { resolve(value != null); })
+				.catch(reject);
 		});
 	}
 
@@ -108,12 +105,28 @@ class GithubClientService {
 	private async getGhAppClient(login: string): Promise<Github> {
 		const ghClient = new Github(this.githubOptions);
 
-		const installationId = await this.installationStorage.getInstallationId(login);
-		if (!installationId) {
+		let installationId: string;
+		let bearerToken: string;
+		try {
+			LOGGER.debug("try to retrieve installation id from storage..");
+			installationId = await this.installationStorage.getInstallationId(login);
+
+			if (installationId == null) {
+				return Promise.reject(`Swingletree seems not to be installed on repository ${login}`);
+			}
+		} catch (err) {
+			LOGGER.warn("failed to retrieve installation id", err);
 			return Promise.reject("installation id was not found for login " + login);
 		}
 
-		let bearerToken = await this.tokenStorage.getToken(login);
+		try {
+			LOGGER.debug("looking up bearer token from cache..");
+			bearerToken = await this.tokenStorage.getToken(login);
+		} catch (err) {
+			LOGGER.warn("an error occurred while trying to retrieve the bearer token. Trying to compensate..", err);
+			bearerToken = null;
+		}
+
 		if (!bearerToken) {
 			LOGGER.info("bearer for %s seems to have reached ttl. requesting new bearer.", login);
 			try {

@@ -36,7 +36,7 @@ class TokenStorage {
 	public getToken(login: string): Promise<string> {
 		return new Promise<string>((resolve, reject) => {
 			this.client.get(login, (err, value) => {
-				if (err) {
+				if (err && value != null) {
 					reject(err);
 				} else {
 					resolve(value);

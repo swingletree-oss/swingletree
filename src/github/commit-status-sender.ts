@@ -50,8 +50,18 @@ class CommitStatusSender {
 	}
 
 
-	public sendAnalysisStatus(analysisEvent: SonarWebhookEvent): Promise<void> {
+	public async sendAnalysisStatus(analysisEvent: SonarWebhookEvent): Promise<void> {
 		const coordinates = analysisEvent.properties.repository.split("/");
+
+		try {
+			if (!(await this.githubClientService.isOrganizationKnown(coordinates[0]))) {
+				LOGGER.debug("ignoring webhook event for unknown organization %s.", coordinates[0]);
+				return Promise.resolve();
+			}
+		} catch (err) {
+			LOGGER.error("failed to look up organization %s in installation cache", coordinates[0]);
+			return Promise.reject(err);
+		}
 
 		const githubCheck: ChecksCreateParams = {
 			name: this.configurationService.get().context,

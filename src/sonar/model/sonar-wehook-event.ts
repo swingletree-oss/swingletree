@@ -3,6 +3,7 @@ import { SonarQualityGate } from "./sonar-quality-gate";
 
 export class SonarWebhookEvent {
 	analysedAt: string;
+	changedAt: string;
 	project: Project;
 	properties: Properties;
 
@@ -35,6 +36,7 @@ export class SonarWebhookEvent {
 interface Project {
 	key: string;
 	name: string;
+	url?: string;
 }
 
 interface Branch {

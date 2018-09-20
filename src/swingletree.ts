@@ -66,6 +66,7 @@ class SwingletreeServer {
 		});
 
 		// update installation cache data
+		LOGGER.info("warming up installation cache");
 		this.clientService.getInstallations()
 			.then((installations: GithubInstallation[]) => {
 				installations.forEach((installation: GithubInstallation) => {
@@ -73,7 +74,11 @@ class SwingletreeServer {
 				});
 			})
 			.catch((err) => {
-				LOGGER.warn("could not update installation cache: " + err.message);
+				try {
+					LOGGER.warn("could not update installation cache: %s", JSON.parse(err.message).message);
+				} catch (err) {
+					LOGGER.warn("could not update installation cache: %s", err.message);
+				}
 			});
 
 		// kickstart everything
