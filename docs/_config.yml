@@ -29,3 +29,4 @@ exclude:
   - vendor/gems/
   - vendor/ruby/
   - activity-diagram.puml
+  - .vendor
