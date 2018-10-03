@@ -4,7 +4,7 @@ layout: landing-page
 
 {% include github-corner.html %}
 
-<!-- Main -->
+<!-- main -->
 <article id="main">
     <header class="special container">
         <span class="icon fa-umbrella"></span>
@@ -12,7 +12,7 @@ layout: landing-page
         <p>Swingletree is a GitHub App which shows your analysis results inside your pull requests using the GitHub Checks feature</p>
     </header>
         
-    <!-- Two -->
+    <!-- features -->
     <section class="wrapper style1 container special">
         <div class="row">
             <div class="4u">
@@ -49,6 +49,44 @@ layout: landing-page
             
             </div>
         </div>
+    </section>
+
+    <!-- demo screenshots -->
+    <section class="wrapper style3 container special">
+        
+        <header class="major">
+            <h2>Take a <strong>peek</strong></h2>
+        </header>
+        
+        <div class="row">
+            <div class="12u">
+                <section>
+                    <header>
+                        <h3>Access SonarQube findings fast</h3>
+                    </header>
+                    <p>SonarQube findings are annotated and updated inside your Pull Requests. If quality gates are not fulfilled, the Pull Request can be blocked from merging.</p>
+                    <img class="image featured" src="assets/images/pull-request-files.png" alt="" />
+                </section>
+            </div>
+        </div>
+        <div class="row"></div>
+            <div class="12u">
+                <section>
+                    <header>
+                        <h3>GitHub Checks API integration</h3>
+                    </header>
+                    <p>Checks API integration instead of using Commit Status API provides Swingletree a better integration into GitHub.</p>
+                    <img class="image featured" src="assets/images/swingletree-check-run.png" alt="" />
+                </section>
+            </div>
+        </div>
+
+        <footer class="major">
+            <ul class="buttons">
+                <li><a href="{{ site.github }}/blob/master/README.md" class="button">More details</a></li>
+            </ul>
+        </footer>
+    
     </section>
 </article>
 

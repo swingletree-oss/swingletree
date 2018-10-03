@@ -7,8 +7,9 @@ description: >- # this means to ignore newlines until "baseurl:"
   Integrate SonarQube into GitHub Pull Requests
 baseurl: "/swingletree/" # the subpath of your site, e.g. /blog
 url: "https://error418.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-github_username:  error418/swingletree
+github_username: error418/swingletree
 github: https://github.com/error418/swingletree
+mod_css: assets/css/mod.css
 
 # Build settings
 markdown: kramdown
