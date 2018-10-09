@@ -67,6 +67,7 @@ class CommitStatusSender {
 			name: this.configurationService.get().context,
 			owner: coordinates[0],
 			repo: coordinates[1],
+			status: "completed",
 			conclusion: analysisEvent.qualityGate.status == QualityGateStatus.OK ? "success" : "action_required",
 			started_at: new Date(analysisEvent.analysedAt).toISOString(),
 			completed_at: new Date(analysisEvent.analysedAt).toISOString(),
@@ -81,33 +82,35 @@ class CommitStatusSender {
 					summary: this.templateEngine.template(Templates.CHECK_RUN_SUMMARY, analysisEvent)
 				};
 
-				githubCheck.output.annotations = [];
-
 				try {
-					const issues = await this.sonarClient.getIssues(analysisEvent.project.key, analysisEvent.analysedAt);
+					const issues = await this.sonarClient.getIssues(analysisEvent.project.key, analysisEvent.branch.name);
 
-					issues.forEach((item) => {
-						const path = item.component.split(":").splice(2).join(":");
-						const annotation: ChecksCreateParamsOutputAnnotations = {
-							path: path,
-							start_line: item.line || 1,
-							end_line: item.line || 1,
-							title: `${item.severity} ${item.type} (${item.rule})`,
-							message: item.message,
-							annotation_level: this.severityMap[item.severity] || "notice",
-						};
+					if (issues.length > 0) {
+						githubCheck.output.annotations = [];
+						issues.forEach((item) => {
+							const path = item.component.split(":").splice(2).join(":");
+							const annotation: ChecksCreateParamsOutputAnnotations = {
+								path: path,
+								start_line: item.line || 1,
+								end_line: item.line || 1,
+								title: `${item.severity} ${item.type} (${item.rule})`,
+								message: item.message,
+								annotation_level: this.severityMap[item.severity] || "notice",
+							};
 
-						// set text range, if available
-						if (item.textRange) {
-							annotation.start_line = item.textRange.startLine;
-							annotation.end_line = item.textRange.endLine;
-							annotation.start_column = item.textRange.startOffset;
-							annotation.end_column = item.textRange.endOffset;
-						}
+							// set text range, if available
+							if (item.textRange) {
+								annotation.start_line = item.textRange.startLine;
+								annotation.end_line = item.textRange.endLine;
+								annotation.start_column = item.textRange.startOffset;
+								annotation.end_column = item.textRange.endOffset;
+							}
 
-						githubCheck.output.annotations.push(annotation);
-					});
-					LOGGER.debug("annotating %s issues to check result", githubCheck.output.annotations.length);
+							githubCheck.output.annotations.push(annotation);
+						});
+						LOGGER.debug("annotating %s issues to check result", githubCheck.output.annotations.length);
+					}
+
 				} catch (err) {
 					LOGGER.warn("failed to retrieve SonarQube issues for check annotations. This affects %s @%s", analysisEvent.properties.repository, analysisEvent.properties.commitId);
 				}

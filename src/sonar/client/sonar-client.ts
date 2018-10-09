@@ -18,7 +18,7 @@ export class SonarClient {
 	}
 
 	private async getIssue(queryParams: SonarIssueQuery, page = 1): Promise<SonarIssueResponse> {
-		LOGGER.debug("retrieve page %s for project %s", page, queryParams.componentKey);
+		LOGGER.debug("retrieve page %s for project %s", page, queryParams.componentKeys);
 
 		queryParams.p = page;
 
@@ -56,13 +56,13 @@ export class SonarClient {
 		return paging.pageSize * paging.pageIndex < paging.total;
 	}
 
-	public getIssues(projectKey: string, createdAt: string): Promise<SonarIssue[]> {
+	public getIssues(projectKey: string, branch: string): Promise<SonarIssue[]> {
 		return new Promise<SonarIssue[]>(async (resolve, reject) => {
 			let issues: SonarIssue[] = [];
 
 			const query: SonarIssueQuery = {
-				componentKey: projectKey,
-				createdAt: createdAt,
+				componentKeys: projectKey,
+				branch: branch,
 				statuses: "OPEN,CONFIRMED,REOPENED",
 				resolved: false
 			};

@@ -23,14 +23,15 @@ export interface Component {
 }
 
 export interface SonarIssueQuery {
-	componentKey?: string;
+	componentKeys?: string;
 	assigned?: boolean;
 	languages?: string;
 	p?: number;
 	ps?: number;
 	resolved?: boolean;
 	statuses?: string;
-	createdAt: string;
+	branch?: string;
+	createdAt?: string;
 }
 
 export interface SonarIssue {
