@@ -11,6 +11,7 @@ import { ChecksCreateParams, ChecksCreateParamsOutputAnnotations } from "@octoki
 import { QualityGateStatus } from "../sonar/model/sonar-quality-gate";
 import { SonarClient } from "../sonar/client/sonar-client";
 import { TemplateEngine, Templates } from "../template/template-engine";
+import { SummaryTemplate } from "../template/model/summary-template";
 
 
 /** Sends Commit Status Requests to GitHub
@@ -77,9 +78,11 @@ class CommitStatusSender {
 
 		return new Promise<void>(async (resolve, reject) => {
 			if (analysisEvent.qualityGate.status != QualityGateStatus.OK) {
+				const summaryTemplateData: SummaryTemplate = { event: analysisEvent };
+
 				githubCheck.output = {
 					title: `Sonar Quality Gate "${analysisEvent.qualityGate.name}"`,
-					summary: this.templateEngine.template(Templates.CHECK_RUN_SUMMARY, analysisEvent)
+					summary: ""
 				};
 
 				try {
@@ -108,12 +111,26 @@ class CommitStatusSender {
 
 							githubCheck.output.annotations.push(annotation);
 						});
-						LOGGER.debug("annotating %s issues to check result", githubCheck.output.annotations.length);
+
+						if (githubCheck.output.annotations.length >= 50) {
+							// this is a GitHub api constraint. Annotations are limited to 50 items max.
+							LOGGER.debug("%s issues were retrieved. Limiting reported results to 50.", githubCheck.output.annotations.length);
+							summaryTemplateData.annotationsCapped = true;
+							summaryTemplateData.originalIssueCount = githubCheck.output.annotations.length;
+
+							// capping to 50 items
+							githubCheck.output.annotations = githubCheck.output.annotations.slice(0, 50);
+						} else {
+							LOGGER.debug("annotating %s issues to check result", githubCheck.output.annotations.length);
+						}
 					}
 
 				} catch (err) {
 					LOGGER.warn("failed to retrieve SonarQube issues for check annotations. This affects %s @%s", analysisEvent.properties.repository, analysisEvent.properties.commitId);
 				}
+
+				// add summary via template engine
+				githubCheck.output.summary = this.templateEngine.template<SummaryTemplate>(Templates.CHECK_RUN_SUMMARY, summaryTemplateData);
 			}
 
 			this.githubClientService.createCheckStatus(githubCheck)

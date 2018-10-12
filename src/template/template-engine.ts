@@ -16,7 +16,7 @@ export class TemplateEngine {
 	 * @param template Template to use
 	 * @param context context supplied to the template
 	 */
-	public template(template: Templates, context: object): string {
+	public template<T extends TemplateData>(template: Templates, context: T): string {
 		LOGGER.debug("processing template %s", template);
 		return this.environment.render(template, context);
 	}
@@ -25,4 +25,7 @@ export class TemplateEngine {
 export enum Templates {
 	/** Template for GitHub Check Run summaries */
 	CHECK_RUN_SUMMARY = "check-run/summary.md.tpl"
+}
+
+export interface TemplateData {
 }
