@@ -66,7 +66,7 @@ class SwingletreeServer {
 		});
 
 		// update installation cache data
-		LOGGER.info("warming up installation cache");
+		LOGGER.info("warming installation cache...");
 		this.clientService.getInstallations()
 			.then((installations: GithubInstallation[]) => {
 				installations.forEach((installation: GithubInstallation) => {

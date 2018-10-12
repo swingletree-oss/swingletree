@@ -48,7 +48,7 @@ class GithubWebhook {
 	}
 
 	public installationHandler(repo: string, data: GithubInstallationWebhook) {
-		LOGGER.info("received GitHub webhook installation event");
+		LOGGER.debug("received GitHub webhook installation event");
 
 		try {
 			this.eventBus.emit(AppEvent.appInstalled, data.installation);
