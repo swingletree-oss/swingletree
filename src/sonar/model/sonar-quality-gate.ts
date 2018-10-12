@@ -33,7 +33,7 @@ export interface Condition {
 	errorThreshold: string;
 	metric: string;
 	onLeakPeriod: boolean;
-	operator: string;
+	operator: "GREATER_THAN" | "LESS_THAN" | string;
 	status: "OK" | "ERROR" | "NO_VALUE" | string;
 	value: string;
 }
