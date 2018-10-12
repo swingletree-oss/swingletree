@@ -77,14 +77,15 @@ class CommitStatusSender {
 		};
 
 		return new Promise<void>(async (resolve, reject) => {
+			const summaryTemplateData: SummaryTemplate = { event: analysisEvent };
+
+			githubCheck.output = {
+				title: `Sonar Quality Gate "${analysisEvent.qualityGate.name}"`,
+				summary: ""
+			};
+
+			// acquire more information in case of a failed quality gate
 			if (analysisEvent.qualityGate.status != QualityGateStatus.OK) {
-				const summaryTemplateData: SummaryTemplate = { event: analysisEvent };
-
-				githubCheck.output = {
-					title: `Sonar Quality Gate "${analysisEvent.qualityGate.name}"`,
-					summary: ""
-				};
-
 				try {
 					const issues = await this.sonarClient.getIssues(analysisEvent.project.key, analysisEvent.branch.name);
 
@@ -128,15 +129,15 @@ class CommitStatusSender {
 				} catch (err) {
 					LOGGER.warn("failed to retrieve SonarQube issues for check annotations. This affects %s @%s", analysisEvent.properties.repository, analysisEvent.properties.commitId);
 				}
-
-				// add summary via template engine
-				githubCheck.output.summary = this.templateEngine.template<SummaryTemplate>(Templates.CHECK_RUN_SUMMARY, summaryTemplateData);
 			}
+
+			// add summary via template engine
+			githubCheck.output.summary = this.templateEngine.template<SummaryTemplate>(Templates.CHECK_RUN_SUMMARY, summaryTemplateData);
 
 			this.githubClientService.createCheckStatus(githubCheck)
 				.then(() => {
 					this.eventBus.emit(AppEvent.statusSent, githubCheck);
-					LOGGER.info("check status update (%s) was sent to github", githubCheck.conclusion);
+					LOGGER.info("check status update (%s) for %s/%s@%s was sent to github", githubCheck.conclusion, githubCheck.owner, githubCheck.repo, githubCheck.head_sha);
 					resolve();
 				})
 				.catch((error: any) => {
