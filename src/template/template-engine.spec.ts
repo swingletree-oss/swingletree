@@ -37,7 +37,7 @@ describe("Template Engine", () => {
 		it("should run template with test data", () => {
 			uut = new TemplateEngine();
 
-			uut.template(Templates.CHECK_RUN_SUMMARY, sonarWebhookTestData);
+			uut.template(Templates.CHECK_RUN_SUMMARY, { event: sonarWebhookTestData });
 		});
 
 	});

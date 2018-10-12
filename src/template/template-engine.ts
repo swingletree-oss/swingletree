@@ -9,6 +9,7 @@ export class TemplateEngine {
 
 	constructor() {
 		this.environment = Nunjucks.configure("templates");
+		this.environment.addFilter("gateStatusIcon", this.qualityGateStatusIconFilter);
 	}
 
 	/** Gets and fills a template
@@ -19,6 +20,14 @@ export class TemplateEngine {
 	public template<T extends TemplateData>(template: Templates, context: T): string {
 		LOGGER.debug("processing template %s", template);
 		return this.environment.render(template, context);
+	}
+
+	public qualityGateStatusIconFilter(str: string) {
+		if (str == "OK") return ":large_blue_circle:";
+		if (str == "ERROR") return ":red_circle:";
+		if (str == "NO_VALUE") return ":white_circle:";
+
+		return "";
 	}
 }
 

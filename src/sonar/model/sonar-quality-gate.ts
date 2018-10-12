@@ -34,6 +34,6 @@ export interface Condition {
 	metric: string;
 	onLeakPeriod: boolean;
 	operator: string;
-	status: string;
+	status: "OK" | "ERROR" | "NO_VALUE" | string;
 	value: string;
 }
