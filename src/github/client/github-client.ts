@@ -105,7 +105,7 @@ class GithubClientService {
 	private async getGhAppClient(login: string): Promise<Github> {
 		const ghClient = new Github(this.githubOptions);
 
-		let installationId: string;
+		let installationId: number;
 		let bearerToken: string;
 		try {
 			LOGGER.debug("try to retrieve installation id from storage..");

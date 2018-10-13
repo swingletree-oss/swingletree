@@ -134,6 +134,7 @@ class CommitStatusSender {
 			// add summary via template engine
 			githubCheck.output.summary = this.templateEngine.template<SummaryTemplate>(Templates.CHECK_RUN_SUMMARY, summaryTemplateData);
 
+			// send check run status to GitHub
 			this.githubClientService.createCheckStatus(githubCheck)
 				.then(() => {
 					this.eventBus.emit(AppEvent.statusSent, githubCheck);

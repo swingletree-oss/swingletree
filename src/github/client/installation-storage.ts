@@ -17,13 +17,13 @@ class InstallationStorage {
 		this.client.set(login, installationId.toString());
 	}
 
-	public getInstallationId(login: string): Promise<string> {
-		return new Promise<string>((resolve, reject) => {
+	public getInstallationId(login: string): Promise<number> {
+		return new Promise<number>((resolve, reject) => {
 			this.client.get(login, (err, value) => {
 				if (err && value != null) {
 					reject(err);
 				} else {
-					resolve(value);
+					resolve(Number(value));
 				}
 			});
 		});
