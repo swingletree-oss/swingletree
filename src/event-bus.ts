@@ -18,12 +18,16 @@ class EventBus {
 
 	public register(appEvent: AppEvent, handler: Function, context: any) {
 		LOGGER.debug("handler for %s registered.", appEvent);
-		this.eventBus.on(appEvent, this.handlerWrapper(handler, context));
+		this.eventBus.on(appEvent, this.handlerWrapper(handler, context, appEvent));
 	}
 
-	private handlerWrapper(handler: Function, context: any): any {
+	private handlerWrapper(handler: Function, context: any, eventName: string): any {
 		return (...args: any[]) => {
-			handler.apply(context, args);
+			try {
+				handler.apply(context, args);
+			} catch (err) {
+				LOGGER.error("a handler for event %s encoutered an error.", eventName, err);
+			}
 		};
 	}
 }
