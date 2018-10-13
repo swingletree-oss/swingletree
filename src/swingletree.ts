@@ -8,11 +8,11 @@ import GithubWebhook from "./github/github-webhook";
 import SonarWebhook from "./sonar/sonar-webhook";
 import { inject } from "inversify";
 import { LOGGER } from "./logger";
-import EventBus from "./event-bus";
+import EventBus from "./event/event-bus";
 import GithubClientService from "./github/client/github-client";
-import { GithubInstallation } from "./github/model/gh-webhook-event";
 import PageRoutes from "./pages/page-routes";
-import { AppEvent } from "./app-events";
+import { AppInstalledEvent } from "./event/event-model";
+import { AppsGetInstallationsResponseItem } from "@octokit/rest";
 
 @injectable()
 class SwingletreeServer {
@@ -68,9 +68,14 @@ class SwingletreeServer {
 		// update installation cache data
 		LOGGER.info("warming installation cache...");
 		this.clientService.getInstallations()
-			.then((installations: GithubInstallation[]) => {
-				installations.forEach((installation: GithubInstallation) => {
-					this.eventBus.emit(AppEvent.appInstalled, installation);
+			.then((installations: AppsGetInstallationsResponseItem[]) => {
+				installations.forEach((installation: AppsGetInstallationsResponseItem) => {
+					this.eventBus.emit<AppInstalledEvent>(
+						new AppInstalledEvent(
+							installation.account.login,
+							installation.id
+						)
+					);
 				});
 			})
 			.catch((err) => {

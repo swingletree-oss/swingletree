@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import { EventEmitter } from "events";
-import { AppEvent } from "./app-events";
-import { LOGGER } from "./logger";
+import { LOGGER } from "../logger";
+import { SwingletreeEvent, Events } from "./event-model";
 
 @injectable()
 class EventBus {
@@ -11,14 +11,14 @@ class EventBus {
 		this.eventBus = new EventEmitter();
 	}
 
-	public emit(appEvent: AppEvent, eventArgument: any) {
-		LOGGER.debug("app event %s emitted", appEvent);
-		this.eventBus.emit(appEvent, eventArgument);
+	public emit<T extends SwingletreeEvent>(event: T) {
+		LOGGER.debug("app event %s emitted", event.getEventId());
+		this.eventBus.emit(event.getEventId(), event);
 	}
 
-	public register(appEvent: AppEvent, handler: Function, context: any) {
-		LOGGER.debug("handler for %s registered.", appEvent);
-		this.eventBus.on(appEvent, this.handlerWrapper(handler, context, appEvent));
+	public register<T extends SwingletreeEvent>(eventType: Events, handler: Function, context: any) {
+		LOGGER.debug("handler for %s registered.", eventType);
+		this.eventBus.on(eventType, this.handlerWrapper(handler, context, eventType));
 	}
 
 	private handlerWrapper(handler: Function, context: any, eventName: string): any {

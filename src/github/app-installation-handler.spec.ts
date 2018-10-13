@@ -6,11 +6,9 @@ import * as sinon from "sinon";
 
 chai.use(require("sinon-chai"));
 
-import { AppEvent } from "../app-events";
-import EventBus from "../event-bus";
-
 import GhAppInstallationHandler from "./app-installation-handler";
 import { GithubWebhookEventType } from "./model/gh-webhook-event";
+import { AppInstalledEvent, Events } from "../event/event-model";
 
 const sandbox = sinon.sandbox.create();
 
@@ -41,7 +39,7 @@ describe("App installation handler", () => {
 	});
 
 	it("should register on installation event", () => {
-		sinon.assert.calledWith(eventBusMock.register, AppEvent.appInstalled);
+		sinon.assert.calledWith(eventBusMock.register, Events.AppInstalledEvent);
 	});
 
 	it("should store installation metadata", () => {
@@ -53,7 +51,10 @@ describe("App installation handler", () => {
 			id: 123
 		};
 
-		uut.appInstalled(data);
+		uut.appInstalled({
+			installationId: data.id,
+			login: data.account.login
+		} as AppInstalledEvent);
 
 		sinon.assert.calledWith(installationStorage.store, "login", 123);
 	});

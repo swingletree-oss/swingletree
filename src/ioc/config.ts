@@ -5,7 +5,7 @@ import { Container } from "inversify";
 import { ConfigurationService } from "../configuration";
 import CommitStatusSender from "../github/commit-status-sender";
 import GithubClientService from "../github/client/github-client";
-import EventBus from "../event-bus";
+import EventBus from "../event/event-bus";
 import SwingletreeServer from "../swingletree";
 import SonarWebhook from "../sonar/sonar-webhook";
 import GithubWebhook from "../github/github-webhook";

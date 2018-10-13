@@ -1,17 +1,17 @@
 "use strict";
 
 import { LOGGER } from "../logger";
-import { AppEvent } from "../app-events";
 import GithubClientService from "./client/github-client";
 import { SonarWebhookEvent } from "../sonar/model/sonar-wehook-event";
 import { injectable, inject } from "inversify";
 import { ConfigurationService } from "../configuration";
-import EventBus from "../event-bus";
+import EventBus from "../event/event-bus";
 import { ChecksCreateParams, ChecksCreateParamsOutputAnnotations } from "@octokit/rest";
 import { QualityGateStatus } from "../sonar/model/sonar-quality-gate";
 import { SonarClient } from "../sonar/client/sonar-client";
 import { TemplateEngine, Templates } from "../template/template-engine";
 import { SummaryTemplate } from "../template/model/summary-template";
+import { Events, SonarAnalysisCompleteEvent, GithubCheckStatusUpdatedEvent } from "../event/event-model";
 
 
 /** Sends Commit Status Requests to GitHub
@@ -45,13 +45,15 @@ class CommitStatusSender {
 		this.sonarClient = sonarClient;
 		this.templateEngine = templateEngine;
 
-		this.eventBus.register(AppEvent.sonarAnalysisComplete, this.sendAnalysisStatus, this);
+		this.eventBus.register(Events.SonarAnalysisComplete, this.sendAnalysisStatus, this);
 
 		this.githubClientService = githubClientService;
 	}
 
 
-	public async sendAnalysisStatus(analysisEvent: SonarWebhookEvent): Promise<void> {
+	public async sendAnalysisStatus(event: SonarAnalysisCompleteEvent): Promise<void> {
+		const analysisEvent = event.analysisEvent;
+
 		const coordinates = analysisEvent.properties.repository.split("/");
 
 		try {
@@ -137,8 +139,10 @@ class CommitStatusSender {
 			// send check run status to GitHub
 			this.githubClientService.createCheckStatus(githubCheck)
 				.then(() => {
-					this.eventBus.emit(AppEvent.statusSent, githubCheck);
 					LOGGER.info("check status update (%s) for %s/%s@%s was sent to github", githubCheck.conclusion, githubCheck.owner, githubCheck.repo, githubCheck.head_sha);
+					this.eventBus.emit<GithubCheckStatusUpdatedEvent>(
+						new GithubCheckStatusUpdatedEvent(githubCheck)
+					);
 					resolve();
 				})
 				.catch((error: any) => {

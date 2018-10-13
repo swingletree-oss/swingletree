@@ -6,14 +6,14 @@ import * as sinon from "sinon";
 chai.use(require("sinon-chai"));
 
 import { Response, Request, NextFunction } from "express";
-import { AppEvent } from "../app-events";
 import { SonarWebhookEvent } from "./model/sonar-wehook-event";
 
 import SonarWebhook from "./sonar-webhook";
 import { EventEmitter } from "events";
 
-import EventBus from "../event-bus";
+import EventBus from "../event/event-bus";
 import { ConfigurationService } from "../configuration";
+import { Events, SonarAnalysisCompleteEvent } from "../event/event-model";
 
 describe("Sonar Webhook", () => {
 
@@ -60,22 +60,9 @@ describe("Sonar Webhook", () => {
 
 		uut.webhook({ body: testData } as Request, responseMock);
 
-		sinon.assert.calledWith(eventBusMock.emit, AppEvent.sonarAnalysisComplete, sinon.match((val) => {
-			return val.properties.commitId == "12345" && val.properties.repository == "testOrg/testRepo";
+		sinon.assert.calledWith(eventBusMock.emit, sinon.match((val: SonarAnalysisCompleteEvent) => {
+			return val.analysisEvent.properties.commitId == "12345" && val.analysisEvent.properties.repository == "testOrg/testRepo";
 		}));
 	});
 
-	it("should send ignored event on missing properties", () => {
-		uut.webhook({ body: testData } as Request, responseMock);
-		sinon.assert.calledWith(eventBusMock.emit, AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
-	});
-
-	it("should not send ignored event on partially set properties", () => {
-		testData.properties = {
-			"sonar.analysis.commitId": "12345"
-		};
-
-		uut.webhook({ body: testData } as Request, responseMock);
-		sinon.assert.calledWith(eventBusMock.emit, AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
-	});
 });

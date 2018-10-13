@@ -1,14 +1,14 @@
 "use strict";
 
 import { Router, Request, Response, NextFunction } from "express";
-import { AppEvent } from "../app-events";
 import { SonarWebhookEvent } from "./model/sonar-wehook-event";
 import { injectable } from "inversify";
 import { inject } from "inversify";
-import EventBus from "../event-bus";
+import EventBus from "../event/event-bus";
 import { ConfigurationService } from "../configuration";
 import * as BasicAuth from "basic-auth";
 import { LOGGER } from "../logger";
+import { SonarAnalysisCompleteEvent } from "../event/event-model";
 
 /** Provides a Webhook for Sonar
  */
@@ -67,13 +67,14 @@ class SonarWebhook {
 			LOGGER.debug(JSON.stringify(req.body));
 		}
 
-		const event = new SonarWebhookEvent(req.body);
+		const analysisEvent = new SonarWebhookEvent(req.body);
 
-		if (this.isWebhookEventRelevant(event)) {
-			this.eventBus.emit(AppEvent.sonarAnalysisComplete, event);
+		if (this.isWebhookEventRelevant(analysisEvent)) {
+			this.eventBus.emit<SonarAnalysisCompleteEvent>(
+				new SonarAnalysisCompleteEvent(analysisEvent)
+			);
 		} else {
 			LOGGER.debug("SonarQube webhook data did not contain repo and/or commit-sha data. This event will be ignored.");
-			this.eventBus.emit(AppEvent.webhookEventIgnored, SonarWebhook.IGNORE_ID);
 		}
 
 		res.sendStatus(204);

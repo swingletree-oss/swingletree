@@ -6,8 +6,8 @@ import * as sinon from "sinon";
 chai.use(require("sinon-chai"));
 
 import GithubWebhook from "./github-webhook";
-import { AppEvent } from "../app-events";
 import { GithubWebhookEventType } from "./model/gh-webhook-event";
+import { Events, AppInstalledEvent } from "../event/event-model";
 
 const sandbox = sinon.createSandbox();
 
@@ -15,7 +15,7 @@ describe("GitHub Webhook", () => {
 	let uut: GithubWebhook;
 
 	let eventBusMock: any;
-	let pullRequestData: any;
+	let ghAppInstallWebhookData: any;
 
 	beforeEach(function () {
 		eventBusMock = {
@@ -31,7 +31,7 @@ describe("GitHub Webhook", () => {
 
 		uut = new GithubWebhook(eventBusMock, configurationMock);
 
-		pullRequestData = Object.assign({}, require("../../test/ghPushEvent.json"));
+		ghAppInstallWebhookData = Object.assign({}, require("../../test/gh-install-webhook.json"));
 	});
 
 	afterEach(function () {
@@ -39,10 +39,13 @@ describe("GitHub Webhook", () => {
 	});
 
 
-	it("should send sendStatus pending event on GitHub push event", () => {
-		uut.installationHandler("test/repo", pullRequestData);
+	it("should send app installed event", () => {
+		uut.installationHandler("test/repo", ghAppInstallWebhookData);
 
-		sinon.assert.calledWith(eventBusMock.emit, AppEvent.appInstalled);
+		sinon.assert.calledWith(eventBusMock.emit, sinon.match((event: AppInstalledEvent) => {
+				return event.getEventId() == Events.AppInstalledEvent;
+			})
+		);
 	});
 
 });

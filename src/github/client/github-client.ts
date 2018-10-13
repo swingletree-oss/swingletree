@@ -12,7 +12,6 @@ import { LOGGER } from "../../logger";
 
 import * as Github from "@octokit/rest";
 import { AuthJWT, AuthUserToken, ChecksCreateParams } from "@octokit/rest";
-import { GithubInstallation } from "../model/gh-webhook-event";
 
 @injectable()
 class GithubClientService {
@@ -38,22 +37,15 @@ class GithubClientService {
 		};
 	}
 
-	public getInstallations(): Promise<GithubInstallation[]> {
-		return new Promise<GithubInstallation[]>((resolve, reject) => {
+	public getInstallations(): Promise<Github.AppsGetInstallationsResponseItem[]> {
+		return new Promise<Github.AppsGetInstallationsResponseItem[]>((resolve, reject) => {
 			const client = this.getClient();
 
 			client.apps.getInstallations({})
-			.then((response: any) => {
-					const result: GithubInstallation[] = [];
-
-					let instItem: any;
-					for (instItem in response.data) {
-						result.push(response.data[instItem]);
-					}
-
-					resolve(result);
+				.then((response: Github.Response<Github.AppsGetInstallationsResponseItem[]>) => {
+					resolve(response.data);
 				})
-			.catch(reject);
+				.catch(reject);
 		});
 	}
 
