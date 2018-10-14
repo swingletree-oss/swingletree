@@ -3,7 +3,6 @@ import { ChecksCreateParams } from "@octokit/rest";
 
 export enum Events {
 	GithubCheckStatusUpdatedEvent = "github:checkrun:updated",
-	webhookEventIgnored = "github:webhook-event-ignored",
 	SonarAnalysisComplete = "sonar:analysis-complete",
 	AppInstalledEvent = "github:app-installed"
 }
