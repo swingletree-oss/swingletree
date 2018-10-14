@@ -43,7 +43,7 @@ describe("GitHub Webhook", () => {
 		uut.installationHandler("test/repo", ghAppInstallWebhookData);
 
 		sinon.assert.calledWith(eventBusMock.emit, sinon.match((event: AppInstalledEvent) => {
-				return event.getEventId() == Events.AppInstalledEvent;
+				return event.getEventType() == Events.AppInstalledEvent;
 			})
 		);
 	});
