@@ -4,3 +4,5 @@ plugins:
     enabled: true
   eslint:
     enabled: true
+exclude_patterns:
+  - "**/*.spec.ts"
