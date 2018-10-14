@@ -51,7 +51,7 @@ class GithubWebhook {
 		LOGGER.debug("received GitHub webhook installation event");
 
 		try {
-			this.eventBus.emit<AppInstalledEvent>(
+			this.eventBus.emit(
 				new AppInstalledEvent(
 					data.installation.account.login,
 					data.installation.id

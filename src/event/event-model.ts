@@ -16,7 +16,7 @@ export abstract class SwingletreeEvent {
 		this.eventType = eventType;
 	}
 
-	public getEventId(): Events {
+	public getEventType(): Events {
 		return this.eventType;
 	}
 }

@@ -11,12 +11,12 @@ class EventBus {
 		this.eventBus = new EventEmitter();
 	}
 
-	public emit<T extends SwingletreeEvent>(event: T) {
-		LOGGER.debug("app event %s emitted", event.getEventId());
-		this.eventBus.emit(event.getEventId(), event);
+	public emit(event: SwingletreeEvent) {
+		LOGGER.debug("app event %s emitted", event.getEventType());
+		this.eventBus.emit(event.getEventType(), event);
 	}
 
-	public register<T extends SwingletreeEvent>(eventType: Events, handler: Function, context: any) {
+	public register(eventType: Events, handler: Function, context: any) {
 		LOGGER.debug("handler for %s registered.", eventType);
 		this.eventBus.on(eventType, this.handlerWrapper(handler, context, eventType));
 	}

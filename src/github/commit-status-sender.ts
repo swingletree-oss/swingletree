@@ -129,7 +129,7 @@ class CommitStatusSender {
 					}
 
 				} catch (err) {
-					LOGGER.warn("failed to retrieve SonarQube issues for check annotations. This affects %s @%s", analysisEvent.properties.repository, analysisEvent.properties.commitId);
+					LOGGER.warn("failed to retrieve SonarQube issues for check annotations. This affects %s @%s", analysisEvent.properties.repository, analysisEvent.properties.commitId, err);
 				}
 			}
 
@@ -140,7 +140,7 @@ class CommitStatusSender {
 			this.githubClientService.createCheckStatus(githubCheck)
 				.then(() => {
 					LOGGER.info("check status update (%s) for %s/%s@%s was sent to github", githubCheck.conclusion, githubCheck.owner, githubCheck.repo, githubCheck.head_sha);
-					this.eventBus.emit<GithubCheckStatusUpdatedEvent>(
+					this.eventBus.emit(
 						new GithubCheckStatusUpdatedEvent(githubCheck)
 					);
 					resolve();

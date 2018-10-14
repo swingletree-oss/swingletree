@@ -70,7 +70,7 @@ class SwingletreeServer {
 		this.clientService.getInstallations()
 			.then((installations: AppsGetInstallationsResponseItem[]) => {
 				installations.forEach((installation: AppsGetInstallationsResponseItem) => {
-					this.eventBus.emit<AppInstalledEvent>(
+					this.eventBus.emit(
 						new AppInstalledEvent(
 							installation.account.login,
 							installation.id

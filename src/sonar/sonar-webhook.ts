@@ -70,7 +70,7 @@ class SonarWebhook {
 		const analysisEvent = new SonarWebhookEvent(req.body);
 
 		if (this.isWebhookEventRelevant(analysisEvent)) {
-			this.eventBus.emit<SonarAnalysisCompleteEvent>(
+			this.eventBus.emit(
 				new SonarAnalysisCompleteEvent(analysisEvent)
 			);
 		} else {
