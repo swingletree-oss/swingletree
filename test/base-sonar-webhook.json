@@ -29,7 +29,7 @@
                 "errorThreshold": "1",
                 "metric": "new_reliability_rating",
                 "onLeakPeriod": true,
-                "operator": "GREATER_THAN",
+                "operator": "LESS_THAN",
                 "status": "OK",
                 "value": "1"
             },
@@ -37,7 +37,7 @@
                 "errorThreshold": "1",
                 "metric": "new_maintainability_rating",
                 "onLeakPeriod": true,
-                "operator": "GREATER_THAN",
+                "operator": "EQUALS",
                 "status": "OK",
                 "value": "1"
             },
@@ -45,7 +45,7 @@
                 "errorThreshold": "80",
                 "metric": "new_coverage",
                 "onLeakPeriod": true,
-                "operator": "LESS_THAN",
+                "operator": "NOT_EQUALS",
                 "status": "NO_VALUE"
             }
         ],

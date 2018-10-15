@@ -9,7 +9,9 @@ export class TemplateEngine {
 
 	constructor() {
 		this.environment = Nunjucks.configure("templates");
+
 		this.environment.addFilter("gateStatusIcon", this.qualityGateStatusIconFilter);
+		this.environment.addFilter("gateConditionIcon", this.qualityGateConditionIconFilter);
 	}
 
 	/** Gets and fills a template
@@ -28,6 +30,15 @@ export class TemplateEngine {
 		if (str == "NO_VALUE") return ":white_circle:";
 
 		return "";
+	}
+
+	public qualityGateConditionIconFilter(str: string) {
+		if (str == "NOT_EQUALS") return "&ne;";
+		if (str == "EQUALS") return "=";
+		if (str == "GREATER_THAN") return "&gt;";
+		if (str == "LESS_THAN") return "&lt;";
+
+		return str;
 	}
 }
 

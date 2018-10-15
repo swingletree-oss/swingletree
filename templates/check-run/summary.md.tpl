@@ -2,10 +2,10 @@
 SonarQube reported Quality Gate status: *{{ event.qualityGate.status }}*
 
 {% if (event.qualityGate.conditions) and (event.qualityGate.conditions.length > 0) -%}
-| Metric |      | Status   | Operator | Value  |
-| :----- | :--: | :------- | :------- | :----- |
+| Metric |      | Status   | Constraint | Current Value |
+| :----- | :--: | :------- | :----- | :----- | 
 {% for c in event.qualityGate.conditions | sort(false, false, "metric") -%}
-| {{ c.metric | replace("_", " ") | capitalize }} | {{ c.status | gateStatusIcon }} | {{ c.status }} | {{ c.operator | replace("_", " ") | title }} | {{ c.value | default("*none*") }} |
+| {{ c.metric | replace("_", " ") | capitalize }} | {{ c.status | gateStatusIcon }} | {{ c.status }} | {{ c.operator | gateConditionIcon | safe }} {{ c.errorThreshold }} | {{ c.value | default("*none*") }} |
 {% endfor %}
 {% endif %}
 
