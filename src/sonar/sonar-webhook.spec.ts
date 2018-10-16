@@ -60,9 +60,9 @@ describe("Sonar Webhook", () => {
 
 		uut.webhook({ body: testData } as Request, responseMock);
 
-		sinon.assert.calledWith(eventBusMock.emit, sinon.match((val: SonarAnalysisCompleteEvent) => {
-			return val.analysisEvent.properties.commitId == "12345" && val.analysisEvent.properties.repository == "testOrg/testRepo";
-		}));
+		sinon.assert.calledWith(eventBusMock.emit, sinon.match.has("commitId", "12345"));
+		sinon.assert.calledWith(eventBusMock.emit, sinon.match.has("owner", "testOrg"));
+		sinon.assert.calledWith(eventBusMock.emit, sinon.match.has("repository", "testRepo"));
 	});
 
 });

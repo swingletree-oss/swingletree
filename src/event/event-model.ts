@@ -3,6 +3,7 @@ import { ChecksCreateParams } from "@octokit/rest";
 
 export enum Events {
 	GithubCheckStatusUpdatedEvent = "github:checkrun:updated",
+	GithubCheckRunWriteEvent = "github:checkrun:write",
 	SonarAnalysisComplete = "sonar:analysis-complete",
 	AppInstalledEvent = "github:app-installed"
 }
@@ -34,6 +35,16 @@ export class AppInstalledEvent extends SwingletreeEvent {
 	}
 }
 
+export class GithubCheckRunWriteEvent extends SwingletreeEvent {
+	payload: ChecksCreateParams;
+
+	constructor(payload: ChecksCreateParams) {
+		super(Events.GithubCheckRunWriteEvent);
+
+		this.payload = payload;
+	}
+}
+
 export class GithubCheckStatusUpdatedEvent extends SwingletreeEvent {
 	checkRunData: ChecksCreateParams;
 
@@ -45,6 +56,9 @@ export class GithubCheckStatusUpdatedEvent extends SwingletreeEvent {
 }
 
 export class SonarAnalysisCompleteEvent extends SwingletreeEvent {
+	commitId: string;
+	owner: string;
+	repository: string;
 	analysisEvent: SonarWebhookEvent;
 
 	constructor(analysisEvent: SonarWebhookEvent) {

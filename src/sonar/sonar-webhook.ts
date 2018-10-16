@@ -29,8 +29,8 @@ class SonarWebhook {
 
 	private isWebhookEventRelevant(event: SonarWebhookEvent) {
 		if (event.properties !== undefined) {
-			return event.properties.commitId !== undefined &&
-				event.properties.repository !== undefined;
+			return event.properties["sonar.analysis.commitId"] !== undefined &&
+				event.properties["sonar.analysis.repository"] !== undefined;
 		}
 		return false;
 	}
@@ -67,12 +67,17 @@ class SonarWebhook {
 			LOGGER.debug(JSON.stringify(req.body));
 		}
 
-		const analysisEvent = new SonarWebhookEvent(req.body);
+		const webhookData: SonarWebhookEvent = req.body;
 
-		if (this.isWebhookEventRelevant(analysisEvent)) {
-			this.eventBus.emit(
-				new SonarAnalysisCompleteEvent(analysisEvent)
-			);
+		if (this.isWebhookEventRelevant(webhookData)) {
+			const analysisEvent = new SonarAnalysisCompleteEvent(webhookData);
+			const coordinates = webhookData.properties["sonar.analysis.repository"].split("/");
+
+			analysisEvent.commitId = webhookData.properties["sonar.analysis.commitId"];
+			analysisEvent.owner = coordinates[0];
+			analysisEvent.repository = coordinates[1];
+
+			this.eventBus.emit(analysisEvent);
 		} else {
 			LOGGER.debug("SonarQube webhook data did not contain repo and/or commit-sha data. This event will be ignored.");
 		}

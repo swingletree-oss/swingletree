@@ -16,8 +16,8 @@ class EventBus {
 		this.eventBus.emit(event.getEventType(), event);
 	}
 
-	public register(eventType: Events, handler: Function, context: any) {
-		LOGGER.debug("handler for %s registered.", eventType);
+	public register(eventType: Events, handler: Function, context: object) {
+		LOGGER.debug("%s registered a handler for %s ", context.constructor.name, eventType);
 		this.eventBus.on(eventType, this.handlerWrapper(handler, context, eventType));
 	}
 

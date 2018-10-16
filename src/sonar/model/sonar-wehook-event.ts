@@ -1,36 +1,44 @@
-import { SonarQualityGate } from "./sonar-quality-gate";
-"use strict";
+export enum QualityGateStatus {
+	OK = "OK",
+	NO_VALUE = "NO_VALUE",
+	ERROR = "ERROR"
+}
 
-export class SonarWebhookEvent {
+export enum ConditionOperator {
+	GREATER_THAN = "GREATER_THAN",
+	LESS_THAN = "LESS_THAN",
+	EQUALS = "EQUALS",
+	NOT_EQUALS = "NOT_EQUALS"
+}
+
+export interface Condition {
+	errorThreshold: string;
+	metric: string;
+	onLeakPeriod: boolean;
+	operator: ConditionOperator | string;
+	status: QualityGateStatus | string;
+	value: string;
+}
+
+export interface SonarQualityGate {
+	conditions: Condition[];
+	name: string;
+	status: string;
+}
+
+export interface SonarWebhookEvent {
 	analysedAt: string;
 	changedAt: string;
 	project: Project;
-	properties: Properties;
+	branch?: Branch;
+
+	properties: any;
 
 	qualityGate: SonarQualityGate;
 
-	dashboardUrl: string;
 	serverUrl: string;
 	status: string;
 	taskId: string;
-
-	branch: Branch;
-
-	statusSuccess: boolean;
-
-	constructor(model: any = {}) {
-		Object.assign(this, model);
-
-		this.properties = new Properties(model.properties);
-		this.qualityGate = new SonarQualityGate(model.qualityGate);
-		this.statusSuccess = this.qualityGate.status === "OK";
-
-		if (model.branch) {
-			this.dashboardUrl = model.branch.url;
-		} else {
-			this.dashboardUrl = (model.project) ? model.project.url : model.serverUrl;
-		}
-	}
 }
 
 interface Project {
@@ -41,18 +49,8 @@ interface Project {
 
 interface Branch {
 	name: string;
-	type?: string;
+	type?: "LONG" | "SHORT" | string;
 	isMain?: boolean;
 	url?: string;
 }
 
-class Properties {
-	commitId: string;
-	repository: string;
-	appAction: string;
-
-	constructor(properties: any) {
-		this.commitId = properties["sonar.analysis.commitId"];
-		this.repository = properties["sonar.analysis.repository"];
-	}
-}

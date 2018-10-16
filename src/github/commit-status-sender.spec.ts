@@ -10,16 +10,14 @@ chai.use(require("sinon-chai"));
 chai.use(require("chai-as-promised"));
 
 import GithubClientService from "./client/github-client";
-import { SonarWebhookEvent } from "../sonar/model/sonar-wehook-event";
-import { SonarQualityGate } from "../sonar/model/sonar-quality-gate";
-import { Events, SonarAnalysisCompleteEvent, GithubCheckStatusUpdatedEvent } from "../event/event-model";
+import { Events, SonarAnalysisCompleteEvent, GithubCheckStatusUpdatedEvent, GithubCheckRunWriteEvent } from "../event/event-model";
 
 const sandbox = sinon.sandbox.create();
 
 describe("Commit Status Sender", () => {
 	let uut: CommitStatusSender;
 
-	let mockEvent: SonarWebhookEvent;
+	let mockEvent: GithubCheckRunWriteEvent;
 
 	let eventBusMock: any;
 	let configurationMock: any;
@@ -61,13 +59,10 @@ describe("Commit Status Sender", () => {
 
 		uut = new CommitStatusSender(
 			eventBusMock,
-			configurationMock,
-			githubClientMock,
-			sonarClientMock,
-			templateEngineMock
+			githubClientMock
 		);
 
-		mockEvent = new SonarWebhookEvent(Object.assign({}, require("../../test/base-sonar-webhook.json")));
+		mockEvent = new GithubCheckRunWriteEvent(Object.assign({}, require("../../test/check-run/create.json")));
 	});
 
 	afterEach(function () {
@@ -75,31 +70,16 @@ describe("Commit Status Sender", () => {
 	});
 
 	it("should register to SonarQube analysis complete event", () => {
-		sinon.assert.calledWith(eventBusMock.register, Events.SonarAnalysisComplete);
+		sinon.assert.calledWith(eventBusMock.register, Events.GithubCheckRunWriteEvent);
 	});
 
 	it("should send commit status on matching event", (done) => {
 		githubClientMock.createCheckStatus.resolves();
 
-		uut.sendAnalysisStatus(new SonarAnalysisCompleteEvent(mockEvent))
+		uut.sendAnalysisStatus(mockEvent)
 			.then(() => {
 				sinon.assert.calledWith(eventBusMock.emit,
 					sinon.match.has("eventType", Events.GithubCheckStatusUpdatedEvent)
-				);
-				done();
-			})
-			.catch(done);
-	});
-
-	it("should send failure commit status when quality gate failed", (done) => {
-		sonarClientMock.getIssues.resolves();
-		mockEvent = new SonarWebhookEvent(Object.assign({}, require("../../test/base-sonar-webhook-failed.json")));
-
-		githubClientMock.createCheckStatus.resolves();
-		uut.sendAnalysisStatus(new SonarAnalysisCompleteEvent(mockEvent))
-			.then(() => {
-				sinon.assert.calledWith(eventBusMock.emit,
-					sinon.match.has("checkRunData", sinon.match.has("conclusion", "action_required"))
 				);
 				done();
 			})

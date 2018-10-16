@@ -41,7 +41,6 @@ export class GithubConfig {
 	public readonly keyFile: string;
 	public readonly base: string;
 	public readonly webhookSecret: string;
-	public readonly pendingCommitStatus: boolean;
 	public readonly appPublicPage: string;
 
 	constructor(model: GithubConfig) {
@@ -49,7 +48,6 @@ export class GithubConfig {
 		this.keyFile = process.env["GITHUB_KEY_FILE"] || model.keyFile;
 		this.base = process.env["GITHUB_BASE"] || model.base;
 		this.webhookSecret = process.env["GITHUB_SECRET"] || model.webhookSecret;
-		this.pendingCommitStatus = model.pendingCommitStatus;
 		this.appPublicPage = process.env["GITHUB_APP_PAGE"] || model.appPublicPage;
 	}
 }
@@ -69,11 +67,13 @@ export class SonarConfig {
 	public readonly base: string;
 	public readonly secret: string;
 	public readonly logWebhookEvents: boolean;
+	public readonly context: string;
 
 	constructor(model: SonarConfig) {
 		this.token = process.env["SONAR_TOKEN"] || model.token;
 		this.base = process.env["SONAR_BASE"] || model.base;
 		this.secret = process.env["SONAR_SECRET"] || model.secret;
+		this.context = model.context;
 		this.logWebhookEvents = ("true" == process.env["LOG_SONAR_WEBHOOKS"]) || model.logWebhookEvents;
 	}
 }

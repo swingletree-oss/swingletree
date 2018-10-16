@@ -28,12 +28,14 @@ describe("Configuration", () => {
 				base: "base",
 				token: "token",
 				secret: "test",
+				context: "testcontext",
 				logWebhookEvents: false
 			});
 
 			expect(uut.base).to.be.equal("base");
 			expect(uut.token).to.be.equal("token");
 			expect(uut.secret).to.be.equal("test");
+			expect(uut.context).to.be.equal("testcontext");
 		});
 
 		it("should prioritize environment variables", () => {
@@ -45,12 +47,14 @@ describe("Configuration", () => {
 				base: "base",
 				token: "token",
 				secret: "test",
+				context: "testcontext",
 				logWebhookEvents: false
 			});
 
 			expect(uut.base).to.be.equal("envBase");
 			expect(uut.token).to.be.equal("envToken");
 			expect(uut.secret).to.be.equal("envSecret");
+			expect(uut.context).to.be.equal("testcontext");
 		});
 	});
 
@@ -63,7 +67,6 @@ describe("Configuration", () => {
 				webhookSecret: "secret",
 				appId: 101,
 				keyFile: "testfile",
-				pendingCommitStatus: false,
 				appPublicPage: "test"
 			});
 
@@ -84,7 +87,6 @@ describe("Configuration", () => {
 				webhookSecret: "secret",
 				appId: 101,
 				keyFile: "testfile",
-				pendingCommitStatus: false,
 				appPublicPage: "test"
 			});
 
