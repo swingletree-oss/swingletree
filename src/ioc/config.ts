@@ -2,7 +2,7 @@ import "reflect-metadata";
 
 import { Container } from "inversify";
 
-import { ConfigurationService } from "../configuration";
+import { ConfigurationService } from "../config/configuration";
 import CommitStatusSender from "../github/commit-status-sender";
 import GithubClientService from "../github/client/github-client";
 import EventBus from "../event/event-bus";
@@ -12,7 +12,7 @@ import GithubWebhook from "../github/github-webhook";
 import TokenStorage from "../github/client/token-storage";
 import InstallationStorage from "../github/client/installation-storage";
 import GhAppInstallationHandler from "../github/app-installation-handler";
-import RedisClientFactory from "../redis-client";
+import RedisClientFactory from "../db/redis-client";
 import PageRoutes from "../pages/page-routes";
 import { SonarClient } from "../sonar/client/sonar-client";
 import { TemplateEngine } from "../template/template-engine";

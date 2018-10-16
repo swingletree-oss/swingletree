@@ -7,7 +7,7 @@ import { GithubWebhookEventType, GithubInstallationWebhook } from "./model/gh-we
 import EventBus from "../event/event-bus";
 import { injectable } from "inversify";
 import { inject } from "inversify";
-import { ConfigurationService } from "../configuration";
+import { ConfigurationService } from "../config/configuration";
 import { AppInstalledEvent } from "../event/event-model";
 
 const GithubWebHookHandler = require("express-github-webhook");

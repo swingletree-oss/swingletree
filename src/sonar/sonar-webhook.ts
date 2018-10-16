@@ -5,7 +5,7 @@ import { SonarWebhookEvent } from "./model/sonar-wehook-event";
 import { injectable } from "inversify";
 import { inject } from "inversify";
 import EventBus from "../event/event-bus";
-import { ConfigurationService } from "../configuration";
+import { ConfigurationService } from "../config/configuration";
 import * as BasicAuth from "basic-auth";
 import { LOGGER } from "../logger";
 import { SonarAnalysisCompleteEvent } from "../event/event-model";

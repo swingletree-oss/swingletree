@@ -1,8 +1,8 @@
 import { RedisClient } from "redis";
-import { ConfigurationService } from "./configuration";
+import { ConfigurationService } from "../config/configuration";
 import { inject } from "inversify";
 import { injectable } from "inversify";
-import { LOGGER } from "./logger";
+import { LOGGER } from "../logger";
 
 @injectable()
 class RedisClientFactory {

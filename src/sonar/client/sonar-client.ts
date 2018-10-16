@@ -1,7 +1,7 @@
 "use strict";
 
 import { injectable, inject } from "inversify";
-import { ConfigurationService } from "../../configuration";
+import { ConfigurationService } from "../../config/configuration";
 import { LOGGER } from "../../logger";
 
 import * as request from "request";

@@ -4,7 +4,7 @@ import { LOGGER } from "../logger";
 import GithubClientService from "./client/github-client";
 import { SonarWebhookEvent } from "../sonar/model/sonar-wehook-event";
 import { injectable, inject } from "inversify";
-import { ConfigurationService } from "../configuration";
+import { ConfigurationService } from "../config/configuration";
 import EventBus from "../event/event-bus";
 import { ChecksCreateParams, ChecksCreateParamsOutputAnnotations } from "@octokit/rest";
 import { QualityGateStatus } from "../sonar/model/sonar-quality-gate";
