@@ -62,7 +62,7 @@ describe("Commit Status Sender", () => {
 			githubClientMock
 		);
 
-		mockEvent = new GithubCheckRunWriteEvent(Object.assign({}, require("../../test/check-run/create.json")));
+		mockEvent = new GithubCheckRunWriteEvent(Object.assign({}, require("../../test/github/check-run/create.json")));
 	});
 
 	afterEach(function () {

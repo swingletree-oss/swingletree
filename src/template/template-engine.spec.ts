@@ -18,7 +18,7 @@ describe("Template Engine", () => {
 
 	beforeEach(() => {
 		envBackup = process.env;
-		sonarWebhookTestData = Object.assign({}, require("../../test/base-sonar-webhook.json"));
+		sonarWebhookTestData = Object.assign({}, require("../../test/sonar/base-sonar-webhook.json"));
 	});
 
 	afterEach(() => {

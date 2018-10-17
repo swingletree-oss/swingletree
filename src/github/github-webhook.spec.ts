@@ -31,7 +31,7 @@ describe("GitHub Webhook", () => {
 
 		uut = new GithubWebhook(eventBusMock, configurationMock);
 
-		ghAppInstallWebhookData = Object.assign({}, require("../../test/gh-install-webhook.json"));
+		ghAppInstallWebhookData = Object.assign({}, require("../../test/github/gh-install-webhook.json"));
 	});
 
 	afterEach(function () {

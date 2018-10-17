@@ -40,7 +40,7 @@ describe("Sonar Webhook", () => {
 			register: sinon.stub()
 		};
 
-		testData = Object.assign({}, require("../../test/base-sonar-webhook.json"));
+		testData = Object.assign({}, require("../../test/sonar/base-sonar-webhook.json"));
 		// reset test data properties for test cases
 		testData.properties = {};
 
