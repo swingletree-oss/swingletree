@@ -1,4 +1,4 @@
-import { AppsGetInstallationsResponse, AppsGetInstallationsResponseItem } from "@octokit/rest";
+import { AppsGetInstallationsResponseItem } from "@octokit/rest";
 
 "use strict";
 

@@ -3,13 +3,8 @@
 import { LOGGER } from "../logger";
 import GithubClientService from "./client/github-client";
 import { injectable, inject } from "inversify";
-import { ConfigurationService } from "../config/configuration";
 import EventBus from "../event/event-bus";
-import { ChecksCreateParams, ChecksCreateParamsOutputAnnotations } from "@octokit/rest";
-import { SonarClient } from "../sonar/client/sonar-client";
-import { TemplateEngine, Templates } from "../template/template-engine";
-import { SummaryTemplate } from "../template/model/summary-template";
-import { Events, SonarAnalysisCompleteEvent, GithubCheckStatusUpdatedEvent, GithubCheckRunWriteEvent } from "../event/event-model";
+import { Events, GithubCheckStatusUpdatedEvent, GithubCheckRunWriteEvent } from "../event/event-model";
 
 
 /** Sends Commit Status Requests to GitHub
