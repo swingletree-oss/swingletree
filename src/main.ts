@@ -7,8 +7,7 @@ import SonarStatusEmitter from "./sonar/sonar-status-emitter";
 
 const express = require("express");
 
-// TODO: populate app installation database on startup
-
+// initialize Swingletree server and inject instances
 const swingletree = container.get<SwingletreeServer>(SwingletreeServer);
 
 // initialize dangling event handlers
