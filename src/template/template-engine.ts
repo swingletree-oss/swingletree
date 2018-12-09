@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import * as Nunjucks from "nunjucks";
 import { LOGGER } from "../logger";
+import { RuleType } from "../sonar/model/sonar-issue";
 
 @injectable()
 export class TemplateEngine {
@@ -12,6 +13,7 @@ export class TemplateEngine {
 
 		this.environment.addFilter("gateStatusIcon", this.qualityGateStatusIconFilter);
 		this.environment.addFilter("gateConditionIcon", this.qualityGateConditionIconFilter);
+		this.environment.addFilter("ruleTypeIcon", this.ruleTypeIconFilter);
 	}
 
 	/** Gets and fills a template
@@ -39,6 +41,15 @@ export class TemplateEngine {
 		if (str == "LESS_THAN") return "&lt;";
 
 		return str;
+	}
+
+	public ruleTypeIconFilter(type: RuleType | string) {
+		if (type == RuleType.BUG) return "<span title=\"Bugs\">:bug:</span>";
+		if (type == RuleType.CODE_SMELL) return "<span title=\"Code Smells\">:poop:</span>";
+		if (type == RuleType.VULNERABILITY) return "<span title=\"Vulnerabilities\">:skull:</span>";
+		if (type == RuleType.SECURITY_HOTSPOT) return "<span title=\"Security Hotspot\">:bomb:</span>";
+
+		return type;
 	}
 }
 

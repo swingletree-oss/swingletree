@@ -1,5 +1,12 @@
 "use strict";
 
+export enum RuleType {
+	CODE_SMELL = "CODE_SMELL",
+	BUG = "BUG",
+	VULNERABILITY = "VULNERABILITY",
+	SECURITY_HOTSPOT = "SECURITY_HOTSPOT"
+}
+
 export interface SonarPaging {
 	pageIndex: number;
 	pageSize: number;

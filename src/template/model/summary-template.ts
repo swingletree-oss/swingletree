@@ -8,5 +8,7 @@ export interface SummaryTemplate extends TemplateData {
 	annotationsCapped?: boolean;
 
 	/** original issue count, in the case of annotation capping */
-	originalIssueCount?: number;
+	issueCounts?: Map<string, number>;
+
+	totalIssues?: number;
 }

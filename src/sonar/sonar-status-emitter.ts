@@ -71,9 +71,11 @@ class SonarStatusEmitter {
 
 		try {
 			const issues = await this.sonarClient.getIssues(event.analysisEvent.project.key, event.analysisEvent.branch.name);
+			const counters: Map<string, number> = new Map<string, number>();
 
 			if (issues.length > 0) {
 				checkRun.output.annotations = [];
+
 				issues.forEach((item) => {
 					const path = item.component.split(":").splice(2).join(":");
 					const annotation: ChecksCreateParamsOutputAnnotations = {
@@ -84,6 +86,13 @@ class SonarStatusEmitter {
 						message: item.message,
 						annotation_level: this.severityMap[item.severity] || "notice",
 					};
+
+					// update counters
+					if (counters.has(item.type)) {
+						counters.set(item.type, counters.get(item.type) + 1);
+					} else {
+						counters.set(item.type, 1);
+					}
 
 					// set text range, if available
 					if (item.textRange) {
@@ -100,7 +109,8 @@ class SonarStatusEmitter {
 					// this is a GitHub api constraint. Annotations are limited to 50 items max.
 					LOGGER.debug("%s issues were retrieved. Limiting reported results to 50.", checkRun.output.annotations.length);
 					summaryTemplateData.annotationsCapped = true;
-					summaryTemplateData.originalIssueCount = checkRun.output.annotations.length;
+					summaryTemplateData.issueCounts = counters;
+					summaryTemplateData.totalIssues = issues.length;
 
 					// capping to 50 items
 					checkRun.output.annotations = checkRun.output.annotations.slice(0, 50);
