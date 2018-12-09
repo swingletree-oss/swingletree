@@ -10,7 +10,7 @@ import GhAppInstallationHandler from "./app-installation-handler";
 import { GithubWebhookEventType } from "./model/gh-webhook-event";
 import { AppInstalledEvent, Events } from "../event/event-model";
 
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe("App installation handler", () => {
 	let uut: GhAppInstallationHandler;

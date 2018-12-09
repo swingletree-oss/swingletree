@@ -1,5 +1,5 @@
 # build swingletree
-FROM node:8-alpine as build
+FROM node:10-alpine as build
 
 ARG NPM_REGISTRY=https://registry.npmjs.org/
 
@@ -12,7 +12,7 @@ RUN npm run build
 RUN npm prune --production
 
 # swingletree container image
-FROM node:8-alpine
+FROM node:10-alpine
 
 ENV NODE_ENV "production"
 ENV REDIS_HOST "http://redis"

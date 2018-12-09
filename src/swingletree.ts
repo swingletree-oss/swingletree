@@ -2,17 +2,16 @@ import * as express from "express";
 import * as compression from "compression";
 import * as bodyParser from "body-parser";
 import { Response, Request, NextFunction } from "express";
-import { injectable } from "inversify";
+import { injectable, inject } from "inversify";
 
 import GithubWebhook from "./github/github-webhook";
 import SonarWebhook from "./sonar/sonar-webhook";
-import { inject } from "inversify";
 import { LOGGER } from "./logger";
 import EventBus from "./event/event-bus";
 import GithubClientService from "./github/client/github-client";
 import PageRoutes from "./pages/page-routes";
 import { AppInstalledEvent } from "./event/event-model";
-import { AppsGetInstallationsResponseItem } from "@octokit/rest";
+import { AppsListInstallationsResponseItem } from "@octokit/rest";
 
 @injectable()
 class SwingletreeServer {
@@ -68,8 +67,8 @@ class SwingletreeServer {
 		// update installation cache data
 		LOGGER.info("warming installation cache...");
 		this.clientService.getInstallations()
-			.then((installations: AppsGetInstallationsResponseItem[]) => {
-				installations.forEach((installation: AppsGetInstallationsResponseItem) => {
+			.then((installations: AppsListInstallationsResponseItem[]) => {
+				installations.forEach((installation: AppsListInstallationsResponseItem) => {
 					this.eventBus.emit(
 						new AppInstalledEvent(
 							installation.account.login,

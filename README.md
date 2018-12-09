@@ -43,7 +43,7 @@ Swingletree can be run from source or by using Docker.
 
 To be able to run Swingletree following prerequisites must be met:
 
-* NodeJS 8 or later
+* NodeJS 10 or later
 * Redis 4 or later
 
 Pick one of the following ways to launch Swingletree:

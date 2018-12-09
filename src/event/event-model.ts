@@ -1,6 +1,8 @@
 import { SonarWebhookEvent } from "../sonar/model/sonar-wehook-event";
 import { ChecksCreateParams } from "@octokit/rest";
 
+/** Contains event identifiers.
+ */
 export enum Events {
 	GithubCheckStatusUpdatedEvent = "github:checkrun:updated",
 	GithubCheckRunWriteEvent = "github:checkrun:write",
@@ -8,7 +10,8 @@ export enum Events {
 	AppInstalledEvent = "github:app-installed"
 }
 
-
+/** Event superclass
+ */
 export abstract class SwingletreeEvent {
 	eventType: Events;
 
@@ -21,7 +24,11 @@ export abstract class SwingletreeEvent {
 	}
 }
 
-
+/** App installed event.
+ *
+ * This event is fired when a GitHub organization installed Swingletree.
+ *
+ */
 export class AppInstalledEvent extends SwingletreeEvent {
 	login: string;
 	installationId: number;

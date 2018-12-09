@@ -37,12 +37,13 @@ class GithubClientService {
 		};
 	}
 
-	public getInstallations(): Promise<Github.AppsGetInstallationsResponseItem[]> {
-		return new Promise<Github.AppsGetInstallationsResponseItem[]>((resolve, reject) => {
+	public getInstallations(): Promise<Github.AppsListInstallationsResponseItem[]> {
+		return new Promise<Github.AppsListInstallationsResponseItem[]>((resolve, reject) => {
 			const client = this.getClient();
 
-			client.apps.getInstallations({})
-				.then((response: Github.Response<Github.AppsGetInstallationsResponseItem[]>) => {
+			const options = client.apps.listInstallations.prototype.endpoint.merge({});
+			client.request.paginate(options)
+				.then((response: Github.Response<Github.AppsListInstallationsResponseItem[]>) => {
 					resolve(response.data);
 				})
 				.catch(reject);

@@ -12,7 +12,7 @@ chai.use(require("chai-as-promised"));
 import GithubClientService from "./client/github-client";
 import { Events, SonarAnalysisCompleteEvent, GithubCheckStatusUpdatedEvent, GithubCheckRunWriteEvent } from "../event/event-model";
 
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe("Commit Status Sender", () => {
 	let uut: CommitStatusSender;
