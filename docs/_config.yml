@@ -1,33 +1,57 @@
-remote_theme: error418/Twenty-Jekyll-Theme
+#remote_theme: error418/Twenty-Jekyll-Theme
+remote_theme: error418/jekyll-doc-theme
 
 title: Swingletree
-enableHeader: false
 email: 
-description: >- # this means to ignore newlines until "baseurl:"
+description:  >-
   Integrate SonarQube into GitHub Pull Requests
-baseurl: "/swingletree/" # the subpath of your site, e.g. /blog
-url: "https://error418.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-github_username: error418/swingletree
-github: https://github.com/error418/swingletree
-mod_css: assets/css/mod.css
+lang: de-DE
+
+baseurl: "/swingletree" # the subpath of your site, e.g. /blog/
+url: "https://error418.github.io/swingletree" # the base hostname & protocol for your site
+git_address: https://github.com/error418/swingletree
+git_edit_address: https://github.com/error418/swingletree/blob/master
+
+# theme options from https://bootswatch.com/
+# comment out this to use default Bootstrap
+bootwatch: paper
 
 # Build settings
 markdown: kramdown
-plugins:
+highlighter: rouge
+gems:
   - jekyll-feed
-  - jekyll-remote-theme
-  
+  - jekyll-redirect-from
+  - jekyll-seo-tag
+  - jekyll-sitemap
 
-# Exclude from processing.
-# The following items will not be processed, by default. Create a custom list
-# to override the default setting.
 exclude:
   - Gemfile
   - Gemfile.lock
-  - node_modules
-  - vendor/bundle/
-  - vendor/cache/
-  - vendor/gems/
-  - vendor/ruby/
-  - activity-diagram.puml
-  - .vendor
+  - .idea/
+  - .gitignore
+  - README.md
+timezone: Europe/Berlin
+defaults:
+#- scope:
+#    path: _posts
+#    type: posts
+#  values:
+#    layout: post
+#    sectionid: blog
+- scope:
+    path: _docs
+    type: docs
+  values:
+    layout: docs
+    sectionid: docs
+    seo:
+      type: "WebPage"
+
+collections:
+  docs:
+    permalink: /:collection/:path/
+    output: true
+#  posts:
+#    permalink: /blog/:year/:month/:day/:title/
+#    output: true
