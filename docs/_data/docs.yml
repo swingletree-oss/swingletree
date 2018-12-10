@@ -1,0 +1,9 @@
+- title: Getting Started
+  docs:
+  - home
+  - installation
+  - configure
+
+- title: Extend
+  docs:
+  - architecture

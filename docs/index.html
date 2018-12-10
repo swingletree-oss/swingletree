@@ -1,91 +1,46 @@
 ---
-layout: landing-page
+layout: default
 ---
 
 <!-- main -->
-<article id="main">
-    <header class="special container">
-        <span class="icon fa-umbrella"></span>
-        <h2>See what was found in SonarQube without leaving GitHub</h2>
+<div class="header-container jumbotron">
+    <div class="container">
+        <h1>See what was found in SonarQube without leaving GitHub</h1>
         <p>Swingletree is a GitHub App which shows your analysis results inside your pull requests using the GitHub Checks feature</p>
-    </header>
-        
-    <!-- features -->
-    <section class="wrapper style1 container special">
-        <div class="row">
-            <div class="4u">
-            
-                <section>
-                    <span class="icon featured fa-github"></span>
-                    <header>
-                        <h3>GitHub App</h3>
-                    </header>
-                    <p>Install to your GitHub organization and you are ready to go</p>
-                </section>
-            
-            </div>
-            <div class="4u">
-            
-                <section>
-                    <span class="icon featured fa-eye"></span>
-                    <header>
-                        <h3>See what needs to be fixed</h3>
-                    </header>
-                    <p>Get a overview of what has been found in your Pull Request by SonarQube</p>
-                </section>
-            
-            </div>
-            <div class="4u">
-            
-                <section>
-                    <span class="icon featured fa-check-circle"></span>
-                    <header>
-                        <h3>Uses GitHub Check Suite</h3>
-                    </header>
-                    <p>Swingletree does not clutter your Pull Request conversations</p>
-                </section>
-            
-            </div>
-        </div>
-    </section>
+        <p><a class="btn btn-primary btn-lg" href="{{ "/docs/home/" | prepend: site.baseurl }}" role="button">Learn more</a></p>
+    </div>
+</div>
 
-    <!-- demo screenshots -->
-    <section class="wrapper style3 container special">
-        
-        <header class="major">
-            <h2>Take a <strong>peek</strong></h2>
-        </header>
-        
-        <div class="row">
-            <div class="12u">
-                <section>
-                    <header>
-                        <h3>Access SonarQube findings fast</h3>
-                    </header>
-                    <p>SonarQube findings are annotated and updated inside your Pull Requests. If quality gates are not fulfilled, the Pull Request can be blocked from merging.</p>
-                    <img class="image featured" src="assets/images/pull-request-files.png" alt="" />
-                </section>
-            </div>
-        </div>
-        <div class="row"></div>
-            <div class="12u">
-                <section>
-                    <header>
-                        <h3>GitHub Checks API integration</h3>
-                    </header>
-                    <p>Checks API integration instead of using Commit Status API provides Swingletree a better integration into GitHub.</p>
-                    <img class="image featured" src="assets/images/swingletree-check-run.png" alt="" />
-                </section>
-            </div>
-        </div>
-    </section>
-</article>
+<div class="container">
 
-<!-- CTA -->
-<section id="cta">
-    <footer>
-        <ul class="buttons">
-            <li><a href="{{ site.github }}/blob/master/README.md" class="button special">Get started</a></li>
-        </ul>
-    </footer>
-</section>
+    <div class="row">
+        <div class="col-sm-4">
+            <h1 class="text-center"><i class="fab fa-github-square"></i></h1>
+            <h3 class="text-center">GitHub App</h3>
+            <p>
+                Install to your GitHub organization and you are ready to go
+            </p>
+        </div>
+        <div class="col-sm-4">
+            <h1 class="text-center"><i class="far fa-eye"></i></h1>
+            <h3 class="text-center">See what needs to be fixed</h3>
+            <p>Get a overview of what has been found in your Pull Request by SonarQube</p>
+        </div>
+        <div class="col-sm-4">
+            <h1 class="text-center"><i class="far fa-check-circle"></i></h1>
+            <h3 class="text-center">Uses GitHub Check Suite</h3>
+            <p>Swingletree does not clutter your Pull Request conversations</p>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <h3>Access SonarQube findings fast</h3>
+        <p>SonarQube findings are annotated and updated inside your Pull Requests. If quality gates are not fulfilled, the Pull Request can be blocked from merging.</p>
+        <img class="image featured" src="assets/images/pull-request-files.png" alt="" />
+
+        <h3>GitHub Checks API integration</h3>
+        <p>Checks API integration instead of using Commit Status API provides Swingletree a better integration into GitHub.</p>
+        <img class="image featured" src="assets/images/swingletree-check-run.png" alt="" />
+    </div>
+</div>
