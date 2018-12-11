@@ -14,6 +14,9 @@ url: "https://error418.github.io/swingletree" # the base hostname & protocol for
 git_address: https://github.com/error418/swingletree
 git_edit_address: https://github.com/error418/swingletree/blob/master
 
+blog:
+  enable: false
+
 # theme options from https://bootswatch.com/
 # comment out this to use default Bootstrap
 bootwatch: paper
