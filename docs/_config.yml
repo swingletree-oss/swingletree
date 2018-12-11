@@ -7,6 +7,8 @@ description:  >-
   Integrate SonarQube into GitHub Pull Requests
 lang: de-DE
 
+logo: assets/images/icon.svg
+
 baseurl: "/swingletree" # the subpath of your site, e.g. /blog/
 url: "https://error418.github.io/swingletree" # the base hostname & protocol for your site
 git_address: https://github.com/error418/swingletree
@@ -19,7 +21,7 @@ bootwatch: paper
 # Build settings
 markdown: kramdown
 highlighter: rouge
-gems:
+plugins:
   - jekyll-feed
   - jekyll-redirect-from
   - jekyll-seo-tag
@@ -33,12 +35,12 @@ exclude:
   - README.md
 timezone: Europe/Berlin
 defaults:
-#- scope:
-#    path: _posts
-#    type: posts
-#  values:
-#    layout: post
-#    sectionid: blog
+- scope:
+    path: _posts
+    type: posts
+  values:
+    layout: post
+    sectionid: blog
 - scope:
     path: _docs
     type: docs
