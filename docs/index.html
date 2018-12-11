@@ -6,7 +6,7 @@ layout: default
 <div class="header-container jumbotron">
     <div class="container">
         <h1>Integrate SonarQube into GitHub</h1>
-        <p>Swingletree shows your analysis results inside your pull requests using the GitHub Checks feature.</p>
+        <p>See SonarQube findings inside your Pull Requests.</p>
         <p><a class="btn btn-primary btn-lg" href="{{ "/docs/home/" | prepend: site.baseurl }}" role="button">Learn more</a></p>
     </div>
 </div>
@@ -14,17 +14,10 @@ layout: default
 <div class="container">
     <hr>
 
-    <div class="row">
+    <div class="row text-center">
         <div class="col-sm-4">
-            <h1 class="text-center"><i class="fab fa-github-square"></i></h1>
-            <h3 class="text-center">GitHub App</h3>
-            <p>
-                Install to your GitHub organization and you are ready to go. No machine user required.
-            </p>
-        </div>
-        <div class="col-sm-4">
-            <h1 class="text-center"><i class="far fa-eye"></i></h1>
-            <h3 class="text-center">See what needs to be fixed</h3>
+            <h1 class="text-center"><i class="fas fa-crosshairs"></i></h1>
+            <h3 class="text-center">Identify issues</h3>
             <p>
                 Get a overview of what has been found in your Pull Request by SonarQube.
                 No need to jump between tools to see what failed your Quality Gate.
@@ -34,7 +27,14 @@ layout: default
             <h1 class="text-center"><i class="far fa-check-circle"></i></h1>
             <h3 class="text-center">GitHub Check Suite</h3>
             <p>
-                Place SonarQube information where it belongs. 
+                Place SonarQube information where it belongs
+            </p>
+        </div>
+        <div class="col-sm-4">
+            <h1 class="text-center"><i class="fab fa-github-square"></i></h1>
+            <h3 class="text-center">GitHub App</h3>
+            <p>
+                Install to your GitHub organization and you are ready to go. No machine user required.
             </p>
         </div>
     </div>
@@ -42,12 +42,26 @@ layout: default
     <hr>
 
     <div class="row">
-        <h3>Access SonarQube findings fast</h3>
-        <p>SonarQube findings are annotated and updated inside your Pull Requests. If quality gates are not fulfilled, the Pull Request can be blocked from merging.</p>
-        <img class="image featured" src="assets/images/pull-request-files.png" alt="" />
+        <h3>Showcase</h3>
 
-        <h3>GitHub Checks API integration</h3>
-        <p>Checks API integration instead of using Commit Status API provides Swingletree a better integration into GitHub.</p>
-        <img class="image featured" src="assets/images/swingletree-check-run.png" alt="" />
+        <p>
+            SonarQube findings are annotated and updated inside your Pull Requests.
+            If the built-in SonarQube Branch Analysis quality gates are not fulfilled,
+            the Pull Request can be blocked from merging.
+        </p>
+
+        <p>
+            <img class="showcase" style="width:75%" src="assets/images/pull-request-files.png" alt="" />
+        </p>
+
+        <p>
+            Posting and deleting analysis results as comments into the Pull Request conversation clutters
+            the discussion and may lead to misunderstandings due to automated deletions.
+            Swingletree uses GitHub Checks to inform users about the status of their Pull Request,
+            which is a more fitting way.
+        </p>
+        <p>
+            <img class="showcase" style="width:75%" src="assets/images/swingletree-check-run.png" alt="" />
+        </p>
     </div>
 </div>
