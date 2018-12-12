@@ -8,9 +8,11 @@ This section covers the installation of an on-premise Swingletree.
 
 ## Prerequisites
 
-Swingletree needs a Redis Database for caching purposes.
+Swingletree needs a Redis Database for caching purposes. SonarQube offers a branch analysis feature with its Developer Edition. This is required to
+obtain information about the quality of branches in relation to the `master` branch.
 
 * Redis Database
+* SonarQube Developer Edition (minimum)
 
 ## Steps
 
