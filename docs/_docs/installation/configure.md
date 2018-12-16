@@ -6,7 +6,7 @@ redirect_from: /docs/index.html
 
 Swingletree is configured using a configuration file named `swingletree.conf.yaml` or via environment variables, which are listed and described below.
 
-### Environment Variables
+## Environment Variables
 
 | Variable              | Description                                                   | Default |
 | --------------------- | ------------------------------------------------------------- | ------- |

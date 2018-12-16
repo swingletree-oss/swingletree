@@ -4,6 +4,11 @@
   - installation
   - configure
 
+- title: Usage
+  docs:
+  - usage
+  - gradle
+
 - title: Extend Swingletree
   docs:
   - architecture
