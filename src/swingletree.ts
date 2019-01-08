@@ -17,20 +17,17 @@ import { AppsListInstallationsResponseItem } from "@octokit/rest";
 class SwingletreeServer {
 	private githubWebhook: GithubWebhook;
 	private sonarWebhook: SonarWebhook;
-	private clientService: GithubClientService;
 	private eventBus: EventBus;
 	private pageRoutes: PageRoutes;
 
 	constructor(
 		@inject(GithubWebhook) githubWebhook: GithubWebhook,
 		@inject(SonarWebhook) sonarWebhook: SonarWebhook,
-		@inject(GithubClientService) clientService: GithubClientService,
 		@inject(EventBus) eventBus: EventBus,
 		@inject(PageRoutes) pageRoutes: PageRoutes
 	) {
 		this.githubWebhook = githubWebhook;
 		this.sonarWebhook = sonarWebhook;
-		this.clientService = clientService;
 		this.eventBus = eventBus;
 		this.pageRoutes = pageRoutes;
 	}
@@ -64,26 +61,8 @@ class SwingletreeServer {
 			res.send(visibleError);
 		});
 
-		// update installation cache data
-		LOGGER.info("warming installation cache...");
-		this.clientService.getInstallations()
-			.then((installations: AppsListInstallationsResponseItem[]) => {
-				installations.forEach((installation: AppsListInstallationsResponseItem) => {
-					this.eventBus.emit(
-						new AppInstalledEvent(
-							installation.account.login,
-							installation.id
-						)
-					);
-				});
-			})
-			.catch((err) => {
-				try {
-					LOGGER.warn("could not update installation cache: %s", JSON.parse(err.message).message);
-				} catch (err) {
-					LOGGER.warn("could not update installation cache: %s", err.message);
-				}
-			});
+		// trigger update installation cache data
+
 
 		// kickstart everything
 		app.listen(app.get("port"), () => {

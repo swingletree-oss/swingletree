@@ -3,17 +3,23 @@ import { ConfigurationService } from "../config/configuration";
 import { inject } from "inversify";
 import { injectable } from "inversify";
 import { LOGGER } from "../logger";
+import EventBus from "../event/event-bus";
+import { DatabaseReconnectEvent } from "../event/event-model";
 
 @injectable()
 class RedisClientFactory {
+	private eventBus: EventBus;
 	private configService: ConfigurationService;
 	private registeredClients: RedisClient[];
 
 	constructor(
-		@inject(ConfigurationService) configService: ConfigurationService
+		@inject(ConfigurationService) configService: ConfigurationService,
+		@inject(EventBus) eventBus: EventBus
 	) {
 		this.configService = configService;
 		this.registeredClients = [];
+
+		this.eventBus = eventBus;
 
 		if (!configService.get().storage.password) {
 			LOGGER.warn("Redis client is configured to use no authentication. Please consider securing the database.");
@@ -53,6 +59,7 @@ class RedisClientFactory {
 
 		client.on("ready", () => {
 			LOGGER.debug("Redis client for database index %i is connected and ready.", databaseIndex);
+			this.eventBus.emit(new DatabaseReconnectEvent(databaseIndex));
 		});
 
 		// set authentication if available
