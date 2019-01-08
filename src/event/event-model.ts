@@ -1,5 +1,6 @@
 import { SonarWebhookEvent } from "../sonar/model/sonar-wehook-event";
 import { ChecksCreateParams } from "@octokit/rest";
+import { DATABASE_INDEX } from "../db/redis-client";
 
 /** Contains event identifiers.
  */
@@ -7,7 +8,8 @@ export enum Events {
 	GithubCheckStatusUpdatedEvent = "github:checkrun:updated",
 	GithubCheckRunWriteEvent = "github:checkrun:write",
 	SonarAnalysisComplete = "sonar:analysis-complete",
-	AppInstalledEvent = "github:app-installed"
+	AppInstalledEvent = "github:app-installed",
+	DatabaseReconnect = "database:reconnect"
 }
 
 /** Event superclass
@@ -39,6 +41,16 @@ export class AppInstalledEvent extends SwingletreeEvent {
 
 		this.login = login;
 		this.installationId = installationId;
+	}
+}
+
+export class DatabaseReconnectEvent extends SwingletreeEvent {
+	databaseIndex: DATABASE_INDEX;
+
+	constructor(databaseIndex: DATABASE_INDEX) {
+		super(Events.DatabaseReconnect);
+
+		this.databaseIndex = databaseIndex;
 	}
 }
 

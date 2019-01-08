@@ -15,6 +15,10 @@ export class SonarClient {
 		@inject(ConfigurationService) configurationService: ConfigurationService,
 	) {
 		this.configurationService = configurationService;
+
+		if (!this.configurationService.get().sonar.base) {
+			LOGGER.warn("Sonar base URL seems to be not configured. This will lead to errors.");
+		}
 	}
 
 	private async getIssue(queryParams: SonarIssueQuery, page = 1): Promise<SonarIssueResponse> {
@@ -38,15 +42,17 @@ export class SonarClient {
 				this.configurationService.get().sonar.base + "/api/issues/search",
 				options,
 				(error: any, response: request.Response, body: any) => {
-					if (error) {
-						reject(error);
+					try {
+						if (!error && response.statusCode == 200) {
+							resolve(JSON.parse(body) as SonarIssueResponse);
+						} else {
+							if (error) {
+								reject(error);
+							}
+						}
+					} catch (err) {
+						reject(err);
 					}
-
-					if (response.statusCode != 200) {
-						reject("Received HTTP status code " + response.statusCode);
-					}
-
-					resolve(JSON.parse(body) as SonarIssueResponse);
 				}
 			);
 		});
@@ -76,7 +82,7 @@ export class SonarClient {
 					page = issuePage.paging.pageIndex;
 				} while (this.pagingNecessary(issuePage.paging));
 			} catch (err) {
-				LOGGER.error("an error occured while paginating through issues of project %s. Skipping issue collection", projectKey, err);
+				LOGGER.error("an error occured while paginating through issues of project %s. Skipping issue collection\nCaused by: %s", projectKey, err);
 				reject(err);
 			}
 

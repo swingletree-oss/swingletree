@@ -17,6 +17,7 @@ describe("App installation handler", () => {
 
 	let eventBusMock: any;
 	let installationStorage: any;
+	let githubClientMock: any;
 
 	beforeEach(function () {
 
@@ -28,9 +29,19 @@ describe("App installation handler", () => {
 			store: sinon.stub()
 		};
 
+		githubClientMock = {
+			getInstallations: sinon.stub().resolves([
+				{
+					account: { login: "test" },
+					id: "testId"
+				}
+			])
+		};
+
 		uut = new GhAppInstallationHandler(
 			eventBusMock,
-			installationStorage
+			installationStorage,
+			githubClientMock
 		);
 	});
 

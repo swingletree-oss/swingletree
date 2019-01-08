@@ -2,6 +2,7 @@ import { RedisClient } from "redis";
 import { inject } from "inversify";
 import { injectable } from "inversify";
 import RedisClientFactory, { DATABASE_INDEX } from "../../db/redis-client";
+import { LOGGER } from "../../logger";
 
 @injectable()
 class InstallationStorage {
@@ -17,6 +18,14 @@ class InstallationStorage {
 		this.client.set(login, installationId.toString());
 	}
 
+	public flush() {
+		return new Promise<void>((resolve, reject) => {
+			this.client.flushdb(() => {
+				resolve();
+			});
+		});
+	}
+
 	public getInstallationId(login: string): Promise<number> {
 		return new Promise<number>((resolve, reject) => {
 			this.client.get(login, (err, value) => {
@@ -24,6 +33,19 @@ class InstallationStorage {
 					reject(err);
 				} else {
 					resolve(Number(value));
+				}
+			});
+		});
+	}
+
+	public keyCount(): Promise<number> {
+		return new Promise<number>((resolve, reject) => {
+			this.client.dbsize((err, size) => {
+				if (err && size != null) {
+					LOGGER.debug("failed to retrieve database size. Skipping cache sync");
+					reject(err);
+				} else {
+					resolve(size);
 				}
 			});
 		});
