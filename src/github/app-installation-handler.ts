@@ -29,7 +29,10 @@ class GhAppInstallationHandler {
 		this.clientService = clientService;
 
 		this.eventBus.register(Events.AppInstalledEvent, this.appInstalled, this);
-		this.eventBus.register(Events.DatabaseReconnect, this.syncAppInstallations, this);
+		this.eventBus.register(Events.DatabaseReconnect, this.syncAppInstallationsOnReconnect, this);
+
+		// trigger update installation cache data
+		setInterval(this.syncAppInstallations, InstallationStorage.SYNC_INTERVAL);
 	}
 
 	public appInstalled(event: AppInstalledEvent) {
@@ -37,27 +40,33 @@ class GhAppInstallationHandler {
 		LOGGER.info("new installation for login %s was registered", event.login);
 	}
 
-	public async syncAppInstallations(event: DatabaseReconnectEvent) {
+	public async syncAppInstallationsOnReconnect(event: DatabaseReconnectEvent) {
 		if (event.databaseIndex == DATABASE_INDEX.INSTALLATION_STORAGE) {
+			LOGGER.debug("performing synchronize check after database connection loss..");
+			this.syncAppInstallations();
+		}
+	}
 
-			LOGGER.info("warming installation cache...");
-
-			if (await this.installationStorage.keyCount() > 0) {
-				LOGGER.debug("database is not empty. Skipping cache warming.");
-				return;
-			}
+	private async syncAppInstallations() {
+		if (await this.installationStorage.isSyncRequired()) {
+			LOGGER.info("synchronizing installation cache...");
+			this.installationStorage.setSyncFlag();
 
 			try {
 				const installations: AppsListInstallationsResponseItem[] = await this.clientService.getInstallations();
+				LOGGER.debug("retrieved %s installations", installations.length);
 
 				installations.forEach((installation: AppsListInstallationsResponseItem) => {
 					this.installationStorage.store(installation.account.login, installation.id);
 				});
+				LOGGER.info("installation cache sync complete.");
 			} catch (err) {
 				try {
 					LOGGER.warn("could not update installation cache: %s", JSON.parse(err.message).message);
 				} catch (err) {
 					LOGGER.warn("could not update installation cache: %s", err.message);
+				} finally {
+					this.installationStorage.removeSyncFlag();
 				}
 			}
 		}

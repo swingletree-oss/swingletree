@@ -1,5 +1,4 @@
 import * as winston from "winston";
-import { Format } from "logform";
 
 export enum LOG_FORMAT {
 	JSON = "json",

@@ -7,6 +7,8 @@ import { LOGGER } from "../../logger";
 @injectable()
 class InstallationStorage {
 	private client: RedisClient;
+	private readonly SYNC_KEY = "//SWINGLETREE:LAST_SYNC";
+	public static readonly SYNC_INTERVAL = 86400000;
 
 	constructor(
 		@inject(RedisClientFactory) redisClientFactory: RedisClientFactory
@@ -14,16 +16,12 @@ class InstallationStorage {
 		this.client = redisClientFactory.createClient(DATABASE_INDEX.INSTALLATION_STORAGE);
 	}
 
+	/** Stores a installation.
+	 *
+	 *  Cache ttl spans over 4 sync intervals.
+	 */
 	public store(login: string, installationId: number) {
-		this.client.set(login, installationId.toString());
-	}
-
-	public flush() {
-		return new Promise<void>((resolve, reject) => {
-			this.client.flushdb(() => {
-				resolve();
-			});
-		});
+		this.client.set(login, installationId.toString(), "PX", Math.floor(InstallationStorage.SYNC_INTERVAL * 4));
 	}
 
 	public getInstallationId(login: string): Promise<number> {
@@ -38,16 +36,35 @@ class InstallationStorage {
 		});
 	}
 
-	public keyCount(): Promise<number> {
-		return new Promise<number>((resolve, reject) => {
-			this.client.dbsize((err, size) => {
-				if (err && size != null) {
-					LOGGER.debug("failed to retrieve database size. Skipping cache sync");
+	public isSyncRequired(): Promise<boolean> {
+		return new Promise<boolean>((resolve, reject) => {
+			this.client.exists(this.SYNC_KEY, (err, value) => {
+				if (err && value != null) {
 					reject(err);
 				} else {
-					resolve(size);
+					resolve(value == 0);
 				}
 			});
+		});
+	}
+
+	public setSyncFlag() {
+		this.client.set(this.SYNC_KEY, Date.now().toString(), "PX", InstallationStorage.SYNC_INTERVAL, (err) => {
+			if (err) {
+				LOGGER.warn("failed to set cache flag");
+			} else {
+				LOGGER.debug("sync flag was successfully set.");
+			}
+		});
+	}
+
+	public removeSyncFlag() {
+		this.client.del(this.SYNC_KEY, (err) => {
+			if (err) {
+				LOGGER.warn("failed to delete cache flag");
+			} else {
+				LOGGER.debug("sync flag was deleted");
+			}
 		});
 	}
 

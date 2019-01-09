@@ -7,28 +7,21 @@ import { injectable, inject } from "inversify";
 import GithubWebhook from "./github/github-webhook";
 import SonarWebhook from "./sonar/sonar-webhook";
 import { LOGGER } from "./logger";
-import EventBus from "./event/event-bus";
-import GithubClientService from "./github/client/github-client";
 import PageRoutes from "./pages/page-routes";
-import { AppInstalledEvent } from "./event/event-model";
-import { AppsListInstallationsResponseItem } from "@octokit/rest";
 
 @injectable()
 class SwingletreeServer {
 	private githubWebhook: GithubWebhook;
 	private sonarWebhook: SonarWebhook;
-	private eventBus: EventBus;
 	private pageRoutes: PageRoutes;
 
 	constructor(
 		@inject(GithubWebhook) githubWebhook: GithubWebhook,
 		@inject(SonarWebhook) sonarWebhook: SonarWebhook,
-		@inject(EventBus) eventBus: EventBus,
 		@inject(PageRoutes) pageRoutes: PageRoutes
 	) {
 		this.githubWebhook = githubWebhook;
 		this.sonarWebhook = sonarWebhook;
-		this.eventBus = eventBus;
 		this.pageRoutes = pageRoutes;
 	}
 
@@ -60,9 +53,6 @@ class SwingletreeServer {
 			res.status(err.status || 500);
 			res.send(visibleError);
 		});
-
-		// trigger update installation cache data
-
 
 		// kickstart everything
 		app.listen(app.get("port"), () => {

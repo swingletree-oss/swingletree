@@ -35,16 +35,18 @@ class GithubClientService {
 		this.githubOptions = {
 			baseUrl: this.configurationService.get().github.base
 		};
+
+		LOGGER.info("Github client configured to use %s", this.configurationService.get().github.base);
 	}
 
 	public getInstallations(): Promise<Github.AppsListInstallationsResponseItem[]> {
 		return new Promise<Github.AppsListInstallationsResponseItem[]>((resolve, reject) => {
 			const client = this.getClient();
 
-			const options = client.apps.listInstallations.prototype.endpoint.merge({});
-			client.request.paginate(options)
-				.then((response: Github.Response<Github.AppsListInstallationsResponseItem[]>) => {
-					resolve(response.data);
+			const options = client.apps.listInstallations.endpoint.merge({});
+			client.paginate(options)
+				.then((response: any[]) => {
+					resolve(response as Github.AppsListInstallationsResponseItem[]);
 				})
 				.catch(reject);
 		});
