@@ -32,7 +32,7 @@ class GhAppInstallationHandler {
 		this.eventBus.register(Events.DatabaseReconnect, this.syncAppInstallationsOnReconnect, this);
 
 		// trigger update installation cache data
-		setInterval(this.syncAppInstallations, InstallationStorage.SYNC_INTERVAL);
+		setInterval(() => { this.syncAppInstallations(); }, InstallationStorage.SYNC_INTERVAL);
 	}
 
 	public appInstalled(event: AppInstalledEvent) {
