@@ -69,6 +69,8 @@ class GhAppInstallationHandler {
 					this.installationStorage.removeSyncFlag();
 				}
 			}
+		} else {
+			LOGGER.debug("cache seems to be fresh. Skipping sync.");
 		}
 	}
 }
