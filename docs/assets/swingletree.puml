@@ -1,0 +1,27 @@
+@startuml analysis-flow
+  skinparam monochrome true
+
+  GitHub --> CI : trigger build
+  activate CI
+  CI --> SonarQube: analysis data
+  deactivate CI
+  activate SonarQube
+  SonarQube -> Swingletree : webhook event
+  deactivate SonarQube
+  Swingletree --> Swingletree : look up installation id
+  Swingletree -> GitHub : update check run status
+@enduml
+
+@startuml startup-flow
+  skinparam monochrome true
+
+  Swingletree -> GitHub : request all installations
+  activate GitHub
+  GitHub -> Swingletree: send installations (paged)
+  deactivate GitHub
+  Swingletree -> Cache: update installation cache
+  activate GitHub
+  GitHub -> Swingletree : installation added webhook event
+  deactivate GitHub
+  Swingletree -> Cache: update installation cache
+@enduml
