@@ -1,0 +1,11 @@
+@startuml Startup actions
+  Swingletree -> GitHub : request all installations
+  activate GitHub
+  GitHub -> Swingletree: send installations (paged)
+  deactivate GitHub
+  Swingletree -> Cache: update installation cache
+  activate GitHub
+  GitHub -> Swingletree : installation added webhook event
+  deactivate GitHub
+  Swingletree -> Cache: update installation cache
+@enduml
