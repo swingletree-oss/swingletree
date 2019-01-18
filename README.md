@@ -12,7 +12,7 @@ Swingletree gives you the possibility to block pull requests on failing quality 
 
 Swingletree uses [SonarQube webhooks][sonar-webhook]. No need to install and update plugins on your SonarQube instance.
 
-![Activity Diagram](./docs/assets/images/swingletree-flow.png)
+![Activity Diagram](./docs/assets/images/analysis-flow.png)
 
 Swingletree integrates itself as a GitHub App, which spares you some configuration work and does not require a technical user. It will use the GitHub checks API to attach SonarQube information to your Pull Requests.
 
