@@ -20,6 +20,14 @@ class PageRoutes {
 			this.redisClientFactory = redisClientFactory;
 	}
 
+	public filters(): any {
+		return {
+			"code": function (text: string, options: any) {
+				return `<pre><code class="language-${options.lang}">${require("pug").runtime.escape(text)}</code></pre>`;
+			}
+		};
+	}
+
 	public getRoute(): Router {
 		const router = Router();
 
@@ -35,6 +43,10 @@ class PageRoutes {
 				unhealthy: this.redisClientFactory.unhealthyConnectionCount(),
 				connections: this.redisClientFactory.connectionCount(),
 			});
+		});
+
+		router.get("/code", (req, res) => {
+			res.render("codegen", {});
 		});
 
 		router.use("/static", express.static("static"));

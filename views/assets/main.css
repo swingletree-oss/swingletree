@@ -1,3 +1,7 @@
 .popover {
     box-shadow: 0px 0px 0px 2px #ffc107;
 }
+
+pre {
+    margin-top: 0px;
+}

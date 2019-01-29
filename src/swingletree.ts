@@ -39,6 +39,7 @@ class SwingletreeServer {
 		// set rendering engine
 		app.set("view engine", "pug");
 		app.use("/", this.pageRoutes.getRoute());
+		app.locals.filters = this.pageRoutes.filters();
 
 		// health endpoint
 		app.get("/health", (request: Request, response: Response) => {

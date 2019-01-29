@@ -1,0 +1,7 @@
+// Gradle build file
+sonarqube {
+  properties {
+    property "sonar.analysis.commitId", commitId
+    property "sonar.analysis.repository", repository
+  }
+}
