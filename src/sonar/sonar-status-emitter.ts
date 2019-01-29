@@ -65,7 +65,7 @@ class SonarStatusEmitter {
 		const summaryTemplateData: SummaryTemplate = { event: event.analysisEvent };
 
 		checkRun.output = {
-			title: `Sonar Quality Gate "${event.analysisEvent.qualityGate.name}"`,
+			title: `Sonar Quality Gate ${event.analysisEvent.qualityGate.status}`,
 			summary: ""
 		};
 
