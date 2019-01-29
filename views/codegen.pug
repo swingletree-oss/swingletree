@@ -1,0 +1,39 @@
+extends base
+
+block content
+  div(class="container")
+    div(class="row")
+      div(class="col-md-12")
+        h2 Code Snippets
+
+        p.
+          asdads
+
+        ul(class="nav nav-tabs code-select")
+
+          li.nav-item
+            a(class="nav-link active" href="#" data-case=".gradle") Gradle
+          li.nav-item
+            a(class="nav-link" href="#" data-case=".maven") Maven
+          li.nav-item
+            a(class="nav-link" href="#" data-case=".bash") Bash
+
+        div.code-showcase
+          div.gradle
+            include:code(lang='groovy') code/gradle.txt
+
+          div.maven(style="display:none")
+            include:code(lang='xml') code/maven.txt
+            .
+              The build needs to be started providing the parameters for commit id and repository name.
+
+          div.bash(style="display:none")
+            include:code(lang='bash') code/bash.txt
+  
+  script
+    include assets/code.js
+  script
+    include assets/prism.js
+  style
+    include assets/prism.css
+    

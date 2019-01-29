@@ -1,0 +1,6 @@
+<project>
+  <properties>
+    <sonar.analysis.commitId>${commitId}</sonar.analysis.commitId>
+    <sonar.analysis.repository>${repository}</sonar.analysis.repository>
+  </properties>
+</project>
