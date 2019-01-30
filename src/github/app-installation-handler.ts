@@ -61,13 +61,8 @@ class GhAppInstallationHandler {
 				});
 				LOGGER.info("installation cache sync complete.");
 			} catch (err) {
-				try {
-					LOGGER.warn("could not update installation cache: %s", JSON.parse(err.message).message);
-				} catch (err) {
-					LOGGER.warn("could not update installation cache: %s", err.message);
-				} finally {
-					this.installationStorage.removeSyncFlag();
-				}
+				LOGGER.warn("could not update installation cache: %s", err);
+				this.installationStorage.removeSyncFlag();
 			}
 		} else {
 			LOGGER.debug("cache seems to be fresh. Skipping sync.");
