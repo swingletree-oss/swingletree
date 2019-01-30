@@ -49,6 +49,9 @@ export class GithubConfig {
 		this.base = process.env["GITHUB_BASE"] || model.base;
 		this.webhookSecret = process.env["GITHUB_SECRET"] || model.webhookSecret;
 		this.appPublicPage = process.env["GITHUB_APP_PAGE"] || model.appPublicPage;
+
+		// data preparation
+		this.base = this.base.replace(/\/+$/, ""); // remove trailing slashes
 	}
 }
 
