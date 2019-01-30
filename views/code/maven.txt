@@ -4,3 +4,8 @@
     <sonar.analysis.repository>${repository}</sonar.analysis.repository>
   </properties>
 </project>
+
+<!--
+  The build needs to be started providing the parameters for commitId and repository
+  when invoking the maven build.
+-->

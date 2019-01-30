@@ -46,7 +46,7 @@ class PageRoutes {
 		});
 
 		router.get("/code", (req, res) => {
-			res.render("codegen", {});
+			res.render("code", {});
 		});
 
 		router.use("/static", express.static("static"));

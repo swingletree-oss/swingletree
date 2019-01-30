@@ -1,7 +1,12 @@
-// Gradle build file
+plugins {
+  id "org.sonarqube" version "2.7"
+}
+
 sonarqube {
   properties {
     property "sonar.analysis.commitId", commitId
     property "sonar.analysis.repository", repository
   }
 }
+
+// commitId and repository can be obtained using a git plugin like grgit
