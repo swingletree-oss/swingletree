@@ -20,8 +20,6 @@ class GithubClientService {
 	private tokenStorage: TokenStorage;
 	private key: string;
 
-	private githubOptions: Github.Options;
-
 	constructor(
 		@inject(ConfigurationService) configurationService: ConfigurationService,
 		@inject(TokenStorage) tokenStorage: TokenStorage,
@@ -31,10 +29,6 @@ class GithubClientService {
 		this.configurationService = configurationService;
 		this.tokenStorage = tokenStorage;
 		this.installationStorage = installationStorage;
-
-		this.githubOptions = {
-			baseUrl: this.configurationService.get().github.base
-		};
 
 		LOGGER.info("Github client configured to use %s", this.configurationService.get().github.base);
 	}
@@ -85,21 +79,18 @@ class GithubClientService {
 	}
 
 	private getClient(): Github {
-		const ghClient = new Github(this.githubOptions);
-
-		const auth: AuthJWT = {
-			type: "app",
-			token: this.createJWT()
-		};
-
-		ghClient.authenticate(auth);
+		const context = this;
+		const ghClient = new Github({
+			baseUrl: this.configurationService.get().github.base,
+			auth () {
+				return `Bearer ${context.createJWT()}`;
+			}
+		});
 
 		return ghClient;
 	}
 
 	private async getGhAppClient(login: string): Promise<Github> {
-		const ghClient = new Github(this.githubOptions);
-
 		let installationId: number;
 		let bearerToken: string;
 		try {
@@ -125,13 +116,8 @@ class GithubClientService {
 		if (!bearerToken) {
 			LOGGER.info("bearer for %s seems to have reached ttl. requesting new bearer.", login);
 			try {
-				const auth: AuthJWT = {
-					type: "app",
-					token: this.createJWT()
-				};
-				ghClient.authenticate(auth);
-
-				const bearerRequest = await ghClient.apps.createInstallationToken({
+				const bearerClient = this.getClient();
+				const bearerRequest = await bearerClient.apps.createInstallationToken({
 					installation_id: installationId
 				});
 
@@ -143,13 +129,12 @@ class GithubClientService {
 		}
 
 		return new Promise<any>((resolve, reject) => {
-			const auth: AuthUserToken = {
-				type: "token",
-				token: bearerToken
-			};
-			ghClient.authenticate(auth);
-
-			resolve(ghClient);
+			resolve(
+				new Github({
+					baseUrl: this.configurationService.get().github.base,
+					auth: `token ${bearerToken}`
+				})
+			);
 		});
 	}
 
