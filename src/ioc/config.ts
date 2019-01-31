@@ -17,6 +17,7 @@ import RedisClientFactory from "../db/redis-client";
 import PageRoutes from "../pages/page-routes";
 import { SonarClient } from "../sonar/client/sonar-client";
 import { TemplateEngine } from "../template/template-engine";
+import HealthService from "../health-service";
 
 
 const container = new Container();
@@ -24,6 +25,7 @@ const container = new Container();
 container.bind<CommitStatusSender>(CommitStatusSender).toSelf().inSingletonScope();
 container.bind<ConfigurationService>(ConfigurationService).toSelf().inSingletonScope();
 container.bind<GithubClientService>(GithubClientService).toSelf().inSingletonScope();
+container.bind<HealthService>(HealthService).toSelf().inSingletonScope();
 container.bind<SonarClient>(SonarClient).toSelf().inSingletonScope();
 container.bind<EventBus>(EventBus).toSelf().inSingletonScope();
 container.bind<SwingletreeServer>(SwingletreeServer).toSelf().inSingletonScope();

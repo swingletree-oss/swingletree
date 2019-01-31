@@ -1,5 +1,6 @@
 .popover {
     box-shadow: 0px 0px 0px 2px #ffc107;
+    max-width: 400px;
 }
 
 pre {
