@@ -44,10 +44,10 @@ export class TemplateEngine {
 	}
 
 	public ruleTypeIconFilter(type: RuleType | string) {
-		if (type == RuleType.BUG) return "<span title=\"Bugs\">:bug:</span>";
-		if (type == RuleType.CODE_SMELL) return "<span title=\"Code Smells\">:poop:</span>";
-		if (type == RuleType.VULNERABILITY) return "<span title=\"Vulnerabilities\">:skull:</span>";
-		if (type == RuleType.SECURITY_HOTSPOT) return "<span title=\"Security Hotspot\">:bomb:</span>";
+		if (type == RuleType.BUG) return "<span title=\"Bugs\"> &#x1F41B;</span>";
+		if (type == RuleType.CODE_SMELL) return "<span title=\"Code Smells\"> &#x2623;&#xFE0F;</span>";
+		if (type == RuleType.VULNERABILITY) return "<span title=\"Vulnerabilities\"> &#x1F480;</span>";
+		if (type == RuleType.SECURITY_HOTSPOT) return "<span title=\"Security Hotspot\"> &#x1F4A3;</span>";
 
 		return type;
 	}
