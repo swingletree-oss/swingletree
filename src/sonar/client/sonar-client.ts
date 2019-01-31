@@ -6,19 +6,46 @@ import { LOGGER } from "../../logger";
 
 import * as request from "request";
 import { SonarIssueResponse, SonarIssueQuery, SonarIssue, SonarPaging } from "../model/sonar-issue";
+import HealthService, { HealthState } from "../../health-service";
+import { Events } from "../../event/event-model";
+import EventBus from "../../event/event-bus";
+
 
 @injectable()
 export class SonarClient {
 	private configurationService: ConfigurationService;
+	private healthService: HealthService;
 
 	constructor(
 		@inject(ConfigurationService) configurationService: ConfigurationService,
+		@inject(HealthService) healthService: HealthService,
+		@inject(EventBus) eventBus: EventBus
 	) {
 		this.configurationService = configurationService;
+		this.healthService = healthService;
+
+		eventBus.register(Events.HealthCheckEvent, this.performHealthCheck, this);
 
 		if (!this.configurationService.get().sonar.base) {
 			LOGGER.warn("Sonar base URL seems to be not configured. This will lead to errors.");
 		}
+	}
+
+	private performHealthCheck() {
+		this.getVersion()
+			.then(() => {
+				this.healthService.setState({
+					state: HealthState.UP,
+					service: "sonarqube"
+				});
+			})
+			.catch(() => {
+				this.healthService.setState({
+					state: HealthState.DOWN,
+					service: "sonarqube",
+					detail: "service not reachable"
+				});
+			});
 	}
 
 	private async getIssue(queryParams: SonarIssueQuery, page = 1): Promise<SonarIssueResponse> {
@@ -87,6 +114,28 @@ export class SonarClient {
 			}
 
 			resolve(issues);
+		});
+	}
+
+	public getVersion(): Promise<string> {
+		return new Promise((resolve, reject) => {
+			request(
+				this.configurationService.get().sonar.base + "/api/version",
+				{},
+				(error: any, response: request.Response, body: any) => {
+					try {
+						if (!error && response.statusCode == 200) {
+							resolve(body);
+						} else {
+							if (error) {
+								reject(error);
+							}
+						}
+					} catch (err) {
+						reject(err);
+					}
+				}
+			);
 		});
 	}
 }

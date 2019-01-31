@@ -5,19 +5,19 @@ import * as express from "express";
 import { injectable } from "inversify";
 import { inject } from "inversify";
 import { ConfigurationService } from "../config/configuration";
-import RedisClientFactory from "../db/redis-client";
+import HealthService, { HealthState } from "../health-service";
 
 @injectable()
 class PageRoutes {
 	private configService: ConfigurationService;
-	private redisClientFactory: RedisClientFactory;
+	private healthService: HealthService;
 
 	constructor(
 		@inject(ConfigurationService) configService: ConfigurationService,
-		@inject(RedisClientFactory) redisClientFactory: RedisClientFactory
+		@inject(HealthService) healthService: HealthService
 		) {
 			this.configService = configService;
-			this.redisClientFactory = redisClientFactory;
+			this.healthService = healthService;
 	}
 
 	public filters(): any {
@@ -34,26 +34,17 @@ class PageRoutes {
 		// set locals for all pages
 		router.use("/", (req: Request, res: Response, next: NextFunction) => {
 			res.locals.appPublicPage = this.configService.get().github.appPublicPage;
+			res.locals.healthStates = this.healthService.getStates(HealthState.DOWN);
 			next();
 		});
 
 		// index page route
 		router.get("/", (req, res) => {
-			const healthStates: Health[] = [];
-			if (this.redisClientFactory.unhealthyConnectionCount() > 0) {
-				healthStates.push({
-					state: HealthState.DOWN,
-					service: "redis",
-					detail: `${this.redisClientFactory.unhealthyConnectionCount()} of ${this.redisClientFactory.connectionCount()} clients have connectivity issues`
-				});
-			}
-			res.render("index", {
-				healthStates: healthStates
-			});
+			res.render("index");
 		});
 
-		router.get("/code", (req, res) => {
-			res.render("code", {});
+		router.get("/code/", (req, res) => {
+			res.render("code");
 		});
 
 		router.use("/static", express.static("static"));
@@ -61,17 +52,6 @@ class PageRoutes {
 		return router;
 	}
 
-}
-
-interface Health {
-	state: HealthState;
-	service: string;
-	detail?: string;
-}
-
-enum HealthState {
-	UP,
-	DOWN
 }
 
 export default PageRoutes;

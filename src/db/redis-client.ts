@@ -4,26 +4,44 @@ import { inject } from "inversify";
 import { injectable } from "inversify";
 import { LOGGER } from "../logger";
 import EventBus from "../event/event-bus";
-import { DatabaseReconnectEvent } from "../event/event-model";
+import { DatabaseReconnectEvent, PerformHealthCheckEvent, Events } from "../event/event-model";
+import HealthService, { HealthState } from "../health-service";
 
 @injectable()
 class RedisClientFactory {
 	private eventBus: EventBus;
 	private configService: ConfigurationService;
+	private healthService: HealthService;
+
 	private registeredClients: RedisClient[];
 
 	constructor(
 		@inject(ConfigurationService) configService: ConfigurationService,
-		@inject(EventBus) eventBus: EventBus
+		@inject(EventBus) eventBus: EventBus,
+		@inject(HealthService) healthService: HealthService
 	) {
-		this.configService = configService;
 		this.registeredClients = [];
 
+		this.configService = configService;
+		this.healthService = healthService;
 		this.eventBus = eventBus;
+
+		this.eventBus.register(Events.HealthCheckEvent, this.performHealthCheck, this);
 
 		if (!configService.get().storage.password) {
 			LOGGER.warn("Redis client is configured to use no authentication. Please consider securing the database.");
 		}
+	}
+
+	public performHealthCheck() {
+		const unhealthy = this.unhealthyConnectionCount();
+		const total = this.connectionCount();
+
+		this.healthService.setState({
+			state: (unhealthy == 0) ? HealthState.UP : HealthState.DOWN,
+			service: "redis",
+			detail: `${unhealthy} of ${total} clients have connectivity issues`
+		});
 	}
 
 	public unhealthyConnectionCount() {
