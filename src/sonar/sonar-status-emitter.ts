@@ -9,6 +9,7 @@ import { SonarClient } from "./client/sonar-client";
 import { LOGGER } from "../logger";
 import { Templates } from "../template/template-engine";
 import { TemplateEngine } from "../template/template-engine";
+import { RuleType } from "./model/sonar-issue";
 
 @injectable()
 class SonarStatusEmitter {
@@ -73,6 +74,11 @@ class SonarStatusEmitter {
 			const issues = await this.sonarClient.getIssues(event.analysisEvent.project.key, event.analysisEvent.branch.name);
 			const counters: Map<string, number> = new Map<string, number>();
 
+			// preset known rule types
+			for (const rule in RuleType) {
+				counters.set(rule, 0);
+			}
+
 			if (issues.length > 0) {
 				checkRun.output.annotations = [];
 
@@ -105,11 +111,12 @@ class SonarStatusEmitter {
 					checkRun.output.annotations.push(annotation);
 				});
 
+				summaryTemplateData.issueCounts = counters;
+
 				if (checkRun.output.annotations.length >= 50) {
 					// this is a GitHub api constraint. Annotations are limited to 50 items max.
 					LOGGER.debug("%s issues were retrieved. Limiting reported results to 50.", checkRun.output.annotations.length);
 					summaryTemplateData.annotationsCapped = true;
-					summaryTemplateData.issueCounts = counters;
 					summaryTemplateData.totalIssues = issues.length;
 
 					// capping to 50 items
