@@ -39,9 +39,16 @@ class PageRoutes {
 
 		// index page route
 		router.get("/", (req, res) => {
+			const healthStates: Health[] = [];
+			if (this.redisClientFactory.unhealthyConnectionCount() > 0) {
+				healthStates.push({
+					state: HealthState.DOWN,
+					service: "redis",
+					detail: `${this.redisClientFactory.unhealthyConnectionCount()} of ${this.redisClientFactory.connectionCount()} clients have connectivity issues`
+				});
+			}
 			res.render("index", {
-				unhealthy: this.redisClientFactory.unhealthyConnectionCount(),
-				connections: this.redisClientFactory.connectionCount(),
+				healthStates: healthStates
 			});
 		});
 
@@ -54,6 +61,17 @@ class PageRoutes {
 		return router;
 	}
 
+}
+
+interface Health {
+	state: HealthState;
+	service: string;
+	detail?: string;
+}
+
+enum HealthState {
+	UP,
+	DOWN
 }
 
 export default PageRoutes;

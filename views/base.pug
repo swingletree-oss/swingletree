@@ -44,7 +44,7 @@ html
                                     Install
                 
                 ul(class="navbar-nav")
-                    if unhealthy > 0
+                    if healthStates.length > 0
                         li(class="nav-item")
                             a(class="nav-link" data-toggle="popover" data-placement="bottom" title="Service information")
                                 i(class="fas fa-fw mr-1 fa-exclamation-circle text-warning")
@@ -52,10 +52,11 @@ html
                                     span Swingletree detected issues which may lead to a service interruption
                                     hr
                                     ul(class="list-unstyled" style="margin:0px")
-                                        li 
-                                            i(class="fas fa-fw mr-1 fa-exclamation text-danger")
-                                            .
-                                                #{unhealthy} of #{connections} database connections failing
+                                        each health in healthStates
+                                            li 
+                                                i(class="fas fa-fw mr-1 fa-exclamation text-danger")
+                                                .
+                                                    #{health.service}: #{health.detail}
                     li(class="nav-item")
                         a(class="nav-link" href="./code")
                             i(class="fas fa-fw mr-1 fa-code")
