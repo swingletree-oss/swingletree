@@ -8,24 +8,34 @@ import GithubWebhook from "./github/github-webhook";
 import SonarWebhook from "./sonar/sonar-webhook";
 import { LOGGER } from "./logger";
 import PageRoutes from "./pages/page-routes";
+import EventBus from "./event/event-bus";
+import { CacheSyncEvent, PerformHealthCheckEvent } from "./event/event-model";
+import InstallationStorage from "./github/client/installation-storage";
 
 @injectable()
 class SwingletreeServer {
 	private githubWebhook: GithubWebhook;
 	private sonarWebhook: SonarWebhook;
 	private pageRoutes: PageRoutes;
+	private eventBus: EventBus;
 
 	constructor(
 		@inject(GithubWebhook) githubWebhook: GithubWebhook,
 		@inject(SonarWebhook) sonarWebhook: SonarWebhook,
-		@inject(PageRoutes) pageRoutes: PageRoutes
+		@inject(PageRoutes) pageRoutes: PageRoutes,
+		@inject(EventBus) eventBus: EventBus
 	) {
 		this.githubWebhook = githubWebhook;
 		this.sonarWebhook = sonarWebhook;
 		this.pageRoutes = pageRoutes;
+		this.eventBus = eventBus;
 	}
 
 	public run(app: express.Application) {
+		// bootstrap periodic events
+		setInterval(() => { this.eventBus.emit(new CacheSyncEvent()); }, InstallationStorage.SYNC_INTERVAL);
+		setInterval(() => { this.eventBus.emit(new PerformHealthCheckEvent()); }, 300000);
+
 		// express configuration
 		app.set("port", process.env.PORT || 3000);
 		app.use(compression());

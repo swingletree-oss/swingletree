@@ -9,7 +9,9 @@ export enum Events {
 	GithubCheckRunWriteEvent = "github:checkrun:write",
 	SonarAnalysisComplete = "sonar:analysis-complete",
 	AppInstalledEvent = "github:app-installed",
-	DatabaseReconnect = "database:reconnect"
+	DatabaseReconnect = "database:reconnect",
+	HealthCheckEvent = "swingletree:healthcheck",
+	CacheSyncEvent = "swingletree:cachesync"
 }
 
 /** Event superclass
@@ -54,6 +56,12 @@ export class DatabaseReconnectEvent extends SwingletreeEvent {
 	}
 }
 
+export class CacheSyncEvent extends SwingletreeEvent {
+	constructor() {
+		super(Events.CacheSyncEvent);
+	}
+}
+
 export class GithubCheckRunWriteEvent extends SwingletreeEvent {
 	payload: ChecksCreateParams;
 
@@ -84,5 +92,11 @@ export class SonarAnalysisCompleteEvent extends SwingletreeEvent {
 		super(Events.SonarAnalysisComplete);
 
 		this.analysisEvent = analysisEvent;
+	}
+}
+
+export class PerformHealthCheckEvent extends SwingletreeEvent {
+	constructor() {
+		super(Events.HealthCheckEvent);
 	}
 }
