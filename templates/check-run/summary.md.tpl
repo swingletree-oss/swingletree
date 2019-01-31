@@ -1,13 +1,15 @@
 {# Context Type: SummaryTemplate #}
-SonarQube reported Quality Gate status: *{{ event.qualityGate.status }}*
 
 {% if issueCounts -%}
-{% for key in issueCounts.keys() -%}
-{{ key | ruleTypeIcon | safe }} {{ issueCounts.get(key) }} {% if loop.last == false %}&bull;{% endif %}
-{% endfor %}
+### {% for key in issueCounts.keys() -%}{{ key | ruleTypeIcon | safe }} {{ issueCounts.get(key) }} {% if loop.last == false %}&bull;{% endif -%}
+{% endfor -%}
 {% endif %}
 
+SonarQube reported Quality Gate *"{{ event.qualityGate.name }}"* with status: *{{ event.qualityGate.status }}*
+
 {% if (event.qualityGate.conditions) and (event.qualityGate.conditions.length > 0) -%}
+### Conditions
+
 | Metric |      | Status   | Constraint | Current Value |
 | :----- | :--: | :------- | :----- | :----- | 
 {% for c in event.qualityGate.conditions | sort(false, false, "metric") -%}
