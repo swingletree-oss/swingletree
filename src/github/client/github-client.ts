@@ -42,7 +42,10 @@ class GithubClientService {
 				.then((response: any[]) => {
 					resolve(response as Github.AppsListInstallationsResponseItem[]);
 				})
-				.catch(reject);
+				.catch((error) => {
+					LOGGER.error("An error occurred while fetching the installations. Please check your GitHub App private key.");
+					reject(error);
+				});
 		});
 	}
 
