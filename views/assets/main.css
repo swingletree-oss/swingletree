@@ -6,3 +6,8 @@
 pre {
     margin-top: 0px;
 }
+
+[x-relative-date] {
+    font-size: 80%;
+    text-align: right;
+}

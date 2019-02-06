@@ -40,7 +40,8 @@ class RedisClientFactory {
 		this.healthService.setState({
 			state: (unhealthy == 0) ? HealthState.UP : HealthState.DOWN,
 			service: "redis",
-			detail: `${unhealthy} of ${total} clients have connectivity issues`
+			detail: `${unhealthy} of ${total} clients have connectivity issues`,
+			timestamp: Date.now()
 		});
 	}
 

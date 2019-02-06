@@ -32,6 +32,7 @@ interface Health {
 	state: HealthState;
 	service: string;
 	detail?: string;
+	timestamp: number;
 }
 
 export enum HealthState {

@@ -36,14 +36,18 @@ export class SonarClient {
 			.then(() => {
 				this.healthService.setState({
 					state: HealthState.UP,
-					service: "sonarqube"
+					service: "sonarqube",
+					timestamp: Date.now()
 				});
 			})
-			.catch(() => {
+			.catch((err) => {
+				LOGGER.warn("sonar client health check failed. This can lead to a service disruption.");
+
 				this.healthService.setState({
 					state: HealthState.DOWN,
 					service: "sonarqube",
-					detail: "service not reachable"
+					detail: `integration disrupted (${err})`,
+					timestamp: Date.now()
 				});
 			});
 	}
@@ -53,21 +57,12 @@ export class SonarClient {
 
 		queryParams.p = page;
 
-		const options: request.CoreOptions = {
-			qs: queryParams,
-		};
-
-		// add auth to options, if sonar token is available
-		if (this.configurationService.get().sonar.token) {
-			options.auth = {
-				username: this.configurationService.get().sonar.token
-			};
-		}
-
 		return new Promise<SonarIssueResponse>((resolve, reject) => {
 			request(
 				this.configurationService.get().sonar.base + "/api/issues/search",
-				options,
+				this.requestOptions({
+					qs: queryParams,
+				}),
 				(error: any, response: request.Response, body: any) => {
 					try {
 						if (!error && response.statusCode == 200) {
@@ -83,6 +78,14 @@ export class SonarClient {
 				}
 			);
 		});
+	}
+
+	private requestOptions(options: request.CoreOptions = {}): request.CoreOptions {
+		options.auth = {
+			username: this.configurationService.get().sonar.token
+		};
+
+		return options;
 	}
 
 	public pagingNecessary(paging: SonarPaging): boolean {
@@ -121,7 +124,7 @@ export class SonarClient {
 		return new Promise((resolve, reject) => {
 			request(
 				this.configurationService.get().sonar.base + "/api/version",
-				{},
+				this.requestOptions(),
 				(error: any, response: request.Response, body: any) => {
 					try {
 						if (!error && response.statusCode == 200) {
@@ -129,6 +132,8 @@ export class SonarClient {
 						} else {
 							if (error) {
 								reject(error);
+							} else {
+								reject(response.statusCode);
 							}
 						}
 					} catch (err) {
