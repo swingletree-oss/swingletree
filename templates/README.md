@@ -1,6 +1,8 @@
 # Templates
 
-This directory contains Nunjucks templates used by Swingletree
+This directory contains Nunjucks templates used by Swingletree.
+
+Templates are managed by the `TemplateEngine` class.
 
 ## Overview
 
