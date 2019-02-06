@@ -36,6 +36,9 @@ class SwingletreeServer {
 		setInterval(() => { this.eventBus.emit(new CacheSyncEvent()); }, InstallationStorage.SYNC_INTERVAL);
 		setInterval(() => { this.eventBus.emit(new PerformHealthCheckEvent()); }, 300000);
 
+		// fire initial health check event after initialization grace period
+		setTimeout(() => { this.eventBus.emit(new PerformHealthCheckEvent()); }, 10000);
+
 		// express configuration
 		app.set("port", process.env.PORT || 3000);
 		app.use(compression());
