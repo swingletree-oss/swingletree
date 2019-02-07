@@ -123,7 +123,7 @@ export class SonarClient {
 	public getVersion(): Promise<string> {
 		return new Promise((resolve, reject) => {
 			request(
-				this.configurationService.get().sonar.base + "/api/version",
+				this.configurationService.get().sonar.base + "/api/server/version",
 				this.requestOptions(),
 				(error: any, response: request.Response, body: any) => {
 					try {
