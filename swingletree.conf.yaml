@@ -1,5 +1,3 @@
-context: swingletree # this will appear as the commit status context
-
 # storage configuration
 storage:
   database: localhost # database host
@@ -18,6 +16,6 @@ github:
 sonar:
   secret: # basic auth password protecting the webhook
   base: # SonarQube base url
-  context: sonarqube # gets appended to general commit status context
+  context: sonarqube # defines the check status name
   token: # API token
   logWebhookEvents: false # log SonarQube webhook event requests on debug level

@@ -36,7 +36,7 @@ class SonarStatusEmitter {
 		this.eventBus = eventBus;
 		this.sonarClient = sonarClient;
 		this.templateEngine = templateEngine;
-		this.context = `${configurationService.get().context}/${configurationService.get().sonar.context}`;
+		this.context = configurationService.get().sonar.context;
 
 		eventBus.register(Events.SonarAnalysisComplete, this.analysisCompleteHandler, this);
 	}

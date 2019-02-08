@@ -25,11 +25,8 @@ export class Configuration {
 	public readonly github: GithubConfig;
 	public readonly sonar: SonarConfig;
 	public readonly storage: StorageConfig;
-	public readonly context: string;
 
 	constructor(model: Configuration) {
-		this. context = model.context;
-
 		this.github = new GithubConfig(model.github);
 		this.sonar = new SonarConfig(model.sonar);
 		this.storage = new StorageConfig(model.storage);
