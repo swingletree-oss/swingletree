@@ -82,9 +82,11 @@ export class SonarClient {
 	}
 
 	private requestOptions(options: request.CoreOptions = {}): request.CoreOptions {
-		options.auth = {
-			username: this.configurationService.get().sonar.token
-		};
+		if (this.configurationService.get().sonar.token) {
+			options.auth = {
+				username: this.configurationService.get().sonar.token
+			};
+		}
 
 		return options;
 	}
@@ -139,7 +141,7 @@ export class SonarClient {
 							}
 						}
 					} catch (err) {
-						LOGGER.error("sonar request failed: ", error);
+						LOGGER.error("sonar request failed2: ", error);
 						reject("connection failure");
 					}
 				}
