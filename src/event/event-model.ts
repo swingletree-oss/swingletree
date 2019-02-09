@@ -1,6 +1,7 @@
 import { SonarWebhookEvent } from "../sonar/model/sonar-wehook-event";
 import { ChecksCreateParams } from "@octokit/rest";
 import { DATABASE_INDEX } from "../db/redis-client";
+import { Health } from "../health-service";
 
 /** Contains event identifiers.
  */
@@ -11,6 +12,7 @@ export enum Events {
 	AppInstalledEvent = "github:app-installed",
 	DatabaseReconnect = "database:reconnect",
 	HealthCheckEvent = "swingletree:healthcheck",
+	HealthStatusEvent = "swingletree:healthcheck:status",
 	CacheSyncEvent = "swingletree:cachesync"
 }
 
@@ -98,5 +100,15 @@ export class SonarAnalysisCompleteEvent extends SwingletreeEvent {
 export class PerformHealthCheckEvent extends SwingletreeEvent {
 	constructor() {
 		super(Events.HealthCheckEvent);
+	}
+}
+
+export class HealthStatusEvent extends SwingletreeEvent {
+	health: Health;
+
+	constructor(health: Health) {
+		super(Events.HealthStatusEvent);
+
+		this.health = health;
 	}
 }

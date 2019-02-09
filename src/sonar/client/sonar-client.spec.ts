@@ -28,10 +28,7 @@ describe("Sonar Client", () => {
 			register: sinon.stub()
 		};
 
-		const healthServiceMock: any = {
-		};
-
-		uut = new SonarClient(configurationMock, healthServiceMock, eventBusMock);
+		uut = new SonarClient(configurationMock, eventBusMock);
 	});
 
 	afterEach(function () {

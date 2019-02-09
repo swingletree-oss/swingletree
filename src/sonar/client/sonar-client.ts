@@ -6,23 +6,22 @@ import { LOGGER } from "../../logger";
 
 import * as request from "request";
 import { SonarIssueResponse, SonarIssueQuery, SonarIssue, SonarPaging } from "../model/sonar-issue";
-import HealthService, { HealthState } from "../../health-service";
-import { Events } from "../../event/event-model";
+import { HealthState } from "../../health-service";
+import { Events, HealthStatusEvent } from "../../event/event-model";
 import EventBus from "../../event/event-bus";
 
 
 @injectable()
 export class SonarClient {
 	private configurationService: ConfigurationService;
-	private healthService: HealthService;
+	private eventBus: EventBus;
 
 	constructor(
 		@inject(ConfigurationService) configurationService: ConfigurationService,
-		@inject(HealthService) healthService: HealthService,
 		@inject(EventBus) eventBus: EventBus
 	) {
 		this.configurationService = configurationService;
-		this.healthService = healthService;
+		this.eventBus = eventBus;
 
 		eventBus.register(Events.HealthCheckEvent, this.performHealthCheck, this);
 
@@ -34,21 +33,23 @@ export class SonarClient {
 	private performHealthCheck() {
 		this.getVersion()
 			.then(() => {
-				this.healthService.setState({
-					state: HealthState.UP,
-					service: "sonarqube",
-					timestamp: Date.now()
-				});
+				this.eventBus.emit(
+					new HealthStatusEvent({
+						state: HealthState.UP,
+						service: "sonarqube",
+						timestamp: Date.now()
+					})
+				);
 			})
 			.catch((err) => {
-				LOGGER.warn("sonar client health check failed. This can lead to a service disruption.");
-
-				this.healthService.setState({
-					state: HealthState.DOWN,
-					service: "sonarqube",
-					detail: `integration disrupted (${err})`,
-					timestamp: Date.now()
-				});
+				this.eventBus.emit(
+					new HealthStatusEvent({
+						state: HealthState.DOWN,
+						service: "sonarqube",
+						detail: `integration disrupted (${err})`,
+						timestamp: Date.now()
+					})
+				);
 			});
 	}
 
@@ -131,13 +132,15 @@ export class SonarClient {
 							resolve(body);
 						} else {
 							if (error) {
-								reject(error);
+								LOGGER.error("sonar request failed: ", error);
+								reject("connection failure");
 							} else {
 								reject(response.statusCode);
 							}
 						}
 					} catch (err) {
-						reject(err);
+						LOGGER.error("sonar request failed: ", error);
+						reject("connection failure");
 					}
 				}
 			);

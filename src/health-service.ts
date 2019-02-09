@@ -1,14 +1,27 @@
-import { injectable } from "inversify";
+import { injectable, inject } from "inversify";
+import EventBus from "./event/event-bus";
+import { Events, HealthStatusEvent } from "./event/event-model";
+import { LOGGER } from "./logger";
 
 @injectable()
 class HealthService {
 	private state: Map<string, Health>;
 
-	constructor() {
+	constructor(@inject(EventBus) eventBus: EventBus) {
 		this.state = new Map<string, Health>();
+
+		eventBus.register(Events.HealthStatusEvent, this.healthStatusEventHandler, this);
 	}
 
-	public setState(health: Health) {
+	public healthStatusEventHandler(event: HealthStatusEvent) {
+		if (event.health.state == HealthState.DOWN) {
+			LOGGER.warn("component %s reported state DOWN. This may lead to a service interruption.", event.health.service);
+		}
+
+		this.setState(event.health);
+	}
+
+	private setState(health: Health) {
 		this.state.set(health.service, health);
 	}
 
@@ -28,7 +41,7 @@ class HealthService {
 	}
 }
 
-interface Health {
+export interface Health {
 	state: HealthState;
 	service: string;
 	detail?: string;
