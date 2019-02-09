@@ -107,7 +107,7 @@ Swingletree is configured using a configuration file named `swingletree.conf.yam
 
 If you are running GitHub Enterprise be sure to address the API endpoint. Depending on your configuration this could be a subdomain like `https://api.corporategithub.com` or a path `https://corporategithub.com/api/`.
 
-Swingletree is tested against GitHub Enterprise 2.15
+Swingletree is tested against GitHub Enterprise 2.16.1 and SonarQube 7.6
 
 ### GitHub App Configuration
 
