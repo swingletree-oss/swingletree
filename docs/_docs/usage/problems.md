@@ -12,4 +12,12 @@ Health Checks include
 * Redis database connectivity
 * SonarQube API connectivity
 
-# Common Problems
+## Common Problems
+
+### Sonar communication disrupted
+
+In case of reported SonarQube connectivity issues, check:
+
+* Authentication token is provided (when SonarQube enforces authentication)
+* SonarQube base url is configured
+
