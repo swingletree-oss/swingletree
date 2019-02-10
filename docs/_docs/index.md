@@ -4,8 +4,6 @@ permalink: /docs/home/
 redirect_from: /docs/index.html
 ---
 
-# Swingletree
-
 ## Setup
 
 Swingletree can be run with multiple instances. A redis database is used as a common cache.
