@@ -13,6 +13,7 @@ obtain information about the quality of branches in relation to the `master` bra
 
 * Redis Database
 * SonarQube Developer Edition (minimum)
+* GitHub or GitHub Enterprise
 
 ## Steps
 

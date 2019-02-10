@@ -2,14 +2,7 @@
 layout: default
 ---
 
-<!-- main -->
-<div class="header-container jumbotron">
-    <div class="container">
-        <h1>Integrate SonarQube into GitHub</h1>
-        <p>See SonarQube findings inside your Pull Requests.</p>
-        <p><a class="btn btn-primary btn-lg" href="{{ "/docs/home/" | prepend: site.baseurl }}" role="button">Learn more</a></p>
-    </div>
-</div>
+{% include header-banner.html %}
 
 <div class="container">
 
@@ -50,38 +43,4 @@ layout: default
 
     <hr>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <h3>Showcase</h3>
-
-            <p>
-                SonarQube findings are annotated and updated inside your Pull Requests.
-                If the built-in SonarQube Branch Analysis quality gates are not fulfilled,
-                the Pull Request can be blocked from merging.
-            </p>
-
-            <p>
-                <img class="showcase" style="width:75%" src="assets/images/pr-merge-block.png" alt="" />
-            </p>
-
-            <p>
-                Swingletree annotates the code inside the Pull Request with the SonarQube findings. Developers do not
-                have to leave GitHub.
-            </p>
-
-            <p>
-                <img class="showcase" style="width:75%" src="assets/images/pull-request-files.png" alt="" />
-            </p>
-
-            <p>
-                Posting and deleting analysis results as comments into the Pull Request conversation clutters
-                the discussion and may lead to misunderstandings due to automated deletions.
-                Swingletree uses GitHub Checks to inform users about the status of their Pull Request,
-                which is a more fitting way of pointing out issues.
-            </p>
-            <p>
-                <img class="showcase" style="width:75%" src="assets/images/swingletree-check-run.png" alt="" />
-            </p>
-        </div>
-    </div>
 </div>

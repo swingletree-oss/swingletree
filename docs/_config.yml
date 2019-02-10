@@ -17,6 +17,11 @@ git_edit_address: https://github.com/error418/swingletree/blob/master
 blog:
   enable: false
 
+nav:
+  - id: showcase
+    url: /showcase.html
+    name: Showcase
+
 # theme options from https://bootswatch.com/
 # comment out this to use default Bootstrap
 bootwatch: paper
