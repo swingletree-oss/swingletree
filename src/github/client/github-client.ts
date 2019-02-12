@@ -19,6 +19,7 @@ class GithubClientService {
 	private installationStorage: InstallationStorage;
 	private tokenStorage: TokenStorage;
 	private key: string;
+	private clientLogConfig: object = {};
 
 	constructor(
 		@inject(ConfigurationService) configurationService: ConfigurationService,
@@ -31,6 +32,10 @@ class GithubClientService {
 		this.installationStorage = installationStorage;
 
 		LOGGER.info("Github client configured to use %s", this.configurationService.get().github.base);
+
+		if (configurationService.get().github.clientDebug) {
+			this.clientLogConfig = console;
+		}
 	}
 
 	public getInstallations(): Promise<Github.AppsListInstallationsResponseItem[]> {
@@ -87,7 +92,8 @@ class GithubClientService {
 			baseUrl: this.configurationService.get().github.base,
 			auth () {
 				return `Bearer ${context.createJWT()}`;
-			}
+			},
+			log: this.clientLogConfig
 		});
 
 		return ghClient;
@@ -135,7 +141,8 @@ class GithubClientService {
 			resolve(
 				new Github({
 					baseUrl: this.configurationService.get().github.base,
-					auth: `token ${bearerToken}`
+					auth: `token ${bearerToken}`,
+					log: this.clientLogConfig
 				})
 			);
 		});
