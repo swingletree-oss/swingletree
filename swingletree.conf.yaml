@@ -11,6 +11,7 @@ github:
   webhookSecret: # this is the webhook secret. You should set it.
   pendingCommitStatus: false # if set to true, Swingletree will send a "pending" commit status to github when receiving push events
   appPublicPage: # the GitHub App public page. Will be referenced in the Swingletree landing page.
+  clientDebug: false # runs octokit in debug mode. Use this only for debug, since this can reveal secret tokens in the logs!
 
 # SonarQube specific configuration
 sonar:

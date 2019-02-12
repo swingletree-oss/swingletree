@@ -39,6 +39,7 @@ export class GithubConfig {
 	public readonly base: string;
 	public readonly webhookSecret: string;
 	public readonly appPublicPage: string;
+	public readonly clientDebug: boolean;
 
 	constructor(model: GithubConfig) {
 		this.appId = Number(process.env["GITHUB_APPID"] || model.appId);
@@ -46,6 +47,7 @@ export class GithubConfig {
 		this.base = process.env["GITHUB_BASE"] || model.base;
 		this.webhookSecret = process.env["GITHUB_SECRET"] || model.webhookSecret;
 		this.appPublicPage = process.env["GITHUB_APP_PAGE"] || model.appPublicPage;
+		this.clientDebug  = ("true" == process.env["GITHUB_CLIENT_DEBUG"]) || model.clientDebug;
 
 		// data preparation
 		this.base = this.base.replace(/\/+$/, ""); // remove trailing slashes
@@ -68,6 +70,7 @@ export class SonarConfig {
 	public readonly secret: string;
 	public readonly logWebhookEvents: boolean;
 	public readonly context: string;
+	public readonly metrics: string[];
 
 	constructor(model: SonarConfig) {
 		this.token = process.env["SONAR_TOKEN"] || model.token;
@@ -75,5 +78,6 @@ export class SonarConfig {
 		this.secret = process.env["SONAR_SECRET"] || model.secret;
 		this.context = model.context;
 		this.logWebhookEvents = ("true" == process.env["LOG_SONAR_WEBHOOKS"]) || model.logWebhookEvents;
+		this.metrics = model.metrics;
 	}
 }
