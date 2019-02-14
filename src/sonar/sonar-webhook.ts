@@ -4,11 +4,11 @@ import { Router, Request, Response, NextFunction } from "express";
 import { SonarWebhookEvent } from "./model/sonar-wehook-event";
 import { injectable } from "inversify";
 import { inject } from "inversify";
-import EventBus from "../event/event-bus";
-import { ConfigurationService } from "../config/configuration";
+import EventBus from "../core/event/event-bus";
+import { ConfigurationService } from "../core/config/configuration";
 import * as BasicAuth from "basic-auth";
-import { LOGGER } from "../logger";
-import { SonarAnalysisCompleteEvent } from "../event/event-model";
+import { LOGGER } from "../core/logger";
+import { SonarAnalysisCompleteEvent } from "./events";
 
 /** Provides a Webhook for Sonar
  */
@@ -76,6 +76,7 @@ class SonarWebhook {
 			analysisEvent.commitId = webhookData.properties["sonar.analysis.commitId"];
 			analysisEvent.owner = coordinates[0];
 			analysisEvent.repository = coordinates[1];
+			analysisEvent.targetBranch = webhookData.properties["sonar.branch.target"];
 
 			this.eventBus.emit(analysisEvent);
 		} else {

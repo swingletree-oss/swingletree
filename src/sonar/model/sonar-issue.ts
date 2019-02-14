@@ -7,6 +7,25 @@ export enum RuleType {
 	SECURITY_HOTSPOT = "SECURITY_HOTSPOT"
 }
 
+export enum SonarMetrics {
+	COVERAGE = "coverage",
+	MAINTAINABILITY_RATING = "new_maintainability_rating",
+	NEW_MAINTAINABILITY_RATING = "new_maintainability_rating",
+	NEW_BRANCH_COVERAGE = "new_branch_coverage",
+	NEW_CONDITIONS_TO_COVER = "new_conditions_to_cover",
+	NEW_COVERAGE = "new_coverage",
+	NEW_LINE_COVERAGE = "new_line_coverage",
+	NEW_LINES_TO_COVER = "new_lines_to_cover",
+	NEW_BLOCKER_VIOLATIONS = "new_blocker_violations",
+	NEW_CODE_SMELLS = "new_code_smells",
+	NEW_CRITICAL_VIOLATIONS = "new_critical_violations",
+	NEW_INFO_VIOLATIONS = "new_info_violations",
+	NEW_VIOLATIONS = "new_violations",
+	NEW_MAJOR_VIOLATIONS = "new_major_violations",
+	NEW_MINOR_VIOLATIONS = "new_minor_violations",
+	NEW_VULNERABILITIES = "new_vulnerabilities"
+}
+
 export interface SonarPaging {
 	pageIndex: number;
 	pageSize: number;
@@ -20,13 +39,37 @@ export interface Comment {
 	createdAt: Date;
 }
 
-export interface Component {
+export interface SonarComponent {
 	key: string;
 	enabled?: boolean;
 	qualifier: string;
 	name: string;
 	longName: string;
 	path?: string;
+	measures?: SonarMeasure[];
+}
+
+export class SonarComponentView {
+	model: SonarComponent;
+	measures: Map<string, SonarMeasure>;
+
+	constructor(model: SonarComponent) {
+		this.model = model;
+		this.measures = new Map<string, SonarMeasure>();
+
+		if (model.measures) {
+			model.measures.forEach((measure: SonarMeasure) => {
+				this.measures.set(measure.metric, measure);
+			});
+		}
+	}
+}
+
+export interface SonarMeasureComponentQuery {
+	additionalFields?: string;
+	component?: string;
+	metricKeys: string;
+	branch: string;
 }
 
 export interface SonarIssueQuery {
@@ -39,6 +82,29 @@ export interface SonarIssueQuery {
 	statuses?: string;
 	branch?: string;
 	createdAt?: string;
+}
+
+export interface SonarMeasure {
+	metric: string;
+	value: string;
+	periods: SonarPeriod[];
+}
+
+export interface SonarPeriod {
+	index: string;
+	value: string;
+}
+
+export interface SonarMetric {
+	key: string;
+	name: string;
+	description: string;
+	domain: string;
+	type: string;
+	higherValuesAreBetter: boolean;
+	qualitative: boolean;
+	hidden: boolean;
+	custom: boolean;
 }
 
 export interface SonarIssue {
@@ -75,5 +141,5 @@ export interface SonarIssueResponse {
 	maxResultsReached: boolean;
 	paging: SonarPaging;
 	issues: SonarIssue[];
-	components: Component[];
+	components: SonarComponent[];
 }
