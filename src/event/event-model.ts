@@ -89,6 +89,7 @@ export class SonarAnalysisCompleteEvent extends SwingletreeEvent {
 	owner: string;
 	repository: string;
 	analysisEvent: SonarWebhookEvent;
+	targetBranch?: string;
 
 	constructor(analysisEvent: SonarWebhookEvent) {
 		super(Events.SonarAnalysisComplete);
