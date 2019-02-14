@@ -20,7 +20,7 @@
     }
   },
   "include": [
-    "src/**/*", "test/configuration.spec.ts", "test/sonar-client.spec.ts", "test/sonar-webhook.spec.ts", "test/template-engine.spec.ts", "test/app-installation-handler.spec.ts", "test/commit-status-sender.spec.ts", "test/github-webhook.spec.ts"
+    "src/**/*"
   ],
   "exclude": [
     "test/**/*.spec.ts"

@@ -6,9 +6,9 @@ import * as chai from "chai";
 import * as sinon from "sinon";
 chai.use(require("sinon-chai"));
 
-import GithubWebhook from "../src/core/github/github-webhook";
-import { GithubWebhookEventType } from "../src/core/github/model/gh-webhook-event";
-import { Events, AppInstalledEvent } from "../src/core/event/event-model";
+import GithubWebhook from "../../src/core/github/github-webhook";
+import { GithubWebhookEventType } from "../../src/core/github/model/gh-webhook-event";
+import { Events, AppInstalledEvent } from "../../src/core/event/event-model";
 
 const sandbox = sinon.createSandbox();
 
@@ -32,7 +32,7 @@ describe("GitHub Webhook", () => {
 
 		uut = new GithubWebhook(eventBusMock, configurationMock);
 
-		ghAppInstallWebhookData = Object.assign({}, require("./mock/gh-install-webhook.json"));
+		ghAppInstallWebhookData = Object.assign({}, require("../mock/gh-install-webhook.json"));
 	});
 
 	afterEach(function () {

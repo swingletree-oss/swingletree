@@ -1,6 +1,6 @@
 "use strict";
 
-import CommitStatusSender from "../src/core/github/commit-status-sender";
+import CommitStatusSender from "../../src/core/github/commit-status-sender";
 
 import { suite, test, describe } from "mocha";
 import { expect, assert } from "chai";
@@ -10,7 +10,7 @@ import * as sinon from "sinon";
 chai.use(require("sinon-chai"));
 chai.use(require("chai-as-promised"));
 
-import { Events, GithubCheckRunWriteEvent } from "../src/core/event/event-model";
+import { Events, GithubCheckRunWriteEvent } from "../../src/core/event/event-model";
 
 const sandbox = sinon.createSandbox();
 
@@ -62,7 +62,7 @@ describe("Commit Status Sender", () => {
 			githubClientMock
 		);
 
-		mockEvent = new GithubCheckRunWriteEvent(Object.assign({}, require("./mock/check-run-create.json")));
+		mockEvent = new GithubCheckRunWriteEvent(Object.assign({}, require("../mock/check-run-create.json")));
 	});
 
 	afterEach(function () {

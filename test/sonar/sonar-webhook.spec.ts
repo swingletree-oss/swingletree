@@ -7,13 +7,13 @@ import * as sinon from "sinon";
 chai.use(require("sinon-chai"));
 
 import { Response, Request, NextFunction } from "express";
-import { SonarWebhookEvent } from "../src/sonar/model/sonar-wehook-event";
+import { SonarWebhookEvent } from "../../src/sonar/model/sonar-wehook-event";
 
-import SonarWebhook from "../src/sonar/sonar-webhook";
+import SonarWebhook from "../../src/sonar/sonar-webhook";
 import { EventEmitter } from "events";
 
-import EventBus from "../src/core/event/event-bus";
-import { ConfigurationService } from "../src/core/config/configuration";
+import EventBus from "../../src/core/event/event-bus";
+import { ConfigurationService } from "../../src/core/config/configuration";
 
 describe("Sonar Webhook", () => {
 
@@ -40,7 +40,7 @@ describe("Sonar Webhook", () => {
 			register: sinon.stub()
 		};
 
-		testData = Object.assign({}, require("./mock/base-sonar-webhook.json"));
+		testData = Object.assign({}, require("../mock/base-sonar-webhook.json"));
 		// reset test data properties for test cases
 		testData.properties = {};
 
