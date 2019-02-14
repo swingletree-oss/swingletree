@@ -6,7 +6,7 @@ import * as chai from "chai";
 import * as sinon from "sinon";
 chai.use(require("sinon-chai"));
 
-import { SonarClient } from "../src/sonar/client/sonar-client";
+import { SonarClient } from "../../src/sonar/client/sonar-client";
 
 const sandbox = sinon.createSandbox();
 
