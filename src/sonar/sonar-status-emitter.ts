@@ -1,15 +1,16 @@
 import { injectable, inject } from "inversify";
-import EventBus from "../event/event-bus";
-import { Events, SonarAnalysisCompleteEvent, GithubCheckRunWriteEvent } from "../event/event-model";
+import EventBus from "../core/event/event-bus";
+import { Events, GithubCheckRunWriteEvent } from "../core/event/event-model";
 import { ChecksCreateParams, ChecksCreateParamsOutputAnnotations } from "@octokit/rest";
-import { ConfigurationService } from "../config/configuration";
+import { ConfigurationService } from "../core/config/configuration";
 import { SonarWebhookEvent, QualityGateStatus } from "./model/sonar-wehook-event";
-import { SummaryTemplate } from "../template/model/summary-template";
 import { SonarClient } from "./client/sonar-client";
-import { LOGGER } from "../logger";
-import { Templates } from "../template/template-engine";
-import { TemplateEngine } from "../template/template-engine";
-import { RuleType } from "./model/sonar-issue";
+import { LOGGER } from "../core/logger";
+import { Templates } from "../core/template/template-engine";
+import { TemplateEngine } from "../core/template/template-engine";
+import { RuleType, SonarMetrics } from "./model/sonar-issue";
+import { SonarEvents, SonarAnalysisCompleteEvent } from "./events";
+import { SonarCheckRunSummaryTemplate } from "./sonar-template";
 
 @injectable()
 class SonarStatusEmitter {
@@ -38,7 +39,7 @@ class SonarStatusEmitter {
 		this.templateEngine = templateEngine;
 		this.context = configurationService.get().sonar.context;
 
-		eventBus.register(Events.SonarAnalysisComplete, this.analysisCompleteHandler, this);
+		eventBus.register(SonarEvents.SonarAnalysisComplete, this.analysisCompleteHandler, this);
 	}
 
 	private dashboardUrl(sonarEvent: SonarWebhookEvent): string {
@@ -63,14 +64,31 @@ class SonarStatusEmitter {
 			details_url: this.dashboardUrl(event.analysisEvent)
 		};
 
-		const summaryTemplateData: SummaryTemplate = { event: event.analysisEvent };
+		const summaryTemplateData: SonarCheckRunSummaryTemplate = { event: event.analysisEvent };
 
 		checkRun.output = {
-			title: `Sonar Quality Gate ${event.analysisEvent.qualityGate.status}`,
+			title: `${event.analysisEvent.qualityGate.status}`,
 			summary: ""
 		};
 
+		const projectKey = event.analysisEvent.project.key;
+		const branch = event.analysisEvent.branch.name;
+
 		try {
+			// calculate coverage deltas
+			try {
+				const branchCoverage = await this.sonarClient.getMeasureValue(projectKey, branch, SonarMetrics.COVERAGE);
+				const mainCoverage = await this.sonarClient.getMeasureValue(projectKey, event.targetBranch, SonarMetrics.COVERAGE);
+				const deltaCoverage = Number(branchCoverage) - Number(mainCoverage);
+
+				summaryTemplateData.branchCoverage = Number(branchCoverage);
+				summaryTemplateData.targetCoverage = Number(mainCoverage);
+
+				checkRun.output.title = `${checkRun.output.title} - Coverage: ${branchCoverage} (${(deltaCoverage < 0 ? "" : "+")}${deltaCoverage}%})`;
+			} catch (err) {
+				LOGGER.warn("failed to calculate coverage delta: ", err);
+			}
+
 			const issues = await this.sonarClient.getIssues(event.analysisEvent.project.key, event.analysisEvent.branch.name);
 			const counters: Map<string, number> = new Map<string, number>();
 
@@ -130,7 +148,7 @@ class SonarStatusEmitter {
 		}
 
 		// add summary via template engine
-		checkRun.output.summary = this.templateEngine.template<SummaryTemplate>(Templates.CHECK_RUN_SUMMARY, summaryTemplateData);
+		checkRun.output.summary = this.templateEngine.template<SonarCheckRunSummaryTemplate>(Templates.CHECK_RUN_SUMMARY, summaryTemplateData);
 
 		this.eventBus.emit(new GithubCheckRunWriteEvent(checkRun));
 	}

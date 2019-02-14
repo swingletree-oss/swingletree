@@ -1,14 +1,14 @@
 "use strict";
 
 import { injectable, inject } from "inversify";
-import { ConfigurationService } from "../../config/configuration";
-import { LOGGER } from "../../logger";
+import { ConfigurationService } from "../../core/config/configuration";
+import { LOGGER } from "../../core/logger";
 
 import * as request from "request";
-import { SonarIssueResponse, SonarIssueQuery, SonarIssue, SonarPaging } from "../model/sonar-issue";
-import { HealthState } from "../../health-service";
-import { Events, HealthStatusEvent } from "../../event/event-model";
-import EventBus from "../../event/event-bus";
+import { SonarIssueResponse, SonarIssueQuery, SonarIssue, SonarPaging, SonarMeasureComponentQuery, SonarComponent, SonarComponentView, SonarMetrics } from "../model/sonar-issue";
+import { HealthState } from "../../core/health-service";
+import { Events, HealthStatusEvent } from "../../core/event/event-model";
+import EventBus from "../../core/event/event-bus";
 
 
 @injectable()
@@ -71,6 +71,8 @@ export class SonarClient {
 						} else {
 							if (error) {
 								reject(error);
+							} else {
+								reject(new Error(`Sonar client request failed ${response.statusCode}`));
 							}
 						}
 					} catch (err) {
@@ -121,6 +123,43 @@ export class SonarClient {
 
 			resolve(issues);
 		});
+	}
+
+	public getMeasures(projectKey: string, branch: string, metricKeys: string[]): Promise<SonarComponentView> {
+		const queryParams: SonarMeasureComponentQuery = {
+			metricKeys: metricKeys.join(","),
+			component: projectKey,
+			branch: branch
+		};
+
+		return new Promise<SonarComponentView>(async (resolve, reject) => {
+			request(
+				this.configurationService.get().sonar.base + "/api/measures/component",
+				this.requestOptions({
+					qs: queryParams,
+				}),
+				(error: any, response: request.Response, body: any) => {
+					try {
+						if (!error && response.statusCode == 200) {
+							resolve(new SonarComponentView(JSON.parse(body) as SonarComponent));
+						} else {
+							if (error) {
+								reject(error);
+							} else {
+								reject(new Error(`Sonar client request failed ${response.statusCode}`));
+							}
+						}
+					} catch (err) {
+						reject(err);
+					}
+				}
+			);
+		});
+	}
+
+	public async getMeasureValue(projectKey: string, branch: string, metric: SonarMetrics): Promise<string> {
+		const measureView = await this.getMeasures(projectKey, branch, [ metric ]);
+		return measureView.measures.get(metric).value;
 	}
 
 	public getVersion(): Promise<string> {
