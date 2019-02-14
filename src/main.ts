@@ -28,5 +28,5 @@ const core = new SwingletreeCore(
 core.start();
 
 LOGGER.info("starting sonarqube component");
-const sonarPlugin = new SonarQubePlugin(app, container.get<TemplateEngine>(TemplateEngine));
+const sonarPlugin = new SonarQubePlugin(app);
 sonarPlugin.start();
