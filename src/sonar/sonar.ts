@@ -11,15 +11,14 @@ import { SwingletreeComponent } from "../component";
 export class SonarQubePlugin extends SwingletreeComponent {
 
 	private app: express.Application;
-	private templateEngine: TemplateEngine;
 
-	constructor(app: express.Application, templateEngine: TemplateEngine) {
+	constructor(app: express.Application) {
 		super();
 		this.app = app;
-		this.templateEngine = templateEngine;
 	}
 
 	public start(): void {
+		// register services to dependency injection
 		container.bind<SonarWebhook>(SonarWebhook).toSelf().inSingletonScope();
 		container.bind<SonarStatusEmitter>(SonarStatusEmitter).toSelf().inSingletonScope();
 		container.bind<SonarClient>(SonarClient).toSelf().inSingletonScope();
@@ -27,7 +26,10 @@ export class SonarQubePlugin extends SwingletreeComponent {
 		// initialize emitter
 		container.get<SonarStatusEmitter>(SonarStatusEmitter);
 
+		// add webhook endpoint
 		this.app.use("/webhook/sonar", container.get<SonarWebhook>(SonarWebhook).getRoute());
+
+		// add template filter for rule type icons
 		container.get<TemplateEngine>(TemplateEngine).addFilter("ruleTypeIcon", SonarQubePlugin.ruleTypeIconFilter);
 	}
 
