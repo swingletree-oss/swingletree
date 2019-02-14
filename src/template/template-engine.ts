@@ -14,6 +14,7 @@ export class TemplateEngine {
 		this.environment.addFilter("gateStatusIcon", this.qualityGateStatusIconFilter);
 		this.environment.addFilter("gateConditionIcon", this.qualityGateConditionIconFilter);
 		this.environment.addFilter("ruleTypeIcon", this.ruleTypeIconFilter);
+		this.environment.addFilter("delta", this.deltaFilter);
 	}
 
 	/** Gets and fills a template
@@ -24,6 +25,10 @@ export class TemplateEngine {
 	public template<T extends TemplateData>(template: Templates, context: T): string {
 		LOGGER.debug("processing template %s", template);
 		return this.environment.render(template, context);
+	}
+
+	public deltaFilter(value: number) {
+		return `${(value > 0) ? "+" : ""}${value}`;
 	}
 
 	public qualityGateStatusIconFilter(str: string) {
