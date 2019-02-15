@@ -5,7 +5,7 @@ import { ConfigurationService } from "../../configuration";
 import { LOGGER } from "../../core/logger";
 
 import * as request from "request";
-import { SonarIssueResponse, SonarIssueQuery, SonarIssue, SonarPaging, SonarMeasureComponentQuery, SonarComponent, SonarComponentView, SonarMetrics } from "../model/sonar-issue";
+import { SonarIssueResponse, SonarIssueQuery, SonarIssue, SonarPaging, SonarMeasureComponentQuery, SonarMetrics, SonarMeasuresResponse, SonarMeasuresView, SonarMeasuresResponseComponent } from "../model/sonar-issue";
 import { HealthState } from "../../core/health-service";
 import { Events, HealthStatusEvent } from "../../core/event/event-model";
 import EventBus from "../../core/event/event-bus";
@@ -125,14 +125,14 @@ class SonarClient {
 		});
 	}
 
-	public getMeasures(projectKey: string, branch: string, metricKeys: string[]): Promise<SonarComponentView> {
+	public getMeasures(projectKey: string, metricKeys: string[], branch?: string): Promise<SonarMeasuresView> {
 		const queryParams: SonarMeasureComponentQuery = {
 			metricKeys: metricKeys.join(","),
 			component: projectKey,
 			branch: branch
 		};
 
-		return new Promise<SonarComponentView>(async (resolve, reject) => {
+		return new Promise<SonarMeasuresView>(async (resolve, reject) => {
 			request(
 				this.configurationService.get().sonar.base + "/api/measures/component",
 				this.requestOptions({
@@ -141,7 +141,7 @@ class SonarClient {
 				(error: any, response: request.Response, body: any) => {
 					try {
 						if (!error && response.statusCode == 200) {
-							resolve(new SonarComponentView(JSON.parse(body) as SonarComponent));
+							resolve(new SonarMeasuresView(JSON.parse(body).component as SonarMeasuresResponseComponent));
 						} else {
 							if (error) {
 								reject(error);
@@ -157,8 +157,8 @@ class SonarClient {
 		});
 	}
 
-	public async getMeasureValue(projectKey: string, branch: string, metric: SonarMetrics): Promise<string> {
-		const measureView = await this.getMeasures(projectKey, branch, [ metric ]);
+	public async getMeasureValue(projectKey: string, metric: SonarMetrics, branch?: string): Promise<string> {
+		const measureView = await this.getMeasures(projectKey, [ metric ], branch);
 		return measureView.measures.get(metric).value;
 	}
 
