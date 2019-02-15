@@ -4,7 +4,7 @@ import { suite, test, describe } from "mocha";
 import { expect, assert } from "chai";
 import * as chai from "chai";
 import * as sinon from "sinon";
-import { SonarConfig, GithubConfig, StorageConfig } from "../src/core/config/configuration";
+import { SonarConfig, GithubConfig, StorageConfig } from "../src/configuration";
 chai.use(require("sinon-chai"));
 
 const sandbox = sinon.createSandbox();

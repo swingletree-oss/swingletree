@@ -1,0 +1,16 @@
+github:
+  appId: 101
+  appPublicPage: "publicPage"
+  base: "http://localhost:10101"
+  clientDebug: false
+  keyFile: ""
+  webhookSecret: null
+sonar:
+  base: "http://localhost:10101"
+  context: "sonarqube"
+  logWebhookEvents: false
+  secret: null
+  token: "1234"
+storage:
+  database: "http://localhost"
+  password: null

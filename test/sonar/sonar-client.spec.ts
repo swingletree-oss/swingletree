@@ -6,7 +6,8 @@ import * as chai from "chai";
 import * as sinon from "sinon";
 chai.use(require("sinon-chai"));
 
-import { SonarClient } from "../../src/sonar/client/sonar-client";
+import SonarClient from "../../src/sonar/client/sonar-client";
+import { ConfigurationServiceMock, EventBusMock } from "../mock-classes";
 
 const sandbox = sinon.createSandbox();
 
@@ -15,18 +16,8 @@ describe("Sonar Client", () => {
 
 	beforeEach(function () {
 
-		const configurationMock: any = {
-			get: sinon.stub().returns({
-				sonar: {
-					token: "98451e669834295d248afa4a5430048bf39a619d",
-					base: "http://localhost:8000"
-				}
-			})
-		};
-
-		const eventBusMock: any = {
-			register: sinon.stub()
-		};
+		const configurationMock = new ConfigurationServiceMock();
+		const eventBusMock = new EventBusMock();
 
 		uut = new SonarClient(configurationMock, eventBusMock);
 	});
