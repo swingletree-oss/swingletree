@@ -74,21 +74,21 @@ class SonarStatusEmitter {
 		const projectKey = event.analysisEvent.project.key;
 		const branch = event.analysisEvent.branch.name;
 
+		// calculate coverage deltas
 		try {
-			// calculate coverage deltas
-			try {
-				const branchCoverage = await this.sonarClient.getMeasureValue(projectKey, SonarMetrics.COVERAGE, branch);
-				const mainCoverage = await this.sonarClient.getMeasureValue(projectKey, SonarMetrics.COVERAGE, event.targetBranch);
-				const deltaCoverage = Number(branchCoverage) - Number(mainCoverage);
+			const branchCoverage = await this.sonarClient.getMeasureValue(projectKey, SonarMetrics.COVERAGE, branch);
+			const mainCoverage = await this.sonarClient.getMeasureValue(projectKey, SonarMetrics.COVERAGE, event.targetBranch);
+			const deltaCoverage = Number(branchCoverage) - Number(mainCoverage);
 
-				summaryTemplateData.branchCoverage = Number(branchCoverage);
-				summaryTemplateData.targetCoverage = Number(mainCoverage);
+			summaryTemplateData.branchCoverage = Number(branchCoverage);
+			summaryTemplateData.targetCoverage = Number(mainCoverage);
 
-				checkRun.output.title = `${checkRun.output.title} - Coverage: ${branchCoverage} (${(deltaCoverage < 0 ? "" : "+")}${deltaCoverage}%)`;
-			} catch (err) {
-				LOGGER.warn("failed to calculate coverage delta: ", err);
-			}
+			checkRun.output.title = `${checkRun.output.title} - Coverage: ${branchCoverage} (${(deltaCoverage < 0 ? "" : "+")}${deltaCoverage}%)`;
+		} catch (err) {
+			LOGGER.warn("failed to calculate coverage delta: ", err);
+		}
 
+		try {
 			const issues = await this.sonarClient.getIssues(event.analysisEvent.project.key, event.analysisEvent.branch.name);
 			const counters: Map<string, number> = new Map<string, number>();
 
