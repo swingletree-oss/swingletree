@@ -1,17 +1,16 @@
 import * as yaml from "js-yaml";
 import { injectable } from "inversify";
-import { LOGGER } from "../logger";
+import { LOGGER } from "./core/logger";
 
 @injectable()
 export class ConfigurationService {
-	private readonly CONFIG_FILE = "./swingletree.conf.yaml";
 	private config: Configuration;
 
-	constructor() {
-		LOGGER.info("loading configuration file %s", this.CONFIG_FILE);
+	constructor(file = "./swingletree.conf.yaml") {
+		LOGGER.info("loading configuration from file %s", file);
 		this.config = new Configuration(
 			yaml.safeLoad(
-				require("fs").readFileSync(this.CONFIG_FILE)
+				require("fs").readFileSync(file)
 			) as Configuration
 		);
 	}

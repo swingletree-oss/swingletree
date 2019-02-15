@@ -2,7 +2,7 @@ import "reflect-metadata";
 
 import { Container } from "inversify";
 
-import { ConfigurationService } from "./core/config/configuration";
+import { ConfigurationService } from "./configuration";
 import CommitStatusSender from "./core/github/commit-status-sender";
 import GithubClientService from "./core/github/client/github-client";
 import EventBus from "./core/event/event-bus";

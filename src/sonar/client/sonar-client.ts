@@ -1,7 +1,7 @@
 "use strict";
 
 import { injectable, inject } from "inversify";
-import { ConfigurationService } from "../../core/config/configuration";
+import { ConfigurationService } from "../../configuration";
 import { LOGGER } from "../../core/logger";
 
 import * as request from "request";
@@ -12,7 +12,7 @@ import EventBus from "../../core/event/event-bus";
 
 
 @injectable()
-export class SonarClient {
+class SonarClient {
 	private configurationService: ConfigurationService;
 	private eventBus: EventBus;
 
@@ -188,3 +188,5 @@ export class SonarClient {
 		});
 	}
 }
+
+export default SonarClient;
