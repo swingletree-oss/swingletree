@@ -30,7 +30,7 @@ class InstallationStorage {
 				if (err) {
 					reject(err);
 				} else {
-					resolve(Number(value));
+					resolve((value) ? Number(value) : null);
 				}
 			});
 		});
