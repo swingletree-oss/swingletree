@@ -47,7 +47,7 @@ describe("Template Engine", () => {
 			counts.set(RuleType.SECURITY_HOTSPOT, 40);
 			counts.set(RuleType.VULNERABILITY, 100);
 
-				uut.template<SonarCheckRunSummaryTemplate>(Templates.CHECK_RUN_SUMMARY, {
+			uut.template<SonarCheckRunSummaryTemplate>(Templates.CHECK_RUN_SUMMARY, {
 				event: sonarWebhookTestData,
 				branchCoverage: 100,
 				targetCoverage: 80,
