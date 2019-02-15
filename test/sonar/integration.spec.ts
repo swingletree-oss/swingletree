@@ -30,7 +30,7 @@ describe("Integration Test", () => {
 			})
 		};
 
-		mockServer = http.createServer(require("mockserver")("./test/mock", true)).listen(mockPort);
+		mockServer = http.createServer(require("mockserver")("./test/mock", process.env.DEBUG == "true")).listen(mockPort);
 		sonarClient = new SonarClientMock();
 	});
 
@@ -40,7 +40,7 @@ describe("Integration Test", () => {
 
 
 	describe("Sonar Client", () => {
-		it("should indicate paging requirement", async () => {
+		it("should retrieve version", async () => {
 			expect(await sonarClient.getVersion()).to.equal("1.2.3-TEST");
 		});
 
@@ -55,6 +55,13 @@ describe("Integration Test", () => {
 
 			expect(result.measures.get(SonarMetrics.NEW_COVERAGE).value).to.equal("90.0");
 			expect(result.measures.get(SonarMetrics.NEW_VIOLATIONS).value).to.equal("1");
+		});
+
+		it("should retrieve measures from a different branch", async () => {
+			const result = await sonarClient.getMeasures("test", [ SonarMetrics.NEW_COVERAGE, SonarMetrics.NEW_VIOLATIONS ], "dev");
+
+			expect(result.measures.get(SonarMetrics.NEW_COVERAGE).value).to.equal("11.0");
+			expect(result.measures.get(SonarMetrics.NEW_VIOLATIONS).value).to.equal("5");
 		});
 	});
 

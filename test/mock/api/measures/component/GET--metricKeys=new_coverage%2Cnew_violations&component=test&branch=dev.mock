@@ -1,0 +1,24 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "component": {
+    "id": "AWjw99hwOMeIdET5yZEz",
+    "key": "testproject:project",
+    "name": "Test Project",
+    "description": "Chill, it is a test.",
+    "qualifier": "TRK",
+    "measures": [
+      {
+        "metric": "new_coverage",
+        "value": "11.0",
+        "bestValue": false
+      },
+      {
+        "metric": "new_violations",
+        "value": "5",
+        "bestValue": false
+      }
+    ]
+  }
+}
