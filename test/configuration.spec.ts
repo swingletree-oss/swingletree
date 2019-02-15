@@ -14,7 +14,7 @@ describe("Configuration", () => {
 	let envBackup;
 
 	beforeEach(() => {
-		envBackup = process.env;
+		envBackup = Object.assign({}, process.env);
 	});
 
 	afterEach(() => {
