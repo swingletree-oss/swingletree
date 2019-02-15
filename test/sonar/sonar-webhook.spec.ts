@@ -14,6 +14,7 @@ import { EventEmitter } from "events";
 
 import EventBus from "../../src/core/event/event-bus";
 import { ConfigurationService } from "../../src/configuration";
+import { ConfigurationServiceMock, EventBusMock } from "../mock-classes";
 
 describe("Sonar Webhook", () => {
 
@@ -24,21 +25,17 @@ describe("Sonar Webhook", () => {
 
 	beforeEach(function () {
 
-		const configurationMock: any = {
-			get: sinon.stub().returns({
-				context: "test",
-				sonar: {
-					logWebhookEvents: false
-				}
-			})
-		};
+		const configurationMock = new ConfigurationServiceMock();
+		configurationMock.get = sinon.stub().returns({
+			context: "test",
+			sonar: {
+				logWebhookEvents: false
+			}
+		});
 
 		responseMock = {sendStatus: sinon.stub()};
 
-		eventBusMock = {
-			emit: sinon.stub(),
-			register: sinon.stub()
-		};
+		eventBusMock = new EventBusMock();
 
 		testData = Object.assign({}, require("../mock/base-sonar-webhook.json"));
 		// reset test data properties for test cases
