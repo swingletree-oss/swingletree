@@ -5,7 +5,7 @@ import * as express from "express";
 import container from "../ioc-config";
 import SonarWebhook from "./sonar-webhook";
 import SonarStatusEmitter from "./sonar-status-emitter";
-import { SonarClient } from "./client/sonar-client";
+import SonarClient from "./client/sonar-client";
 import { SwingletreeComponent } from "../component";
 
 export class SonarQubePlugin extends SwingletreeComponent {

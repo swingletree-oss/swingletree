@@ -4,7 +4,7 @@ import * as jwt from "jsonwebtoken";
 import { inject } from "inversify";
 import { injectable } from "inversify";
 
-import { ConfigurationService } from "../../config/configuration";
+import { ConfigurationService } from "../../../configuration";
 
 import InstallationStorage from "./installation-storage";
 import TokenStorage from "./token-storage";

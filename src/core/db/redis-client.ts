@@ -1,5 +1,5 @@
 import { RedisClient } from "redis";
-import { ConfigurationService } from "../config/configuration";
+import { ConfigurationService } from "../../configuration";
 import { inject } from "inversify";
 import { injectable } from "inversify";
 import { LOGGER } from "../logger";
