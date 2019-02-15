@@ -49,11 +49,24 @@ export interface SonarComponent {
 	measures?: SonarMeasure[];
 }
 
-export class SonarComponentView {
-	model: SonarComponent;
+export interface SonarMeasuresResponse {
+	component: SonarMeasuresResponseComponent;
+}
+
+export interface SonarMeasuresResponseComponent {
+	id: string;
+	key: string;
+	name: string;
+	description: string;
+	qualifier: string;
+	measures: SonarMeasure[];
+}
+
+export class SonarMeasuresView {
+	model: SonarMeasuresResponseComponent;
 	measures: Map<string, SonarMeasure>;
 
-	constructor(model: SonarComponent) {
+	constructor(model: SonarMeasuresResponseComponent) {
 		this.model = model;
 		this.measures = new Map<string, SonarMeasure>();
 
@@ -87,13 +100,9 @@ export interface SonarIssueQuery {
 export interface SonarMeasure {
 	metric: string;
 	value: string;
-	periods: SonarPeriod[];
+	bestValue: boolean;
 }
 
-export interface SonarPeriod {
-	index: string;
-	value: string;
-}
 
 export interface SonarMetric {
 	key: string;

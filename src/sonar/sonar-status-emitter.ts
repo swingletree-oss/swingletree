@@ -77,8 +77,8 @@ class SonarStatusEmitter {
 		try {
 			// calculate coverage deltas
 			try {
-				const branchCoverage = await this.sonarClient.getMeasureValue(projectKey, branch, SonarMetrics.COVERAGE);
-				const mainCoverage = await this.sonarClient.getMeasureValue(projectKey, event.targetBranch, SonarMetrics.COVERAGE);
+				const branchCoverage = await this.sonarClient.getMeasureValue(projectKey, SonarMetrics.COVERAGE, branch);
+				const mainCoverage = await this.sonarClient.getMeasureValue(projectKey, SonarMetrics.COVERAGE, event.targetBranch);
 				const deltaCoverage = Number(branchCoverage) - Number(mainCoverage);
 
 				summaryTemplateData.branchCoverage = Number(branchCoverage);
