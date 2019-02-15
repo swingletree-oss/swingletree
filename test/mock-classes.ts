@@ -4,6 +4,7 @@ import * as sinon from "sinon";
 import SonarClient from "../src/sonar/client/sonar-client";
 import InstallationStorage from "../src/core/github/client/installation-storage";
 import RedisClientFactory from "../src/core/db/redis-client";
+import { TemplateEngine } from "../src/core/template/template-engine";
 
 export class EventBusMock extends EventBus {
 	constructor() {
@@ -41,5 +42,14 @@ export class InstallationStorageMock extends InstallationStorage {
 		this.isSyncRequired = sinon.stub().resolves(false);
 		this.removeSyncFlag = sinon.stub();
 		this.store = sinon.stub();
+	}
+}
+
+export class TemplateEngineMock extends TemplateEngine {
+	constructor() {
+		super();
+
+		this.addFilter = sinon.stub();
+		this.template = sinon.stub().returns("stubbed template text");
 	}
 }

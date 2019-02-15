@@ -57,8 +57,8 @@ Content-Type: application/json; charset=utf-8
             "uuid": "AWWB1gI54fg8LP4IRmpY",
             "enabled": true,
             "qualifier": "TRK",
-            "name": "gradle-semantic-release-plugin",
-            "longName": "gradle-semantic-release-plugin"
+            "name": "test-plugin",
+            "longName": "test-plugin"
         }
     ]
 }

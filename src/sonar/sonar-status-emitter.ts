@@ -84,7 +84,7 @@ class SonarStatusEmitter {
 				summaryTemplateData.branchCoverage = Number(branchCoverage);
 				summaryTemplateData.targetCoverage = Number(mainCoverage);
 
-				checkRun.output.title = `${checkRun.output.title} - Coverage: ${branchCoverage} (${(deltaCoverage < 0 ? "" : "+")}${deltaCoverage}%})`;
+				checkRun.output.title = `${checkRun.output.title} - Coverage: ${branchCoverage} (${(deltaCoverage < 0 ? "" : "+")}${deltaCoverage}%)`;
 			} catch (err) {
 				LOGGER.warn("failed to calculate coverage delta: ", err);
 			}
