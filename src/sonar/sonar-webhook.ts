@@ -9,6 +9,7 @@ import { ConfigurationService } from "../configuration";
 import * as BasicAuth from "basic-auth";
 import { LOGGER } from "../core/logger";
 import { SonarAnalysisCompleteEvent } from "./events";
+import InstallationStorage from "../core/github/client/installation-storage";
 
 /** Provides a Webhook for Sonar
  */
@@ -18,13 +19,16 @@ class SonarWebhook {
 
 	private eventBus: EventBus;
 	private configurationService: ConfigurationService;
+	private installationStorage: InstallationStorage;
 
 	constructor(
 		@inject(EventBus) eventBus: EventBus,
-		@inject(ConfigurationService) configurationService: ConfigurationService
+		@inject(ConfigurationService) configurationService: ConfigurationService,
+		@inject(InstallationStorage) installationStorage: InstallationStorage
 	) {
 		this.eventBus = eventBus;
 		this.configurationService = configurationService;
+		this.installationStorage = installationStorage;
 	}
 
 	private isWebhookEventRelevant(event: SonarWebhookEvent) {
@@ -32,6 +36,7 @@ class SonarWebhook {
 			return event.properties["sonar.analysis.commitId"] !== undefined &&
 				event.properties["sonar.analysis.repository"] !== undefined;
 		}
+
 		return false;
 	}
 
@@ -60,7 +65,7 @@ class SonarWebhook {
 		return router;
 	}
 
-	public webhook = (req: Request, res: Response) => {
+	public webhook = async (req: Request, res: Response) => {
 		LOGGER.debug("received SonarQube webhook event");
 
 		if (this.configurationService.get().sonar.logWebhookEvents) {
@@ -77,8 +82,11 @@ class SonarWebhook {
 			analysisEvent.owner = coordinates[0];
 			analysisEvent.repository = coordinates[1];
 			analysisEvent.targetBranch = webhookData.properties["sonar.branch.target"];
-
-			this.eventBus.emit(analysisEvent);
+			if (await this.installationStorage.getInstallationId(coordinates[0])) {
+				this.eventBus.emit(analysisEvent);
+			} else {
+				LOGGER.info("ignored sonarqube analysis for %s/%s. Swingletree may not be installed in this organization.", coordinates[0], coordinates[1]);
+			}
 		} else {
 			LOGGER.debug("SonarQube webhook data did not contain repo and/or commit-sha data. This event will be ignored.");
 		}

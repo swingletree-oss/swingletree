@@ -14,7 +14,7 @@ import { EventEmitter } from "events";
 
 import EventBus from "../../src/core/event/event-bus";
 import { ConfigurationService } from "../../src/configuration";
-import { ConfigurationServiceMock, EventBusMock } from "../mock-classes";
+import { ConfigurationServiceMock, EventBusMock, InstallationStorageMock } from "../mock-classes";
 
 describe("Sonar Webhook", () => {
 
@@ -43,19 +43,20 @@ describe("Sonar Webhook", () => {
 
 		uut = new SonarWebhook(
 			eventBusMock as EventBus,
-			configurationMock as ConfigurationService
+			configurationMock as ConfigurationService,
+			new InstallationStorageMock()
 		);
 	});
 
 
-	it("should send commit status event on relevant hook", () => {
+	it("should send commit status event on relevant hook", async () => {
 
 		testData.properties = {
 			"sonar.analysis.commitId": "12345",
 			"sonar.analysis.repository": "testOrg/testRepo"
 		};
 
-		uut.webhook({ body: testData } as Request, responseMock);
+		await uut.webhook({ body: testData } as Request, responseMock);
 
 		sinon.assert.calledWith(eventBusMock.emit, sinon.match.has("commitId", "12345"));
 		sinon.assert.calledWith(eventBusMock.emit, sinon.match.has("owner", "testOrg"));

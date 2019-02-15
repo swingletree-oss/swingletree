@@ -2,6 +2,8 @@ import { ConfigurationService, Configuration } from "../src/configuration";
 import EventBus from "../src/core/event/event-bus";
 import * as sinon from "sinon";
 import SonarClient from "../src/sonar/client/sonar-client";
+import InstallationStorage from "../src/core/github/client/installation-storage";
+import RedisClientFactory from "../src/core/db/redis-client";
 
 export class EventBusMock extends EventBus {
 	constructor() {
@@ -20,5 +22,24 @@ export class ConfigurationServiceMock extends ConfigurationService {
 export class SonarClientMock extends SonarClient {
 	constructor(configService = new ConfigurationServiceMock(), eventBus = new EventBusMock()) {
 		super(configService, eventBus);
+	}
+}
+
+export class RedisClientFactoryMock extends RedisClientFactory {
+	constructor() {
+		super(new ConfigurationServiceMock(), new EventBusMock());
+		this.createClient = sinon.stub();
+		this.connectionCount = sinon.stub().returns(2);
+		this.unhealthyConnectionCount = sinon.stub().returns(0);
+	}
+}
+
+export class InstallationStorageMock extends InstallationStorage {
+	constructor() {
+		super(new RedisClientFactoryMock());
+		this.getInstallationId = sinon.stub().resolves(10);
+		this.isSyncRequired = sinon.stub().resolves(false);
+		this.removeSyncFlag = sinon.stub();
+		this.store = sinon.stub();
 	}
 }
