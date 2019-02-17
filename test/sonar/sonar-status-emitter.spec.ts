@@ -8,10 +8,10 @@ chai.use(require("sinon-chai"));
 
 import SonarStatusEmitter from "../../src/sonar/sonar-status-emitter";
 
-import { ConfigurationServiceMock, EventBusMock, InstallationStorageMock, SonarClientMock, TemplateEngineMock } from "../mock-classes";
+import { ConfigurationServiceMock, EventBusMock, SonarClientMock, TemplateEngineMock } from "../mock-classes";
 import { SonarAnalysisCompleteEvent, SonarEvents } from "../../src/sonar/events";
 import EventBus from "../../src/core/event/event-bus";
-import { GithubCheckRunWriteEvent, Events } from "../../src/core/event/event-model";
+import { Events } from "../../src/core/event/event-model";
 
 describe("Sonar Status Emitter", () => {
 

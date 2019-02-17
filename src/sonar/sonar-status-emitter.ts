@@ -1,14 +1,14 @@
 import { injectable, inject } from "inversify";
 import EventBus from "../core/event/event-bus";
-import { Events, GithubCheckRunWriteEvent } from "../core/event/event-model";
-import { ChecksCreateParams, ChecksCreateParamsOutputAnnotations } from "@octokit/rest";
+import { GithubCheckRunWriteEvent } from "../core/event/event-model";
+import { ChecksCreateParams, ChecksCreateParamsOutputAnnotations, ChecksCreateParamsOutput } from "@octokit/rest";
 import { ConfigurationService } from "../configuration";
 import { SonarWebhookEvent, QualityGateStatus } from "./client/sonar-wehook-event";
 import SonarClient from "./client/sonar-client";
 import { LOGGER } from "../logger";
 import { Templates } from "../core/template/template-engine";
 import { TemplateEngine } from "../core/template/template-engine";
-import { RuleType, SonarMetrics } from "./client/sonar-issue";
+import { RuleType, SonarMetrics, SonarIssue } from "./client/sonar-issue";
 import { SonarEvents, SonarAnalysisCompleteEvent } from "./events";
 import { SonarCheckRunSummaryTemplate } from "./sonar-template";
 
@@ -50,6 +50,55 @@ class SonarStatusEmitter {
 		}
 	}
 
+	private async processCoverageDeltas(output: ChecksCreateParamsOutput, summaryTemplateData: SonarCheckRunSummaryTemplate, projectKey: string, targetBranch: string, branch?: string) {
+		try {
+			const branchCoverage = await this.sonarClient.getMeasureValue(projectKey, SonarMetrics.COVERAGE, branch);
+			const mainCoverage = await this.sonarClient.getMeasureValue(projectKey, SonarMetrics.COVERAGE, targetBranch);
+			const deltaCoverage = Number(branchCoverage) - Number(mainCoverage);
+
+			summaryTemplateData.branchCoverage = Number(branchCoverage);
+			summaryTemplateData.targetCoverage = Number(mainCoverage);
+
+			output.title = `${output.title} - Coverage: ${branchCoverage} (${(deltaCoverage < 0 ? "" : "+")}${deltaCoverage}%)`;
+		} catch (err) {
+			LOGGER.warn("failed to calculate coverage delta: ", err);
+		}
+	}
+
+	private processIssues(checkRun: ChecksCreateParams, summaryTemplateData: SonarCheckRunSummaryTemplate, issues: SonarIssue[], counters: Map<string, number>) {
+		issues.forEach((item) => {
+			const path = item.component.split(":").splice(2).join(":");
+			const annotation: ChecksCreateParamsOutputAnnotations = {
+				path: path,
+				start_line: item.line || 1,
+				end_line: item.line || 1,
+				title: `${item.severity} ${item.type} (${item.rule})`,
+				message: item.message,
+				annotation_level: this.severityMap[item.severity] || "notice",
+			};
+
+			// update counters
+			if (counters.has(item.type)) {
+				counters.set(item.type, counters.get(item.type) + 1);
+			} else {
+				counters.set(item.type, 1);
+			}
+
+			// set text range, if available
+			if (item.textRange) {
+				annotation.start_line = item.textRange.startLine;
+				annotation.end_line = item.textRange.endLine;
+				annotation.start_column = item.textRange.startOffset;
+				annotation.end_column = item.textRange.endOffset;
+			}
+
+			checkRun.output.annotations.push(annotation);
+		});
+
+		summaryTemplateData.issueCounts = counters;
+
+	}
+
 	public async analysisCompleteHandler(event: SonarAnalysisCompleteEvent) {
 
 		const checkRun: ChecksCreateParams = {
@@ -75,18 +124,7 @@ class SonarStatusEmitter {
 		const branch = event.analysisEvent.branch.name;
 
 		// calculate coverage deltas
-		try {
-			const branchCoverage = await this.sonarClient.getMeasureValue(projectKey, SonarMetrics.COVERAGE, branch);
-			const mainCoverage = await this.sonarClient.getMeasureValue(projectKey, SonarMetrics.COVERAGE, event.targetBranch);
-			const deltaCoverage = Number(branchCoverage) - Number(mainCoverage);
-
-			summaryTemplateData.branchCoverage = Number(branchCoverage);
-			summaryTemplateData.targetCoverage = Number(mainCoverage);
-
-			checkRun.output.title = `${checkRun.output.title} - Coverage: ${branchCoverage} (${(deltaCoverage < 0 ? "" : "+")}${deltaCoverage}%)`;
-		} catch (err) {
-			LOGGER.warn("failed to calculate coverage delta: ", err);
-		}
+		await this.processCoverageDeltas(checkRun.output, summaryTemplateData, projectKey, event.targetBranch, branch);
 
 		try {
 			const issues = await this.sonarClient.getIssues(event.analysisEvent.project.key, event.analysisEvent.branch.name);
@@ -100,36 +138,7 @@ class SonarStatusEmitter {
 			if (issues.length > 0) {
 				checkRun.output.annotations = [];
 
-				issues.forEach((item) => {
-					const path = item.component.split(":").splice(2).join(":");
-					const annotation: ChecksCreateParamsOutputAnnotations = {
-						path: path,
-						start_line: item.line || 1,
-						end_line: item.line || 1,
-						title: `${item.severity} ${item.type} (${item.rule})`,
-						message: item.message,
-						annotation_level: this.severityMap[item.severity] || "notice",
-					};
-
-					// update counters
-					if (counters.has(item.type)) {
-						counters.set(item.type, counters.get(item.type) + 1);
-					} else {
-						counters.set(item.type, 1);
-					}
-
-					// set text range, if available
-					if (item.textRange) {
-						annotation.start_line = item.textRange.startLine;
-						annotation.end_line = item.textRange.endLine;
-						annotation.start_column = item.textRange.startOffset;
-						annotation.end_column = item.textRange.endOffset;
-					}
-
-					checkRun.output.annotations.push(annotation);
-				});
-
-				summaryTemplateData.issueCounts = counters;
+				this.processIssues(checkRun, summaryTemplateData, issues, counters);
 
 				if (checkRun.output.annotations.length >= 50) {
 					// this is a GitHub api constraint. Annotations are limited to 50 items max.
