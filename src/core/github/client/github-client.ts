@@ -90,43 +90,57 @@ class GithubClientService {
 		return ghClient;
 	}
 
-	private async getGhAppClient(login: string): Promise<Github> {
+	private async retrieveInstallationId(login: string): Promise<number> {
 		let installationId: number;
-		let bearerToken: string;
+
 		try {
 			LOGGER.debug("try to retrieve installation id from storage..");
 			installationId = await this.installationStorage.getInstallationId(login);
 
 			if (installationId == null) {
-				return Promise.reject(`Swingletree seems not to be installed on repository ${login}`);
+				throw new Error(`Swingletree seems not to be installed on repository ${login}`);
 			}
+
+			return installationId;
 		} catch (err) {
 			LOGGER.warn("failed to retrieve installation id", err);
-			return Promise.reject("installation id was not found for login " + login);
+			throw err;
 		}
+	}
 
+	private async retrieveBearerToken(login: string): Promise<string> {
 		try {
 			LOGGER.debug("looking up bearer token from cache..");
-			bearerToken = await this.tokenStorage.getToken(login);
-		} catch (err) {
-			LOGGER.warn("an error occurred while trying to retrieve the bearer token. Trying to compensate..", err);
-			bearerToken = null;
-		}
+			let bearerToken = await this.tokenStorage.getToken(login);
 
-		if (!bearerToken) {
-			LOGGER.info("bearer for %s seems to have reached ttl. requesting new bearer.", login);
-			try {
-				const bearerClient = this.getClient();
-				const bearerRequest = await bearerClient.apps.createInstallationToken({
-					installation_id: installationId
-				});
+			// on cache miss
+			if (bearerToken == null) {
+				LOGGER.info("bearer for %s seems to have reached ttl. requesting new bearer.", login);
+				try {
+					const bearerClient = this.getClient();
+					const bearerRequest = await bearerClient.apps.createInstallationToken({
+						installation_id: await this.retrieveInstallationId(login)
+					});
 
-				this.tokenStorage.store(login, bearerRequest.data);
-				bearerToken = bearerRequest.data.token;
-			} catch (err) {
-				return Promise.reject(err);
+					// cache token
+					this.tokenStorage.store(login, bearerRequest.data);
+
+					// extract token
+					bearerToken = bearerRequest.data.token;
+				} catch (err) {
+					throw new Error("failed to request new bearer token. " + err);
+				}
 			}
+
+			return bearerToken;
+		} catch (err) {
+			LOGGER.warn("an error occurred while trying to retrieve the bearer token.", err);
+			throw err;
 		}
+	}
+
+	private async getGhAppClient(login: string): Promise<Github> {
+		const bearerToken = await this.retrieveBearerToken(login);
 
 		return new Promise<any>((resolve) => {
 			resolve(
@@ -138,7 +152,8 @@ class GithubClientService {
 			);
 		});
 	}
-
 }
+
+
 
 export default GithubClientService;
