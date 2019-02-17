@@ -3,7 +3,7 @@ github:
   appPublicPage: "publicPage"
   base: "http://localhost:10101"
   clientDebug: false
-  keyFile: ""
+  keyFile: "test/app-key.test"
   webhookSecret: null
 sonar:
   base: "http://localhost:10101"
