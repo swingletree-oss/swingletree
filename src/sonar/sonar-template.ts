@@ -1,5 +1,5 @@
 import { CheckRunSummaryTemplate } from "../core/template/model/summary-template";
-import { SonarWebhookEvent } from "./model/sonar-wehook-event";
+import { SonarWebhookEvent } from "./client/sonar-wehook-event";
 
 export interface SonarCheckRunSummaryTemplate extends CheckRunSummaryTemplate {
 	event: SonarWebhookEvent;

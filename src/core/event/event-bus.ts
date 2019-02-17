@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { EventEmitter } from "events";
-import { LOGGER } from "../logger";
+import { LOGGER } from "../../logger";
 import { SwingletreeEvent, Events } from "./event-model";
 
 @injectable()

@@ -5,7 +5,7 @@ import { Response, Request, NextFunction } from "express";
 import { injectable, inject } from "inversify";
 
 import GithubWebhook from "./github/github-webhook";
-import { LOGGER } from "./logger";
+import { LOGGER } from "../logger";
 import PageRoutes from "./pages/page-routes";
 import EventBus from "./event/event-bus";
 import { CacheSyncEvent, PerformHealthCheckEvent } from "./event/event-model";

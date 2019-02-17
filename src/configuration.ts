@@ -1,6 +1,6 @@
 import * as yaml from "js-yaml";
 import { injectable } from "inversify";
-import { LOGGER } from "./core/logger";
+import { LOGGER } from "./logger";
 
 @injectable()
 export class ConfigurationService {

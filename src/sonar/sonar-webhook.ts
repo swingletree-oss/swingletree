@@ -1,13 +1,13 @@
 "use strict";
 
 import { Router, Request, Response, NextFunction } from "express";
-import { SonarWebhookEvent } from "./model/sonar-wehook-event";
+import { SonarWebhookEvent } from "./client/sonar-wehook-event";
 import { injectable } from "inversify";
 import { inject } from "inversify";
 import EventBus from "../core/event/event-bus";
 import { ConfigurationService } from "../configuration";
 import * as BasicAuth from "basic-auth";
-import { LOGGER } from "../core/logger";
+import { LOGGER } from "../logger";
 import { SonarAnalysisCompleteEvent } from "./events";
 import InstallationStorage from "../core/github/client/installation-storage";
 

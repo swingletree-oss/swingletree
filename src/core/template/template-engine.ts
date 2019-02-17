@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import * as Nunjucks from "nunjucks";
-import { LOGGER } from "../logger";
+import { LOGGER } from "../../logger";
 
 @injectable()
 export class TemplateEngine {

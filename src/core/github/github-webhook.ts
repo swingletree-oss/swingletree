@@ -1,6 +1,6 @@
 "use strict";
 
-import { LOGGER } from "../logger";
+import { LOGGER } from "../../logger";
 import { Router } from "express";
 import { GithubWebhookEventType, GithubInstallationWebhook } from "./model/gh-webhook-event";
 

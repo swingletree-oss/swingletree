@@ -9,7 +9,7 @@ chai.use(require("chai-as-promised"));
 
 import SonarClient from "../../src/sonar/client/sonar-client";
 import { SonarClientMock } from "../mock-classes";
-import { SonarMetrics } from "../../src/sonar/model/sonar-issue";
+import { SonarMetrics } from "../../src/sonar/client/sonar-issue";
 
 const sandbox = sinon.createSandbox();
 
