@@ -5,6 +5,7 @@ import SonarClient from "../src/sonar/client/sonar-client";
 import InstallationStorage from "../src/core/github/client/installation-storage";
 import RedisClientFactory from "../src/core/db/redis-client";
 import { TemplateEngine } from "../src/core/template/template-engine";
+import TokenStorage from "../src/core/github/client/token-storage";
 
 export class EventBusMock extends EventBus {
 	constructor() {
@@ -45,6 +46,15 @@ export class InstallationStorageMock extends InstallationStorage {
 	}
 }
 
+export class TokenStorageMock extends TokenStorage {
+	constructor() {
+		super(new RedisClientFactoryMock());
+
+		this.getToken = sinon.stub().resolves(null);
+		this.store = sinon.stub();
+	}
+}
+
 export class TemplateEngineMock extends TemplateEngine {
 	constructor() {
 		super();
@@ -53,3 +63,4 @@ export class TemplateEngineMock extends TemplateEngine {
 		this.template = sinon.stub().returns("stubbed template text");
 	}
 }
+

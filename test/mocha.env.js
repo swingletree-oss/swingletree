@@ -1,1 +1,1 @@
-process.env.LOG_LEVEL = 'off'
+process.env.LOG_LEVEL = (process.env.DEBUG == "true") ? 'debug' : 'off';
