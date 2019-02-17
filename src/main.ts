@@ -3,7 +3,6 @@ import container from "./ioc-config";
 import CommitStatusSender from "./core/github/commit-status-sender";
 import GhAppInstallationHandler from "./core/github/app-installation-handler";
 import { SonarQubePlugin } from "./sonar/sonar";
-import { TemplateEngine } from "./core/template/template-engine";
 import SwingletreeCore from "./core/core";
 import GithubWebhook from "./core/github/github-webhook";
 import PageRoutes from "./core/pages/page-routes";
