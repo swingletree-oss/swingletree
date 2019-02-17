@@ -1,5 +1,5 @@
 import { SwingletreeEvent, Events } from "../core/event/event-model";
-import { SonarWebhookEvent } from "./model/sonar-wehook-event";
+import { SonarWebhookEvent } from "./client/sonar-wehook-event";
 
 export enum SonarEvents {
 	SonarAnalysisComplete = "sonar:analysis-complete"

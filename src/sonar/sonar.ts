@@ -1,4 +1,4 @@
-import { RuleType } from "./model/sonar-issue";
+import { RuleType } from "./client/sonar-issue";
 import { TemplateEngine } from "../core/template/template-engine";
 import * as express from "express";
 

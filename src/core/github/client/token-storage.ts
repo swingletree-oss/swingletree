@@ -1,7 +1,7 @@
 import { RedisClient } from "redis";
 import { inject } from "inversify";
 import { injectable } from "inversify";
-import { LOGGER } from "../../logger";
+import { LOGGER } from "../../../logger";
 import RedisClientFactory, { DATABASE_INDEX } from "../../db/redis-client";
 
 @injectable()

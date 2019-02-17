@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
 import EventBus from "./event/event-bus";
 import { Events, HealthStatusEvent } from "./event/event-model";
-import { LOGGER } from "./logger";
+import { LOGGER } from "../logger";
 
 @injectable()
 class HealthService {

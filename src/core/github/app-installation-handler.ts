@@ -1,6 +1,6 @@
 "use strict";
 
-import { LOGGER } from "../logger";
+import { LOGGER } from "../../logger";
 
 import { injectable, inject } from "inversify";
 import EventBus from "../event/event-bus";

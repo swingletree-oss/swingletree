@@ -2,7 +2,7 @@ import { RedisClient } from "redis";
 import { ConfigurationService } from "../../configuration";
 import { inject } from "inversify";
 import { injectable } from "inversify";
-import { LOGGER } from "../logger";
+import { LOGGER } from "../../logger";
 import EventBus from "../event/event-bus";
 import { DatabaseReconnectEvent, HealthStatusEvent } from "../event/event-model";
 import { HealthState } from "../health-service";

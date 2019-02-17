@@ -3,12 +3,12 @@ import EventBus from "../core/event/event-bus";
 import { Events, GithubCheckRunWriteEvent } from "../core/event/event-model";
 import { ChecksCreateParams, ChecksCreateParamsOutputAnnotations } from "@octokit/rest";
 import { ConfigurationService } from "../configuration";
-import { SonarWebhookEvent, QualityGateStatus } from "./model/sonar-wehook-event";
+import { SonarWebhookEvent, QualityGateStatus } from "./client/sonar-wehook-event";
 import SonarClient from "./client/sonar-client";
-import { LOGGER } from "../core/logger";
+import { LOGGER } from "../logger";
 import { Templates } from "../core/template/template-engine";
 import { TemplateEngine } from "../core/template/template-engine";
-import { RuleType, SonarMetrics } from "./model/sonar-issue";
+import { RuleType, SonarMetrics } from "./client/sonar-issue";
 import { SonarEvents, SonarAnalysisCompleteEvent } from "./events";
 import { SonarCheckRunSummaryTemplate } from "./sonar-template";
 

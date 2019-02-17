@@ -2,10 +2,10 @@
 
 import { injectable, inject } from "inversify";
 import { ConfigurationService } from "../../configuration";
-import { LOGGER } from "../../core/logger";
+import { LOGGER } from "../../logger";
 
 import * as request from "request";
-import { SonarIssueResponse, SonarIssueQuery, SonarIssue, SonarPaging, SonarMeasureComponentQuery, SonarMetrics, SonarMeasuresResponse, SonarMeasuresView, SonarMeasuresResponseComponent } from "../model/sonar-issue";
+import { SonarIssueResponse, SonarIssueQuery, SonarIssue, SonarPaging, SonarMeasureComponentQuery, SonarMetrics, SonarMeasuresResponse, SonarMeasuresView, SonarMeasuresResponseComponent } from "./sonar-issue";
 import { HealthState } from "../../core/health-service";
 import { Events, HealthStatusEvent } from "../../core/event/event-model";
 import EventBus from "../../core/event/event-bus";

@@ -8,7 +8,7 @@ import SwingletreeCore from "./core/core";
 import GithubWebhook from "./core/github/github-webhook";
 import PageRoutes from "./core/pages/page-routes";
 import EventBus from "./core/event/event-bus";
-import { LOGGER } from "./core/logger";
+import { LOGGER } from "./logger";
 
 const express = require("express");
 

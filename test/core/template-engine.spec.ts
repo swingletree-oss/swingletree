@@ -6,7 +6,7 @@ import * as chai from "chai";
 import * as sinon from "sinon";
 import { TemplateEngine, Templates } from "../../src/core/template/template-engine";
 import { SonarQubePlugin } from "../../src/sonar/sonar";
-import { RuleType } from "../../src/sonar/model/sonar-issue";
+import { RuleType } from "../../src/sonar/client/sonar-issue";
 import { SonarCheckRunSummaryTemplate } from "../../src/sonar/sonar-template";
 
 chai.use(require("sinon-chai"));

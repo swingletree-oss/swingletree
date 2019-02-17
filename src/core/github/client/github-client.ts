@@ -8,7 +8,7 @@ import { ConfigurationService } from "../../../configuration";
 
 import InstallationStorage from "./installation-storage";
 import TokenStorage from "./token-storage";
-import { LOGGER } from "../../logger";
+import { LOGGER } from "../../../logger";
 
 import * as Github from "@octokit/rest";
 import { ChecksCreateParams } from "@octokit/rest";
