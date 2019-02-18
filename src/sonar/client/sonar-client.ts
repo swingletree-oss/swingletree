@@ -83,6 +83,14 @@ class SonarClient {
 		});
 	}
 
+	private errorHandler(error: any, reject: any, response: request.Response) {
+		if (error) {
+			reject(error);
+		} else {
+			reject(new Error(`Sonar client request failed ${response.statusCode}`));
+		}
+	}
+
 	private requestOptions(options: request.CoreOptions = {}): request.CoreOptions {
 		if (this.configurationService.get().sonar.token) {
 			options.auth = {
@@ -143,11 +151,7 @@ class SonarClient {
 						if (!error && response.statusCode == 200) {
 							resolve(new SonarMeasuresView(JSON.parse(body).component as SonarMeasuresResponseComponent));
 						} else {
-							if (error) {
-								reject(error);
-							} else {
-								reject(new Error(`Sonar client request failed ${response.statusCode}`));
-							}
+							this.errorHandler(error, reject, response);
 						}
 					} catch (err) {
 						reject(err);
@@ -172,12 +176,7 @@ class SonarClient {
 						if (!error && response.statusCode == 200) {
 							resolve(body);
 						} else {
-							if (error) {
-								LOGGER.error("sonar request failed: ", error);
-								reject(error);
-							} else {
-								reject(new Error(`SonarQube request responded with ${response.statusCode}`));
-							}
+							this.errorHandler(error, reject, response);
 						}
 					} catch (err) {
 						LOGGER.error("sonar request failed: ", err);
@@ -207,11 +206,7 @@ class SonarClient {
 							const history = <SonarMeasureHistoryResponse>JSON.parse(body);
 							resolve(history.measures[0]);
 						} else {
-							if (error) {
-								reject(error);
-							} else {
-								reject(new Error(`SonarQube request responded with ${response.statusCode}`));
-							}
+							this.errorHandler(error, reject, response);
 						}
 					} catch (err) {
 						reject(error);
