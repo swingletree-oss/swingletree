@@ -11,7 +11,7 @@ Content-Type: application/json; charset=utf-8
     "measures": [
       {
         "metric": "coverage",
-        "value": "90.0",
+        "value": "90.06",
         "bestValue": false
       }
     ]

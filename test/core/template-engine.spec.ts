@@ -50,7 +50,7 @@ describe("Template Engine", () => {
 			uut.template<SonarCheckRunSummaryTemplate>(Templates.CHECK_RUN_SUMMARY, {
 				event: sonarWebhookTestData,
 				branchCoverage: 100,
-				targetCoverage: 80,
+				targetCoverage: 80.06,
 				annotationsCapped: true,
 				issueCounts: counts,
 				totalIssues: 1335

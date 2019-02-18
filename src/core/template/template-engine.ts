@@ -13,6 +13,7 @@ export class TemplateEngine {
 		this.addFilter("gateStatusIcon", this.qualityGateStatusIconFilter);
 		this.addFilter("gateConditionIcon", this.qualityGateConditionIconFilter);
 		this.addFilter("delta", this.deltaFilter);
+		this.addFilter("fixed", this.fixedFilter);
 	}
 
 	/** Gets and fills a template
@@ -32,6 +33,10 @@ export class TemplateEngine {
 
 	public deltaFilter(value: number) {
 		return `${(value > 0) ? "+" : ""}${value}`;
+	}
+
+	public fixedFilter(value: number) {
+		return value.toFixed(1);
 	}
 
 	public qualityGateStatusIconFilter(str: string) {

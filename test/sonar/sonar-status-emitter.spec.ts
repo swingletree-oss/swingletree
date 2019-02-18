@@ -86,7 +86,7 @@ describe("Sonar Status Emitter", () => {
 		sinon.assert.calledOnce(eventMock.emit as any);
 
 		sinon.assert.calledWith(eventMock.emit as any, sinon.match.has("eventType", Events.GithubCheckRunWriteEvent));
-		sinon.assert.calledWith(eventMock.emit as any, sinon.match.hasNested("payload.output.title", sinon.match("- Coverage: 90.0 (+2%)")));
+		sinon.assert.calledWith(eventMock.emit as any, sinon.match.hasNested("payload.output.title", sinon.match("- Coverage: 90.1 (+2.1%)")));
 	});
 
 });
