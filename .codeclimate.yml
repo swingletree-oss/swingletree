@@ -6,3 +6,7 @@ plugins:
     enabled: true
 exclude_patterns:
   - "**/*.spec.ts"
+checks:
+  method-lines:
+    config:
+      threshold: 40
