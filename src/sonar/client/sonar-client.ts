@@ -69,11 +69,7 @@ class SonarClient {
 						if (!error && response.statusCode == 200) {
 							resolve(JSON.parse(body) as SonarIssueResponse);
 						} else {
-							if (error) {
-								reject(error);
-							} else {
-								reject(new Error(`Sonar client request failed ${response.statusCode}`));
-							}
+							this.errorHandler(error, reject, response);
 						}
 					} catch (err) {
 						reject(err);
