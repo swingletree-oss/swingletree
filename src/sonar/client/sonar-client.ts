@@ -208,14 +208,12 @@ class SonarClient {
 							resolve(history.measures[0]);
 						} else {
 							if (error) {
-								LOGGER.error("sonar request failed: ", error);
 								reject(error);
 							} else {
 								reject(new Error(`SonarQube request responded with ${response.statusCode}`));
 							}
 						}
 					} catch (err) {
-						LOGGER.error("Caught an error when executing sonar request: ", err);
 						reject(error);
 					}
 				}
