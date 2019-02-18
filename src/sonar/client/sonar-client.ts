@@ -215,8 +215,16 @@ class SonarClient {
 	public async getMeasureHistoryDelta(projectKey: string, metric: string): Promise<number> {
 		const response = await this.getMeasureHistory(projectKey, metric);
 		if (response.history && response.history.length > 0) {
-			const previous = (response.history[1]) ? Number(response.history[1].value) : 0;
-			const current = (response.history[0]) ? Number(response.history[0].value) : 0;
+			let previous = 0;
+			let current = 0;
+
+			if (!!response.history[1]) {
+				previous = Number(response.history[1].value);
+			}
+
+			if (!!response.history[0]) {
+				current = Number(response.history[0].value);
+			}
 
 			return current - previous;
 		}
