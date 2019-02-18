@@ -152,3 +152,25 @@ export interface SonarIssueResponse {
 	issues: SonarIssue[];
 	components: SonarComponent[];
 }
+
+export interface SonarMeasureHistoryQuery {
+	component: string;
+	metrics: string;
+	p?: number;
+	ps?: number;
+}
+
+export interface SonarMeasureHistoryResponse {
+	paging: SonarPaging;
+	measures: SonarMeasureHistory[];
+}
+
+export interface SonarMeasureHistory {
+	metric: string;
+	history: SonarMeasureHistoryItem[];
+}
+
+export interface SonarMeasureHistoryItem {
+	date: string;
+	value: string;
+}

@@ -63,6 +63,24 @@ describe("Integration Test", () => {
 			expect(result.measures.get(SonarMetrics.NEW_COVERAGE).value).to.equal("11.0");
 			expect(result.measures.get(SonarMetrics.NEW_VIOLATIONS).value).to.equal("5");
 		});
+
+		it("should pick current measure history value on single datasets for history delta", async () => {
+			const result = await sonarClient.getMeasureHistoryDelta("current-only", "coverage");
+
+			expect(result).to.be.equal(70.6);
+		});
+
+		it("should calculate measure history delta", async () => {
+			const result = await sonarClient.getMeasureHistoryDelta("both-values", "coverage");
+
+			expect(result).to.be.equal(-19.5);
+		});
+
+		it("should return null on delta calculation when missing history", async () => {
+			const result = await sonarClient.getMeasureHistoryDelta("no-history", "coverage");
+
+			expect(result).to.be.null;
+		});
 	});
 
 });

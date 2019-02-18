@@ -5,7 +5,7 @@ import { ConfigurationService } from "../../configuration";
 import { LOGGER } from "../../logger";
 
 import * as request from "request";
-import { SonarIssueResponse, SonarIssueQuery, SonarIssue, SonarPaging, SonarMeasureComponentQuery, SonarMetrics, SonarMeasuresResponse, SonarMeasuresView, SonarMeasuresResponseComponent } from "./sonar-issue";
+import { SonarIssueResponse, SonarIssueQuery, SonarIssue, SonarPaging, SonarMeasureComponentQuery, SonarMetrics, SonarMeasuresView, SonarMeasuresResponseComponent, SonarMeasureHistoryQuery, SonarMeasureHistory, SonarMeasureHistoryResponse } from "./sonar-issue";
 import { HealthState } from "../../core/health-service";
 import { Events, HealthStatusEvent } from "../../core/event/event-model";
 import EventBus from "../../core/event/event-bus";
@@ -174,18 +174,65 @@ class SonarClient {
 						} else {
 							if (error) {
 								LOGGER.error("sonar request failed: ", error);
-								reject("connection failure");
+								reject(error);
 							} else {
-								reject(response.statusCode);
+								reject(new Error(`SonarQube request responded with ${response.statusCode}`));
 							}
 						}
 					} catch (err) {
-						LOGGER.error("sonar request failed2: ", error);
-						reject("connection failure");
+						LOGGER.error("sonar request failed: ", err);
+						reject(error);
 					}
 				}
 			);
 		});
+	}
+
+	public getMeasureHistory(projectKey: string, metric: string): Promise<SonarMeasureHistory> {
+		const queryParams: SonarMeasureHistoryQuery = {
+			component: projectKey,
+			metrics: metric,
+			ps: 2
+		};
+
+		return new Promise((resolve, reject) => {
+			request(
+				this.configurationService.get().sonar.base + "/api/measures/search_history",
+				this.requestOptions({
+					qs: queryParams
+				}),
+				(error: any, response: request.Response, body: any) => {
+					try {
+						if (!error && response.statusCode == 200) {
+							const history = <SonarMeasureHistoryResponse>JSON.parse(body);
+							resolve(history.measures[0]);
+						} else {
+							if (error) {
+								LOGGER.error("sonar request failed: ", error);
+								reject(error);
+							} else {
+								reject(new Error(`SonarQube request responded with ${response.statusCode}`));
+							}
+						}
+					} catch (err) {
+						LOGGER.error("Caught an error when executing sonar request: ", err);
+						reject(error);
+					}
+				}
+			);
+		});
+	}
+
+	public async getMeasureHistoryDelta(projectKey: string, metric: string): Promise<number> {
+		const response = await this.getMeasureHistory(projectKey, metric);
+		if (response.history && response.history.length > 0) {
+			const previous = (response.history[1]) ? Number(response.history[1].value) : 0;
+			const current = (response.history[0]) ? Number(response.history[0].value) : 0;
+
+			return current - previous;
+		}
+
+		return null;
 	}
 }
 
