@@ -20,15 +20,15 @@ SonarQube Branch analysis was performed in relation to `{{ event.targetBranch }}
 {%   if targetCoverage -%}
 {%     if branchCoverage != targetCoverage -%}
 {%       if branchCoverage > targetCoverage -%}
-:trophy: Coverage improved by {{ (branchCoverage - targetCoverage) | delta }}%
+:trophy: Coverage improved by {{ (branchCoverage - targetCoverage) | fixed | delta }}%
 {%         else -%}
-:x: Coverage loss ({{ (branchCoverage - targetCoverage) | delta }}%)
+:x: Coverage loss ({{ (branchCoverage - targetCoverage) | fixed | delta }}%)
 {%       endif -%}
 {%     else -%}
-:information_source: Coverage stable at {{ branchCoverage }}%
+:information_source: Coverage stable at {{ branchCoverage | fixed }}%
 {%     endif -%}
 {%   else -%}
-:information_source: Coverage of branch at {{ branchCoverage }}%
+:information_source: Coverage of branch at {{ branchCoverage | fixed }}%
 {%   endif -%}
 {% endif %}
 
