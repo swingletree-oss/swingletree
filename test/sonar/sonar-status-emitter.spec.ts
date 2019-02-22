@@ -80,13 +80,25 @@ describe("Sonar Status Emitter", () => {
 	});
 
 
-	it("should calculate branch delta", async () => {
+	it("should calculate branch delta for short living branches", async () => {
 		await uut.analysisCompleteHandler(analysisData);
 
 		sinon.assert.calledOnce(eventMock.emit as any);
 
 		sinon.assert.calledWith(eventMock.emit as any, sinon.match.has("eventType", Events.GithubCheckRunWriteEvent));
 		sinon.assert.calledWith(eventMock.emit as any, sinon.match.hasNested("payload.output.title", sinon.match("- Coverage: 90.1 (+2.1%)")));
+	});
+
+	it("should calculate branch delta for long living branches", async () => {
+		analysisData.analysisEvent.branch.isMain = true;
+		analysisData.analysisEvent.branch.name = undefined;
+		analysisData.analysisEvent.project.key = "test";
+		await uut.analysisCompleteHandler(analysisData);
+
+		sinon.assert.calledOnce(eventMock.emit as any);
+
+		sinon.assert.calledWith(eventMock.emit as any, sinon.match.has("eventType", Events.GithubCheckRunWriteEvent));
+		sinon.assert.calledWith(eventMock.emit as any, sinon.match.hasNested("payload.output.title", sinon.match("- Coverage: 70.6 (-19.5%)")));
 	});
 
 });
