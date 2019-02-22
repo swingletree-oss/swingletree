@@ -8,7 +8,6 @@ $(document).ready(function() {
     $(".code-select").find(".nav-link").each(function(index, linkItem) {
       linkItem = $(linkItem);
       linkItem.toggleClass("active", codeCase == linkItem.attr("data-case"));
-      console.log(codeCase == linkItem.attr("data-case"));
     });
 
     $(codeCase).show();

@@ -6,7 +6,7 @@ import * as chai from "chai";
 import * as sinon from "sinon";
 import { TemplateEngine, Templates } from "../../src/core/template/template-engine";
 import { SonarQubePlugin } from "../../src/sonar/sonar";
-import { RuleType } from "../../src/sonar/client/sonar-issue";
+import { Sonar } from "../../src/sonar/client/sonar-issue";
 import { SonarCheckRunSummaryTemplate } from "../../src/sonar/sonar-template";
 
 chai.use(require("sinon-chai"));
@@ -42,10 +42,10 @@ describe("Template Engine", () => {
 
 		it("should run template with test data", () => {
 			const counts = new Map<string, number>();
-			counts.set(RuleType.BUG, 20);
-			counts.set(RuleType.CODE_SMELL, 30);
-			counts.set(RuleType.SECURITY_HOTSPOT, 40);
-			counts.set(RuleType.VULNERABILITY, 100);
+			counts.set(Sonar.model.RuleType.BUG, 20);
+			counts.set(Sonar.model.RuleType.CODE_SMELL, 30);
+			counts.set(Sonar.model.RuleType.SECURITY_HOTSPOT, 40);
+			counts.set(Sonar.model.RuleType.VULNERABILITY, 100);
 
 			uut.template<SonarCheckRunSummaryTemplate>(Templates.CHECK_RUN_SUMMARY, {
 				event: sonarWebhookTestData,

@@ -5,7 +5,7 @@ import { ConfigurationService } from "../../configuration";
 import { LOGGER } from "../../logger";
 
 import * as request from "request";
-import { SonarIssueResponse, SonarIssueQuery, SonarIssue, SonarPaging, SonarMeasureComponentQuery, SonarMetrics, SonarMeasuresView, SonarMeasuresResponseComponent, SonarMeasureHistoryQuery, SonarMeasureHistory, SonarMeasureHistoryResponse } from "./sonar-issue";
+import { Sonar } from "./sonar-issue";
 import { HealthState } from "../../core/health-service";
 import { Events, HealthStatusEvent } from "../../core/event/event-model";
 import EventBus from "../../core/event/event-bus";
@@ -53,12 +53,12 @@ class SonarClient {
 			});
 	}
 
-	private async getIssue(queryParams: SonarIssueQuery, page = 1): Promise<SonarIssueResponse> {
+	private async getIssue(queryParams: Sonar.model.IssueQuery, page = 1): Promise<Sonar.model.IssueResponse> {
 		LOGGER.debug("retrieve page %s for project %s", page, queryParams.componentKeys);
 
 		queryParams.p = page;
 
-		return new Promise<SonarIssueResponse>((resolve, reject) => {
+		return new Promise<Sonar.model.IssueResponse>((resolve, reject) => {
 			request(
 				this.configurationService.get().sonar.base + "/api/issues/search",
 				this.requestOptions({
@@ -67,7 +67,7 @@ class SonarClient {
 				(error: any, response: request.Response, body: any) => {
 					try {
 						if (!error && response.statusCode == 200) {
-							resolve(JSON.parse(body) as SonarIssueResponse);
+							resolve(JSON.parse(body) as Sonar.model.IssueResponse);
 						} else {
 							this.errorHandler(error, reject, response);
 						}
@@ -97,15 +97,15 @@ class SonarClient {
 		return options;
 	}
 
-	public pagingNecessary(paging: SonarPaging): boolean {
+	public pagingNecessary(paging: Sonar.model.Paging): boolean {
 		return paging.pageSize * paging.pageIndex < paging.total;
 	}
 
-	public getIssues(projectKey: string, branch: string): Promise<SonarIssue[]> {
-		return new Promise<SonarIssue[]>(async (resolve, reject) => {
-			let issues: SonarIssue[] = [];
+	public getIssues(projectKey: string, branch: string): Promise<Sonar.model.Issue[]> {
+		return new Promise<Sonar.model.Issue[]>(async (resolve, reject) => {
+			let issues: Sonar.model.Issue[] = [];
 
-			const query: SonarIssueQuery = {
+			const query: Sonar.model.IssueQuery = {
 				componentKeys: projectKey,
 				branch: branch,
 				statuses: "OPEN,CONFIRMED,REOPENED",
@@ -129,14 +129,14 @@ class SonarClient {
 		});
 	}
 
-	public getMeasures(projectKey: string, metricKeys: string[], branch?: string): Promise<SonarMeasuresView> {
-		const queryParams: SonarMeasureComponentQuery = {
+	public getMeasures(projectKey: string, metricKeys: string[], branch?: string): Promise<Sonar.model.MeasuresView> {
+		const queryParams: Sonar.model.MeasureComponentQuery = {
 			metricKeys: metricKeys.join(","),
 			component: projectKey,
 			branch: branch
 		};
 
-		return new Promise<SonarMeasuresView>(async (resolve, reject) => {
+		return new Promise<Sonar.model.MeasuresView>(async (resolve, reject) => {
 			request(
 				this.configurationService.get().sonar.base + "/api/measures/component",
 				this.requestOptions({
@@ -145,7 +145,7 @@ class SonarClient {
 				(error: any, response: request.Response, body: any) => {
 					try {
 						if (!error && response.statusCode == 200) {
-							resolve(new SonarMeasuresView(JSON.parse(body).component as SonarMeasuresResponseComponent));
+							resolve(new Sonar.model.MeasuresView(JSON.parse(body).component as Sonar.model.MeasuresResponseComponent));
 						} else {
 							this.errorHandler(error, reject, response);
 						}
@@ -157,9 +157,17 @@ class SonarClient {
 		});
 	}
 
-	public async getMeasureValue(projectKey: string, metric: SonarMetrics, branch?: string): Promise<string> {
+	public async getMeasureValue(projectKey: string, metric: Sonar.model.Metrics, branch?: string): Promise<string> {
 		const measureView = await this.getMeasures(projectKey, [ metric ], branch);
 		return measureView.measures.get(metric).value;
+	}
+
+	public async getMeasureValueAsNumber(projectKey: string, metric: Sonar.model.Metrics, branch?: string): Promise<number> {
+		const value = await this.getMeasureValue(projectKey, metric, branch);
+		if (value != null) {
+			return Number(value);
+		}
+		return null;
 	}
 
 	public getVersion(): Promise<string> {
@@ -183,11 +191,12 @@ class SonarClient {
 		});
 	}
 
-	public getMeasureHistory(projectKey: string, metric: string): Promise<SonarMeasureHistory> {
-		const queryParams: SonarMeasureHistoryQuery = {
+	public getMeasureHistory(projectKey: string, metric: string, branch?: string): Promise<Sonar.model.MeasureHistory> {
+		const queryParams: Sonar.model.MeasureHistoryQuery = {
 			component: projectKey,
 			metrics: metric,
-			ps: 2
+			ps: 2,
+			branch: branch
 		};
 
 		return new Promise((resolve, reject) => {
@@ -199,7 +208,7 @@ class SonarClient {
 				(error: any, response: request.Response, body: any) => {
 					try {
 						if (!error && response.statusCode == 200) {
-							const history = <SonarMeasureHistoryResponse>JSON.parse(body);
+							const history = <Sonar.model.MeasureHistoryResponse>JSON.parse(body);
 							resolve(history.measures[0]);
 						} else {
 							this.errorHandler(error, reject, response);
@@ -212,8 +221,9 @@ class SonarClient {
 		});
 	}
 
-	public async getMeasureHistoryDelta(projectKey: string, metric: string): Promise<number> {
-		const response = await this.getMeasureHistory(projectKey, metric);
+	public async getMeasureHistoryDelta(projectKey: string, metric: string, branch?: string): Promise<Sonar.MeasureDelta> {
+		const response = await this.getMeasureHistory(projectKey, metric, branch);
+
 		if (response.history && response.history.length > 0) {
 			let previous = 0;
 			let current = 0;
@@ -226,7 +236,10 @@ class SonarClient {
 				current = Number(response.history[0].value);
 			}
 
-			return current - previous;
+			return {
+				coverage: current,
+				delta: current - previous
+			};
 		}
 
 		return null;

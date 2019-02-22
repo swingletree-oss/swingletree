@@ -8,7 +8,7 @@ import SonarClient from "./client/sonar-client";
 import { LOGGER } from "../logger";
 import { Templates } from "../core/template/template-engine";
 import { TemplateEngine } from "../core/template/template-engine";
-import { RuleType, SonarMetrics, SonarIssue } from "./client/sonar-issue";
+import { Sonar } from "./client/sonar-issue";
 import { SonarEvents, SonarAnalysisCompleteEvent } from "./events";
 import { SonarCheckRunSummaryTemplate } from "./sonar-template";
 
@@ -50,22 +50,36 @@ class SonarStatusEmitter {
 		}
 	}
 
-	private async processCoverageDeltas(output: ChecksCreateParamsOutput, summaryTemplateData: SonarCheckRunSummaryTemplate, projectKey: string, targetBranch: string, branch?: string) {
+	private async processCoverageDeltas(output: ChecksCreateParamsOutput, summaryTemplateData: SonarCheckRunSummaryTemplate, event: SonarAnalysisCompleteEvent) {
 		try {
-			const branchCoverage = await this.sonarClient.getMeasureValue(projectKey, SonarMetrics.COVERAGE, branch);
-			const mainCoverage = await this.sonarClient.getMeasureValue(projectKey, SonarMetrics.COVERAGE, targetBranch);
-			const deltaCoverage = Number(branchCoverage) - Number(mainCoverage);
+			const projectKey = event.analysisEvent.project.key;
+			const currentBranch = event.analysisEvent.branch.name;
+			const targetBranch = event.targetBranch;
 
-			summaryTemplateData.branchCoverage = Number(branchCoverage);
-			summaryTemplateData.targetCoverage = Number(mainCoverage);
+			let deltaCoverage: number = null;
+			let branchCoverage: number = null;
 
-			output.title = `${output.title} - Coverage: ${Number(branchCoverage).toFixed(1)} (${(deltaCoverage < 0 ? "" : "+")}${deltaCoverage.toFixed(1)}%)`;
+			if (!targetBranch && event.analysisEvent.branch.isMain) { // main branch analysis and no target branch set in sonar analysis parameters
+				const historyDelta = await this.sonarClient.getMeasureHistoryDelta(projectKey, Sonar.model.Metrics.COVERAGE, currentBranch);
+				deltaCoverage = historyDelta.delta;
+				branchCoverage = historyDelta.coverage;
+			} else { // non-main branch analysis
+				branchCoverage = await this.sonarClient.getMeasureValueAsNumber(projectKey, Sonar.model.Metrics.COVERAGE, currentBranch);
+				const mainCoverage = await this.sonarClient.getMeasureValueAsNumber(projectKey, Sonar.model.Metrics.COVERAGE, targetBranch);
+				deltaCoverage = branchCoverage - mainCoverage;
+
+				summaryTemplateData.targetCoverage = mainCoverage;
+			}
+
+			summaryTemplateData.branchCoverage = branchCoverage;
+
+			output.title = `${output.title} - Coverage: ${branchCoverage.toFixed(1)} (${(deltaCoverage < 0 ? "" : "+")}${deltaCoverage.toFixed(1)}%)`;
 		} catch (err) {
 			LOGGER.warn("failed to calculate coverage delta: ", err);
 		}
 	}
 
-	private processIssues(checkRun: ChecksCreateParams, summaryTemplateData: SonarCheckRunSummaryTemplate, issues: SonarIssue[], counters: Map<string, number>) {
+	private processIssues(checkRun: ChecksCreateParams, summaryTemplateData: SonarCheckRunSummaryTemplate, issues: Sonar.model.Issue[], counters: Map<string, number>) {
 		issues.forEach((item) => {
 			const path = item.component.split(":").splice(2).join(":");
 			const annotation: ChecksCreateParamsOutputAnnotations = {
@@ -120,18 +134,15 @@ class SonarStatusEmitter {
 			summary: ""
 		};
 
-		const projectKey = event.analysisEvent.project.key;
-		const branch = event.analysisEvent.branch.name;
-
 		// calculate coverage deltas
-		await this.processCoverageDeltas(checkRun.output, summaryTemplateData, projectKey, event.targetBranch, branch);
+		await this.processCoverageDeltas(checkRun.output, summaryTemplateData, event);
 
 		try {
 			const issues = await this.sonarClient.getIssues(event.analysisEvent.project.key, event.analysisEvent.branch.name);
 			const counters: Map<string, number> = new Map<string, number>();
 
 			// preset known rule types
-			for (const rule in RuleType) {
+			for (const rule in Sonar.model.RuleType) {
 				counters.set(rule, 0);
 			}
 
