@@ -64,8 +64,9 @@ describe("App installation handler", () => {
 		};
 
 		uut.appInstalled({
-			installationId: data.id,
-			login: data.account.login
+			account: "login",
+			accountId: 1000,
+			installationId: 123
 		} as AppInstalledEvent);
 
 		sinon.assert.calledWith(installationStorage.store, "login", 123);

@@ -1,4 +1,4 @@
-import { ChecksCreateParams } from "@octokit/rest";
+import { ChecksCreateParams, AppsListInstallationsResponseItem } from "@octokit/rest";
 import { DATABASE_INDEX } from "../db/redis-client";
 import { Health } from "../health-service";
 
@@ -8,6 +8,7 @@ export enum Events {
 	GithubCheckStatusUpdatedEvent = "core:github:checkrun:updated",
 	GithubCheckRunWriteEvent = "core:github:checkrun:write",
 	AppInstalledEvent = "core:github:app-installed",
+	AppDeinstalledEvent = "core:github:app-deinstalled",
 	DatabaseReconnect = "core:database:reconnect",
 	HealthCheckEvent = "core:healthcheck",
 	HealthStatusEvent = "core:healthcheck:status",
@@ -40,15 +41,33 @@ abstract class CoreEvent extends SwingletreeEvent {
  *
  */
 export class AppInstalledEvent extends CoreEvent {
-	login: string;
-	installationId: number;
-	repositories?: string[];
+	account: string;
+	accountId: number;
 
-	constructor(login: string, installationId: number) {
+	installationId: number;
+	installEvent: AppsListInstallationsResponseItem;
+
+	constructor(installEvent: AppsListInstallationsResponseItem) {
 		super(Events.AppInstalledEvent);
 
-		this.login = login;
-		this.installationId = installationId;
+		this.account = installEvent.account.login;
+		this.accountId = installEvent.account.id;
+
+		this.installationId = installEvent.id;
+
+		this.installEvent = installEvent;
+	}
+}
+
+/** App deinstalled event.
+ *
+ * This event is fired when a GitHub organization UNinstalled Swingletree.
+ */
+export class AppDeinstalledEvent extends AppInstalledEvent {
+	constructor(installEvent: AppsListInstallationsResponseItem) {
+		super(installEvent);
+
+		this.eventType = Events.AppDeinstalledEvent;
 	}
 }
 

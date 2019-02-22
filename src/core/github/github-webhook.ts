@@ -8,7 +8,7 @@ import EventBus from "../event/event-bus";
 import { injectable } from "inversify";
 import { inject } from "inversify";
 import { ConfigurationService } from "../../configuration";
-import { AppInstalledEvent } from "../event/event-model";
+import { AppInstalledEvent, AppDeinstalledEvent } from "../event/event-model";
 
 const GithubWebHookHandler = require("express-github-webhook");
 
@@ -51,12 +51,19 @@ class GithubWebhook {
 		LOGGER.debug("received GitHub webhook installation event");
 
 		try {
-			this.eventBus.emit(
-				new AppInstalledEvent(
-					data.installation.account.login,
-					data.installation.id
-				)
-			);
+			if (data.action == "created") {
+				this.eventBus.emit(
+					new AppInstalledEvent(
+						data.installation
+					)
+				);
+			} else if (data.action == "deleted") {
+				this.eventBus.emit(
+					new AppDeinstalledEvent(
+						data.installation
+					)
+				);
+			}
 		} catch (err) {
 			LOGGER.error("failed to emit installation event through event bus", err);
 		}

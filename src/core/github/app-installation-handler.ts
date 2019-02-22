@@ -34,8 +34,8 @@ class GhAppInstallationHandler {
 	}
 
 	public appInstalled(event: AppInstalledEvent) {
-		this.installationStorage.store(event.login, event.installationId);
-		LOGGER.info("new installation for login %s was registered", event.login);
+		this.installationStorage.store(event.account, event.installationId);
+		LOGGER.info("new installation for login %s was registered", event.account);
 	}
 
 	public async syncAppInstallationsOnReconnect(event: DatabaseReconnectEvent) {

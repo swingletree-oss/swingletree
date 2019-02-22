@@ -7,7 +7,6 @@ import * as sinon from "sinon";
 chai.use(require("sinon-chai"));
 
 import GithubWebhook from "../../src/core/github/github-webhook";
-import { GithubWebhookEventType } from "../../src/core/github/model/gh-webhook-event";
 import { Events, AppInstalledEvent } from "../../src/core/event/event-model";
 
 const sandbox = sinon.createSandbox();
@@ -40,7 +39,7 @@ describe("GitHub Webhook", () => {
 	});
 
 
-	it("should send app installed event", () => {
+	it("should send app installed event", async () => {
 		uut.installationHandler("test/repo", ghAppInstallWebhookData);
 
 		sinon.assert.calledWith(eventBusMock.emit, sinon.match((event: AppInstalledEvent) => {
