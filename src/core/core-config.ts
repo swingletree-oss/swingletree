@@ -9,7 +9,7 @@ export namespace CoreConfig {
 	}
 
 	export enum Storage {
-		DATABASE = "storage:database",
+		DATABASE = "storage:host",
 		PASSWORD = "storage:password"
 	}
 }

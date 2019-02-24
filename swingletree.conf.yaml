@@ -1,6 +1,6 @@
 # storage configuration
 storage:
-  database: localhost # database host
+  host: localhost # database host
   password: # database password
 
 # GitHub specific configuration
