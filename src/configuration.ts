@@ -29,7 +29,13 @@ export class ConfigurationService {
 	}
 
 	public get(key: string): string {
-		return String(this.config.get(key));
+		const value = this.config.get(key);
+
+		if (!value || value.toString().trim() == "") {
+			return null;
+		}
+
+		return value;
 	}
 
 	public getNumber(key: string): number {
@@ -37,6 +43,6 @@ export class ConfigurationService {
 	}
 
 	public getBoolean(key: string): boolean {
-		return Boolean(this.get(key));
+		return this.get(key) == "true";
 	}
 }

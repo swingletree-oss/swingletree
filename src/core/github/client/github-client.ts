@@ -17,7 +17,6 @@ import { ChecksCreateParams } from "@octokit/rest";
 
 @injectable()
 class GithubClientService {
-	private configurationService: ConfigurationService;
 	private installationStorage: InstallationStorage;
 	private tokenStorage: TokenStorage;
 	private key: string;
@@ -32,12 +31,12 @@ class GithubClientService {
 		@inject(InstallationStorage) installationStorage: InstallationStorage
 	) {
 		this.key = fs.readFileSync(configurationService.get(CoreConfig.Github.KEYFILE)).toString();
-		this.configurationService = configurationService;
+
 		this.tokenStorage = tokenStorage;
 		this.installationStorage = installationStorage;
 
-		this.appId = this.configurationService.get(CoreConfig.Github.APPID);
-		this.baseUrl = this.configurationService.get(CoreConfig.Github.BASE).replace(/\/+$/, ""); // remove trailing slashes
+		this.appId = configurationService.get(CoreConfig.Github.APPID);
+		this.baseUrl = configurationService.get(CoreConfig.Github.BASE).replace(/\/+$/, ""); // remove trailing slashes
 		LOGGER.info("Github client configured to use %s", this.baseUrl);
 
 		if (configurationService.getBoolean(CoreConfig.Github.CLIENT_DEBUG)) {
@@ -77,7 +76,7 @@ class GithubClientService {
 
 	private createJWT(): string {
 		const payload = {
-			iss: this.configurationService.get(this.appId)
+			iss: this.appId
 		};
 
 		const token = jwt.sign(payload, this.key, { expiresIn: "3m", algorithm: "RS256"});
