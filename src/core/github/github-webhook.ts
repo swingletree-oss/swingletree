@@ -9,6 +9,7 @@ import { injectable } from "inversify";
 import { inject } from "inversify";
 import { ConfigurationService } from "../../configuration";
 import { AppInstalledEvent, AppDeinstalledEvent } from "../event/event-model";
+import { CoreConfig } from "../core-config";
 
 const GithubWebHookHandler = require("express-github-webhook");
 
@@ -18,22 +19,22 @@ const GithubWebHookHandler = require("express-github-webhook");
 class GithubWebhook {
 	public static readonly IGNORE_ID = "github";
 	private eventBus: EventBus;
-	private configService: ConfigurationService;
+	private webhookSecret: string;
 
 	constructor(
 		@inject(EventBus) eventBus: EventBus,
 		@inject(ConfigurationService) configService: ConfigurationService
 	) {
 		this.eventBus = eventBus;
-		this.configService = configService;
+		this.webhookSecret = configService.get(CoreConfig.Github.WEBHOOK_SECRET);
 	}
 
 	public getRoute(): Router {
-		if (!this.configService.get().github.webhookSecret) {
+		if (!this.webhookSecret) {
 			LOGGER.warn("GitHub webhook is not protected. Consider setting a webhook secret in the Swingletree configuration.");
 		}
 
-		const webhookHandler = GithubWebHookHandler({ path: "/", secret: this.configService.get().github.webhookSecret });
+		const webhookHandler = GithubWebHookHandler({ path: "/", secret: this.webhookSecret });
 
 		webhookHandler.on(GithubWebhookEventType.INSTALLATION, this.installationHandler.bind(this));
 

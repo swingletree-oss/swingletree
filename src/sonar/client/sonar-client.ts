@@ -9,25 +9,41 @@ import { Sonar } from "./sonar-issue";
 import { HealthState } from "../../core/health-service";
 import { Events, HealthStatusEvent } from "../../core/event/event-model";
 import EventBus from "../../core/event/event-bus";
+import { SonarConfig } from "../sonar-config";
 
 
 @injectable()
 class SonarClient {
-	private configurationService: ConfigurationService;
 	private eventBus: EventBus;
+
+	private readonly reqClient: request.RequestAPI<request.Request, request.CoreOptions, request.RequiredUriUrl>;
 
 	constructor(
 		@inject(ConfigurationService) configurationService: ConfigurationService,
 		@inject(EventBus) eventBus: EventBus
 	) {
-		this.configurationService = configurationService;
 		this.eventBus = eventBus;
 
 		eventBus.register(Events.HealthCheckEvent, this.performHealthCheck, this);
 
-		if (!this.configurationService.get().sonar.base) {
-			LOGGER.warn("Sonar base URL seems to be not configured. This will lead to errors.");
+		const base = configurationService.get(SonarConfig.BASE);
+		const token = configurationService.get(SonarConfig.TOKEN);
+
+		if (!base) {
+			LOGGER.error("Sonar base URL seems to be not configured. This will lead to errors.");
 		}
+
+		let authOptions: request.AuthOptions;
+		if (token) {
+			authOptions = {
+				username: token
+			};
+		}
+		this.reqClient = request.defaults({
+			json: true,
+			auth: authOptions,
+			baseUrl: base
+		});
 	}
 
 	private performHealthCheck() {
@@ -59,15 +75,15 @@ class SonarClient {
 		queryParams.p = page;
 
 		return new Promise<Sonar.model.IssueResponse>((resolve, reject) => {
-			request(
-				this.configurationService.get().sonar.base + "/api/issues/search",
-				this.requestOptions({
+			this.reqClient(
+				"/api/issues/search",
+				{
 					qs: queryParams,
-				}),
+				},
 				(error: any, response: request.Response, body: any) => {
 					try {
 						if (!error && response.statusCode == 200) {
-							resolve(JSON.parse(body) as Sonar.model.IssueResponse);
+							resolve(body as Sonar.model.IssueResponse);
 						} else {
 							this.errorHandler(error, reject, response);
 						}
@@ -85,16 +101,6 @@ class SonarClient {
 		} else {
 			reject(new Error(`Sonar client request failed ${response.statusCode}`));
 		}
-	}
-
-	private requestOptions(options: request.CoreOptions = {}): request.CoreOptions {
-		if (this.configurationService.get().sonar.token) {
-			options.auth = {
-				username: this.configurationService.get().sonar.token
-			};
-		}
-
-		return options;
 	}
 
 	public pagingNecessary(paging: Sonar.model.Paging): boolean {
@@ -137,15 +143,15 @@ class SonarClient {
 		};
 
 		return new Promise<Sonar.model.MeasuresView>(async (resolve, reject) => {
-			request(
-				this.configurationService.get().sonar.base + "/api/measures/component",
-				this.requestOptions({
+			this.reqClient(
+				"/api/measures/component",
+				{
 					qs: queryParams,
-				}),
+				},
 				(error: any, response: request.Response, body: any) => {
 					try {
 						if (!error && response.statusCode == 200) {
-							resolve(new Sonar.model.MeasuresView(JSON.parse(body).component as Sonar.model.MeasuresResponseComponent));
+							resolve(new Sonar.model.MeasuresView(body.component as Sonar.model.MeasuresResponseComponent));
 						} else {
 							this.errorHandler(error, reject, response);
 						}
@@ -172,9 +178,9 @@ class SonarClient {
 
 	public getVersion(): Promise<string> {
 		return new Promise((resolve, reject) => {
-			request(
-				this.configurationService.get().sonar.base + "/api/server/version",
-				this.requestOptions(),
+			this.reqClient(
+				"/api/server/version",
+				{},
 				(error: any, response: request.Response, body: any) => {
 					try {
 						if (!error && response.statusCode == 200) {
@@ -200,15 +206,15 @@ class SonarClient {
 		};
 
 		return new Promise((resolve, reject) => {
-			request(
-				this.configurationService.get().sonar.base + "/api/measures/search_history",
-				this.requestOptions({
+			this.reqClient(
+				"/api/measures/search_history",
+				{
 					qs: queryParams
-				}),
+				},
 				(error: any, response: request.Response, body: any) => {
 					try {
 						if (!error && response.statusCode == 200) {
-							const history = <Sonar.model.MeasureHistoryResponse>JSON.parse(body);
+							const history = <Sonar.model.MeasureHistoryResponse>body;
 							resolve(history.measures[0]);
 						} else {
 							this.errorHandler(error, reject, response);

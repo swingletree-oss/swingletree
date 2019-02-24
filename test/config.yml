@@ -1,16 +1,17 @@
 github:
-  appId: 101
-  appPublicPage: "publicPage"
+  app:
+    id: 101
+    page: "publicPage"
+    keyfile: "test/app-key.test"
   base: "http://localhost:10101"
-  clientDebug: false
-  keyFile: "test/app-key.test"
-  webhookSecret: null
+  secret: "do not tell"
+  debug: false
 sonar:
   base: "http://localhost:10101"
-  context: "sonarqube"
+  context: "sonarqubetest"
   logWebhookEvents: false
-  secret: null
+  secret: "do not tell"
   token: "1234"
 storage:
   database: "http://localhost"
-  password: null
+  password: "somepassword"

@@ -6,17 +6,19 @@ import { injectable } from "inversify";
 import { inject } from "inversify";
 import { ConfigurationService } from "../../configuration";
 import HealthService, { HealthState } from "../health-service";
+import { CoreConfig } from "../core-config";
 
 @injectable()
 class PageRoutes {
-	private configService: ConfigurationService;
 	private healthService: HealthService;
+
+	private publicPageUrl: string;
 
 	constructor(
 		@inject(ConfigurationService) configService: ConfigurationService,
 		@inject(HealthService) healthService: HealthService
 		) {
-			this.configService = configService;
+			this.publicPageUrl = configService.get(CoreConfig.Github.APP_PUBLIC_PAGE);
 			this.healthService = healthService;
 	}
 
@@ -33,7 +35,7 @@ class PageRoutes {
 
 		// set locals for all pages
 		router.use("/", (req: Request, res: Response, next: NextFunction) => {
-			res.locals.appPublicPage = this.configService.get().github.appPublicPage;
+			res.locals.appPublicPage = this.publicPageUrl;
 			res.locals.healthStates = this.healthService.getStates(HealthState.DOWN);
 			next();
 		});

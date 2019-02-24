@@ -1,4 +1,4 @@
-import { ConfigurationService, Configuration } from "../src/configuration";
+import { ConfigurationService } from "../src/configuration";
 import EventBus from "../src/core/event/event-bus";
 import * as sinon from "sinon";
 import SonarClient from "../src/sonar/client/sonar-client";
@@ -6,6 +6,8 @@ import InstallationStorage from "../src/core/github/client/installation-storage"
 import RedisClientFactory from "../src/core/db/redis-client";
 import { TemplateEngine } from "../src/core/template/template-engine";
 import TokenStorage from "../src/core/github/client/token-storage";
+import { SonarConfig } from "../src/sonar/sonar-config";
+import { CoreConfig } from "../src/core/core-config";
 
 export class EventBusMock extends EventBus {
 	constructor() {
@@ -17,7 +19,12 @@ export class EventBusMock extends EventBus {
 
 export class ConfigurationServiceMock extends ConfigurationService {
 	constructor() {
-		super("./test/config.yml");
+		super();
+		const configStub = sinon.stub();
+		configStub.withArgs(SonarConfig.BASE).returns("http://localhost:10101");
+		configStub.withArgs(CoreConfig.Github.KEYFILE).returns("./test/app-key.test");
+		configStub.withArgs(CoreConfig.Github.BASE).returns("http://localhost:10101");
+		this.get = configStub;
 	}
 }
 
