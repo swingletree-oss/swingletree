@@ -10,6 +10,7 @@ chai.use(require("chai-as-promised"));
 import SonarClient from "../../src/sonar/client/sonar-client";
 import { SonarClientMock } from "../mock-classes";
 import { Sonar } from "../../src/sonar/client/sonar-issue";
+import { SonarConfig } from "../../src/sonar/sonar-config";
 
 const sandbox = sinon.createSandbox();
 
@@ -21,14 +22,6 @@ describe("Integration Test", () => {
 
 	before(() => {
 		const http = require("http");
-
-		const config = {
-			get: sinon.stub().returns({
-				sonar: {
-					base: "http://localhost:" + mockPort
-				}
-			})
-		};
 
 		mockServer = http.createServer(require("mockserver")("./test/mock", process.env.DEBUG == "true")).listen(mockPort);
 		sonarClient = new SonarClientMock();

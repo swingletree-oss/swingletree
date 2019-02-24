@@ -4,13 +4,16 @@ import { suite, test, describe } from "mocha";
 import { expect, assert } from "chai";
 import * as chai from "chai";
 import * as sinon from "sinon";
-import { SonarConfig, GithubConfig, StorageConfig } from "../src/configuration";
+import { ConfigurationService } from "../src/configuration";
+import { SonarConfig } from "../src/sonar/sonar-config";
+import { CoreConfig } from "../src/core/core-config";
 chai.use(require("sinon-chai"));
 
 const sandbox = sinon.createSandbox();
 
-describe("Configuration", () => {
+describe("ConfigurationService", () => {
 
+	let uut: ConfigurationService;
 	let envBackup;
 
 	beforeEach(() => {
@@ -22,108 +25,75 @@ describe("Configuration", () => {
 	});
 
 	describe("Sonar", () => {
-		let uut: SonarConfig;
 
 		it("should use default configuration when no env vars are set", () => {
-			uut = new SonarConfig({
-				base: "base",
-				token: "token",
-				secret: "test",
-				context: "testcontext",
-				logWebhookEvents: false
-			});
+			uut = new ConfigurationService("./test/config.yml");
 
-			expect(uut.base).to.be.equal("base");
-			expect(uut.token).to.be.equal("token");
-			expect(uut.secret).to.be.equal("test");
-			expect(uut.context).to.be.equal("testcontext");
+			expect(uut.get(SonarConfig.BASE)).to.be.equal("http://localhost:10101");
+			expect(uut.get(SonarConfig.TOKEN)).to.be.equal("1234");
+			expect(uut.get(SonarConfig.SECRET)).to.be.equal("do not tell");
+			expect(uut.get(SonarConfig.CONTEXT)).to.be.equal("sonarqubetest");
 		});
 
 		it("should prioritize environment variables", () => {
 			process.env["SONAR_BASE"] = "envBase";
+			process.env["SONAR:BASE"] = "envBase";
 			process.env["SONAR_TOKEN"] = "envToken";
 			process.env["SONAR_SECRET"] = "envSecret";
+			process.env["SONAR_CONTEXT"] = "envContext";
 
-			uut = new SonarConfig({
-				base: "base",
-				token: "token",
-				secret: "test",
-				context: "testcontext",
-				logWebhookEvents: false
-			});
+			uut = new ConfigurationService("./test/config.yml");
 
-			expect(uut.base).to.be.equal("envBase");
-			expect(uut.token).to.be.equal("envToken");
-			expect(uut.secret).to.be.equal("envSecret");
-			expect(uut.context).to.be.equal("testcontext");
+			expect(uut.get(SonarConfig.BASE)).to.be.equal("envBase");
+			expect(uut.get(SonarConfig.TOKEN)).to.be.equal("envToken");
+			expect(uut.get(SonarConfig.SECRET)).to.be.equal("envSecret");
+			expect(uut.get(SonarConfig.CONTEXT)).to.be.equal("envContext");
 		});
 	});
 
 	describe("GitHub", () => {
-		let uut: GithubConfig;
 
 		it("should use default configuration when no env vars are set", () => {
-			uut = new GithubConfig({
-				base: "base",
-				webhookSecret: "secret",
-				appId: 101,
-				keyFile: "testfile",
-				appPublicPage: "test",
-				clientDebug: false
-			});
+			uut = new ConfigurationService("./test/config.yml");
 
-			expect(uut.base).to.be.equal("base");
-			expect(uut.webhookSecret).to.be.equal("secret");
-			expect(uut.appId).to.be.equal(101);
-			expect(uut.keyFile).to.be.equal("testfile");
+			expect(uut.get(CoreConfig.Github.BASE)).to.be.equal("http://localhost:10101");
+			expect(uut.get(CoreConfig.Github.WEBHOOK_SECRET)).to.be.equal("do not tell");
+			expect(uut.getNumber(CoreConfig.Github.APPID)).to.be.equal(101);
+			expect(uut.get(CoreConfig.Github.KEYFILE)).to.be.equal("test/app-key.test");
 		});
 
 		it("should prioritize environment variables", () => {
 			process.env["GITHUB_BASE"] = "envBase";
 			process.env["GITHUB_SECRET"] = "envSecret";
-			process.env["GITHUB_APPID"] = "1337";
-			process.env["GITHUB_KEY_FILE"] = "some other key file";
+			process.env["GITHUB_APP_ID"] = "1337";
+			process.env["GITHUB_APP_KEYFILE"] = "some other key file";
 
-			uut = new GithubConfig({
-				base: "base",
-				webhookSecret: "secret",
-				appId: 101,
-				keyFile: "testfile",
-				appPublicPage: "test",
-				clientDebug: false
-			});
+			uut = new ConfigurationService("./test/config.yml");
 
-			expect(uut.base).to.be.equal("envBase");
-			expect(uut.webhookSecret).to.be.equal("envSecret");
-			expect(uut.appId).to.be.equal(1337);
-			expect(uut.keyFile).to.be.equal("some other key file");
+			expect(uut.get(CoreConfig.Github.BASE)).to.be.equal("envBase");
+			expect(uut.get(CoreConfig.Github.WEBHOOK_SECRET)).to.be.equal("envSecret");
+			expect(uut.getNumber(CoreConfig.Github.APPID)).to.be.equal(1337);
+			expect(uut.get(CoreConfig.Github.KEYFILE)).to.be.equal("some other key file");
 		});
 	});
 
 	describe("Storage", () => {
-		let uut: StorageConfig;
 
 		it("should use default configuration when no env vars are set", () => {
-			uut = new StorageConfig({
-				database: "database",
-				password: "password"
-			});
+			uut = new ConfigurationService("./test/config.yml");
 
-			expect(uut.database).to.be.equal("database");
-			expect(uut.password).to.be.equal("password");
+			expect(uut.get(CoreConfig.Storage.DATABASE)).to.be.equal("http://localhost");
+			expect(uut.get(CoreConfig.Storage.PASSWORD)).to.be.equal("somepassword");
 		});
 
 		it("should prioritize environment variables", () => {
-			process.env["DATABASE_HOST"] = "envHost";
-			process.env["DATABASE_PASSWORD"] = "envPassword";
+			process.env["STORAGE_DATABASE"] = "envHost";
+			process.env["STORAGE_PASSWORD"] = "envPassword";
 
-			uut = new StorageConfig({
-				database: "database",
-				password: "password"
-			});
+			uut = new ConfigurationService("./test/config.yml");
 
-			expect(uut.database).to.be.equal("envHost");
-			expect(uut.password).to.be.equal("envPassword");
+			expect(uut.get(CoreConfig.Storage.DATABASE)).to.be.equal("envHost");
+			expect(uut.get(CoreConfig.Storage.PASSWORD)).to.be.equal("envPassword");
 		});
 	});
 

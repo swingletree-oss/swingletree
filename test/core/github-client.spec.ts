@@ -27,14 +27,6 @@ describe("GitHub Client", () => {
 	before(() => {
 		const http = require("http");
 
-		const config = {
-			get: sinon.stub().returns({
-				sonar: {
-					base: "http://localhost:" + mockPort
-				}
-			})
-		};
-
 		mockServer = http.createServer(require("mockserver")("./test/mock", process.env.DEBUG == "true")).listen(mockPort);
 	});
 

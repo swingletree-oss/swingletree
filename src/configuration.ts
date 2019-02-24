@@ -1,80 +1,42 @@
 import * as yaml from "js-yaml";
 import { injectable } from "inversify";
 import { LOGGER } from "./logger";
+import * as nconf from "nconf";
 
 @injectable()
 export class ConfigurationService {
-	private config: Configuration;
+	private config: nconf.Provider;
 
 	constructor(file = "./swingletree.conf.yaml") {
 		LOGGER.info("loading configuration from file %s", file);
-		this.config = new Configuration(
-			yaml.safeLoad(
-				require("fs").readFileSync(file)
-			) as Configuration
-		);
+
+		this.config = new nconf.Provider()
+			.env({
+				lowerCase: true,
+				separator: "_"
+			})
+			.file({
+				file: file,
+				format: {
+					parse: yaml.safeLoad,
+					stringify: yaml.safeDump
+				}
+			});
 	}
 
-	public get(): Configuration {
-		return this.config;
+	public checkRequired(keys: string[]) {
+		this.config.required(keys);
 	}
-}
 
-export class Configuration {
-	public readonly github: GithubConfig;
-	public readonly sonar: SonarConfig;
-	public readonly storage: StorageConfig;
-
-	constructor(model: Configuration) {
-		this.github = new GithubConfig(model.github);
-		this.sonar = new SonarConfig(model.sonar);
-		this.storage = new StorageConfig(model.storage);
+	public get(key: string): string {
+		return String(this.config.get(key));
 	}
-}
 
-export class GithubConfig {
-	public readonly appId: number;
-	public readonly keyFile: string;
-	public readonly base: string;
-	public readonly webhookSecret: string;
-	public readonly appPublicPage: string;
-	public readonly clientDebug: boolean;
-
-	constructor(model: GithubConfig) {
-		this.appId = Number(process.env["GITHUB_APPID"] || model.appId);
-		this.keyFile = process.env["GITHUB_KEY_FILE"] || model.keyFile;
-		this.base = process.env["GITHUB_BASE"] || model.base;
-		this.webhookSecret = process.env["GITHUB_SECRET"] || model.webhookSecret;
-		this.appPublicPage = process.env["GITHUB_APP_PAGE"] || model.appPublicPage;
-		this.clientDebug  = ("true" == process.env["GITHUB_CLIENT_DEBUG"]) || model.clientDebug;
-
-		// data preparation
-		this.base = this.base.replace(/\/+$/, ""); // remove trailing slashes
+	public getNumber(key: string): number {
+		return Number(this.get(key));
 	}
-}
 
-export class StorageConfig {
-	public readonly database: string;
-	public readonly password: string;
-
-	constructor(model: StorageConfig) {
-		this.database = process.env["DATABASE_HOST"] || model.database;
-		this.password = process.env["DATABASE_PASSWORD"] || model.password;
-	}
-}
-
-export class SonarConfig {
-	public readonly token: string;
-	public readonly base: string;
-	public readonly secret: string;
-	public readonly logWebhookEvents: boolean;
-	public readonly context: string;
-
-	constructor(model: SonarConfig) {
-		this.token = process.env["SONAR_TOKEN"] || model.token;
-		this.base = process.env["SONAR_BASE"] || model.base;
-		this.secret = process.env["SONAR_SECRET"] || model.secret;
-		this.context = model.context;
-		this.logWebhookEvents = ("true" == process.env["LOG_SONAR_WEBHOOKS"]) || model.logWebhookEvents;
+	public getBoolean(key: string): boolean {
+		return Boolean(this.get(key));
 	}
 }

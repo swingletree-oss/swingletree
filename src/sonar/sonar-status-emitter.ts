@@ -11,6 +11,7 @@ import { TemplateEngine } from "../core/template/template-engine";
 import { Sonar } from "./client/sonar-issue";
 import { SonarEvents, SonarAnalysisCompleteEvent } from "./events";
 import { SonarCheckRunSummaryTemplate } from "./sonar-template";
+import { SonarConfig } from "./sonar-config";
 
 @injectable()
 class SonarStatusEmitter {
@@ -37,7 +38,7 @@ class SonarStatusEmitter {
 		this.eventBus = eventBus;
 		this.sonarClient = sonarClient;
 		this.templateEngine = templateEngine;
-		this.context = configurationService.get().sonar.context;
+		this.context = configurationService.get(SonarConfig.CONTEXT);
 
 		eventBus.register(SonarEvents.SonarAnalysisComplete, this.analysisCompleteHandler, this);
 	}

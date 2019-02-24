@@ -6,13 +6,15 @@ import { LOGGER } from "../../logger";
 import EventBus from "../event/event-bus";
 import { DatabaseReconnectEvent, HealthStatusEvent } from "../event/event-model";
 import { HealthState } from "../health-service";
+import { CoreConfig } from "../core-config";
 
 @injectable()
 class RedisClientFactory {
 	private eventBus: EventBus;
-	private configService: ConfigurationService;
 
 	private registeredClients: RedisClient[];
+	private database: string;
+	private password: string;
 
 	constructor(
 		@inject(ConfigurationService) configService: ConfigurationService,
@@ -20,10 +22,12 @@ class RedisClientFactory {
 	) {
 		this.registeredClients = [];
 
-		this.configService = configService;
 		this.eventBus = eventBus;
 
-		if (!configService.get().storage.password) {
+		this.database = configService.get(CoreConfig.Storage.DATABASE);
+		this.password = configService.get(CoreConfig.Storage.PASSWORD);
+
+		if (!this.password) {
 			LOGGER.warn("Redis client is configured to use no authentication. Please consider securing the database.");
 		}
 	}
@@ -59,7 +63,7 @@ class RedisClientFactory {
 
 	public createClient(databaseIndex = 0): RedisClient {
 		const client = new RedisClient({
-			host: this.configService.get().storage.database,
+			host: this.database,
 			retry_strategy: (options) => {
 				return 5000;
 			}
@@ -79,8 +83,8 @@ class RedisClientFactory {
 		});
 
 		// set authentication if available
-		if (this.configService.get().storage.password) {
-			client.auth(this.configService.get().storage.password);
+		if (this.password) {
+			client.auth(this.password);
 		}
 
 		client.select(databaseIndex);

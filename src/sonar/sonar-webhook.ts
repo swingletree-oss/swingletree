@@ -10,6 +10,7 @@ import * as BasicAuth from "basic-auth";
 import { LOGGER } from "../logger";
 import { SonarAnalysisCompleteEvent } from "./events";
 import InstallationStorage from "../core/github/client/installation-storage";
+import { SonarConfig } from "./sonar-config";
 
 /** Provides a Webhook for Sonar
  */
@@ -53,7 +54,7 @@ class SonarWebhook {
 
 	public getRoute(): Router {
 		const router = Router();
-		const secret = this.configurationService.get().sonar.secret;
+		const secret = this.configurationService.get(SonarConfig.SECRET);
 
 		if (secret && secret.trim().length > 0) {
 			router.use(this.authenticationMiddleware(secret));
@@ -68,7 +69,7 @@ class SonarWebhook {
 	public webhook = async (req: Request, res: Response) => {
 		LOGGER.debug("received SonarQube webhook event");
 
-		if (this.configurationService.get().sonar.logWebhookEvents) {
+		if (this.configurationService.getBoolean(SonarConfig.LOG_WEBHOOK_EVENTS)) {
 			LOGGER.debug(JSON.stringify(req.body));
 		}
 

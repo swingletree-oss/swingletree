@@ -10,6 +10,8 @@ import InstallationStorage from "./installation-storage";
 import TokenStorage from "./token-storage";
 import { LOGGER } from "../../../logger";
 
+import { CoreConfig } from "../../core-config";
+
 import * as Github from "@octokit/rest";
 import { ChecksCreateParams } from "@octokit/rest";
 
@@ -21,19 +23,24 @@ class GithubClientService {
 	private key: string;
 	private clientLogConfig: object = {};
 
+	private baseUrl: string;
+	private appId: string;
+
 	constructor(
 		@inject(ConfigurationService) configurationService: ConfigurationService,
 		@inject(TokenStorage) tokenStorage: TokenStorage,
 		@inject(InstallationStorage) installationStorage: InstallationStorage
 	) {
-		this.key = fs.readFileSync(configurationService.get().github.keyFile).toString();
+		this.key = fs.readFileSync(configurationService.get(CoreConfig.Github.KEYFILE)).toString();
 		this.configurationService = configurationService;
 		this.tokenStorage = tokenStorage;
 		this.installationStorage = installationStorage;
 
-		LOGGER.info("Github client configured to use %s", this.configurationService.get().github.base);
+		this.appId = this.configurationService.get(CoreConfig.Github.APPID);
+		this.baseUrl = this.configurationService.get(CoreConfig.Github.BASE).replace(/\/+$/, ""); // remove trailing slashes
+		LOGGER.info("Github client configured to use %s", this.baseUrl);
 
-		if (configurationService.get().github.clientDebug) {
+		if (configurationService.getBoolean(CoreConfig.Github.CLIENT_DEBUG)) {
 			this.clientLogConfig = console;
 		}
 	}
@@ -70,7 +77,7 @@ class GithubClientService {
 
 	private createJWT(): string {
 		const payload = {
-			iss: this.configurationService.get().github.appId.toString()
+			iss: this.configurationService.get(this.appId)
 		};
 
 		const token = jwt.sign(payload, this.key, { expiresIn: "3m", algorithm: "RS256"});
@@ -80,7 +87,7 @@ class GithubClientService {
 	private getClient(): Github {
 		const context = this;
 		const ghClient = new Github({
-			baseUrl: this.configurationService.get().github.base,
+			baseUrl: this.baseUrl,
 			auth () {
 				return `Bearer ${context.createJWT()}`;
 			},
@@ -145,7 +152,7 @@ class GithubClientService {
 		return new Promise<any>((resolve) => {
 			resolve(
 				new Github({
-					baseUrl: this.configurationService.get().github.base,
+					baseUrl: this.baseUrl,
 					auth: `token ${bearerToken}`,
 					log: this.clientLogConfig
 				})
