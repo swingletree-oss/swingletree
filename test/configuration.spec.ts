@@ -90,7 +90,7 @@ describe("ConfigurationService", () => {
 		});
 
 		it("should prioritize environment variables", () => {
-			process.env["STORAGE_DATABASE"] = "envHost";
+			process.env["STORAGE_HOST"] = "envHost";
 			process.env["STORAGE_PASSWORD"] = "envPassword";
 
 			uut = new ConfigurationService("./test/config.yml");
