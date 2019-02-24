@@ -60,6 +60,7 @@ describe("ConfigurationService", () => {
 			expect(uut.get(CoreConfig.Github.WEBHOOK_SECRET)).to.be.equal("do not tell");
 			expect(uut.getNumber(CoreConfig.Github.APPID)).to.be.equal(101);
 			expect(uut.get(CoreConfig.Github.KEYFILE)).to.be.equal("test/app-key.test");
+			expect(uut.getBoolean(CoreConfig.Github.CLIENT_DEBUG)).to.be.false;
 		});
 
 		it("should prioritize environment variables", () => {
@@ -67,6 +68,7 @@ describe("ConfigurationService", () => {
 			process.env["GITHUB_SECRET"] = "envSecret";
 			process.env["GITHUB_APP_ID"] = "1337";
 			process.env["GITHUB_APP_KEYFILE"] = "some other key file";
+			process.env["GITHUB_DEBUG"] = "true";
 
 			uut = new ConfigurationService("./test/config.yml");
 
@@ -74,6 +76,7 @@ describe("ConfigurationService", () => {
 			expect(uut.get(CoreConfig.Github.WEBHOOK_SECRET)).to.be.equal("envSecret");
 			expect(uut.getNumber(CoreConfig.Github.APPID)).to.be.equal(1337);
 			expect(uut.get(CoreConfig.Github.KEYFILE)).to.be.equal("some other key file");
+			expect(uut.getBoolean(CoreConfig.Github.CLIENT_DEBUG)).to.be.true;
 		});
 	});
 
