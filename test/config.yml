@@ -9,7 +9,7 @@ github:
 sonar:
   base: "http://localhost:10101"
   context: "sonarqubetest"
-  logWebhookEvents: false
+  debug: false
   secret: "do not tell"
   token: "1234"
 storage:
