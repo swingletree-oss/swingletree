@@ -12,7 +12,9 @@ Swingletree needs a Redis Database for caching purposes. SonarQube offers a bran
 obtain information about the quality of branches in relation to the `master` branch.
 
 * Redis Database
-* SonarQube Developer Edition (minimum)
+* SonarQube
+  * Developer Edition (minimum)
+  * 7.x (tested with 7.6)
 * GitHub or GitHub Enterprise
 
 ## Steps

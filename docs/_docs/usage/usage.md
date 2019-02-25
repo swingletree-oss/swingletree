@@ -21,6 +21,11 @@ sonar-scanner \
 
 Of course these values (at least `commitId`) need to be acquired dynamically on each build.
 
+## Reference branch analysis
+
+A reference branch can be set by providing the SonarQube property `sonar.branch.target`.
+SonarQube will run the branch analysis in relation to the provided branch name.
+
 ## More examples
 
-Swingletree Web-UI offers different code snippets specific to your running Swingletree version.
+Swingletree Web-UI offers different code snippets specific to your currently deployed Swingletree version.
