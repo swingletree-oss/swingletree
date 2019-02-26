@@ -15,6 +15,8 @@
 @startuml startup-flow
   skinparam monochrome true
 
+  Swingletree -> Cache : check cache sync flag
+
   Swingletree -> GitHub : request all installations
   activate GitHub
   GitHub -> Swingletree: send installations (paged)
@@ -24,4 +26,59 @@
   GitHub -> Swingletree : installation added webhook event
   deactivate GitHub
   Swingletree -> Cache: update installation cache
+@enduml
+
+@startuml component-core
+  skinparam monochrome true
+
+  frame "Swingletree" {
+    package "Core" {
+      [Webhook Handler]
+      [EventBus]
+      [CheckRun Sender]
+      [Installation Handler]
+    }
+
+    [Consumers]
+  }
+  
+  frame "GitHub" {
+      [GitHub API]
+      [GitHub Hook Sender]
+  }
+
+  [CheckRun Sender] --> [GitHub API]
+  [Webhook Handler] --> [EventBus]
+  [EventBus] --> [CheckRun Sender]
+  [GitHub Hook Sender] -> [Webhook Handler]
+
+  [Installation Handler] --> [GitHub API]
+  [Installation Handler] <-> [EventBus]
+
+  [Consumers] <-> [EventBus]
+@enduml
+
+@startuml component-sonar
+  skinparam monochrome true
+
+  frame "Swingletree" {
+    package "Sonar" {
+      [Analysis Handler]
+      [Webhook Handler]
+    }
+
+    package "Core" {
+      [EventBus]
+    }
+  }
+
+  frame "SonarQube" {
+      [Sonar API]
+      [Webhook Sender]
+  }
+
+  [EventBus] <--> [Analysis Handler]
+  [Analysis Handler] --> [Sonar API]
+  [Webhook Handler] <- [Webhook Sender]
+  [Webhook Handler] --> [EventBus]
 @enduml
