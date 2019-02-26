@@ -12,3 +12,4 @@
 - title: Extend Swingletree
   docs:
   - architecture
+  - eventbus

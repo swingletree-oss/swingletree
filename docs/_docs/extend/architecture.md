@@ -5,52 +5,30 @@ redirect_from: /docs/index.html
 ---
 
 
-### Event Bus
+### Architecture
 
-Swingletree uses an event bus for communication between its components. It is possible to acquire the event bus instance through dependency injection.
+Swingletree is divided into components, which communicate via an Event Bus.
 
-A webhook, for example, emits an Event when receiving a `POST` request. Components interested in this event can register an event handler to execute
-business logic based on the payload data provided by the event.
+#### Core Component
 
-### Using the Event Bus
+The Core component handles interactions with GitHub.
 
-A component can perform following actions on the Event Bus
+* GitHub App installation management
+* Authentication with GitHub
+* Provide GitHub API access
+* Token caching
+* Template Engine
+* GitHub Webhook event propagation to Event Bus
 
-* Register a listener for a specific event
-* Emit a Event to the Event Bus
+![component core](../../assets/images/component-core.png)
 
-#### Register to an Event
+#### SonarQube Component
 
-```typescript
-class EventConsumeExample {
-  private eventBus: EventBus;
+The SonarQube component handles interactions with SonarQube
 
-  constructor(@inject(EventBus) eventBus: EventBus) {
-    this.eventBus.register(Events.CustomEventId, this.eventHandler, this);
-  }
+* Query SonarQube API
+* Calculate metrics related to SonarQube
+* Provide Sonar Webhook endpoint
+* Construct GitHub CheckRuns
 
-  public async sendAnalysisStatus(event: CustomEvent) {
-    // event handling logic
-  }
-}
-```
-
-#### Emit an Event
-
-```typescript
-class EventEmitExample {
-  private eventBus: EventBus;
-
-  constructor(@inject(EventBus) eventBus: EventBus) {
-    this.eventBus = eventBus;
-  }
-
-  public someFunction() {
-    this.eventBus.emit(
-      new SomeEvent(
-        // event data
-      )
-    );
-  }
-}
-```
+![component sonar](../../assets/images/component-sonar.png)
