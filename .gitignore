@@ -1,6 +1,8 @@
 bin
 .vscode
 
+out
+
 # Logs
 logs
 *.log
