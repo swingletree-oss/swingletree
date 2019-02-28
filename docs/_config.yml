@@ -17,6 +17,17 @@ git_edit_address: https://github.com/error418/swingletree/blob/master
 blog:
   enable: false
 
+
+# cookies opt in
+optin:
+  notice: We are using Cookies and Google Analytics to make this website better
+  accept: Got it!
+  decline: Decline
+
+analytics:
+  enable: true
+  id: UA-111350981-3
+
 nav:
   - id: showcase
     url: /showcase.html
