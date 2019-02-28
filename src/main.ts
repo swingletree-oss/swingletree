@@ -11,10 +11,12 @@ import { SonarQubePlugin } from "./sonar/sonar";
 container.get<CommitStatusSender>(CommitStatusSender);
 container.get<GhAppInstallationHandler>(GhAppInstallationHandler);
 
-SwingletreeComponent.Registry.add(SwingletreeCore);
-SwingletreeComponent.Registry.add(SonarQubePlugin);
+const registry = new SwingletreeComponent.Registry([
+	SwingletreeCore,
+	SonarQubePlugin
+]);
 
-SwingletreeComponent.Registry.getComponents().forEach(component => {
+registry.getComponents().forEach(component => {
 	const plugin = new component();
 	if (plugin.isEnabled()) {
 		plugin.start();

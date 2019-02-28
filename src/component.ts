@@ -21,17 +21,15 @@ export namespace SwingletreeComponent {
 	}
 
 	export class Registry {
-		private static readonly components: { new(): Component }[] = [];
+		private readonly components: { new(): Component }[];
 
-		public static add(component: { new(): Component }) {
-			console.log("ADDDD");
-			Registry.components.push(component);
+		constructor(components: { new(): Component }[]) {
+			this.components = components;
 		}
 
-		public static getComponents(): Set<{ new(): Component }> {
-			return new Set(Registry.components);
+		public getComponents(): Set<{ new(): Component }> {
+			return new Set<{ new(): Component }>(this.components);
 		}
-
 	}
 }
 
