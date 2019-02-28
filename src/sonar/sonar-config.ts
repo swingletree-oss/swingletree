@@ -3,5 +3,6 @@ export enum SonarConfig {
 	BASE = "sonar:base",
 	CONTEXT = "sonar:context",
 	TOKEN = "sonar:token",
-	LOG_WEBHOOK_EVENTS = "sonar:debug"
+	LOG_WEBHOOK_EVENTS = "sonar:debug",
+	ENABLED = "sonar:enabled"
 }

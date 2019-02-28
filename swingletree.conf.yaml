@@ -1,3 +1,5 @@
+port: 3000
+
 # storage configuration
 storage:
   host: localhost # database host
@@ -15,6 +17,7 @@ github:
 
 # SonarQube specific configuration
 sonar:
+  enabled: true
   secret: # basic auth password protecting the webhook
   base: # SonarQube base url
   context: sonarqube # defines the check status name

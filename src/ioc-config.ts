@@ -14,6 +14,7 @@ import RedisClientFactory from "./core/db/redis-client";
 import PageRoutes from "./core/pages/page-routes";
 import { TemplateEngine } from "./core/template/template-engine";
 import HealthService from "./core/health-service";
+import { WebServer } from "./core/webserver";
 
 
 const container = new Container();
@@ -30,5 +31,6 @@ container.bind<InstallationStorage>(InstallationStorage).toSelf().inSingletonSco
 container.bind<GhAppInstallationHandler>(GhAppInstallationHandler).toSelf().inSingletonScope();
 container.bind<RedisClientFactory>(RedisClientFactory).toSelf().inSingletonScope();
 container.bind<PageRoutes>(PageRoutes).toSelf().inSingletonScope();
+container.bind<WebServer>(WebServer).toSelf().inSingletonScope();
 
 export default container;
