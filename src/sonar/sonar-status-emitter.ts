@@ -82,7 +82,7 @@ class SonarStatusEmitter {
 
 	private processIssues(checkRun: ChecksCreateParams, summaryTemplateData: SonarCheckRunSummaryTemplate, issues: Sonar.model.Issue[], counters: Map<string, number>) {
 		issues.forEach((item) => {
-			const path = item.component.split(":").splice(2).join(":");
+			const path = item.component.replace(`${item.project}:`, "");
 			const annotation: ChecksCreateParamsOutputAnnotations = {
 				path: path,
 				start_line: item.line || 1,
@@ -103,8 +103,12 @@ class SonarStatusEmitter {
 			if (item.textRange) {
 				annotation.start_line = item.textRange.startLine;
 				annotation.end_line = item.textRange.endLine;
-				annotation.start_column = item.textRange.startOffset;
-				annotation.end_column = item.textRange.endOffset;
+
+				// omit values to comply to api validation
+				if (annotation.start_line != annotation.end_line) {
+					annotation.start_column = item.textRange.startOffset;
+					annotation.end_column = item.textRange.endOffset;
+				}
 			}
 
 			checkRun.output.annotations.push(annotation);

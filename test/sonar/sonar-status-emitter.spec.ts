@@ -11,7 +11,7 @@ import SonarStatusEmitter from "../../src/sonar/sonar-status-emitter";
 import { ConfigurationServiceMock, EventBusMock, SonarClientMock, TemplateEngineMock } from "../mock-classes";
 import { SonarAnalysisCompleteEvent, SonarEvents } from "../../src/sonar/events";
 import EventBus from "../../src/core/event/event-bus";
-import { Events } from "../../src/core/event/event-model";
+import { Events, GithubCheckRunWriteEvent } from "../../src/core/event/event-model";
 
 describe("Sonar Status Emitter", () => {
 
@@ -99,6 +99,25 @@ describe("Sonar Status Emitter", () => {
 
 		sinon.assert.calledWith(eventMock.emit as any, sinon.match.has("eventType", Events.GithubCheckRunWriteEvent));
 		sinon.assert.calledWith(eventMock.emit as any, sinon.match.hasNested("payload.output.title", sinon.match("- Coverage: 70.6 (-19.5%)")));
+	});
+
+	it("should determine correct annotation paths", async () => {
+		analysisData.analysisEvent.project.key = "component-test";
+		await uut.analysisCompleteHandler(analysisData);
+
+		sinon.assert.calledOnce(eventMock.emit as any);
+
+		sinon.assert.calledWith(eventMock.emit as any, sinon.match((check: GithubCheckRunWriteEvent) => {
+			return check.payload.output.annotations[0].path == "src/main/java/Main.java";
+		}, "normal project key: path determination is failing in annotation #1"));
+
+		sinon.assert.calledWith(eventMock.emit as any, sinon.match((check: GithubCheckRunWriteEvent) => {
+			return check.payload.output.annotations[1].path == "src/main/java/Main.java";
+		}, "single colon project key: path determination is failing in annotation #2"));
+
+		sinon.assert.calledWith(eventMock.emit as any, sinon.match((check: GithubCheckRunWriteEvent) => {
+			return check.payload.output.annotations[2].path == "src/main/ja:v:a/Main.java";
+		}, "colon in file path causes path determination failure in annotation #3"));
 	});
 
 });
