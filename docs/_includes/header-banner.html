@@ -3,6 +3,16 @@
     <div class="container">
         <h1>Integrate SonarQube into GitHub</h1>
         <p>See SonarQube findings inside your Pull Requests.</p>
-        <p><a class="btn btn-primary btn-lg" href="{{ "/docs/home/" | prepend: site.baseurl }}" role="button">Learn more</a></p>
+
+        <ul class="list-inline">
+{%- unless page.id == "showcase" -%}
+            <li class="list-inline-item">
+                <a class="btn btn-primary" href="{{ "/showcase" | prepend: site.baseurl }}" role="button">Showcase</a>
+            </li>
+{%- endunless -%}
+            <li class="list-inline-item">
+                <a class="btn btn-primary" href="{{ "/docs/home/" | prepend: site.baseurl }}" role="button">Learn more</a>
+            </li>
+        </ul>
     </div>
 </div>
