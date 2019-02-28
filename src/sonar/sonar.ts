@@ -7,17 +7,23 @@ import SonarWebhook from "./sonar-webhook";
 import SonarStatusEmitter from "./sonar-status-emitter";
 import SonarClient from "./client/sonar-client";
 import { SwingletreeComponent } from "../component";
+import { WebServer } from "../core/webserver";
+import { ConfigurationService } from "../configuration";
+import { SonarConfig } from "./sonar-config";
 
-export class SonarQubePlugin extends SwingletreeComponent {
+export class SonarQubePlugin extends SwingletreeComponent.Component {
+	private enabled: boolean;
 
-	private app: express.Application;
+	constructor() {
+		super("sonar");
 
-	constructor(app: express.Application) {
-		super();
-		this.app = app;
+		const configService = container.get<ConfigurationService>(ConfigurationService);
+		this.enabled = configService.getBoolean(SonarConfig.ENABLED);
 	}
 
-	public start(): void {
+	public run(): void {
+		const webserver = container.get<WebServer>(WebServer);
+
 		// register services to dependency injection
 		container.bind<SonarWebhook>(SonarWebhook).toSelf().inSingletonScope();
 		container.bind<SonarStatusEmitter>(SonarStatusEmitter).toSelf().inSingletonScope();
@@ -27,10 +33,14 @@ export class SonarQubePlugin extends SwingletreeComponent {
 		container.get<SonarStatusEmitter>(SonarStatusEmitter);
 
 		// add webhook endpoint
-		this.app.use("/webhook/sonar", container.get<SonarWebhook>(SonarWebhook).getRoute());
+		webserver.addRouter("/webhook/sonar", container.get<SonarWebhook>(SonarWebhook).getRoute());
 
 		// add template filter for rule type icons
 		container.get<TemplateEngine>(TemplateEngine).addFilter("ruleTypeIcon", SonarQubePlugin.ruleTypeIconFilter);
+	}
+
+	public isEnabled(): boolean {
+		return this.enabled;
 	}
 
 	public static ruleTypeIconFilter(type: Sonar.model.RuleType | string) {

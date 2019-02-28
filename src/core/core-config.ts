@@ -13,3 +13,7 @@ export namespace CoreConfig {
 		PASSWORD = "storage:password"
 	}
 }
+
+export enum AppConfig {
+	PORT = "port"
+}

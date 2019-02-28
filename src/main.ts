@@ -2,30 +2,23 @@ import container from "./ioc-config";
 
 import CommitStatusSender from "./core/github/commit-status-sender";
 import GhAppInstallationHandler from "./core/github/app-installation-handler";
-import { SonarQubePlugin } from "./sonar/sonar";
 import SwingletreeCore from "./core/core";
-import GithubWebhook from "./core/github/github-webhook";
-import PageRoutes from "./core/pages/page-routes";
-import EventBus from "./core/event/event-bus";
 import { LOGGER } from "./logger";
-
-const express = require("express");
+import { SwingletreeComponent } from "./component";
+import { SonarQubePlugin } from "./sonar/sonar";
 
 // initialize dangling event handlers
 container.get<CommitStatusSender>(CommitStatusSender);
 container.get<GhAppInstallationHandler>(GhAppInstallationHandler);
 
-const app = express();
+SwingletreeComponent.Registry.add(SwingletreeCore);
+SwingletreeComponent.Registry.add(SonarQubePlugin);
 
-LOGGER.info("starting core component");
-const core = new SwingletreeCore(
-	app,
-	container.get<GithubWebhook>(GithubWebhook),
-	container.get<PageRoutes>(PageRoutes),
-	container.get<EventBus>(EventBus)
-);
-core.start();
-
-LOGGER.info("starting sonarqube component");
-const sonarPlugin = new SonarQubePlugin(app);
-sonarPlugin.start();
+SwingletreeComponent.Registry.getComponents().forEach(component => {
+	const plugin = new component();
+	if (plugin.isEnabled()) {
+		plugin.start();
+	} else {
+		LOGGER.info("component '%s' is disabled", component.name);
+	}
+});

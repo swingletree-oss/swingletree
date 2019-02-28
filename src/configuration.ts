@@ -29,7 +29,7 @@ export class ConfigurationService {
 	}
 
 	public get(key: string): string {
-		const value = this.config.get(key);
+		const value: string = this.config.get(key);
 
 		if (!value || value.toString().trim() == "") {
 			return null;
@@ -43,6 +43,6 @@ export class ConfigurationService {
 	}
 
 	public getBoolean(key: string): boolean {
-		return this.get(key) == "true";
+		return Boolean(this.get(key));
 	}
 }
