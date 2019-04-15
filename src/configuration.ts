@@ -13,7 +13,8 @@ export class ConfigurationService {
 		this.config = new nconf.Provider()
 			.env({
 				lowerCase: true,
-				separator: "_"
+				separator: "_",
+				match: /((ST|GITHUB|SONAR|STORAGE|LOG)_.*)|(PORT)$/i
 			})
 			.file({
 				file: file,
@@ -36,6 +37,10 @@ export class ConfigurationService {
 		}
 
 		return value;
+	}
+
+	public getConfig() {
+		return this.config.get();
 	}
 
 	public getNumber(key: string): number {

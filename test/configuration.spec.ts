@@ -100,4 +100,16 @@ describe("ConfigurationService", () => {
 		});
 	});
 
+	describe("Core", () => {
+		it("should be able to handle nested configuration", () => {
+			process.env["PORT_SUBCONFIG1"] = "test";
+			process.env["PORT"] = "correct value";
+			process.env["PORT_SUBCONFIG2"] = "test two";
+
+			uut = new ConfigurationService("./test/config.yml");
+
+			expect(uut.get("port")).to.be.equal("correct value");
+		});
+	});
+
 });
