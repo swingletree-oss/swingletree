@@ -21,9 +21,9 @@
     "release": "semantic-release"
   },
   "dependencies": {
-    "@octokit/rest": "^16.25.0",
+    "@octokit/rest": "^16.25.2",
     "basic-auth": "^2.0.1",
-    "body-parser": "^1.18.3",
+    "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "express": "^4.16.4",
     "express-github-webhook": "^1.0.6",
@@ -48,7 +48,7 @@
     "@types/jsonwebtoken": "^8.3.2",
     "@types/mocha": "^5.2.6",
     "@types/nconf": "^0.10.0",
-    "@types/node": "^11.13.5",
+    "@types/node": "^12.0.0",
     "@types/nunjucks": "^3.1.1",
     "@types/redis": "^2.8.12",
     "@types/request": "^2.48.1",
@@ -58,13 +58,13 @@
     "eslint": "^5.16.0",
     "mocha": "^6.1.4",
     "mockserver": "^3.0.0",
-    "nodemon": "^1.18.11",
+    "nodemon": "^1.19.0",
     "semantic-release": "^15.13.12",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0",
     "ts-mocha": "^6.0.0",
     "tslint": "^5.16.0",
-    "typescript": "^3.4.4"
+    "typescript": "^3.4.5"
   },
   "license": "GPL-3.0",
   "private": true
