@@ -82,11 +82,22 @@ Swingletree is configured using a configuration file named `swingletree.conf.yam
 
 | Variable              | Description                                                       | Default |
 | --------------------- | ----------------------------------------------------------------- | ------- |
+| `SONAR_ENABLED`       | Enables the Swingletree Sonarqube Plugin.                         | `true` |
 | `SONAR_SECRET`        | Enables and sets the Basic Authentication password for the Swingletree SonarQube webhook. | *none* |
 | `SONAR_BASE`          | SonarQube base url (for example `http://sonarhost:9000`)          | *none*  |
 | `SONAR_TOKEN`         | SonarQube API token                                               | *none*  |
 | `SONAR_CONTEXT`       | Sets the check-run name of Swingletree Sonar                      | `sonarqube` |
 | `SONAR_DEBUG`         | Controls debug mode of the sonar client                           | `false` |
+
+### Zap configuration
+
+| Variable              | Description                                                       | Default |
+| --------------------- | ----------------------------------------------------------------- | ------- |
+| `ZAP_ENABLED`         | Enables the Swingletree ZAP Plugin.                               | `false` |
+| `ZAP_SECRET`          | Enables and sets the Basic Authentication password for the Swingletree Zap webhook. | *none* |
+| `ZAP_CONTEXT`         | Sets the check-run name of Swingletree Zap                        | `security/zap` |
+| `ZAP_DEBUG`           | Controls debug mode of the zap webhook                            | `false` |
+
 
 ### Database configuration
 
