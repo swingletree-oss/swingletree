@@ -14,7 +14,7 @@ export class ConfigurationService {
 			.env({
 				lowerCase: true,
 				separator: "_",
-				match: /((ST|GITHUB|SONAR|STORAGE|LOG)_.*)|(PORT)$/i
+				match: /((ST|GITHUB|SONAR|ZAP|STORAGE|LOG)_.*)|(PORT)$/i
 			})
 			.file({
 				file: file,

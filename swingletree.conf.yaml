@@ -23,3 +23,10 @@ sonar:
   context: sonarqube # defines the check status name
   token: # API token
   debug: false # log SonarQube webhook event requests on debug level
+
+# Zap specific configuration
+zap:
+  enabled: true
+  secret: # basic auth password protecting the webhook
+  context: security/zap # defines the check status name
+  debug: false # log zap webhook event requests on debug level
