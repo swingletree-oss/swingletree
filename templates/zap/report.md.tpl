@@ -1,7 +1,7 @@
 {# Context Type: ZapReportTemplate -#}
 
 {% if counts -%}
-### {% for key in counts.keys() -%} {{ key | zapRiskcodeIcon | safe }} {{ counts.get(key) }} {% if loop.last == false %}&bull;{% endif -%}{% endfor -%}
+### {% for key in [3,2,1,0] -%} {{ key | zapRiskcodeIcon | safe }} {{ counts.get(key) }} {% if loop.last == false %}&bull;{% endif -%}{% endfor -%}
 {% endif %}
 
 {% if event.report.site.length > 0 %}

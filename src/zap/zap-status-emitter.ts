@@ -29,19 +29,19 @@ class ZapStatusEmitter {
 	}
 
 	public getRiskCounts(report: Zap.Report): Map<Zap.Riskcode, number> {
-		const counts = new Map<Zap.Riskcode, number>();
+		const counters = new Map<Zap.Riskcode, number>();
 
 		report.site.forEach((site) => {
 			site.alerts.forEach((alert) => {
-				if (counts.has(alert.riskcode)) {
-					counts.set(alert.riskcode, counts.get(alert.riskcode) + 1);
+				if (counters.has(alert.riskcode)) {
+					counters.set(alert.riskcode, counters.get(alert.riskcode) + 1);
 				} else {
-					counts.set(alert.riskcode, 1);
+					counters.set(alert.riskcode, 1);
 				}
 			});
 		});
 
-		return counts;
+		return counters;
 	}
 
 	public async reportReceivedHandler(event: ZapReportReceivedEvent) {
