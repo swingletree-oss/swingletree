@@ -23,7 +23,7 @@ describe("Zap Template", () => {
 	beforeEach(() => {
 
 		envBackup = process.env;
-		zapTestData = Object.assign({}, require("../zap/report.json"));
+		zapTestData = Object.assign({}, require("../mock/zap-report.json"));
 	});
 
 	afterEach(() => {
