@@ -27,6 +27,17 @@ export class WebServer {
 		this.app.use(bodyParser.json());
 		this.app.use(bodyParser.urlencoded({ extended: true }));
 
+		// set common headers
+		this.app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+			res.header("X-Frame-Options", "DENY");
+			res.header("X-XSS-Protection", "1");
+			res.header("X-Content-Type-Options", "nosniff");
+			next();
+		});
+
+		// disable server reveal
+		this.app.disable("x-powered-by");
+
 		// set rendering engine
 		this.app.set("view engine", "pug");
 
