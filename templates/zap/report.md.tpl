@@ -1,47 +1,29 @@
-{# Context Type: SummaryTemplate -#}
+{# Context Type: ZapReportTemplate -#}
 
-{%- if event.targetBranch -%}
-SonarQube Branch analysis was performed in relation to `{{ event.targetBranch }}`
+{% if counts -%}
+### {% for key in counts.keys() -%} {{ key | zapRiskcodeIcon | safe }} {{ counts.get(key) }} {% if loop.last == false %}&bull;{% endif -%}{% endfor -%}
 {% endif %}
 
-{% if issueCounts -%}
-### {% for key in issueCounts.keys() -%}{{ key | ruleTypeIcon | safe }} {{ issueCounts.get(key) }} {% if loop.last == false %}&bull;{% endif -%}
-{% endfor -%}
-{% endif %}
+{% if event.report.site.length > 0 %}
+### Alerts
+{%  for site in event.report.site -%}
+{%   for alert in site.alerts | sort(false, false, "riskcode") -%}
 
-{% if event.qualityGate.status == "OK" -%}
-    :ok:
-{%- else -%}
-    :x:
-{%- endif %} Quality Gate *"{{ event.qualityGate.name }}"* reported status *{{ event.qualityGate.status }}*<br>
+#### {{ alert.alert }}
 
-{#- branch coverage report -#}
-{% if branchCoverage -%}
-{%   if targetCoverage -%}
-{%     if branchCoverage != targetCoverage -%}
-{%       if branchCoverage > targetCoverage -%}
-:trophy: Coverage improved by {{ (branchCoverage - targetCoverage) | fixed | delta }}%
-{%         else -%}
-:x: Coverage loss ({{ (branchCoverage - targetCoverage) | fixed | delta }}%)
-{%       endif -%}
-{%     else -%}
-:information_source: Coverage stable at {{ branchCoverage | fixed }}%
-{%     endif -%}
-{%   else -%}
-:information_source: Coverage of branch at {{ branchCoverage | fixed }}%
-{%   endif -%}
-{% endif %}
+{{ alert.desc | striptags }}
 
-{% if (event.qualityGate.conditions) and (event.qualityGate.conditions.length > 0) -%}
-### Gate Conditions
+##### Instances
+{%    for instance in alert.instances %}
+* {{ instance.uri }}
+{%-    endfor %}
 
-| Metric | | Status | Constraint | Current Value |
-| :-- | :--: | :-- | :-- | :-- | 
-{%   for c in event.qualityGate.conditions | sort(false, false, "metric") -%}
-{{     c.metric | replace("_", " ") | capitalize }} | {{ c.status | gateStatusIcon }} | {{ c.status }} | {{ c.operator | gateConditionIcon | safe }} {{ c.errorThreshold }} | {{ c.value | default("*none*") }} |
+{%    if alert.solution %}
+##### Solution
+
+{{ alert.solution | striptags }}
+{%    endif %}
+
 {%   endfor %}
-{% endif -%}
-
-{% if annotationsCapped -%}
-:warning: Issue annotations were capped to 50 items. The analysis reported {{ totalIssues }} in total. Please check SonarQube for a full report.
+{%  endfor %}
 {% endif %}

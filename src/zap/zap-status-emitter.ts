@@ -8,6 +8,7 @@ import { Templates } from "../core/template/template-engine";
 import { TemplateEngine } from "../core/template/template-engine";
 import { ZapConfig } from "./zap-config";
 import { ZapEvents, ZapReportReceivedEvent } from "./zap-events";
+import { Zap } from "./zap-model";
 
 @injectable()
 class ZapStatusEmitter {
@@ -27,62 +28,48 @@ class ZapStatusEmitter {
 		eventBus.register(ZapEvents.ZapReportReceived, this.reportReceivedHandler, this);
 	}
 
+	public getRiskCounts(report: Zap.Report): Map<Zap.Riskcode, number> {
+		const counts = new Map<Zap.Riskcode, number>();
+
+		report.site.forEach((site) => {
+			site.alerts.forEach((alert) => {
+				if (counts.has(alert.riskcode)) {
+					counts.set(alert.riskcode, counts.get(alert.riskcode) + 1);
+				} else {
+					counts.set(alert.riskcode, 1);
+				}
+			});
+		});
+
+		return counts;
+	}
+
 	public async reportReceivedHandler(event: ZapReportReceivedEvent) {
+		const riskCounts = this.getRiskCounts(event.report);
 
 		const checkRun: ChecksCreateParams = {
 			name: this.context,
 			owner: event.owner,
 			repo: event.repository,
 			status: "completed",
-			conclusion: event.analysisEvent.qualityGate.status == QualityGateStatus.OK ? "success" : "action_required",
-			started_at: new Date(event.analysisEvent.analysedAt).toISOString(),
-			completed_at: new Date(event.analysisEvent.analysedAt).toISOString(),
-			head_sha: event.commitId,
-			details_url: this.dashboardUrl(event.analysisEvent)
+			conclusion: riskCounts.size == 0 ? "success" : "action_required",
+			started_at: new Date().toISOString(),
+			completed_at: new Date().toISOString(),
+			head_sha: event.commitId
 		};
 
-		const summaryTemplateData: SonarCheckRunSummaryTemplate = { event: event.analysisEvent };
+		const templateData: Zap.ReportTemplate = {
+			event: event,
+			counts: riskCounts
+		};
 
 		checkRun.output = {
-			title: `${event.analysisEvent.qualityGate.status}`,
-			summary: ""
+			title: `OWASP Zap scan result`,
+			summary: this.templateEngine.template<Zap.ReportTemplate>(
+				Templates.ZAP_SCAN,
+				templateData
+			)
 		};
-
-		// calculate coverage deltas
-		await this.processCoverageDeltas(checkRun.output, summaryTemplateData, event);
-
-		try {
-			const issues = await this.sonarClient.getIssues(event.analysisEvent.project.key, event.analysisEvent.branch.name);
-			const counters: Map<string, number> = new Map<string, number>();
-
-			// preset known rule types
-			for (const rule in Sonar.model.RuleType) {
-				counters.set(rule, 0);
-			}
-
-			if (issues.length > 0) {
-				checkRun.output.annotations = [];
-
-				this.processIssues(checkRun, summaryTemplateData, issues, counters);
-
-				if (checkRun.output.annotations.length >= 50) {
-					// this is a GitHub api constraint. Annotations are limited to 50 items max.
-					LOGGER.debug("%s issues were retrieved. Limiting reported results to 50.", checkRun.output.annotations.length);
-					summaryTemplateData.annotationsCapped = true;
-					summaryTemplateData.totalIssues = issues.length;
-
-					// capping to 50 items
-					checkRun.output.annotations = checkRun.output.annotations.slice(0, 50);
-				} else {
-					LOGGER.debug("annotating %s issues to check result", checkRun.output.annotations.length);
-				}
-			}
-		} catch (err) {
-			LOGGER.warn("failed to retrieve SonarQube issues for check annotations. This affects %s @%s", event.repository, event.commitId, err);
-		}
-
-		// add summary via template engine
-		checkRun.output.summary = this.templateEngine.template<SonarCheckRunSummaryTemplate>(Templates.CHECK_RUN_SUMMARY, summaryTemplateData);
 
 		this.eventBus.emit(new GithubCheckRunWriteEvent(checkRun));
 	}

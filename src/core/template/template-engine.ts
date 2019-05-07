@@ -60,7 +60,8 @@ export class TemplateEngine {
 
 export enum Templates {
 	/** Template for GitHub Check Run summaries */
-	CHECK_RUN_SUMMARY = "check-run/summary.md.tpl"
+	CHECK_RUN_SUMMARY = "check-run/summary.md.tpl",
+	ZAP_SCAN = "zap/report.md.tpl"
 }
 
 export interface TemplateData {
