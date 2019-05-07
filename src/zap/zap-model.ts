@@ -1,4 +1,5 @@
 import { TemplateData } from "../core/template/template-engine";
+import { ZapReportReceivedEvent } from "./zap-events";
 
 export namespace Zap {
 
@@ -20,8 +21,8 @@ export namespace Zap {
 		pluginid: string;
 		alert: string;
 		name: string;
-		riskcode: number;
-		confidence: number;
+		riskcode: Riskcode;
+		confidence: Confidence;
 		riskdesc: string;
 		desc: string;
 		instances: Instance[];
@@ -40,6 +41,21 @@ export namespace Zap {
 		evidence?: string;
 	}
 
+	export enum Riskcode {
+		HIGH = 3,
+		MEDIUM = 2,
+		LOW = 1,
+		INFORMATIONAL = 0
+	}
+
+	export enum Confidence {
+		USER_CONFIRMED = 4,
+		HIGH = 3,
+		MEDIUM = 2,
+		LOW = 1,
+		FALSE_POSITIVE = 0
+	}
+
 	export interface WebhookMessage {
 		repository: string;
 		commitId: string;
@@ -47,6 +63,7 @@ export namespace Zap {
 	}
 
 	export interface ReportTemplate extends TemplateData {
-
+		event: ZapReportReceivedEvent;
+		counts: Map<Riskcode, number>;
 	}
 }
