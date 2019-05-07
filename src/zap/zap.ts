@@ -33,8 +33,8 @@ export class ZapPlugin extends SwingletreeComponent.Component {
 
 	public static zapRiskcodeIconFilter(type: Zap.Riskcode | string) {
 		if (type == Zap.Riskcode.HIGH) return "<span title=\"High\"> &#x1F480;&#xFE0F;</span>";
-		if (type == Zap.Riskcode.MEDIUM) return "<span title=\"Code Smells\"> &#x26A0;&#xFE0F;</span>";
-		if (type == Zap.Riskcode.LOW) return "<span title=\"Vulnerabilities\"> &#x1F53B;&#xFE0F;</span>";
+		if (type == Zap.Riskcode.MEDIUM) return "<span title=\"Medium\"> &#x26A0;&#xFE0F;</span>";
+		if (type == Zap.Riskcode.LOW) return "<span title=\"Low\"> &#x1F53B;&#xFE0F;</span>";
 		if (type == Zap.Riskcode.INFORMATIONAL) return "<span title=\"Informational\"> &#x2139;&#xFE0F;</span>";
 
 		return type;
