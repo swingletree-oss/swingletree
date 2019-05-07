@@ -6,7 +6,8 @@
 
 - title: Usage
   docs:
-  - usage
+  - usage/sonarqube
+  - usage/zap
   - problems
 
 - title: Extend Swingletree

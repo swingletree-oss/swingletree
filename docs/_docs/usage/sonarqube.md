@@ -1,6 +1,6 @@
 ---
-title: Usage
-permalink: /docs/usage/
+title: Sonarqube
+permalink: /docs/usage/sonarqube/
 redirect_from: /docs/index.html
 ---
 
