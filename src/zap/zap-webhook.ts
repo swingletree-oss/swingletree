@@ -32,9 +32,8 @@ class ZapWebhook {
 		this.installationStorage = installationStorage;
 	}
 
-	private isWebhookEventRelevant(event: Zap.WebhookMessage) {
-		return event.repository !== undefined &&
-			event.commitId !== undefined;
+	private isWebhookEventRelevant(event: Zap.Report) {
+		return event.site !== undefined;
 	}
 
 	private authenticationMiddleware(secret: string) {
@@ -65,28 +64,35 @@ class ZapWebhook {
 	public webhook = async (req: Request, res: Response) => {
 		LOGGER.debug("received Zap webhook event");
 
+		const org = req.query["org"];
+		const repo = req.query["repo"];
+		const sha = req.query["sha"];
+
 		if (this.configurationService.getBoolean(ZapConfig.LOG_WEBHOOK_EVENTS)) {
 			LOGGER.debug(JSON.stringify(req.body));
 		}
 
-		const webhookData: Zap.WebhookMessage = req.body;
+		const webhookData: Zap.Report = req.body;
+
+		if (org == null || repo == null || sha == null) {
+			res.status(400).send("Missing at least one of following parameters: org, repo, sha");
+			return;
+		}
 
 		if (this.isWebhookEventRelevant(webhookData)) {
-			const coordinates = webhookData.repository.split("/");
-
-			const reportReceivedEvent = new ZapReportReceivedEvent(webhookData.report);
-			reportReceivedEvent.commitId = webhookData.commitId;
-			reportReceivedEvent.owner = coordinates[0];
-			reportReceivedEvent.repository = coordinates[1];
+			const reportReceivedEvent = new ZapReportReceivedEvent(webhookData);
+			reportReceivedEvent.commitId = sha;
+			reportReceivedEvent.owner = org;
+			reportReceivedEvent.repository = repo;
 
 			// check if installation is available
-			if (await this.installationStorage.getInstallationId(coordinates[0])) {
+			if (await this.installationStorage.getInstallationId(org)) {
 				this.eventBus.emit(reportReceivedEvent);
 			} else {
-				LOGGER.info("ignored zap report for %s/%s. Swingletree may not be installed in this organization.", coordinates[0], coordinates[1]);
+				LOGGER.info("ignored zap report for %s/%s. Swingletree may not be installed in this organization.", org, repo);
 			}
 		} else {
-			LOGGER.debug("zap webhook data did not contain repo and/or commit-sha data. This event will be ignored.");
+			LOGGER.debug("zap webhook data did not contain a report. This event will be ignored.");
 		}
 
 		res.sendStatus(204);

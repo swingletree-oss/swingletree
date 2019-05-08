@@ -56,12 +56,6 @@ export namespace Zap {
 		FALSE_POSITIVE = 0
 	}
 
-	export interface WebhookMessage {
-		repository: string;
-		commitId: string;
-		report: Report;
-	}
-
 	export interface ReportTemplate extends TemplateData {
 		event: ZapReportReceivedEvent;
 		counts: Map<Riskcode, number>;
