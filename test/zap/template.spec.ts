@@ -36,6 +36,7 @@ describe("Zap Template", () => {
 		beforeEach(() => {
 			uut = new TemplateEngine();
 			uut.addFilter("zapRiskcodeIcon", ZapPlugin.zapRiskcodeIconFilter);
+			uut.addFilter("zapConfidence", ZapPlugin.zapConfidenceFilter);
 		});
 
 		it("should compile the template", () => {

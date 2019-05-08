@@ -1,29 +1,27 @@
 {# Context Type: ZapReportTemplate -#}
 
-{% if counts -%}
-### {% for key in [3,2,1,0] -%} {{ key | zapRiskcodeIcon | safe }} {{ counts.get(key) }} {% if loop.last == false %}&bull;{% endif -%}{% endfor -%}
-{% endif %}
-
 {% if event.report.site.length > 0 %}
-### Alerts
 {%  for site in event.report.site -%}
-{%   for alert in site.alerts | sort(false, false, "riskcode") -%}
+{%   for alert in site.alerts | sort(true, false, "riskcode") -%}
 
-#### {{ alert.alert }}
+### {{ alert.riskcode | zapRiskcodeIcon | safe }} {{ alert.alert }}
+
+**Risk(Confidence):** {{ alert.riskdesc }}
 
 {{ alert.desc | striptags }}
 
-##### Instances
-{%    for instance in alert.instances %}
-* {{ instance.uri }}
-{%-    endfor %}
+<details><summary>show affected instances</summary><p><ul>
+{%-    for instance in alert.instances %}
+<li>{{ instance.uri }}</li>
+{%-    endfor -%}
+</ul></p></details>
 
 {%    if alert.solution %}
-##### Solution
+#### Solution
 
 {{ alert.solution | striptags }}
 {%    endif %}
-
+---
 {%   endfor %}
 {%  endfor %}
 {% endif %}
