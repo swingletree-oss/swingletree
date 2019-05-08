@@ -1,4 +1,4 @@
-import { SwingletreeEvent, Events } from "../core/event/event-model";
+import { SwingletreeEvent } from "../core/event/event-model";
 import { Zap } from "./zap-model";
 
 export enum ZapEvents {

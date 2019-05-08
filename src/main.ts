@@ -6,6 +6,7 @@ import SwingletreeCore from "./core/core";
 import { LOGGER } from "./logger";
 import { SwingletreeComponent } from "./component";
 import { SonarQubePlugin } from "./sonar/sonar";
+import { ZapPlugin } from "./zap/zap";
 
 // initialize dangling event handlers
 container.get<CommitStatusSender>(CommitStatusSender);
@@ -13,7 +14,8 @@ container.get<GhAppInstallationHandler>(GhAppInstallationHandler);
 
 const registry = new SwingletreeComponent.Registry([
 	SwingletreeCore,
-	SonarQubePlugin
+	SonarQubePlugin,
+	ZapPlugin
 ]);
 
 registry.getComponents().forEach(component => {
