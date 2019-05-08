@@ -48,6 +48,6 @@ export class ConfigurationService {
 	}
 
 	public getBoolean(key: string): boolean {
-		return this.get(key) == "true";
+		return String(this.get(key)) == "true";
 	}
 }
