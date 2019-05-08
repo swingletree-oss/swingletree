@@ -75,7 +75,7 @@ class ZapWebhook {
 		const webhookData: Zap.Report = req.body;
 
 		if (org == null || repo == null || sha == null) {
-			res.status(400).send("Missing at least one of following parameters: org, repo, sha");
+			res.status(400).send("missing at least one of following query parameters: org, repo, sha");
 			return;
 		}
 
