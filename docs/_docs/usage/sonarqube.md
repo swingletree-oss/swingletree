@@ -1,5 +1,5 @@
 ---
-title: Sonarqube
+title: Sonarqube Plugin usage
 permalink: /docs/usage/sonarqube/
 redirect_from: /docs/index.html
 ---

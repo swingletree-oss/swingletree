@@ -1,6 +1,20 @@
 ---
-title: Zap
+title: Zap Plugin usage
 permalink: /docs/usage/zap/
 redirect_from: /docs/index.html
 ---
 
+[OWASP Zap][zap] (aka Zed Attack Proxy) is a security scanner. It offers to generate a JSON-Report when running a scan, which the Swingletree Zap plugin can consume.
+
+## Sending a scan report to Swingletree
+
+A Swingletree webhook is published when the Zap Plugin is enabled.
+It accepts a OWASP Zap scan report in JSON format as a payload and needs some additional query parameters to link the report to a GitHub repository:
+
+```
+POST /webhook/zap?org=[GitHub Organization]&repo=[Repository name]&sha=[Commit SHA]
+```
+
+Swingletree will process the report and send a Check Run Status with the context `security/zap` to the given GitHub coordinates.
+
+[zap]: https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project
