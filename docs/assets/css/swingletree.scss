@@ -1,0 +1,12 @@
+---
+# Swingletree page custom css
+---
+
+h1,h2,h3,h4 {
+  &.underline {
+    border-bottom: 2px dotted #ddd;
+    //text-align: center;
+    padding-bottom: 0.2em;
+    margin-bottom: 1.2em;
+  }
+}
