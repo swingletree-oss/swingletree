@@ -17,6 +17,12 @@ git_edit_address: https://github.com/error418/swingletree/blob/master/docs
 blog:
   enable: false
 
+css:
+  extra:
+    - /assets/css/swingletree.css
+
+sass:
+  style: compressed
 
 # cookies opt in
 optin:

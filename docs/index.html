@@ -6,7 +6,7 @@ layout: default
 
 <div class="container">
 
-    <hr>
+    <h2 class="underline">Core Features</h2>
 
     <div class="row text-center">
         <div class="col-sm-4">
@@ -23,10 +23,10 @@ layout: default
             <span class="text-center">
                 <i class="fa-4x fas fa-crosshairs"></i>
             </span>
-            <h3 class="text-center">Identify issues</h3>
+            <h3 class="text-center">Persisted</h3>
             <p>
-                Get a overview of what has been found in your Pull Request by the SonarQube
-                Branch Plugin.
+                Build reports are persisted in GitHub using Check-Runs, which are attached to the commit.
+                This way you are also able wo view the results of past build reports.
             </p>
         </div>
         <div class="col-sm-4">
@@ -35,11 +35,33 @@ layout: default
             </span>
             <h3 class="text-center">Ease of use</h3>
             <p>
-                Install to your GitHub organization and you are ready to go. No machine user required. No SonarQube Plugin to install.
+                Install to your GitHub organization and you are ready to go. No machine user required for GitHub Enterprise instances.
             </p>
-        </div>    
+        </div>
     </div>
 
-    <hr>
+    <h2 class="underline" style="margin-top:2em">Integrations</h2>
+
+    <div class="row text-center">
+        <div class="col-sm-6">
+            <span class="text-center">
+                <i class="fa-4x fas fa-check-circle"></i>
+            </span>
+            <h3 class="text-center">SonarQube Developer Edition</h3>
+            <p>
+                Swingletree can act as a SonarQube webhook endpoint. It will consume the SonarQube API to acquire additional data to
+                assemble the build report (see showcase).
+            </p>
+        </div>
+        <div class="col-sm-6">
+            <span class="text-center">
+                <i class="fa-4x fas fa-crosshairs"></i>
+            </span>
+            <h3 class="text-center">OWASP Zap Reports</h3>
+            <p>
+                Swingletree can process OWASP Zap Scan JSON-reports.
+            </p>
+        </div>
+    </div>
 
 </div>
