@@ -25,3 +25,5 @@
 {%   endfor %}
 {%  endfor %}
 {% endif %}
+
+Zap version {{ event.report['@version'] }}, generated {{ event.report['@generated'] }}
