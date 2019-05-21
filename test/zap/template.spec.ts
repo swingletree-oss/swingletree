@@ -50,10 +50,14 @@ describe("Zap Template", () => {
 			counts.set(Zap.Riskcode.LOW, 56);
 			counts.set(Zap.Riskcode.MEDIUM, 1337);
 
-			uut.template<Zap.ReportTemplate>(Templates.ZAP_SCAN, {
+			const templateContent = uut.template<Zap.ReportTemplate>(Templates.ZAP_SCAN, {
 				event: new ZapReportReceivedEvent(zapTestData),
 				counts: counts
 			});
+
+			expect(templateContent).to.contain("2.7.0", "zap version is missing or has not the expected value");
+			expect(templateContent).to.contain("Mon, 6 May 2019 13:28:14", "report date is missing or has not the expected value");
+			expect(templateContent).to.contain("X-Frame-Options Header Not Set", "report items are missing");
 		});
 
 	});
