@@ -1,0 +1,581 @@
+{
+	"results": [
+		{
+			"id": "sha256:268bc513b12e6bf7bfb41a7f0b18d69ce69ad952b5ee7489318fbb7b870f4a33",
+			"distro": "CentOS Linux 7 (Core)",
+			"complianceDistribution": {
+				"critical": 0,
+				"high": 0,
+				"medium": 0,
+				"low": 0,
+				"total": 0
+			},
+			"vulnerabilities": [
+				{
+					"id": "CVE-2019-3857",
+					"status": "fixed in 1.4.3-12.el7_6.2",
+					"cvss": 8.8,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+					"description": "An integer overflow flaw which could lead to an out of bounds write was discovered in libssh2 before 1.8.1 in the way SSH_MSG_CHANNEL_REQUEST packets with an exit signal are parsed. A remote attacker who compromises a SSH server may be able to execute code on the client system when a user connects to the server.",
+					"severity": "important",
+					"packageName": "libssh2",
+					"packageVersion": "1.4.3-12.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-3857",
+					"riskFactors": {
+						"Attack vector: network": {},
+						"Has fix": {},
+						"High severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-5827",
+					"status": "affected",
+					"cvss": 8.8,
+					"description": "[Unknown description]",
+					"severity": "important",
+					"packageName": "sqlite",
+					"packageVersion": "3.7.17-8.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-5827",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"Attack vector: network": {},
+						"High severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2016-5131",
+					"status": "affected",
+					"cvss": 8.8,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+					"description": "Use-after-free vulnerability in libxml2 through 2.9.4, as used in Google Chrome before 52.0.2743.82, allows remote attackers to cause a denial of service or possibly have unspecified other impact via vectors related to the XPointer range-to function.",
+					"severity": "important",
+					"packageName": "libxml2",
+					"packageVersion": "2.9.1-6.el7_2.3",
+					"link": "https://access.redhat.com/security/cve/CVE-2016-5131",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"Attack vector: network": {},
+						"DoS": {},
+						"High severity": {}
+					}
+				},
+				{
+					"id": "CVE-2019-10160",
+					"status": "fixed in 2.7.5-80.el7_6",
+					"cvss": 9.8,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+					"description": "A security regression of CVE-2019-9636 was discovered in python since commit d537ab0ff9767ef024f26246899728f0116b1ec3 affecting versions 2.7, 3.5, 3.6, 3.7 and from v3.8.0a4 through v3.8.0b1, which still allows an attacker to exploit CVE-2019-9636 by abusing the user and password parts of a URL. When an application parses user-supplied URLs to store cookies, authentication credentials, or other kind of information, it is possible for an attacker to provide specially crafted URLs to make the application locate host-related information (e.g. cookies, authentication data) and send them to a different host than where it should, unlike if the URLs had been correctly parsed. The result of an attack may vary based on the application.",
+					"severity": "important",
+					"packageName": "python-libs",
+					"packageVersion": "2.7.5-76.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-10160",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"Attack vector: network": {},
+						"Has fix": {},
+						"High severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-3863",
+					"status": "fixed in 1.4.3-12.el7_6.2",
+					"cvss": 8.8,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+					"description": "A flaw was found in libssh2 before 1.8.1. A server could send a multiple keyboard interactive response messages whose total length are greater than unsigned char max characters. This value is used as an index to copy memory causing in an out of bounds memory write error.",
+					"severity": "important",
+					"packageName": "libssh2",
+					"packageVersion": "1.4.3-12.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-3863",
+					"riskFactors": {
+						"Attack vector: network": {},
+						"Has fix": {},
+						"High severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-9636",
+					"status": "fixed in 2.7.5-77.el7_6",
+					"cvss": 9.8,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+					"description": "Python 2.7.x through 2.7.16 and 3.x through 3.7.2 is affected by: Improper Handling of Unicode Encoding (with an incorrect netloc) during NFKC normalization. The impact is: Information disclosure (credentials, cookies, etc. that are cached against a given hostname). The components are: urllib.parse.urlsplit, urllib.parse.urlparse. The attack vector is: A specially crafted URL could be incorrectly parsed to locate cookies or authentication data and send that information to a different host than when parsed correctly.",
+					"severity": "important",
+					"packageName": "python-libs",
+					"packageVersion": "2.7.5-76.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-9636",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"Attack vector: network": {},
+						"Has fix": {},
+						"High severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-3855",
+					"status": "fixed in 1.4.3-12.el7_6.2",
+					"cvss": 8.8,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+					"description": "An integer overflow flaw which could lead to an out of bounds write was discovered in libssh2 before 1.8.1 in the way packets are read from the server. A remote attacker who compromises a SSH server may be able to execute code on the client system when a user connects to the server.",
+					"severity": "important",
+					"packageName": "libssh2",
+					"packageVersion": "1.4.3-12.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-3855",
+					"riskFactors": {
+						"Attack vector: network": {},
+						"Has fix": {},
+						"High severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-3856",
+					"status": "fixed in 1.4.3-12.el7_6.2",
+					"cvss": 8.8,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+					"description": "An integer overflow flaw, which could lead to an out of bounds write, was discovered in libssh2 before 1.8.1 in the way keyboard prompt requests are parsed. A remote attacker who compromises a SSH server may be able to execute code on the client system when a user connects to the server.",
+					"severity": "important",
+					"packageName": "libssh2",
+					"packageVersion": "1.4.3-12.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-3856",
+					"riskFactors": {
+						"Attack vector: network": {},
+						"Has fix": {},
+						"High severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-9948",
+					"status": "affected",
+					"cvss": 9.1,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
+					"description": "urllib in Python 2.x through 2.7.16 supports the local_file: scheme, which makes it easier for remote attackers to bypass protection mechanisms that blacklist file: URIs, as demonstrated by triggering a urllib.urlopen(\\'local_file:///etc/passwd\\') call.",
+					"severity": "moderate",
+					"packageName": "python",
+					"packageVersion": "2.7.5-76.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-9948",
+					"riskFactors": {
+						"Attack vector: network": {},
+						"Medium severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-3861",
+					"status": "affected",
+					"cvss": 9.1,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:H",
+					"description": "An out of bounds read flaw was discovered in libssh2 before 1.8.1 in the way SSH packets with a padding length value greater than the packet length are parsed. A remote attacker who compromises a SSH server may be able to cause a Denial of Service or read data in the client memory.",
+					"severity": "moderate",
+					"packageName": "libssh2",
+					"packageVersion": "1.4.3-12.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-3861",
+					"riskFactors": {
+						"Attack vector: network": {},
+						"DoS": {},
+						"Medium severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-3858",
+					"status": "affected",
+					"cvss": 9.1,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:H",
+					"description": "An out of bounds read flaw was discovered in libssh2 before 1.8.1 when a specially crafted SFTP packet is received from the server. A remote attacker who compromises a SSH server may be able to cause a Denial of Service or read data in the client memory.",
+					"severity": "moderate",
+					"packageName": "libssh2",
+					"packageVersion": "1.4.3-12.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-3858",
+					"riskFactors": {
+						"Attack vector: network": {},
+						"DoS": {},
+						"Medium severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-9740",
+					"status": "affected",
+					"cvss": 6.1,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+					"description": "An issue was discovered in urllib2 in Python 2.x through 2.7.16 and urllib in Python 3.x through 3.7.3. CRLF injection is possible if the attacker controls a url parameter, as demonstrated by the first argument to urllib.request.urlopen with \\\\r\\\\n (specifically in the query string after a ? character) followed by an HTTP header or a Redis command.",
+					"severity": "moderate",
+					"packageName": "python",
+					"packageVersion": "2.7.5-76.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-9740",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"Attack vector: network": {},
+						"Medium severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-3862",
+					"status": "affected",
+					"cvss": 9.1,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:H",
+					"description": "An out of bounds read flaw was discovered in libssh2 before 1.8.1 in the way SSH_MSG_CHANNEL_REQUEST packets with an exit status message and no payload are parsed. A remote attacker who compromises a SSH server may be able to cause a Denial of Service or read data in the client memory.",
+					"severity": "moderate",
+					"packageName": "libssh2",
+					"packageVersion": "1.4.3-12.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-3862",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"Attack vector: network": {},
+						"DoS": {},
+						"Medium severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2018-11212",
+					"cvss": 6.5,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+					"description": "An issue was discovered in libjpeg 9a. The alloc_sarray function in jmemmgr.c allows remote attackers to cause a denial of service (divide-by-zero error) via a crafted file.",
+					"severity": "medium",
+					"packageName": "java",
+					"packageVersion": "11.0.1",
+					"link": "https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2018-11212",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"Attack vector: network": {},
+						"DoS": {},
+						"Medium severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-9924",
+					"status": "affected",
+					"cvss": 7.8,
+					"vector": "CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+					"description": "rbash in Bash before 4.4-beta2 did not prevent the shell user from modifying BASH_CMDS, thus allowing the user to execute any command with the permissions of the shell.",
+					"severity": "moderate",
+					"packageName": "bash",
+					"packageVersion": "4.2.46-31.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-9924",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"Medium severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-9169",
+					"status": "affected",
+					"cvss": 9.8,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+					"description": "In the GNU C Library (aka glibc or libc6) through 2.29, proceed_next_node in posix/regexec.c has a heap-based buffer over-read via an attempted case-insensitive regular-expression match.",
+					"severity": "moderate",
+					"packageName": "glibc",
+					"packageVersion": "2.17-260.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-9169",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"Attack vector: network": {},
+						"Medium severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2018-5407",
+					"status": "fixed in 1.0.2k-16.el7_6.1",
+					"cvss": 4.7,
+					"vector": "CVSS:3.0/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:N/A:N",
+					"description": "Simultaneous Multi-threading (SMT) in processors can enable local users to exploit software vulnerable to timing attacks via a side-channel timing attack on \\'port contention\\'.",
+					"severity": "moderate",
+					"packageName": "openssl-libs",
+					"packageVersion": "1.0.2k-16.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2018-5407",
+					"riskFactors": {
+						"Exploit exists": {},
+						"Has fix": {},
+						"Medium severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2018-12404",
+					"status": "affected",
+					"cvss": 5.9,
+					"description": "      ** reserved ** this candidate has been reserved by an organization or individual that will use it when announcing a new security problem.  when the candidate has been publicized, the details for this candidate will be provided.",
+					"severity": "moderate",
+					"packageName": "nss",
+					"packageVersion": "3.36.0-7.el7_5",
+					"link": "https://access.redhat.com/security/cve/CVE-2018-12404",
+					"riskFactors": {
+						"Attack vector: network": {},
+						"Medium severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-5010",
+					"status": "affected",
+					"cvss": 7.5,
+					"description": "a null pointer dereference vulnerability was found in the certificate parsing code in python. this causes a denial of service to applications when parsing specially crafted certificates. this vulnerability is unlikely to be triggered if application enables ssl/tls certificate validation and accepts certificates only from trusted root certificate authorities.",
+					"severity": "moderate",
+					"packageName": "python",
+					"packageVersion": "2.7.5-76.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-5010",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"Attack vector: network": {},
+						"DoS": {},
+						"Medium severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-9633",
+					"status": "affected",
+					"cvss": 6.5,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+					"description": "gio/gsocketclient.c in GNOME GLib 2.59.2 does not ensure that a parent GTask remains alive during the execution of a connection-attempting enumeration, which allows remote attackers to cause a denial of service (g_socket_client_connected_callback mishandling and application crash) via a crafted web site, as demonstrated by GNOME Web (aka Epiphany).",
+					"severity": "moderate",
+					"packageName": "glib2",
+					"packageVersion": "2.56.1-2.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-9633",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"Attack vector: network": {},
+						"DoS": {},
+						"Medium severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2018-14647",
+					"status": "affected",
+					"cvss": 7.5,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+					"description": "Python\\'s elementtree C accelerator failed to initialise Expat\\'s hash salt during initialization. This could make it easy to conduct denial of service attacks against Expat by constructing an XML document that would cause pathological hash collisions in Expat\\'s internal data structures, consuming large amounts CPU and RAM. Python 3.8, 3.7, 3.6, 3.5, 3.4, 2.7 are believed to be vulnerable.",
+					"severity": "moderate",
+					"packageName": "python",
+					"packageVersion": "2.7.5-76.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2018-14647",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"Attack vector: network": {},
+						"DoS": {},
+						"Medium severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-12450",
+					"status": "affected",
+					"cvss": 9.8,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+					"description": "file_copy_fallback in gio/gfile.c in GNOME GLib 2.15.0 through 2.61.1 does not properly restrict file permissions while a copy operation is in progress. Instead, default permissions are used.",
+					"severity": "moderate",
+					"packageName": "glib2",
+					"packageVersion": "2.56.1-2.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-12450",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"Attack vector: network": {},
+						"Medium severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-9947",
+					"status": "affected",
+					"cvss": 6.1,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N",
+					"description": "An issue was discovered in urllib2 in Python 2.x through 2.7.16 and urllib in Python 3.x through 3.7.3. CRLF injection is possible if the attacker controls a url parameter, as demonstrated by the first argument to urllib.request.urlopen with \\\\r\\\\n (specifically in the path component of a URL that lacks a ? character) followed by an HTTP header or a Redis command. This is similar to the CVE-2019-9740 query string issue.",
+					"severity": "moderate",
+					"packageName": "python",
+					"packageVersion": "2.7.5-76.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-9947",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"Attack vector: network": {},
+						"Medium severity": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2018-10754",
+					"status": "affected",
+					"cvss": 7.5,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+					"description": "In ncurses before 6.1.20180414, there is a NULL Pointer Dereference in the _nc_parse_entry function of tinfo/parse_entry.c. It could lead to a remote denial of service if the terminfo library code is used to process untrusted terminfo data in which a use-name is invalid syntax. The product proceeds to the dereference code path even after a \\\"dubious character `[\\' in name or alias field\\\" detection.",
+					"severity": "low",
+					"packageName": "ncurses",
+					"packageVersion": "5.9-14.20130511.el7_4",
+					"link": "https://access.redhat.com/security/cve/CVE-2018-10754",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"DoS": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2018-16429",
+					"status": "affected",
+					"cvss": 7.5,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+					"description": "GNOME GLib 2.56.1 has an out-of-bounds read vulnerability in g_markup_parse_context_parse() in gmarkup.c, related to utf8_str().",
+					"severity": "low",
+					"packageName": "glib2",
+					"packageVersion": "2.56.1-2.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2018-16429",
+					"riskFactors": {
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2018-16428",
+					"status": "affected",
+					"cvss": 9.8,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+					"description": "In GNOME GLib 2.56.1, g_markup_parse_context_end_parse() in gmarkup.c has a NULL pointer dereference.",
+					"severity": "low",
+					"packageName": "glib2",
+					"packageVersion": "2.56.1-2.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2018-16428",
+					"riskFactors": {
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2015-2059",
+					"status": "fix deferred",
+					"cvss": 7.5,
+					"vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+					"description": "The stringprep_utf8_to_ucs4 function in libin before 1.31, as used in jabberd2, allows context-dependent attackers to read system memory and possibly have other unspecified impact via invalid UTF-8 characters in a string, which triggers an out-of-bounds read.",
+					"severity": "low",
+					"packageName": "libidn",
+					"packageVersion": "1.28-4.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2015-2059",
+					"riskFactors": {
+						"Attack vector: network": {}
+					}
+				},
+				{
+					"id": "CVE-2018-16842",
+					"status": "affected",
+					"cvss": 9.1,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:H",
+					"description": "Curl versions 7.14.1 through 7.61.1 are vulnerable to a heap-based buffer over-read in the tool_msgs.c:voutf() function that may result in information exposure and denial of service.",
+					"severity": "low",
+					"packageName": "curl",
+					"packageVersion": "7.29.0-51.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2018-16842",
+					"riskFactors": {
+						"DoS": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2018-14618",
+					"status": "affected",
+					"cvss": 9.8,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+					"description": "curl before version 7.61.1 is vulnerable to a buffer overrun in the NTLM authentication code. The internal function Curl_ntlm_core_mk_nt_hash multiplies the length of the password by two (SUM) to figure out how large temporary storage area to allocate from the heap. The length value is then subsequently used to iterate over the password and generate output into the allocated storage buffer. On systems with a 32 bit size_t, the math to calculate SUM triggers an integer overflow when the password length exceeds 2GB (2^31 bytes). This integer overflow usually causes a very small buffer to actually get allocated instead of the intended very huge one, making the use of that buffer end up in a heap buffer overflow. (This bug is almost identical to CVE-2017-8816.)",
+					"severity": "low",
+					"packageName": "curl",
+					"packageVersion": "7.29.0-51.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2018-14618",
+					"riskFactors": {
+						"Attack vector: network": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-5436",
+					"status": "affected",
+					"cvss": 7.8,
+					"vector": "CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+					"description": "A heap buffer overflow in the TFTP receiving code allows for DoS or arbitrary code execution in libcurl versions 7.19.4 through 7.64.1.",
+					"severity": "low",
+					"packageName": "curl",
+					"packageVersion": "7.29.0-51.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2019-5436",
+					"riskFactors": {
+						"Attack complexity: low": {},
+						"DoS": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2018-9234",
+					"status": "affected",
+					"cvss": 7.5,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+					"description": "GnuPG 2.2.4 and 2.2.5 does not enforce a configuration in which key certification requires an offline master Certify key, which results in apparently valid certifications that occurred only with access to a signing subkey.",
+					"severity": "low",
+					"packageName": "gnupg2",
+					"packageVersion": "2.0.22-5.el7_5",
+					"link": "https://access.redhat.com/security/cve/CVE-2018-9234",
+					"riskFactors": {
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2015-0837",
+					"status": "fix deferred",
+					"cvss": 1.2,
+					"description": "** reserved ** this candidate has been reserved by an organization or individual that will use it when announcing a new security problem.  when the candidate has been publicized, the details for this candidate will be provided.",
+					"severity": "low",
+					"packageName": "gnupg2",
+					"packageVersion": "2.0.22-5.el7_5",
+					"link": "https://access.redhat.com/security/cve/CVE-2015-0837"
+				},
+				{
+					"id": "CVE-2015-0837",
+					"status": "fix deferred",
+					"cvss": 1.2,
+					"description": "** reserved ** this candidate has been reserved by an organization or individual that will use it when announcing a new security problem.  when the candidate has been publicized, the details for this candidate will be provided.",
+					"severity": "low",
+					"packageName": "libgcrypt",
+					"packageVersion": "1.5.3-14.el7",
+					"link": "https://access.redhat.com/security/cve/CVE-2015-0837"
+				},
+				{
+					"id": "CVE-2019-2426",
+					"cvss": 3.7,
+					"vector": "CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N",
+					"description": "Vulnerability in the Java SE component of Oracle Java SE (subcomponent: Networking). Supported versions that are affected are Java SE: 7u201, 8u192 and 11.0.1; Java SE Embedded: 8u191. Difficult to exploit vulnerability allows unauthenticated attacker with network access via multiple protocols to compromise Java SE. Successful attacks of this vulnerability can result in unauthorized read access to a subset of Java SE accessible data. Note: This vulnerability applies to Java deployments, typically in clients running sandboxed Java Web Start applications or sandboxed Java applets (in Java SE 8), that load and run untrusted code (e.g., code that comes from the internet) and rely on the Java sandbox for security. This vulnerability can also be exploited by using APIs in the specified Component, e.g., through a web service which supplies data to the APIs. CVSS 3.0 Base Score 3.7 (Confidentiality impacts). CVSS Vector: (CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:N).",
+					"severity": "low",
+					"packageName": "java",
+					"packageVersion": "11.0.1",
+					"link": "https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2019-2426",
+					"riskFactors": {
+						"Attack vector: network": {},
+						"Recent vulnerability": {}
+					}
+				},
+				{
+					"id": "CVE-2019-2422",
+					"cvss": 3.1,
+					"vector": "CVSS:3.0/AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:N/A:N",
+					"description": "Vulnerability in the Java SE component of Oracle Java SE (subcomponent: Libraries). Supported versions that are affected are Java SE: 7u201, 8u192 and 11.0.1; Java SE Embedded: 8u191. Difficult to exploit vulnerability allows unauthenticated attacker with network access via multiple protocols to compromise Java SE. Successful attacks require human interaction from a person other than the attacker. Successful attacks of this vulnerability can result in unauthorized read access to a subset of Java SE accessible data. Note: This vulnerability applies to Java deployments, typically in clients running sandboxed Java Web Start applications or sandboxed Java applets (in Java SE 8), that load and run untrusted code (e.g., code that comes from the internet) and rely on the Java sandbox for security. This vulnerability does not apply to Java deployments, typically in servers, that load and run only trusted code (e.g., code installed by an administrator). CVSS 3.0 Base Score 3.1 (Confidentiality impacts). CVSS Vector: (CVSS:3.0/AV:N/AC:H/PR:N/UI:R/S:U/C:L/I:N/A:N).",
+					"severity": "low",
+					"packageName": "java",
+					"packageVersion": "11.0.1",
+					"link": "https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2019-2422",
+					"riskFactors": {
+						"Attack vector: network": {},
+						"Recent vulnerability": {}
+					}
+				}
+			],
+			"vulnerabilityDistribution": {
+				"critical": 0,
+				"high": 8,
+				"medium": 15,
+				"low": 12,
+				"total": 35
+			}
+		}
+	]
+}
