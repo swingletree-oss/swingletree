@@ -44,8 +44,6 @@ describe("Twistlock Template", () => {
 				report: testData
 			});
 
-			console.log(templateContent);
-
 			expect(templateContent).to.contain("CVE-2019-5827", "expected CVE is missing");
 		});
 
