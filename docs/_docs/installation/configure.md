@@ -32,6 +32,15 @@ Environment variables override file configuration values.
 | `SONAR_CONTEXT`       | Sets the check-run name of Swingletree Sonar                      | `sonarqube` |
 | `SONAR_DEBUG`         | Controls debug mode of the sonar client                           | `false` |
 
+### Twistlock configuration
+
+| Variable              | Description                                                       | Default |
+| --------------------- | ----------------------------------------------------------------- | ------- |
+| `TWISTLOCK_ENABLED`   | Enables the Swingletree Twistlock Plugin.                         | `false` |
+| `TWISTLOCK_SECRET`    | Enables and sets the Basic Authentication password for the Swingletree Twistlock webhook. | *none* |
+| `TWISTLOCK_CONTEXT`   | Sets the check-run name of Swingletree Twistlock                  | `security/zap` |
+| `TWISTLOCK_DEBUG`     | Controls debug mode of the Twistlock webhook                      | `false` |
+
 ### Zap configuration
 
 | Variable              | Description                                                       | Default |
@@ -46,8 +55,8 @@ Environment variables override file configuration values.
 
 | Variable              | Description                                                       | Default |
 | --------------------- | ----------------------------------------------------------------- | ------- |
-| `STORAGE_HOST`       | Sets the Redis database host                                       | *none*  |
-| `STORAGE_PASSWORD`   | Sets the Redis database password to use for authentication         | *none*  |
+| `STORAGE_HOST`        | Sets the Redis database host                                       | *none*  |
+| `STORAGE_PASSWORD`    | Sets the Redis database password to use for authentication         | *none*  |
 
 ### Application configuration
 

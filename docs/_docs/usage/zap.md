@@ -15,6 +15,8 @@ It accepts a OWASP Zap scan report in JSON format as a payload and needs some ad
 POST /webhook/zap?org=[GitHub Organization]&repo=[Repository name]&sha=[Commit SHA]
 ```
 
+It is recommended to protect your webhook endpoint. If you enabled webhook protection you will need to provide the authentication credentials via Basic Authentication.
+
 Swingletree will process the report and send a Check Run Status with the context `security/zap` to the given GitHub coordinates.
 
 [zap]: https://www.owasp.org/index.php/OWASP_Zed_Attack_Proxy_Project
