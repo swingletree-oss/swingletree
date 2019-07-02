@@ -1,0 +1,4 @@
+dependencies:
+  - name: stable/redis
+    version: 8.0.14
+    condition: redis.enabled
