@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@octokit/rest": "^16.25.2",
+    "@octokit/webhooks": "^6.2.2",
     "basic-auth": "^2.0.1",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
@@ -59,7 +60,7 @@
     "mocha": "^6.1.4",
     "mockserver": "^3.0.0",
     "nodemon": "^1.19.0",
-    "semantic-release": "^15.13.12",
+    "semantic-release": "^15.13.18",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0",
     "ts-mocha": "^6.0.0",

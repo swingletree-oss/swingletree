@@ -1,6 +1,7 @@
 import { ChecksCreateParams, AppsListInstallationsResponseItem } from "@octokit/rest";
 import { DATABASE_INDEX } from "../db/redis-client";
 import { Health } from "../health-service";
+import { WebhookPayloadInstallationInstallation } from "@octokit/webhooks";
 
 /** Contains event identifiers.
  */
@@ -12,13 +13,19 @@ export enum Events {
 	DatabaseReconnect = "core:database:reconnect",
 	HealthCheckEvent = "core:healthcheck",
 	HealthStatusEvent = "core:healthcheck:status",
-	CacheSyncEvent = "core:cachesync"
+	CacheSyncEvent = "core:cachesync",
+	GitHubCheckSuiteRequestedEvent = "core:checksuite:requested"
+}
+
+export interface SwingletreeRepoConfig {
+
 }
 
 /** Event superclass
  */
 export abstract class SwingletreeEvent {
 	eventType: string;
+	config: SwingletreeRepoConfig;
 
 	constructor(eventType: string) {
 		this.eventType = eventType;
@@ -35,6 +42,25 @@ abstract class CoreEvent extends SwingletreeEvent {
 	}
 }
 
+
+export class CheckSuiteRequestedEvent extends CoreEvent {
+	checkSuiteId: number;
+	owner: string;
+	repo: string;
+	branch: string;
+	commitSha: string;
+
+	constructor(checkSuiteId: number, owner: string, repo: string, branch: string, commitSha: string) {
+		super(Events.GitHubCheckSuiteRequestedEvent);
+
+		this.checkSuiteId = checkSuiteId;
+		this.owner = owner;
+		this.repo = repo;
+		this.branch = branch;
+		this.commitSha = commitSha;
+	}
+}
+
 /** App installed event.
  *
  * This event is fired when a GitHub organization installed Swingletree.
@@ -45,9 +71,9 @@ export class AppInstalledEvent extends CoreEvent {
 	accountId: number;
 
 	installationId: number;
-	installEvent: AppsListInstallationsResponseItem;
+	installEvent: WebhookPayloadInstallationInstallation;
 
-	constructor(installEvent: AppsListInstallationsResponseItem) {
+	constructor(installEvent: WebhookPayloadInstallationInstallation) {
 		super(Events.AppInstalledEvent);
 
 		this.account = installEvent.account.login;
@@ -64,7 +90,7 @@ export class AppInstalledEvent extends CoreEvent {
  * This event is fired when a GitHub organization UNinstalled Swingletree.
  */
 export class AppDeinstalledEvent extends AppInstalledEvent {
-	constructor(installEvent: AppsListInstallationsResponseItem) {
+	constructor(installEvent: WebhookPayloadInstallationInstallation) {
 		super(installEvent);
 
 		this.eventType = Events.AppDeinstalledEvent;

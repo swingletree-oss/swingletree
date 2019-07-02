@@ -15,6 +15,8 @@ import { CoreConfig } from "../../core-config";
 import * as Github from "@octokit/rest";
 import { ChecksCreateParams } from "@octokit/rest";
 
+import * as yaml from "js-yaml";
+
 @injectable()
 class GithubClientService {
 	private installationStorage: InstallationStorage;
@@ -58,6 +60,17 @@ class GithubClientService {
 	public async createCheckStatus(createParams: ChecksCreateParams): Promise<Github.Response<Github.ChecksCreateResponse>> {
 		const client = await this.getGhAppClient(createParams.owner);
 		return await client.checks.create(createParams);
+	}
+
+	public async getSwingletreeConfigFromRepository(owner: string, repo: string) {
+		const client = await this.getGhAppClient(owner);
+		const response = await client.repos.getContents({
+			owner: owner,
+			repo: repo,
+			path: ".swingletree.yml"
+		});
+
+		return yaml.safeLoad(Buffer.from(response.data.content, "base64").toString());
 	}
 
 	public async getCheckSuitesOfRef(params: Github.ChecksListSuitesForRefParams): Promise<Github.Response<Github.ChecksListSuitesForRefResponse>> {

@@ -2,14 +2,15 @@
 
 import { LOGGER } from "../../logger";
 import { Router } from "express";
-import { GithubWebhookEventType, GithubInstallationWebhook } from "./model/gh-webhook-event";
 
 import EventBus from "../event/event-bus";
 import { injectable } from "inversify";
 import { inject } from "inversify";
 import { ConfigurationService } from "../../configuration";
-import { AppInstalledEvent, AppDeinstalledEvent } from "../event/event-model";
+import { AppInstalledEvent, AppDeinstalledEvent, CheckSuiteRequestedEvent } from "../event/event-model";
 import { CoreConfig } from "../core-config";
+import { WebhookPayloadCheckSuite, WebhookPayloadInstallation } from "@octokit/webhooks";
+import { GithubWebhookEventType } from "./model/gh-webhook-event";
 
 const GithubWebHookHandler = require("express-github-webhook");
 
@@ -37,6 +38,7 @@ class GithubWebhook {
 		const webhookHandler = GithubWebHookHandler({ path: "/", secret: this.webhookSecret });
 
 		webhookHandler.on(GithubWebhookEventType.INSTALLATION, this.installationHandler.bind(this));
+		webhookHandler.on(GithubWebhookEventType.CHECK_SUITE, this.checkSuiteHandler.bind(this));
 
 		webhookHandler.on("error", function (err: any, req: any, res: any) {
 			LOGGER.warn("failed to process webhook call. " + err);
@@ -48,7 +50,7 @@ class GithubWebhook {
 		return router;
 	}
 
-	public installationHandler(repo: string, data: GithubInstallationWebhook) {
+	public installationHandler(repo: string, data: WebhookPayloadInstallation) {
 		LOGGER.debug("received GitHub webhook installation event");
 
 		try {
@@ -62,6 +64,26 @@ class GithubWebhook {
 				this.eventBus.emit(
 					new AppDeinstalledEvent(
 						data.installation
+					)
+				);
+			}
+		} catch (err) {
+			LOGGER.error("failed to emit installation event through event bus", err);
+		}
+	}
+
+	public checkSuiteHandler(repo: string, data: WebhookPayloadCheckSuite) {
+		LOGGER.debug("received GitHub webhook check suite event");
+
+		try {
+			if (data.action == "requested" || data.action == "rerequested") {
+				this.eventBus.emit(
+					new CheckSuiteRequestedEvent(
+						data.check_suite.id,
+						data.repository.owner.login,
+						repo,
+						data.check_suite.head_branch,
+						data.check_suite.head_sha
 					)
 				);
 			}
