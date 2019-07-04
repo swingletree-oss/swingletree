@@ -7,6 +7,7 @@ export namespace TwistlockModel {
 	interface Result {
 		id: string;
 		distro: string;
+		compliances?: Compliance[];
 		complianceDistribution: SeverityCount;
 		vulnerabilities?: Vulnerability[];
 		vulnerabilityDistribution: SeverityCount;
@@ -18,6 +19,11 @@ export namespace TwistlockModel {
 		medium: number;
 		low: number;
 		total: number;
+	}
+
+	interface Compliance {
+		title: string;
+		severity: string;
 	}
 
 	interface Vulnerability {
