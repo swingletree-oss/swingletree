@@ -28,6 +28,17 @@ class TwistlockStatusEmitter {
 		eventBus.register(TwistlockEvents.TwistlockReportReceived, this.reportReceivedHandler, this);
 	}
 
+	private getIssueCount(event: TwistlockReportReceivedEvent): number {
+		let count = 0;
+		if (event.report.results && event.report.results.length > 0) {
+			event.report.results.forEach((result) => {
+				count += result.complianceDistribution.total + result.vulnerabilityDistribution.total;
+			});
+		}
+
+		return count;
+	}
+
 	private getConclusion(event: TwistlockReportReceivedEvent): "action_required" | "success" {
 		let conclusion: "success" | "action_required" = "success";
 		if (event.report.results && event.report.results.length > 0) {
@@ -59,7 +70,7 @@ class TwistlockStatusEmitter {
 		};
 
 		checkRun.output = {
-			title: `Twistlock scan result`,
+			title: `${this.getIssueCount(event)} issues found`,
 			summary: this.templateEngine.template<TwistlockModel.Template>(
 				Templates.TWISTLOCK_SCAN,
 				templateData

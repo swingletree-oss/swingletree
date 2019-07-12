@@ -63,8 +63,13 @@ class ZapStatusEmitter {
 			counts: riskCounts
 		};
 
+		let totalIssueCount = 0;
+		riskCounts.forEach((count) => {
+			totalIssueCount += count;
+		});
+
 		checkRun.output = {
-			title: `OWASP Zap scan result`,
+			title: `${totalIssueCount} issues found`,
 			summary: this.templateEngine.template<Zap.ReportTemplate>(
 				Templates.ZAP_SCAN,
 				templateData
