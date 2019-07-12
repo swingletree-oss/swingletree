@@ -175,9 +175,7 @@ class SonarStatusEmitter {
 		// add summary via template engine
 		checkRun.output.summary = this.templateEngine.template<SonarCheckRunSummaryTemplate>(Templates.CHECK_RUN_SUMMARY, summaryTemplateData);
 
-		const emitEvent = new GithubCheckRunWriteEvent(checkRun);
-
-		this.eventBus.emit(emitEvent);
+		this.eventBus.emit(new GithubCheckRunWriteEvent(checkRun));
 	}
 }
 

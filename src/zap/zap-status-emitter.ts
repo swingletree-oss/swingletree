@@ -50,7 +50,7 @@ class ZapStatusEmitter {
 		const checkRun: ChecksCreateParams = {
 			name: this.context,
 			owner: event.owner,
-			repo: event.repository,
+			repo: event.repo,
 			status: "completed",
 			conclusion: riskCounts.size == 0 ? "success" : "action_required",
 			started_at: new Date().toISOString(),

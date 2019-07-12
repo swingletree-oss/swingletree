@@ -81,7 +81,7 @@ class TwistlockWebhook {
 			const reportReceivedEvent = new TwistlockReportReceivedEvent(webhookData, org, repo);
 			reportReceivedEvent.commitId = sha;
 			reportReceivedEvent.owner = org;
-			reportReceivedEvent.repository = repo;
+			reportReceivedEvent.repo = repo;
 
 			// check if installation is available
 			if (await this.installationStorage.getInstallationId(org)) {

@@ -13,8 +13,6 @@ abstract class ZapEvent extends RepositorySourceConfigurable {
 
 export class ZapReportReceivedEvent extends ZapEvent {
 	commitId: string;
-	owner: string;
-	repository: string;
 	report: Zap.Report;
 
 	constructor(report: Zap.Report, owner: string, repo: string) {

@@ -46,7 +46,7 @@ class TwistlockStatusEmitter {
 		const checkRun: ChecksCreateParams = {
 			name: this.context,
 			owner: event.owner,
-			repo: event.repository,
+			repo: event.repo,
 			status: "completed",
 			conclusion: this.getConclusion(event),
 			started_at: new Date().toISOString(),
@@ -61,7 +61,7 @@ class TwistlockStatusEmitter {
 		checkRun.output = {
 			title: `Twistlock scan result`,
 			summary: this.templateEngine.template<TwistlockModel.Template>(
-				Templates.ZAP_SCAN,
+				Templates.TWISTLOCK_SCAN,
 				templateData
 			)
 		};
