@@ -10,3 +10,9 @@ h1,h2,h3,h4 {
     margin-bottom: 1.2em;
   }
 }
+
+.fas,.fab {
+  &.feat {
+    color: #61828f;
+  }
+}

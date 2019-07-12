@@ -1,6 +1,6 @@
 import { injectable, inject } from "inversify";
 import EventBus from "../core/event/event-bus";
-import { GithubCheckRunWriteEvent } from "../core/event/event-model";
+import { GithubCheckRunWriteEvent, SwingletreeEvent } from "../core/event/event-model";
 import { ChecksCreateParams, ChecksCreateParamsOutputAnnotations, ChecksCreateParamsOutput } from "@octokit/rest";
 import { ConfigurationService } from "../configuration";
 import { SonarWebhookEvent, QualityGateStatus } from "./client/sonar-wehook-event";

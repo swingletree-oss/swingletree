@@ -1,7 +1,8 @@
-import { injectable } from "inversify";
+import { injectable, inject } from "inversify";
 import { EventEmitter } from "events";
 import { LOGGER } from "../../logger";
-import { SwingletreeEvent, Events } from "./event-model";
+import { SwingletreeEvent, RepositorySourceConfigurable, Events } from "./event-model";
+import EventCache from "./event-config";
 
 @injectable()
 class EventBus {
@@ -15,9 +16,15 @@ class EventBus {
 	 *
 	 *  Registered event handlers will pick up and process the event.
 	 */
-	public emit(event: SwingletreeEvent) {
+	public async emit(event: SwingletreeEvent) {
 		LOGGER.debug("app event %s emitted", event.getEventType());
-		this.eventBus.emit(event.getEventType(), event);
+
+		if (event instanceof RepositorySourceConfigurable && !event.augmented) {
+			LOGGER.debug("passing event marked for augmentation to cache service.");
+			this.eventBus.emit(Events.EventAugmentionEvent, event);
+		} else {
+			this.eventBus.emit(event.getEventType(), event);
+		}
 	}
 
 	/** Registers an event handler on the Event Bus.
@@ -36,7 +43,7 @@ class EventBus {
 			try {
 				handler.apply(context, args);
 			} catch (err) {
-				LOGGER.error("a handler for event %s encountered an error.", eventName, err);
+				LOGGER.error("a handler for event %s encountered an error: %s", eventName, err);
 			}
 		};
 	}

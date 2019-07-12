@@ -11,9 +11,12 @@ layout: default
     <div class="row text-center">
         <div class="col-sm-4">
             <span class="text-center">
-                <i class="fa-4x fab fa-github-square"></i>
+                <span class="fa-stack fa-2x">
+                    <i class="fas fa-circle fa-stack-2x feat"></i>
+                    <i class="fa-stack-1x fab fa-github fa-inverse"></i>
+                </span>
             </span>
-            <h3 class="text-center">One Place</h3>
+            <h3 class="text-center">GitHub Integration</h3>
             <p>
                 No need to jump between tools to see what failed your Quality Gate. Swingletree uses the GitHub
                 Checks API to annotate findings in your repositories.
@@ -21,7 +24,10 @@ layout: default
         </div>
         <div class="col-sm-4">
             <span class="text-center">
-                <i class="fa-4x fas fa-database"></i>
+                <span class="fa-stack fa-2x">
+                    <i class="fas fa-circle fa-stack-2x feat"></i>
+                    <i class="fa-stack-1x fas fa-database fa-inverse"></i>
+                </span>
             </span>
             <h3 class="text-center">Persisted</h3>
             <p>
@@ -31,7 +37,10 @@ layout: default
         </div>
         <div class="col-sm-4">
             <span class="text-center">
-                <i class="fa-4x fas fa-feather"></i>
+                <span class="fa-stack fa-2x">
+                    <i class="fas fa-circle fa-stack-2x feat"></i>
+                    <i class="fa-stack-1x fas fa-feather fa-inverse"></i>
+                </span>
             </span>
             <h3 class="text-center">Ease of use</h3>
             <p>
@@ -43,24 +52,46 @@ layout: default
     <h2 class="underline" style="margin-top:2em">Integrations</h2>
 
     <div class="row text-center">
-        <div class="col-sm-6">
-            <span class="text-center">
-                <i class="fa-4x fas fa-check-circle"></i>
-            </span>
-            <h3 class="text-center">SonarQube Developer Edition</h3>
-            <p>
-                Swingletree can act as a SonarQube webhook endpoint. It will consume the SonarQube API to acquire additional data to
-                assemble the build report (see showcase).
-            </p>
+        <div class="row">
+            <div class="col-sm-6">
+                <span class="text-center">
+                    <span class="fa-stack fa-2x">
+                        <i class="fas fa-circle fa-stack-2x feat"></i>
+                        <i class="fa-stack-1x fas fa-check fa-inverse"></i>
+                    </span>
+                </span>
+                <h3 class="text-center">SonarQube Developer Edition</h3>
+                <p>
+                    Swingletree can act as a SonarQube webhook endpoint. It will consume the SonarQube API to acquire additional data to
+                    assemble the build report (see showcase).
+                </p>
+            </div>
+            <div class="col-sm-6">
+                <span class="text-center">
+                    <span class="fa-stack fa-2x">
+                        <i class="fas fa-circle fa-stack-2x feat"></i>
+                        <i class="fa-stack-1x fas fa-lock fa-inverse"></i>
+                    </span>
+                </span>
+                <h3 class="text-center">Twistlock Scan Reports</h3>
+                <p>
+                    Swingletree can process Twistlock Security Scan Reports.
+                </p>
+            </div>
         </div>
-        <div class="col-sm-6">
-            <span class="text-center">
-                <i class="fa-4x fas fa-crosshairs"></i>
-            </span>
-            <h3 class="text-center">OWASP Zap Reports</h3>
-            <p>
-                Swingletree can process OWASP Zap Scan JSON-reports.
-            </p>
+        <div class="row" style="margin-top:1em">
+            <div class="col-sm-6">
+                <span class="text-center">
+                    <span class="fa-stack fa-2x">
+                        <i class="fas fa-circle fa-stack-2x feat"></i>
+                        <i class="fa-stack-1x fas fa-crosshairs  fa-inverse"></i>
+                    </span>
+                </span>
+                <h3 class="text-center">OWASP Zap Reports</h3>
+                <p>
+                    Swingletree can process OWASP Zap Scan JSON-reports.
+                </p>
+            </div>
         </div>
     </div>
 

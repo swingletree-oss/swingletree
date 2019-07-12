@@ -50,6 +50,7 @@ describe("Sonar Status Emitter", () => {
 		);
 
 		analysisData = {
+			id: "id",
 			getEventType: sinon.stub(),
 			owner: "test",
 			repository: "testrepo",

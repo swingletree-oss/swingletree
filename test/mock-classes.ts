@@ -8,12 +8,34 @@ import { TemplateEngine } from "../src/core/template/template-engine";
 import TokenStorage from "../src/core/github/client/token-storage";
 import { SonarConfig } from "../src/sonar/sonar-config";
 import { CoreConfig } from "../src/core/core-config";
+import GithubClientService from "../src/core/github/client/github-client";
+import EventConfigCache from "../src/core/event/event-config";
 
 export class EventBusMock extends EventBus {
 	constructor() {
 		super();
 		this.emit = sinon.stub();
 		this.register = sinon.stub();
+	}
+}
+
+export class EventConfigCacheMock extends EventConfigCache {
+	constructor() {
+		super(new GithubClientServiceMock(), new EventBusMock());
+
+		const self: any = this;
+		self.github = new GithubClientServiceMock();
+	}
+}
+
+export class GithubClientServiceMock extends GithubClientService {
+	constructor() {
+		super(new ConfigurationServiceMock(), new TokenStorageMock(), new InstallationStorageMock);
+
+		this.getSwingletreeConfigFromRepository = sinon.stub().resolves()
+
+		const self: any = this;
+		self.retrieveBearerToken = sinon.stub().resolves("testBearer");
 	}
 }
 

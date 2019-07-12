@@ -7,7 +7,6 @@ import * as sinon from "sinon";
 chai.use(require("sinon-chai"));
 
 import { Response, Request, NextFunction } from "express";
-import { SonarWebhookEvent } from "../../src/sonar/model/sonar-wehook-event";
 
 import SonarWebhook from "../../src/sonar/sonar-webhook";
 import { EventEmitter } from "events";

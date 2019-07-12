@@ -1,9 +1,0 @@
-version: '2'
-services:
-  swingletree:
-    build: .
-    ports:
-    - "3000:3000"
-  redis:
-    image: redis
-    command: --requirepass ${REDIS_PASS}

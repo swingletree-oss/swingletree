@@ -7,17 +7,15 @@ import EventBus from "../core/event/event-bus";
 import { ConfigurationService } from "../configuration";
 import * as BasicAuth from "basic-auth";
 import { LOGGER } from "../logger";
-import { ZapConfig } from "./zap-config";
-import { Zap } from "./zap-model";
 import InstallationStorage from "../core/github/client/installation-storage";
-import { ZapReportReceivedEvent } from "./zap-events";
+import { TwistlockModel } from "./model";
+import { TwistlockConfig } from "./config";
+import { TwistlockReportReceivedEvent } from "./events";
 
 /** Provides a Webhook for Sonar
  */
 @injectable()
-class ZapWebhook {
-	public static readonly IGNORE_ID = "sonar";
-
+class TwistlockWebhook {
 	private eventBus: EventBus;
 	private configurationService: ConfigurationService;
 	private installationStorage: InstallationStorage;
@@ -32,8 +30,8 @@ class ZapWebhook {
 		this.installationStorage = installationStorage;
 	}
 
-	private isWebhookEventRelevant(event: Zap.Report) {
-		return event.site !== undefined;
+	private isWebhookEventRelevant(event: TwistlockModel.Report) {
+		return event.results.length > 0;
 	}
 
 	private authenticationMiddleware(secret: string) {
@@ -49,12 +47,12 @@ class ZapWebhook {
 
 	public getRoute(): Router {
 		const router = Router();
-		const secret = this.configurationService.get(ZapConfig.SECRET);
+		const secret = this.configurationService.get(TwistlockConfig.SECRET);
 
 		if (secret && secret.trim().length > 0) {
 			router.use(this.authenticationMiddleware(secret));
 		} else {
-			LOGGER.warn("Zap webhook is not protected. Consider setting a zap secret in the Swingletree configuration.");
+			LOGGER.warn("Twistlock webhook is not protected. Consider setting a Twistlock secret in the Swingletree configuration.");
 		}
 		router.post("/", this.webhook);
 
@@ -62,17 +60,17 @@ class ZapWebhook {
 	}
 
 	public webhook = async (req: Request, res: Response) => {
-		LOGGER.debug("received Zap webhook event");
+		LOGGER.debug("received Twistlock webhook event");
 
 		const org = req.query["org"];
 		const repo = req.query["repo"];
 		const sha = req.query["sha"];
 
-		if (this.configurationService.getBoolean(ZapConfig.LOG_WEBHOOK_EVENTS)) {
+		if (this.configurationService.getBoolean(TwistlockConfig.LOG_WEBHOOK_EVENTS)) {
 			LOGGER.debug(JSON.stringify(req.body));
 		}
 
-		const webhookData: Zap.Report = req.body;
+		const webhookData: TwistlockModel.Report = req.body;
 
 		if (org == null || repo == null || sha == null) {
 			res.status(400).send("missing at least one of following query parameters: org, repo, sha");
@@ -80,7 +78,7 @@ class ZapWebhook {
 		}
 
 		if (this.isWebhookEventRelevant(webhookData)) {
-			const reportReceivedEvent = new ZapReportReceivedEvent(webhookData, org, repo);
+			const reportReceivedEvent = new TwistlockReportReceivedEvent(webhookData, org, repo);
 			reportReceivedEvent.commitId = sha;
 			reportReceivedEvent.owner = org;
 			reportReceivedEvent.repo = repo;
@@ -89,11 +87,11 @@ class ZapWebhook {
 			if (await this.installationStorage.getInstallationId(org)) {
 				this.eventBus.emit(reportReceivedEvent);
 			} else {
-				LOGGER.info("ignored zap report for %s/%s. Swingletree may not be installed in this organization.", org, repo);
+				LOGGER.info("ignored twistlock report for %s/%s. Swingletree may not be installed in this organization.", org, repo);
 			}
 		} else {
-			LOGGER.debug("zap webhook data did not contain a report. This event will be ignored.");
-			res.status(400).send("zap webhook data did not contain a report. This event will be ignored.");
+			LOGGER.debug("twistlock webhook data did not contain a report. This event will be ignored.");
+			res.status(400).send("twistlock webhook data did not contain a report. This event will be ignored.");
 			return;
 		}
 
@@ -101,4 +99,4 @@ class ZapWebhook {
 	}
 }
 
-export default ZapWebhook;
+export default TwistlockWebhook;

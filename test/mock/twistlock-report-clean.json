@@ -1,0 +1,23 @@
+{
+	"results": [
+		{
+			"id": "sha256:268bc513b12e6bf7bfb41a7f0b18d69ce69ad952b5ee7489318fbb7b870f4a33",
+			"distro": "CentOS Linux 7 (Core)",
+			"complianceDistribution": {
+				"critical": 0,
+				"high": 0,
+				"medium": 0,
+				"low": 0,
+				"total": 0
+			},
+			"vulnerabilities": [ ],
+			"vulnerabilityDistribution": {
+				"critical": 0,
+				"high": 0,
+				"medium": 0,
+				"low": 0,
+				"total": 0
+			}
+		}
+	]
+}

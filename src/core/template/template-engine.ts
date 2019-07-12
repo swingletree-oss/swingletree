@@ -14,6 +14,7 @@ export class TemplateEngine {
 		this.addFilter("gateConditionIcon", this.qualityGateConditionIconFilter);
 		this.addFilter("delta", this.deltaFilter);
 		this.addFilter("fixed", this.fixedFilter);
+		this.addFilter("keys", this.listKeys);
 	}
 
 	/** Gets and fills a template
@@ -56,12 +57,18 @@ export class TemplateEngine {
 		return str;
 	}
 
+	public listKeys(object: any) {
+		if (object) {
+			return Object.keys(object);
+		}
+	}
 }
 
 export enum Templates {
 	/** Template for GitHub Check Run summaries */
 	CHECK_RUN_SUMMARY = "check-run/summary.md.tpl",
-	ZAP_SCAN = "zap/report.md.tpl"
+	ZAP_SCAN = "zap/report.md.tpl",
+	TWISTLOCK_SCAN = "twistlock/scan.md.tpl"
 }
 
 export interface TemplateData {

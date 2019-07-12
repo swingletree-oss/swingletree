@@ -51,7 +51,7 @@ describe("Zap Template", () => {
 			counts.set(Zap.Riskcode.MEDIUM, 1337);
 
 			const templateContent = uut.template<Zap.ReportTemplate>(Templates.ZAP_SCAN, {
-				event: new ZapReportReceivedEvent(zapTestData),
+				event: new ZapReportReceivedEvent(zapTestData, "org", "repo"),
 				counts: counts
 			});
 

@@ -44,13 +44,13 @@ class ZapStatusEmitter {
 		return counters;
 	}
 
-	public async reportReceivedHandler(event: ZapReportReceivedEvent) {
+	public reportReceivedHandler(event: ZapReportReceivedEvent) {
 		const riskCounts = this.getRiskCounts(event.report);
 
 		const checkRun: ChecksCreateParams = {
 			name: this.context,
 			owner: event.owner,
-			repo: event.repository,
+			repo: event.repo,
 			status: "completed",
 			conclusion: riskCounts.size == 0 ? "success" : "action_required",
 			started_at: new Date().toISOString(),
@@ -63,8 +63,13 @@ class ZapStatusEmitter {
 			counts: riskCounts
 		};
 
+		let totalIssueCount = 0;
+		riskCounts.forEach((count) => {
+			totalIssueCount += count;
+		});
+
 		checkRun.output = {
-			title: `OWASP Zap scan result`,
+			title: `${totalIssueCount} issues found`,
 			summary: this.templateEngine.template<Zap.ReportTemplate>(
 				Templates.ZAP_SCAN,
 				templateData
