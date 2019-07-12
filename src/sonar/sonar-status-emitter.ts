@@ -1,6 +1,6 @@
 import { injectable, inject } from "inversify";
 import EventBus from "../core/event/event-bus";
-import { GithubCheckRunWriteEvent } from "../core/event/event-model";
+import { GithubCheckRunWriteEvent, SwingletreeEvent } from "../core/event/event-model";
 import { ChecksCreateParams, ChecksCreateParamsOutputAnnotations, ChecksCreateParamsOutput } from "@octokit/rest";
 import { ConfigurationService } from "../configuration";
 import { SonarWebhookEvent, QualityGateStatus } from "./client/sonar-wehook-event";
@@ -175,7 +175,9 @@ class SonarStatusEmitter {
 		// add summary via template engine
 		checkRun.output.summary = this.templateEngine.template<SonarCheckRunSummaryTemplate>(Templates.CHECK_RUN_SUMMARY, summaryTemplateData);
 
-		this.eventBus.emit(new GithubCheckRunWriteEvent(checkRun));
+		const emitEvent = new GithubCheckRunWriteEvent(checkRun);
+
+		this.eventBus.emit(emitEvent);
 	}
 }
 

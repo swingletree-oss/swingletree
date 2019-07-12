@@ -70,6 +70,10 @@ class GithubClientService {
 			path: ".swingletree.yml"
 		});
 
+		if (response.status == 404) {
+			return null;
+		}
+
 		return yaml.safeLoad(Buffer.from(response.data.content, "base64").toString());
 	}
 

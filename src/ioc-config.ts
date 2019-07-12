@@ -15,6 +15,7 @@ import PageRoutes from "./core/pages/page-routes";
 import { TemplateEngine } from "./core/template/template-engine";
 import HealthService from "./core/health-service";
 import { WebServer } from "./core/webserver";
+import EventConfigCache from "./core/event/event-config";
 
 
 const container = new Container();
@@ -24,6 +25,7 @@ container.bind<ConfigurationService>(ConfigurationService).toSelf().inSingletonS
 container.bind<GithubClientService>(GithubClientService).toSelf().inSingletonScope();
 container.bind<HealthService>(HealthService).toSelf().inSingletonScope();
 container.bind<EventBus>(EventBus).toSelf().inSingletonScope();
+container.bind<EventConfigCache>(EventConfigCache).toSelf().inSingletonScope();
 container.bind<GithubWebhook>(GithubWebhook).toSelf().inSingletonScope();
 container.bind<TokenStorage>(TokenStorage).toSelf().inSingletonScope();
 container.bind<TemplateEngine>(TemplateEngine).toSelf().inSingletonScope();

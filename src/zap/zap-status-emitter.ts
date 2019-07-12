@@ -44,7 +44,7 @@ class ZapStatusEmitter {
 		return counters;
 	}
 
-	public async reportReceivedHandler(event: ZapReportReceivedEvent) {
+	public reportReceivedHandler(event: ZapReportReceivedEvent) {
 		const riskCounts = this.getRiskCounts(event.report);
 
 		const checkRun: ChecksCreateParams = {

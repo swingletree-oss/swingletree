@@ -11,6 +11,7 @@ import { AppInstalledEvent, AppDeinstalledEvent, CheckSuiteRequestedEvent } from
 import { CoreConfig } from "../core-config";
 import { WebhookPayloadCheckSuite, WebhookPayloadInstallation } from "@octokit/webhooks";
 import { GithubWebhookEventType } from "./model/gh-webhook-event";
+import GithubClientService from "./client/github-client";
 
 const GithubWebHookHandler = require("express-github-webhook");
 
@@ -72,20 +73,21 @@ class GithubWebhook {
 		}
 	}
 
-	public checkSuiteHandler(repo: string, data: WebhookPayloadCheckSuite) {
+	public async checkSuiteHandler(repo: string, data: WebhookPayloadCheckSuite) {
 		LOGGER.debug("received GitHub webhook check suite event");
 
 		try {
 			if (data.action == "requested" || data.action == "rerequested") {
-				this.eventBus.emit(
-					new CheckSuiteRequestedEvent(
+				const event = new CheckSuiteRequestedEvent(
 						data.check_suite.id,
 						data.repository.owner.login,
 						repo,
 						data.check_suite.head_branch,
-						data.check_suite.head_sha
-					)
-				);
+						data.check_suite.head_sha,
+						data.action == "rerequested"
+					);
+
+				this.eventBus.emit(event);
 			}
 		} catch (err) {
 			LOGGER.error("failed to emit installation event through event bus", err);

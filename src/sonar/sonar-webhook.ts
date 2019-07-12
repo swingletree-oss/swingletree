@@ -90,6 +90,8 @@ class SonarWebhook {
 			}
 		} else {
 			LOGGER.debug("SonarQube webhook data did not contain repo and/or commit-sha data. This event will be ignored.");
+			res.status(400).send("SonarQube webhook data did not contain repo and/or commit-sha data. This event will be ignored.");
+			return;
 		}
 
 		res.sendStatus(204);

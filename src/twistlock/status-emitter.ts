@@ -41,7 +41,7 @@ class TwistlockStatusEmitter {
 		return conclusion;
 	}
 
-	public async reportReceivedHandler(event: TwistlockReportReceivedEvent) {
+	public reportReceivedHandler(event: TwistlockReportReceivedEvent) {
 
 		const checkRun: ChecksCreateParams = {
 			name: this.context,

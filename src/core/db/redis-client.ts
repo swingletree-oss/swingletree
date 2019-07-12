@@ -96,6 +96,7 @@ class RedisClientFactory {
 }
 
 export enum DATABASE_INDEX {
+	EVENT_CONFIG_CACHE = 3,
 	TOKEN_STORAGE = 2,
 	INSTALLATION_STORAGE = 1
 }

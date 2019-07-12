@@ -8,6 +8,7 @@ import { CacheSyncEvent, PerformHealthCheckEvent } from "./event/event-model";
 import InstallationStorage from "./github/client/installation-storage";
 import { SwingletreeComponent } from "../component";
 import { WebServer } from "./webserver";
+import EventConfigCache from "./event/event-config";
 
 class SwingletreeCore extends SwingletreeComponent.Component {
 	private webserver: WebServer;
@@ -22,6 +23,8 @@ class SwingletreeCore extends SwingletreeComponent.Component {
 		this.githubWebhook = container.get<GithubWebhook>(GithubWebhook);
 		this.pageRoutes = container.get<PageRoutes>(PageRoutes);
 		this.eventBus = container.get<EventBus>(EventBus);
+
+		container.get<EventConfigCache>(EventConfigCache);
 	}
 
 	public run() {

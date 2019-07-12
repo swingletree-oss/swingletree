@@ -78,7 +78,7 @@ class TwistlockWebhook {
 		}
 
 		if (this.isWebhookEventRelevant(webhookData)) {
-			const reportReceivedEvent = new TwistlockReportReceivedEvent(webhookData);
+			const reportReceivedEvent = new TwistlockReportReceivedEvent(webhookData, org, repo);
 			reportReceivedEvent.commitId = sha;
 			reportReceivedEvent.owner = org;
 			reportReceivedEvent.repository = repo;
@@ -91,6 +91,8 @@ class TwistlockWebhook {
 			}
 		} else {
 			LOGGER.debug("twistlock webhook data did not contain a report. This event will be ignored.");
+			res.status(400).send("twistlock webhook data did not contain a report. This event will be ignored.");
+			return;
 		}
 
 		res.sendStatus(204);

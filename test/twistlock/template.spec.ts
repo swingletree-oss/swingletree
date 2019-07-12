@@ -7,10 +7,6 @@ import * as sinon from "sinon";
 chai.use(require("sinon-chai"));
 chai.use(require("chai-as-promised"));
 
-import TwistlockStatusEmitter from "../../src/twistlock/status-emitter";
-import { EventBusMock, ConfigurationServiceMock, InstallationStorageMock, TemplateEngineMock } from "../mock-classes";
-import { TwistlockReportReceivedEvent } from "../../src/twistlock/events";
-import { Events } from "../../src/core/event/event-model";
 import { TemplateEngine, Templates } from "../../src/core/template/template-engine";
 import { TwistlockModel } from "../../src/twistlock/model";
 

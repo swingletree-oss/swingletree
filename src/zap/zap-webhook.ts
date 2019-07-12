@@ -80,7 +80,7 @@ class ZapWebhook {
 		}
 
 		if (this.isWebhookEventRelevant(webhookData)) {
-			const reportReceivedEvent = new ZapReportReceivedEvent(webhookData);
+			const reportReceivedEvent = new ZapReportReceivedEvent(webhookData, org, repo);
 			reportReceivedEvent.commitId = sha;
 			reportReceivedEvent.owner = org;
 			reportReceivedEvent.repository = repo;
@@ -93,6 +93,8 @@ class ZapWebhook {
 			}
 		} else {
 			LOGGER.debug("zap webhook data did not contain a report. This event will be ignored.");
+			res.status(400).send("zap webhook data did not contain a report. This event will be ignored.");
+			return;
 		}
 
 		res.sendStatus(204);

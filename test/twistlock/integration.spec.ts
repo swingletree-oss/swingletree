@@ -28,7 +28,9 @@ describe("Twistlock", () => {
 			);
 
 			const event = new TwistlockReportReceivedEvent(
-				require("../mock/twistlock-report-all.json")
+				require("../mock/twistlock-report-all.json"),
+				"org",
+				"repo"
 			);
 
 			uut.reportReceivedHandler(event);
@@ -49,7 +51,9 @@ describe("Twistlock", () => {
 			);
 
 			const event = new TwistlockReportReceivedEvent(
-				require("../mock/twistlock-report-clean.json")
+				require("../mock/twistlock-report-clean.json"),
+				"org",
+				"repo"
 			);
 
 			uut.reportReceivedHandler(event);

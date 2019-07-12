@@ -1,7 +1,12 @@
 import { TemplateData } from "../core/template/template-engine";
 import { ZapReportReceivedEvent } from "./zap-events";
+import { RepositoryConfigPluginItem } from "../core/event/event-model";
 
 export namespace Zap {
+
+	export interface ZapRepositoryConfig extends RepositoryConfigPluginItem {
+
+	}
 
 	export interface Report {
 		"@version": string;
