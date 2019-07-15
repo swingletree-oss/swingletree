@@ -23,7 +23,7 @@ export interface RepositoryConfig {
 }
 
 export interface RepositoryConfigPluginItem {
-	enabled: true;
+	enabled: boolean;
 }
 
 /** Event superclass
