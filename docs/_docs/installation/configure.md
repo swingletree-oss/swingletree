@@ -38,7 +38,7 @@ Environment variables override file configuration values.
 | --------------------- | ----------------------------------------------------------------- | ------- |
 | `TWISTLOCK_ENABLED`   | Enables the Swingletree Twistlock Plugin.                         | `false` |
 | `TWISTLOCK_SECRET`    | Enables and sets the Basic Authentication password for the Swingletree Twistlock webhook. | *none* |
-| `TWISTLOCK_CONTEXT`   | Sets the check-run name of Swingletree Twistlock                  | `security/zap` |
+| `TWISTLOCK_CONTEXT`   | Sets the check-run name of Swingletree Twistlock                  | `security/twistlock` |
 | `TWISTLOCK_DEBUG`     | Controls debug mode of the Twistlock webhook                      | `false` |
 
 ### Zap configuration
