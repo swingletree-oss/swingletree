@@ -80,11 +80,23 @@ class SonarStatusEmitter {
 		}
 	}
 
-	private processIssues(checkRun: ChecksCreateParams, summaryTemplateData: SonarCheckRunSummaryTemplate, issues: Sonar.model.Issue[], counters: Map<string, number>) {
-		issues.forEach((item) => {
-			const path = item.component.replace(`${item.project}:`, "");
+	private getIssueProjectPath(issue: Sonar.model.Issue, issueSummary: Sonar.util.IssueSummary): string {
+		let result = "";
+
+		if (issue.subProject) {
+			result = `${issueSummary.components.get(issue.subProject).path}/`;
+		}
+
+		result = `${result}${issueSummary.components.get(issue.component).path}`;
+
+		return result;
+	}
+
+	private processIssues(checkRun: ChecksCreateParams, summaryTemplateData: SonarCheckRunSummaryTemplate, issueSummary: Sonar.util.IssueSummary, counters: Map<string, number>) {
+		issueSummary.issues.forEach((item) => {
+
 			const annotation: ChecksCreateParamsOutputAnnotations = {
-				path: path,
+				path: this.getIssueProjectPath(item, issueSummary),
 				start_line: item.line || 1,
 				end_line: item.line || 1,
 				title: `${item.severity} ${item.type} (${item.rule})`,
@@ -143,7 +155,7 @@ class SonarStatusEmitter {
 		await this.processCoverageDeltas(checkRun.output, summaryTemplateData, event);
 
 		try {
-			const issues = await this.sonarClient.getIssues(event.analysisEvent.project.key, event.analysisEvent.branch.name);
+			const issueSummary = await this.sonarClient.getIssues(event.analysisEvent.project.key, event.analysisEvent.branch.name);
 			const counters: Map<string, number> = new Map<string, number>();
 
 			// preset known rule types
@@ -151,16 +163,16 @@ class SonarStatusEmitter {
 				counters.set(rule, 0);
 			}
 
-			if (issues.length > 0) {
+			if (issueSummary.issues.length > 0) {
 				checkRun.output.annotations = [];
 
-				this.processIssues(checkRun, summaryTemplateData, issues, counters);
+				this.processIssues(checkRun, summaryTemplateData, issueSummary, counters);
 
 				if (checkRun.output.annotations.length >= 50) {
 					// this is a GitHub api constraint. Annotations are limited to 50 items max.
 					LOGGER.debug("%s issues were retrieved. Limiting reported results to 50.", checkRun.output.annotations.length);
 					summaryTemplateData.annotationsCapped = true;
-					summaryTemplateData.totalIssues = issues.length;
+					summaryTemplateData.totalIssues = issueSummary.issues.length;
 
 					// capping to 50 items
 					checkRun.output.annotations = checkRun.output.annotations.slice(0, 50);

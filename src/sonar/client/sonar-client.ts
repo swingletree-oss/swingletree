@@ -11,7 +11,6 @@ import { Events, HealthStatusEvent } from "../../core/event/event-model";
 import EventBus from "../../core/event/event-bus";
 import { SonarConfig } from "../sonar-config";
 
-
 @injectable()
 class SonarClient {
 	private eventBus: EventBus;
@@ -107,9 +106,12 @@ class SonarClient {
 		return paging.pageSize * paging.pageIndex < paging.total;
 	}
 
-	public getIssues(projectKey: string, branch: string): Promise<Sonar.model.Issue[]> {
-		return new Promise<Sonar.model.Issue[]>(async (resolve, reject) => {
-			let issues: Sonar.model.Issue[] = [];
+	public getIssues(projectKey: string, branch: string): Promise<Sonar.util.IssueSummary> {
+		return new Promise<Sonar.util.IssueSummary>(async (resolve, reject) => {
+			const result: Sonar.util.IssueSummary = {
+				issues: [],
+				components: new Map<string, Sonar.model.Component>()
+			};
 
 			const query: Sonar.model.IssueQuery = {
 				componentKeys: projectKey,
@@ -123,7 +125,14 @@ class SonarClient {
 			try {
 				do {
 					issuePage = await this.getIssue(query, page + 1);
-					issues = issues.concat(issuePage.issues);
+					result.issues = result.issues.concat(issuePage.issues);
+
+					issuePage.components.forEach((component: Sonar.model.Component) => {
+						if (!result.components.has(component.key)) {
+							result.components.set(component.key, component);
+						}
+					});
+
 					page = issuePage.paging.pageIndex;
 				} while (this.pagingNecessary(issuePage.paging));
 			} catch (err) {
@@ -131,7 +140,7 @@ class SonarClient {
 				reject(err);
 			}
 
-			resolve(issues);
+			resolve(result);
 		});
 	}
 
