@@ -39,13 +39,13 @@ describe("Sonar Status Emitter", () => {
 	});
 
 	beforeEach(function () {
-
+		const sonarClientMock = new SonarClientMock();
 		eventMock = new EventBusMock();
 
 		uut = new SonarStatusEmitter(
 			eventMock,
 			new ConfigurationServiceMock(),
-			new SonarClientMock(),
+			sonarClientMock,
 			new TemplateEngineMock()
 		);
 
@@ -103,22 +103,14 @@ describe("Sonar Status Emitter", () => {
 	});
 
 	it("should determine correct annotation paths", async () => {
-		analysisData.analysisEvent.project.key = "component-test";
+		analysisData.analysisEvent.project.key = "component-subproject-test";
 		await uut.analysisCompleteHandler(analysisData);
 
 		sinon.assert.calledOnce(eventMock.emit as any);
 
 		sinon.assert.calledWith(eventMock.emit as any, sinon.match((check: GithubCheckRunWriteEvent) => {
-			return check.payload.output.annotations[0].path == "src/main/java/Main.java";
+			return check.payload.output.annotations[0].path == "backend/src/main/java/testpkg/Constants.java";
 		}, "normal project key: path determination is failing in annotation #1"));
-
-		sinon.assert.calledWith(eventMock.emit as any, sinon.match((check: GithubCheckRunWriteEvent) => {
-			return check.payload.output.annotations[1].path == "src/main/java/Main.java";
-		}, "single colon project key: path determination is failing in annotation #2"));
-
-		sinon.assert.calledWith(eventMock.emit as any, sinon.match((check: GithubCheckRunWriteEvent) => {
-			return check.payload.output.annotations[2].path == "src/main/ja:v:a/Main.java";
-		}, "colon in file path causes path determination failure in annotation #3"));
 	});
 
 });

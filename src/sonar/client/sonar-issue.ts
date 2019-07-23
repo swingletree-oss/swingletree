@@ -6,6 +6,13 @@ export namespace Sonar {
 		coverage: number;
 	}
 
+	export namespace util {
+		export interface IssueSummary {
+			issues: Sonar.model.Issue[];
+			components: Map<string, Sonar.model.Component>;
+		}
+	}
+
 	export namespace model {
 		export enum RuleType {
 			CODE_SMELL = "CODE_SMELL",
@@ -127,6 +134,7 @@ export namespace Sonar {
 			key: string;
 			component: string;
 			project: string;
+			subProject?: string;
 			rule: string;
 			status: "OPEN" | "REOPENED" | "CONFIRMED" | "RESOLVED" | "CLOSED";
 			resolution: string;

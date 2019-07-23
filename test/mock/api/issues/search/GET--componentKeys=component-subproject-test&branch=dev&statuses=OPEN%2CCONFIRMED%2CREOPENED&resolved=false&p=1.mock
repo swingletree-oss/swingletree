@@ -1,0 +1,625 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+    "total": 16,
+    "p": 1,
+    "ps": 100,
+    "paging": {
+        "pageIndex": 1,
+        "pageSize": 100,
+        "total": 16
+    },
+    "effortTotal": 138,
+    "debtTotal": 138,
+    "issues": [
+        {
+            "key": "AWwFLmG9VxcOSy6wrTKW",
+            "rule": "squid:S1075",
+            "severity": "MINOR",
+            "component": "component-subproject-test:backend:src/main/java/testpkg/Constants.java",
+            "project": "component-subproject-test",
+            "subProject": "component-subproject-test:backend",
+            "line": 13,
+            "hash": "25928cdc1f6398fd54f7f52c2dc39314",
+            "textRange": {
+                "startLine": 13,
+                "endLine": 13,
+                "startOffset": 46,
+                "endOffset": 64
+            },
+            "flows": [],
+            "status": "OPEN",
+            "message": "Refactor your code to get this URI from a customizable parameter.",
+            "effort": "20min",
+            "debt": "20min",
+            "author": "",
+            "tags": [
+                "android",
+                "cert"
+            ],
+            "creationDate": "2019-04-17T13:07:34+0200",
+            "updateDate": "2019-07-18T15:03:26+0200",
+            "type": "CODE_SMELL",
+            "organization": "default-organization",
+            "fromHotspot": false
+        },
+        {
+            "key": "AWwFLmG9VxcOSy6wrTKX",
+            "rule": "squid:S1075",
+            "severity": "MINOR",
+            "component": "component-subproject-test:backend:src/main/java/testpkg/Constants.java",
+            "project": "component-subproject-test",
+            "subProject": "component-subproject-test:backend",
+            "line": 14,
+            "hash": "3d6a09cb1d3c2ab9cb077ee21a0c5cae",
+            "textRange": {
+                "startLine": 14,
+                "endLine": 14,
+                "startOffset": 46,
+                "endOffset": 51
+            },
+            "flows": [],
+            "status": "OPEN",
+            "message": "Refactor your code to get this URI from a customizable parameter.",
+            "effort": "20min",
+            "debt": "20min",
+            "author": "",
+            "tags": [
+                "android",
+                "cert"
+            ],
+            "creationDate": "2019-04-17T13:07:34+0200",
+            "updateDate": "2019-07-18T15:03:26+0200",
+            "type": "CODE_SMELL",
+            "organization": "default-organization",
+            "fromHotspot": false
+        },
+        {
+            "key": "AWwFLmG9VxcOSy6wrTKY",
+            "rule": "squid:S1075",
+            "severity": "MINOR",
+            "component": "component-subproject-test:backend:src/main/java/testpkg/Constants.java",
+            "project": "component-subproject-test",
+            "subProject": "component-subproject-test:backend",
+            "line": 15,
+            "hash": "814e4991636780641b95e359f805c2dd",
+            "textRange": {
+                "startLine": 15,
+                "endLine": 15,
+                "startOffset": 46,
+                "endOffset": 51
+            },
+            "flows": [],
+            "status": "OPEN",
+            "message": "Refactor your code to get this URI from a customizable parameter.",
+            "effort": "20min",
+            "debt": "20min",
+            "author": "",
+            "tags": [
+                "android",
+                "cert"
+            ],
+            "creationDate": "2019-04-17T13:07:34+0200",
+            "updateDate": "2019-07-18T15:03:26+0200",
+            "type": "CODE_SMELL",
+            "organization": "default-organization",
+            "fromHotspot": false
+        },
+        {
+            "key": "AWwFLmG9VxcOSy6wrTKZ",
+            "rule": "squid:S1075",
+            "severity": "MINOR",
+            "component": "component-subproject-test:backend:src/main/java/testpkg/Constants.java",
+            "project": "component-subproject-test",
+            "subProject": "component-subproject-test:backend",
+            "line": 16,
+            "hash": "53c8c7da4254fabbf55ba0285ecec15d",
+            "textRange": {
+                "startLine": 16,
+                "endLine": 16,
+                "startOffset": 46,
+                "endOffset": 51
+            },
+            "flows": [],
+            "status": "OPEN",
+            "message": "Refactor your code to get this URI from a customizable parameter.",
+            "effort": "20min",
+            "debt": "20min",
+            "author": "",
+            "tags": [
+                "android",
+                "cert"
+            ],
+            "creationDate": "2019-04-17T13:07:34+0200",
+            "updateDate": "2019-07-18T15:03:26+0200",
+            "type": "CODE_SMELL",
+            "organization": "default-organization",
+            "fromHotspot": false
+        },
+        {
+            "key": "AWwFLmG9VxcOSy6wrTKa",
+            "rule": "squid:S1075",
+            "severity": "MINOR",
+            "component": "component-subproject-test:backend:src/main/java/testpkg/Constants.java",
+            "project": "component-subproject-test",
+            "subProject": "component-subproject-test:backend",
+            "line": 17,
+            "hash": "212ff541b7aeb2caf50cab1db272f8f4",
+            "textRange": {
+                "startLine": 17,
+                "endLine": 17,
+                "startOffset": 46,
+                "endOffset": 51
+            },
+            "flows": [],
+            "status": "OPEN",
+            "message": "Refactor your code to get this URI from a customizable parameter.",
+            "effort": "20min",
+            "debt": "20min",
+            "author": "",
+            "tags": [
+                "android",
+                "cert"
+            ],
+            "creationDate": "2019-04-17T13:07:34+0200",
+            "updateDate": "2019-07-18T15:03:26+0200",
+            "type": "CODE_SMELL",
+            "organization": "default-organization",
+            "fromHotspot": false
+        },
+        {
+            "key": "AWwFLmIMVxcOSy6wrTKb",
+            "rule": "squid:S1133",
+            "severity": "INFO",
+            "component": "component-subproject-test:backend:src/main/java/testpkg/v1/Endpoint1.java",
+            "project": "component-subproject-test",
+            "subProject": "component-subproject-test:backend",
+            "line": 19,
+            "hash": "13b499bc00e5eb569a50b6103002a9e1",
+            "textRange": {
+                "startLine": 19,
+                "endLine": 19,
+                "startOffset": 13,
+                "endOffset": 42
+            },
+            "flows": [],
+            "status": "OPEN",
+            "message": "Do not forget to remove this deprecated code someday.",
+            "effort": "10min",
+            "debt": "10min",
+            "author": "",
+            "tags": [
+                "obsolete"
+            ],
+            "creationDate": "2019-04-17T13:07:34+0200",
+            "updateDate": "2019-07-18T15:03:26+0200",
+            "type": "CODE_SMELL",
+            "organization": "default-organization",
+            "fromHotspot": false
+        },
+        {
+            "key": "AWwFLmIMVxcOSy6wrTKd",
+            "rule": "squid:S4488",
+            "severity": "MINOR",
+            "component": "component-subproject-test:backend:src/main/java/testpkg/v1/Endpoint1.java",
+            "project": "component-subproject-test",
+            "subProject": "component-subproject-test:backend",
+            "line": 28,
+            "hash": "4499b4a22d39959178a16edeb5348bba",
+            "textRange": {
+                "startLine": 28,
+                "endLine": 28,
+                "startOffset": 2,
+                "endOffset": 16
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "component-subproject-test:backend:src/main/java/testpkg/v1/Endpoint1.java",
+                            "textRange": {
+                                "startLine": 28,
+                                "endLine": 28,
+                                "startOffset": 26,
+                                "endOffset": 43
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Replace \"@RequestMapping(method = RequestMethod.GET)\" with \"@GetMapping\"",
+            "effort": "2min",
+            "debt": "2min",
+            "author": "",
+            "tags": [
+                "spring"
+            ],
+            "creationDate": "2019-04-17T13:07:34+0200",
+            "updateDate": "2019-07-18T15:03:26+0200",
+            "type": "CODE_SMELL",
+            "organization": "default-organization",
+            "fromHotspot": false
+        },
+        {
+            "key": "AWwFLmIkVxcOSy6wrTKe",
+            "rule": "squid:S1133",
+            "severity": "INFO",
+            "component": "component-subproject-test:backend:src/main/java/testpkg/v1/TestV1.java",
+            "project": "component-subproject-test",
+            "subProject": "component-subproject-test:backend",
+            "line": 7,
+            "hash": "63a5c019334dc597f21a34f248ffbfc4",
+            "textRange": {
+                "startLine": 7,
+                "endLine": 7,
+                "startOffset": 13,
+                "endOffset": 23
+            },
+            "flows": [],
+            "status": "OPEN",
+            "message": "Do not forget to remove this deprecated code someday.",
+            "effort": "10min",
+            "debt": "10min",
+            "author": "",
+            "tags": [
+                "obsolete"
+            ],
+            "creationDate": "2019-04-17T13:07:34+0200",
+            "updateDate": "2019-07-18T15:03:26+0200",
+            "type": "CODE_SMELL",
+            "organization": "default-organization",
+            "fromHotspot": false
+        },
+        {
+            "key": "AWwFLmJKVxcOSy6wrTKg",
+            "rule": "squid:S4488",
+            "severity": "MINOR",
+            "component": "component-subproject-test:backend:src/main/java/testpkg/v2/Endpoint2.java",
+            "project": "component-subproject-test",
+            "subProject": "component-subproject-test:backend",
+            "line": 24,
+            "hash": "4499b4a22d39959178a16edeb5348bba",
+            "textRange": {
+                "startLine": 24,
+                "endLine": 24,
+                "startOffset": 2,
+                "endOffset": 16
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "component-subproject-test:backend:src/main/java/testpkg/v2/Endpoint2.java",
+                            "textRange": {
+                                "startLine": 24,
+                                "endLine": 24,
+                                "startOffset": 26,
+                                "endOffset": 43
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Replace \"@RequestMapping(method = RequestMethod.GET)\" with \"@GetMapping\"",
+            "effort": "2min",
+            "debt": "2min",
+            "author": "",
+            "tags": [
+                "spring"
+            ],
+            "creationDate": "2019-04-17T13:07:34+0200",
+            "updateDate": "2019-07-18T15:03:26+0200",
+            "type": "CODE_SMELL",
+            "organization": "default-organization",
+            "fromHotspot": false
+        },
+        {
+            "key": "AWwFLmJrVxcOSy6wrTKi",
+            "rule": "squid:S4488",
+            "severity": "MINOR",
+            "component": "component-subproject-test:backend:src/main/java/testpkg/v3/Endpoint3.java",
+            "project": "component-subproject-test",
+            "subProject": "component-subproject-test:backend",
+            "line": 43,
+            "hash": "4499b4a22d39959178a16edeb5348bba",
+            "textRange": {
+                "startLine": 43,
+                "endLine": 43,
+                "startOffset": 2,
+                "endOffset": 16
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "component-subproject-test:backend:src/main/java/testpkg/v3/Endpoint3.java",
+                            "textRange": {
+                                "startLine": 43,
+                                "endLine": 43,
+                                "startOffset": 26,
+                                "endOffset": 43
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Replace \"@RequestMapping(method = RequestMethod.GET)\" with \"@GetMapping\"",
+            "effort": "2min",
+            "debt": "2min",
+            "author": "",
+            "tags": [
+                "spring"
+            ],
+            "creationDate": "2019-04-17T13:07:34+0200",
+            "updateDate": "2019-07-18T15:03:26+0200",
+            "type": "CODE_SMELL",
+            "organization": "default-organization",
+            "fromHotspot": false
+        },
+        {
+            "key": "AWwFLmJrVxcOSy6wrTKk",
+            "rule": "squid:S4488",
+            "severity": "MINOR",
+            "component": "component-subproject-test:backend:src/main/java/testpkg/v3/Endpoint3.java",
+            "project": "component-subproject-test",
+            "subProject": "component-subproject-test:backend",
+            "line": 55,
+            "hash": "bdae97fdb60446e17a83af40d6e2b7bc",
+            "textRange": {
+                "startLine": 55,
+                "endLine": 55,
+                "startOffset": 2,
+                "endOffset": 16
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "component-subproject-test:backend:src/main/java/testpkg/v3/Endpoint3.java",
+                            "textRange": {
+                                "startLine": 55,
+                                "endLine": 55,
+                                "startOffset": 26,
+                                "endOffset": 43
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Replace \"@RequestMapping(method = RequestMethod.GET)\" with \"@GetMapping\"",
+            "effort": "2min",
+            "debt": "2min",
+            "author": "",
+            "tags": [
+                "spring"
+            ],
+            "creationDate": "2019-04-17T13:07:34+0200",
+            "updateDate": "2019-07-18T15:03:26+0200",
+            "type": "CODE_SMELL",
+            "organization": "default-organization",
+            "fromHotspot": false
+        },
+        {
+            "key": "AWwFLmLOVxcOSy6wrTKm",
+            "rule": "squid:S3415",
+            "severity": "MAJOR",
+            "component": "component-subproject-test:backend:src/test/java/testpkg/ConstantsTest.java",
+            "project": "component-subproject-test",
+            "subProject": "component-subproject-test:backend",
+            "line": 14,
+            "hash": "ec9260326afbb0339ae4491b6241e255",
+            "textRange": {
+                "startLine": 14,
+                "endLine": 14,
+                "startOffset": 35,
+                "endOffset": 67
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "component-subproject-test:backend:src/test/java/testpkg/ConstantsTest.java",
+                            "textRange": {
+                                "startLine": 14,
+                                "endLine": 14,
+                                "startOffset": 15,
+                                "endOffset": 33
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Swap these 2 arguments so they are in the correct order: expected value, actual value.",
+            "effort": "2min",
+            "debt": "2min",
+            "author": "",
+            "tags": [
+                "suspicious",
+                "tests"
+            ],
+            "creationDate": "2019-04-17T13:07:34+0200",
+            "updateDate": "2019-07-18T15:03:26+0200",
+            "type": "CODE_SMELL",
+            "organization": "default-organization",
+            "fromHotspot": false
+        },
+        {
+            "key": "AWwFLmLOVxcOSy6wrTKn",
+            "rule": "squid:S3415",
+            "severity": "MAJOR",
+            "component": "component-subproject-test:backend:src/test/java/testpkg/ConstantsTest.java",
+            "project": "component-subproject-test",
+            "subProject": "component-subproject-test:backend",
+            "line": 19,
+            "hash": "f385b4f4f2c326503154b3057fed32ea",
+            "textRange": {
+                "startLine": 19,
+                "endLine": 19,
+                "startOffset": 22,
+                "endOffset": 54
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "component-subproject-test:backend:src/test/java/testpkg/ConstantsTest.java",
+                            "textRange": {
+                                "startLine": 19,
+                                "endLine": 19,
+                                "startOffset": 15,
+                                "endOffset": 20
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Swap these 2 arguments so they are in the correct order: expected value, actual value.",
+            "effort": "2min",
+            "debt": "2min",
+            "author": "",
+            "tags": [
+                "suspicious",
+                "tests"
+            ],
+            "creationDate": "2019-04-17T13:07:34+0200",
+            "updateDate": "2019-07-18T15:03:26+0200",
+            "type": "CODE_SMELL",
+            "organization": "default-organization",
+            "fromHotspot": false
+        },
+        {
+            "key": "AWwFLmLOVxcOSy6wrTKo",
+            "rule": "squid:S3415",
+            "severity": "MAJOR",
+            "component": "component-subproject-test:backend:src/test/java/testpkg/ConstantsTest.java",
+            "project": "component-subproject-test",
+            "subProject": "component-subproject-test:backend",
+            "line": 24,
+            "hash": "14ee6ecf7ce790a1501b4dd30443ee19",
+            "textRange": {
+                "startLine": 24,
+                "endLine": 24,
+                "startOffset": 21,
+                "endOffset": 53
+            },
+            "flows": [
+                {
+                    "locations": [
+                        {
+                            "component": "component-subproject-test:backend:src/test/java/testpkg/ConstantsTest.java",
+                            "textRange": {
+                                "startLine": 24,
+                                "endLine": 24,
+                                "startOffset": 15,
+                                "endOffset": 20
+                            }
+                        }
+                    ]
+                }
+            ],
+            "status": "OPEN",
+            "message": "Swap these 2 arguments so they are in the correct order: expected value, actual value.",
+            "effort": "2min",
+            "debt": "2min",
+            "author": "",
+            "tags": [
+                "suspicious",
+                "tests"
+            ],
+            "creationDate": "2019-04-17T13:07:34+0200",
+            "updateDate": "2019-07-18T15:03:26+0200",
+            "type": "CODE_SMELL",
+            "organization": "default-organization",
+            "fromHotspot": false
+        }
+    ],
+    "components": [
+        {
+            "organization": "default-organization",
+            "key": "component-subproject-test:backend:src/main/java/testpkg/Constants.java",
+            "uuid": "AWwFLl2yVxcOSy6wrTJz",
+            "enabled": true,
+            "qualifier": "FIL",
+            "name": "Constants.java",
+            "longName": "src/main/java/testpkg/Constants.java",
+            "path": "src/main/java/testpkg/Constants.java"
+        },
+        {
+            "organization": "default-organization",
+            "key": "component-subproject-test:backend:src/main/java/testpkg/v2/Endpoint2.java",
+            "uuid": "AWwFLl2zVxcOSy6wrTJ-",
+            "enabled": true,
+            "qualifier": "FIL",
+            "name": "Endpoint2.java",
+            "longName": "src/main/java/testpkg/v2/Endpoint2.java",
+            "path": "src/main/java/testpkg/v2/Endpoint2.java"
+        },
+        {
+            "organization": "default-organization",
+            "key": "component-subproject-test:backend:src/main/java/testpkg/v1/Endpoint1.java",
+            "uuid": "AWwFLl2zVxcOSy6wrTJ7",
+            "enabled": true,
+            "qualifier": "FIL",
+            "name": "Endpoint1.java",
+            "longName": "src/main/java/testpkg/v1/Endpoint1.java",
+            "path": "src/main/java/testpkg/v1/Endpoint1.java"
+        },
+        {
+            "organization": "default-organization",
+            "key": "component-subproject-test:backend:src/main/java/testpkg/v1/TestV1.java",
+            "uuid": "AWwFLl2zVxcOSy6wrTJ8",
+            "enabled": true,
+            "qualifier": "FIL",
+            "name": "TestV1.java",
+            "longName": "src/main/java/testpkg/v1/TestV1.java",
+            "path": "src/main/java/testpkg/v1/TestV1.java"
+        },
+        {
+            "organization": "default-organization",
+            "key": "component-subproject-test:backend:src/test/java/testpkg/ConstantsTest.java",
+            "uuid": "AWwFLl2zVxcOSy6wrTKJ",
+            "enabled": true,
+            "qualifier": "UTS",
+            "name": "ConstantsTest.java",
+            "longName": "src/test/java/testpkg/ConstantsTest.java",
+            "path": "src/test/java/testpkg/ConstantsTest.java"
+        },
+        {
+            "organization": "default-organization",
+            "key": "component-subproject-test",
+            "uuid": "AWwFLlimgkt-OoOp_ITb",
+            "enabled": true,
+            "qualifier": "TRK",
+            "name": "component-subproject-test",
+            "longName": "component-subproject-test"
+        },
+        {
+            "organization": "default-organization",
+            "key": "component-subproject-test:backend:src/main/java/testpkg/v3/Endpoint3.java",
+            "uuid": "AWwFLl2zVxcOSy6wrTKB",
+            "enabled": true,
+            "qualifier": "FIL",
+            "name": "Endpoint3.java",
+            "longName": "src/main/java/testpkg/v3/Endpoint3.java",
+            "path": "src/main/java/testpkg/v3/Endpoint3.java"
+        },
+        {
+            "organization": "default-organization",
+            "key": "component-subproject-test:backend",
+            "uuid": "AWwFLl2yVxcOSy6wrTJu",
+            "enabled": true,
+            "qualifier": "BRC",
+            "name": "backend",
+            "longName": "backend",
+            "path": "backend"
+        }
+    ],
+    "facets": []
+}
