@@ -102,15 +102,30 @@ describe("Sonar Status Emitter", () => {
 		sinon.assert.calledWith(eventMock.emit as any, sinon.match.hasNested("payload.output.title", sinon.match("- Coverage: 70.6 (-19.5%)")));
 	});
 
-	it("should determine correct annotation paths", async () => {
+	it("should not contain undefined annotation paths in GitHub check run", async () => {
 		analysisData.analysisEvent.project.key = "component-subproject-test";
 		await uut.analysisCompleteHandler(analysisData);
 
 		sinon.assert.calledOnce(eventMock.emit as any);
 
-		sinon.assert.calledWith(eventMock.emit as any, sinon.match((check: GithubCheckRunWriteEvent) => {
-			return check.payload.output.annotations[0].path == "backend/src/main/java/testpkg/Constants.java";
-		}, "normal project key: path determination is failing in annotation #1"));
+		sinon.assert.calledWith(eventMock.emit as any,
+			sinon.match.hasNested("payload.output.annotations",
+				sinon.match.every(
+					sinon.match.has("path", sinon.match((path) => { return path; }))
+				)
+			)
+		);
+	});
+
+	it("should determine annotation paths", async () => {
+		analysisData.analysisEvent.project.key = "component-subproject-test";
+		await uut.analysisCompleteHandler(analysisData);
+
+		sinon.assert.calledOnce(eventMock.emit as any);
+
+		sinon.assert.calledWith(eventMock.emit as any, sinon.match.hasNested("payload.output.annotations[0]",
+			sinon.match.has("path", "backend/src/main/java/testpkg/Constants.java"))
+		);
 	});
 
 });

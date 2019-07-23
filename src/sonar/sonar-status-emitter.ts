@@ -84,10 +84,22 @@ class SonarStatusEmitter {
 		let result = "";
 
 		if (issue.subProject) {
-			result = `${issueSummary.components.get(issue.subProject).path}/`;
+			const subProject = issueSummary.components.get(issue.subProject);
+			if (subProject && subProject.path) {
+				result = `${subProject.path}/`;
+			} else {
+				LOGGER.debug("failed to retrieve sonar component path for subproject %s", issue.subProject);
+				return undefined;
+			}
 		}
 
-		result = `${result}${issueSummary.components.get(issue.component).path}`;
+		const component = issueSummary.components.get(issue.component);
+		if (component && component.path) {
+			result = `${result}${component.path}`;
+		} else {
+			LOGGER.debug("failed to retrieve sonar component path for %s", issue.component);
+			return undefined;
+		}
 
 		return result;
 	}
@@ -123,7 +135,11 @@ class SonarStatusEmitter {
 				}
 			}
 
-			checkRun.output.annotations.push(annotation);
+			if (annotation.path) {
+				checkRun.output.annotations.push(annotation);
+			} else {
+				LOGGER.debug("skipped an annotation due to missing path.");
+			}
 		});
 
 		summaryTemplateData.issueCounts = counters;
@@ -181,7 +197,7 @@ class SonarStatusEmitter {
 				}
 			}
 		} catch (err) {
-			LOGGER.warn("failed to retrieve SonarQube issues for check annotations. This affects %s @%s", event.repository, event.commitId, err);
+			LOGGER.warn("failed to retrieve SonarQube issues for check annotations. This affects %s @%s: %s", event.repository, event.commitId, err);
 		}
 
 		// add summary via template engine
