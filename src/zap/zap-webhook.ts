@@ -97,7 +97,7 @@ class ZapWebhook {
 			return;
 		}
 
-		res.sendStatus(204);
+		res.status(204).send();
 	}
 }
 
