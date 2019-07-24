@@ -31,7 +31,7 @@ class TwistlockWebhook {
 	}
 
 	private isWebhookEventRelevant(event: TwistlockModel.Report) {
-		return event.results.length > 0;
+		return event.results && event.results.length > 0;
 	}
 
 	private authenticationMiddleware(secret: string) {
@@ -95,7 +95,7 @@ class TwistlockWebhook {
 			return;
 		}
 
-		res.sendStatus(204);
+		res.status(204).send();
 	}
 }
 
