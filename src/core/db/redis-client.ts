@@ -64,6 +64,7 @@ class RedisClientFactory {
 	public createClient(databaseIndex = 0): RedisClient {
 		const client = new RedisClient({
 			host: this.database,
+			password: (this.password) ? this.password : undefined,
 			retry_strategy: (options) => {
 				return 5000;
 			}
@@ -81,11 +82,6 @@ class RedisClientFactory {
 			LOGGER.debug("Redis client for database index %i is connected and ready.", databaseIndex);
 			this.eventBus.emit(new DatabaseReconnectEvent(databaseIndex));
 		});
-
-		// set authentication if available
-		if (this.password) {
-			client.auth(this.password);
-		}
 
 		client.select(databaseIndex);
 
