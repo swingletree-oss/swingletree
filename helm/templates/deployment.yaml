@@ -2,7 +2,6 @@ apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: {{ template "swingletree.fullname" . }}
-  namespace: {{ template "Release.Namespace" . }}
   labels:
     app: {{ template "swingletree.name" . }}
     chart: {{ template "swingletree.chart" . }}
@@ -20,10 +19,32 @@ spec:
         app: {{ template "swingletree.name" . }}
         release: {{ .Release.Name }}
     spec:
+      volumes:
+        - name: config
+          secret:
+            secretName: {{ .Release.Name }}-config
+        - name: appkey
+          secret:
+            secretName: {{ .Release.Name }}-config
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{ if .Values.redis.password }}
+          - name: STORAGE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-config
+                key: redis-credential
+          {{ end }}
+          volumeMounts:
+            - name: config
+              mountPath: /opt/swingletree/swingletree.conf.yaml
+              subPath: swingletree.conf.yaml
+              readOnly: true
+            - name: appkey
+              mountPath: /opt/swingletree/gh-app.pem
+              subPath: gh-app.pem
           ports:
             - name: http
               containerPort: 3000

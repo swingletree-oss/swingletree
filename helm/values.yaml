@@ -13,8 +13,48 @@ service:
   type: ClusterIP
   port: 3000
 
-redis:
+# github app key file content
+github_app_key: # set using `--set-file github_app_key=/path/to/file` when running helm
+
+swingletree: # swingletree configuration
+  port: 3000
+
+  # storage configuration
+  storage:
+    host: localhost # database host
+    # password is taken from redis.password
+
+  # GitHub specific configuration
+  github:
+    app:
+      id: # The AppId of your GitHub app instance (not installation!)
+      page: # the GitHub App public page. Will be referenced in the Swingletree landing page.
+      keyfile: gh-app.pem # the key file of your GitHub App (you retrieve this from the App settings page)
+    base: https://api.github.com # Github Api base url
+    secret: # this is the webhook secret. You should set it.
+    debug: false # runs octokit in debug mode. Use this only for debug, since this can reveal secret tokens in the logs!
+
+  # SonarQube specific configuration
+  sonar:
+    enabled: true
+    secret: # basic auth password protecting the webhook
+    base: # SonarQube base url
+    context: sonarqube # defines the check status name
+    token: # API token
+    debug: false # log SonarQube webhook event requests on debug level
+
+  # Zap specific configuration
+  zap:
+    enabled: false
+    secret: # basic auth password protecting the webhook
+    context: security/zap # defines the check status name
+    debug: false # log zap webhook event requests on debug level
+
+
+redis: # stable/redis
   enabled: true
+  fullnameOverride: swingletree-cache
+  password: # also
 
 ingress:
   enabled: false
