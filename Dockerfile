@@ -33,4 +33,4 @@ COPY swingletree.conf.yaml .
 # add entrypoint script
 COPY docker/entrypoint.sh .
 
-ENTRYPOINT [ "/bin/sh", "entrypoint.sh" ]
+ENTRYPOINT [ "node", "main.js" ]

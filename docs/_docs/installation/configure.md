@@ -15,8 +15,7 @@ Environment variables override file configuration values.
 | --------------------- | ----------------------------------------------------------------- | ------- |
 | `GITHUB_APP_ID`       | Configures the GitHub Application ID                              | *none*  |
 | `GITHUB_APP_PAGE`     | *(optional)* Points to the GitHub App public page. The value can be found on the GitHub App configuration page. | *none* |
-| `GITHUB_APP_KEYFILE`  | A path pointing to the GitHub App private key file                | `gh-app.pem`  |
-| `GITHUB_APP_PEM`      | Contents will be written to `./gh-app.pem` on startup             | *none*  |
+| `GITHUB_APP_KEYFILE`  | A path pointing to the GitHub App private key file                | `gh-app.pem` |
 | `GITHUB_BASE`         | Configures the GitHub API base URL (useful for GitHub Enterprise) | `https://api.github.com`  |
 | `GITHUB_SECRET`       | Configures the GitHub webhook secret                              | *none*  |
 | `GITHUB_DEBUG`        | Controls debug mode of octokit                                    | `false` |
