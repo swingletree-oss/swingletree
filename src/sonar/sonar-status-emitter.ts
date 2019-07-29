@@ -61,7 +61,7 @@ class SonarStatusEmitter {
 			let branchCoverage: number = null;
 
 			if (!targetBranch && event.analysisEvent.branch.isMain) { // main branch analysis and no target branch set in sonar analysis parameters
-				const historyDelta = await this.sonarClient.getMeasureHistoryDelta(projectKey, Sonar.model.Metrics.COVERAGE, currentBranch);
+				const historyDelta = await this.sonarClient.getMeasureHistoryDelta(projectKey, Sonar.model.Metrics.COVERAGE);
 				deltaCoverage = historyDelta.delta;
 				branchCoverage = historyDelta.coverage;
 			} else { // non-main branch analysis
