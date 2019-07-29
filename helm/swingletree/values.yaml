@@ -50,6 +50,13 @@ swingletree: # swingletree configuration
     context: security/zap # defines the check status name
     debug: false # log zap webhook event requests on debug level
 
+  # Twistlock specific configuration
+  twistlock:
+    enabled: false
+    secret: # basic auth password protecting the webhook
+    context: security/twistlock # defines the check status name
+    debug: false # log zap webhook event requests on debug level
+
 
 redis: # stable/redis
   enabled: true
