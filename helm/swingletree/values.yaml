@@ -61,7 +61,7 @@ swingletree: # swingletree configuration
 redis: # stable/redis
   enabled: true
   fullnameOverride: swingletree-cache
-  password: # also
+  password: # set your database password with this value
 
 ingress:
   enabled: false
