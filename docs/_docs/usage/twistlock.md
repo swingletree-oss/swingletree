@@ -19,4 +19,27 @@ It is recommended to protect your webhook endpoint. If you enabled webhook prote
 
 Swingletree will process the report and send a Check Run Status with the context `security/twistlock` to the given GitHub coordinates.
 
+## Repository-specific Configuration
+
+Repository-specific behaviour can be configured by placing a `.swingletree.yaml` in the repository root directory. Swingletree reads from the master branch file only.
+
+Swingletree fails on any findings, if no `.swingletree.yaml` is available in the repository.
+
+```yaml
+plugin:
+  twistlock:
+    # vulnerabilities equal or above this severity require developer action
+    thresholdVulnerability: high
+    # vulnerabilities equal or above this cvss score require developer action
+    thresholdCvss: 8
+    # compliance issues equal or above this severity require developer action
+    thresholdCompliance: high
+
+    # define false-positives to exclude them
+    exceptions:
+      CVE-1230: not applicable
+      CVE-3332: also not applicable
+    # CVE-Key: exclusion note
+```
+
 [twistlock]: https://www.twistlock.com/
