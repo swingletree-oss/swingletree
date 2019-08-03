@@ -28,16 +28,6 @@ class TwistlockStatusEmitter {
 		eventBus.register(TwistlockEvents.TwistlockReportReceived, this.reportReceivedHandler, this);
 	}
 
-	private getIssueCount(event: TwistlockReportReceivedEvent): number {
-		let count = 0;
-		if (event.report.results && event.report.results.length > 0) {
-			event.report.results.forEach((result) => {
-				count += result.complianceDistribution.total + result.vulnerabilityDistribution.total;
-			});
-		}
-
-		return count;
-	}
 
 	private getConclusion(event: TwistlockReportReceivedEvent): "action_required" | "success" {
 		let conclusion: "success" | "action_required" = "success";
@@ -54,6 +44,15 @@ class TwistlockStatusEmitter {
 
 	public reportReceivedHandler(event: TwistlockReportReceivedEvent) {
 
+		const config = event.getPluginConfig<TwistlockModel.RepoConfig>("twistlock");
+		const issueReport = new TwistlockModel.util.FindingReport(
+			event.report,
+			config.thresholdVulnerability,
+			config.thresholdCvss,
+			config.thresholdCompliance,
+			config.exceptions
+		);
+
 		const checkRun: ChecksCreateParams = {
 			name: this.context,
 			owner: event.owner,
@@ -66,11 +65,12 @@ class TwistlockStatusEmitter {
 		};
 
 		const templateData: TwistlockModel.Template = {
-			report: event.report
+			report: event.report,
+			issues: issueReport
 		};
 
 		checkRun.output = {
-			title: `${this.getIssueCount(event)} issues found`,
+			title: `${issueReport.issuesCount()} issues found`,
 			summary: this.templateEngine.template<TwistlockModel.Template>(
 				Templates.TWISTLOCK_SCAN,
 				templateData
