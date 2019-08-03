@@ -57,6 +57,14 @@ export abstract class RepositorySourceConfigurable extends SwingletreeEvent {
 		this.owner = owner;
 		this.repo = repo;
 	}
+
+	public getPluginConfig<T extends RepositoryConfigPluginItem>(plugin: string): T {
+		if (this.config && this.config.plugin) {
+			return this.config.plugin.get(plugin) as T;
+		} else {
+			return null;
+		}
+	}
 }
 
 abstract class CoreEvent extends SwingletreeEvent {
