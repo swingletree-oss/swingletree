@@ -1,25 +1,24 @@
 {# Context Type: TwistlockModel.Template -#}
 
-{% if report.results.length > 0 %}
-{%  for result in report.results -%}
+{% if issues.getIssuesCount > 0 %}
 
 ## Summary
 
-| Type | Critical | High | Medium | Low | Total |
+| Type | Critical | High | Medium | Low |
 |:--- |:---:|:---:|:---:|:---:|:---:|
-| Compliance | {{ result.complianceDistribution.critical }} | {{ result.complianceDistribution.high }} | {{ result.complianceDistribution.medium }} | {{ result.complianceDistribution.low }} | {{ result.complianceDistribution.total }} |
-| Vulnerabilities | {{ result.vulnerabilityDistribution.critical }} | {{ result.vulnerabilityDistribution.high }} | {{ result.vulnerabilityDistribution.medium }} | {{ result.vulnerabilityDistribution.low }} | {{ result.vulnerabilityDistribution.total }} |
+| Compliance | {{ issues.complianceCounts.critical }} | {{ issues.complianceCounts.high }} | {{ issues.complianceCounts.medium }} | {{ issues.complianceCounts.low }} |
+| Vulnerabilities | {{ issues.vulnerabilityCounts.critical }} | {{ issues.vulnerabilityCounts.high }} | {{ issues.vulnerabilityCounts.medium }} | {{ issues.vulnerabilityCounts.low }} |
 
-{%   if result.compliances -%}
+{%   if issues.complianceIssues.length > 0 -%}
 ## Compliance Issues
-{%     for compliance in result.compliances -%}
+{%     for compliance in issues.complianceIssues -%}
 * **{{ compliance.severity }}:** {{ compliance.title }}
 {%     endfor %}
 {%   endif %}
 
-{%   if result.vulnerabilities -%}
+{%   if issues.vulnerabilityIssues.length > 0 -%}
 ## Vulnerabilities
-{%     for vul in result.vulnerabilities | sort(true, false, "cvss") -%}
+{%     for vul in issues.vulnerabilityIssues | sort(true, false, "cvss") -%}
 ### {{ vul.id }}
 
 | CVSS | Severity | Package | Version | |

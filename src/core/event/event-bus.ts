@@ -2,7 +2,6 @@ import { injectable, inject } from "inversify";
 import { EventEmitter } from "events";
 import { LOGGER } from "../../logger";
 import { SwingletreeEvent, RepositorySourceConfigurable, Events } from "./event-model";
-import EventCache from "./event-config";
 
 @injectable()
 class EventBus {
