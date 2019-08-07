@@ -12,11 +12,18 @@ export namespace TwistlockModel {
 			public readonly complianceCounts: Map<FindingSeverity, number>;
 			public readonly vulnerabilityCounts: Map<FindingSeverity, number>;
 
+			public readonly exceptions: Map<string, string>;
+
 			constructor(report: Report, vulnSeverity = FindingSeverity.LOW, minCvss = 0, complianceSeverity = FindingSeverity.LOW, exceptions = new Map<string, string>()) {
 				this.complianceIssues = [];
 				this.ignoredComplianceIssues = [];
 				this.vulnerabilityIssues = [];
 				this.ignoredVulnerabilityIssues = [];
+
+				this.complianceCounts = new Map<FindingSeverity, number>();
+				this.vulnerabilityCounts = new Map<FindingSeverity, number>();
+
+				this.exceptions = exceptions;
 
 				if (report.results && report.results.length > 0) {
 					report.results.forEach((result) => {
@@ -49,12 +56,20 @@ export namespace TwistlockModel {
 
 			private addComplianceIssue(issue: Compliance) {
 				this.complianceIssues.push(issue);
-				this.complianceCounts.set(issue.severity, this.complianceCounts.get(issue.severity) + 1);
+				if (this.complianceCounts.has(issue.severity)) {
+					this.complianceCounts.set(issue.severity, this.complianceCounts.get(issue.severity) + 1);
+				} else {
+					this.complianceCounts.set(issue.severity, 1);
+				}
 			}
 
 			private addVulnerabilityIssue(issue: Vulnerability) {
 				this.vulnerabilityIssues.push(issue);
-				this.vulnerabilityCounts.set(issue.severity, this.vulnerabilityCounts.get(issue.severity) + 1);
+				if (this.vulnerabilityCounts.has(issue.severity)) {
+					this.vulnerabilityCounts.set(issue.severity, this.vulnerabilityCounts.get(issue.severity) + 1);
+				} else {
+					this.vulnerabilityCounts.set(issue.severity, 1);
+				}
 			}
 
 			public issuesCount(): number {
@@ -67,6 +82,14 @@ export namespace TwistlockModel {
 		}
 	}
 
+	export enum FindingSeverity {
+		CRITICAL = "critical",
+		HIGH = "high",
+		MEDIUM = "medium",
+		LOW = "low",
+		TOTAL = "total"
+	}
+
 	export interface RepoConfig extends RepositoryConfigPluginItem {
 		thresholdVulnerability: FindingSeverity;
 		thresholdCvss: number;
@@ -75,13 +98,31 @@ export namespace TwistlockModel {
 		exceptions: Map<string, string>;
 	}
 
-	export enum FindingSeverity {
-		CRITICAL = "critical",
-		HIGH = "high",
-		MEDIUM = "medium",
-		LOW = "low",
-		TOTAL = "total"
+	export class DefaultRepoConfig implements RepoConfig {
+		enabled: boolean;
+		thresholdVulnerability: FindingSeverity;
+		thresholdCvss: number;
+		thresholdCompliance: FindingSeverity;
+
+		exceptions: Map<string, string>;
+
+		constructor(repoConfig?: RepoConfig) {
+			if (repoConfig) {
+				this.enabled = repoConfig.enabled;
+				this.thresholdCompliance = repoConfig.thresholdCompliance;
+				this.thresholdCvss = repoConfig.thresholdCvss;
+				this.thresholdVulnerability = repoConfig.thresholdVulnerability;
+				this.exceptions = repoConfig.exceptions || new Map<string, string>();
+			} else {
+				this.enabled = false;
+				this.exceptions = new Map<string, string>();
+				this.thresholdCompliance = FindingSeverity.LOW;
+				this.thresholdCvss = 0;
+				this.thresholdVulnerability = FindingSeverity.LOW;
+			}
+		}
 	}
+
 
 	export class SeverityUtil {
 		static severityScore(severity: FindingSeverity): number {
