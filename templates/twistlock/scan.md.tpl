@@ -1,6 +1,6 @@
 {# Context Type: TwistlockModel.Template -#}
 
-{% if issues.getIssuesCount > 0 %}
+{% if issues.complianceIssues.length + issues.vulnerabilityIssues.length > 0 %}
 
 ## Summary
 
@@ -29,22 +29,41 @@
 <blockquote>{{ vul.description }}</blockquote>
 </ul></p></details>
 
-{%-    if vul.vector %}
-
+{%-      if vul.vector %}
 #### Vector
 
 `{{ vul.vector }}`
-{%    endif -%}
+{%       endif -%}
 
-{%    if vul.vector -%}
+{%       if vul.vector -%}
 #### Risk Factors
-{%       for factor in vul.riskFactors | keys -%}
+{%         for factor in vul.riskFactors | keys -%}
 * {{ factor }}
-{%       endfor %}
-{%-    endif %}
-
----
+{%         endfor %}
+{%-      endif %}
 {%     endfor %}
 {%   endif %}
-{%  endfor %}
+
+---
+
+{% endif %}
+
+{% if issues.ignoredVulnerabilityIssues.length > 0 %}
+## Ignored Vulnerabilities
+
+| ID | Severity | Exception Cause |
+| --- | --- | --- |
+{%   for ignored in issues.ignoredVulnerabilityIssues -%}
+| {{ ignored.id }} | {{ ignored.severity }} | {{ issues.exceptions.get(ignored.id) }} |
+{%   endfor %}
+{% endif %}
+
+{% if issues.ignoredComplianceIssues.length > 0 %}
+## Ignored Compliance Issues
+
+| ID | Exception Cause |
+| --- | --- |
+{%   for ignored in issues.ignoredComplianceIssues -%}
+| {{ ignored.id }} | {{ issues.exceptions.get(ignored.id) }} |
+{%   endfor %}
 {% endif %}

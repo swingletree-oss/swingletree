@@ -44,7 +44,7 @@ class TwistlockStatusEmitter {
 
 	public reportReceivedHandler(event: TwistlockReportReceivedEvent) {
 
-		const config = event.getPluginConfig<TwistlockModel.RepoConfig>("twistlock");
+		const config = new TwistlockModel.DefaultRepoConfig(event.getPluginConfig<TwistlockModel.RepoConfig>("twistlock"));
 		const issueReport = new TwistlockModel.util.FindingReport(
 			event.report,
 			config.thresholdVulnerability,
