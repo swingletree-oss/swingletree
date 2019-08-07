@@ -5,9 +5,9 @@
 ## Summary
 
 | Type | Critical | High | Medium | Low |
-|:--- |:---:|:---:|:---:|:---:|:---:|
-| Compliance | {{ issues.complianceCounts.critical }} | {{ issues.complianceCounts.high }} | {{ issues.complianceCounts.medium }} | {{ issues.complianceCounts.low }} |
-| Vulnerabilities | {{ issues.vulnerabilityCounts.critical }} | {{ issues.vulnerabilityCounts.high }} | {{ issues.vulnerabilityCounts.medium }} | {{ issues.vulnerabilityCounts.low }} |
+|:--- |:---:|:---:|:---:|:---:|
+| Compliance | {{ issues.complianceCounts.get("critical") }} | {{ issues.complianceCounts.get("high") }} | {{ issues.complianceCounts.get("medium") }} | {{ issues.complianceCounts.get("low") }} |
+| Vulnerabilities | {{ issues.vulnerabilityCounts.get("critical") }} | {{ issues.vulnerabilityCounts.get("high") }} | {{ issues.vulnerabilityCounts.get("medium") }} | {{ issues.vulnerabilityCounts.get("low") }} |
 
 {%   if issues.complianceIssues.length > 0 -%}
 ## Compliance Issues
@@ -18,7 +18,8 @@
 
 {%   if issues.vulnerabilityIssues.length > 0 -%}
 ## Vulnerabilities
-{%     for vul in issues.vulnerabilityIssues | sort(true, false, "cvss") -%}
+{%     for vul in issues.vulnerabilityIssues | sort(true, false, "cvss") %}
+
 ### {{ vul.id }}
 
 | CVSS | Severity | Package | Version | |
@@ -30,6 +31,7 @@
 </ul></p></details>
 
 {%-      if vul.vector %}
+
 #### Vector
 
 `{{ vul.vector }}`
