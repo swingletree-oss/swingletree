@@ -539,7 +539,7 @@
 				{
 					"id": "CVE-2015-0837",
 					"status": "fix deferred",
-					"cvss": 1.2,
+					"cvss": 0.2,
 					"description": "** reserved ** this candidate has been reserved by an organization or individual that will use it when announcing a new security problem.  when the candidate has been publicized, the details for this candidate will be provided.",
 					"severity": "low",
 					"packageName": "libgcrypt",
