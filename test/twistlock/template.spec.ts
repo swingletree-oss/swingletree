@@ -40,7 +40,6 @@ describe("Twistlock Template", () => {
 		it("should run ZAP template with test data", () => {
 			const findingReport = new TwistlockModel.util.FindingReport(
 				testData,
-				TwistlockModel.FindingSeverity.LOW,
 				0,
 				TwistlockModel.FindingSeverity.LOW
 			);
@@ -59,7 +58,6 @@ describe("Twistlock Template", () => {
 
 			const findingReport = new TwistlockModel.util.FindingReport(
 				testData,
-				TwistlockModel.FindingSeverity.LOW,
 				0,
 				TwistlockModel.FindingSeverity.LOW,
 				exceptions
@@ -75,7 +73,6 @@ describe("Twistlock Template", () => {
 
 			const findingReport = new TwistlockModel.util.FindingReport(
 				testData,
-				TwistlockModel.FindingSeverity.LOW,
 				0,
 				TwistlockModel.FindingSeverity.LOW,
 				exceptions
@@ -89,6 +86,48 @@ describe("Twistlock Template", () => {
 			expect(templateContent).to.contain("CVE-2019-5827");
 			expect(templateContent).to.contain("is not exploitable");
 			expect(templateContent).to.contain("Ignored Vulnerabilities");
+		});
+
+		it("should not miss any issues on finding report", () => {
+			const findingReport = new TwistlockModel.util.FindingReport(
+				testData,
+				0,
+				TwistlockModel.FindingSeverity.LOW
+			);
+
+			expect(findingReport.vulnerabilityIssues.length).to.equal(testData.results[0].vulnerabilities.length);
+			expect(findingReport.ignoredVulnerabilityIssues.length).to.equal(0);
+		});
+
+		it("should send all issues to ignored if cvss is maxed", () => {
+			const findingReport = new TwistlockModel.util.FindingReport(
+				testData,
+				10,
+				TwistlockModel.FindingSeverity.CRITICAL
+			);
+
+			expect(findingReport.ignoredVulnerabilityIssues.length).to.equal(testData.results[0].vulnerabilities.length);
+			expect(findingReport.vulnerabilityIssues.length).to.equal(0);
+		});
+
+		it("should mention vulnerability threshold ignores", () => {
+			const exceptions = new Map<string, string>();
+			exceptions.set("CVE-2019-5827", "is not exploitable");
+
+			const findingReport = new TwistlockModel.util.FindingReport(
+				testData,
+				10,
+				TwistlockModel.FindingSeverity.LOW,
+				exceptions
+			);
+
+			const templateContent = uut.template<TwistlockModel.Template>(Templates.TWISTLOCK_SCAN, {
+				report: testData,
+				issues: findingReport
+			});
+
+			expect(findingReport.ignoredVulnerabilityIssues).to.contain.a.item.with.property("id", "CVE-2015-0837");
+			expect(templateContent).to.contain("did not reach specified thresholds");
 		});
 
 	});

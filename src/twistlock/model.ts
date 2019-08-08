@@ -10,18 +10,18 @@ export namespace TwistlockModel {
 			public readonly ignoredVulnerabilityIssues: TwistlockModel.Vulnerability[];
 
 			public readonly complianceCounts: Map<FindingSeverity, number>;
-			public readonly vulnerabilityCounts: Map<FindingSeverity, number>;
+			public readonly vulnerabilityCounts: Map<string, number>;
 
 			public readonly exceptions: Map<string, string>;
 
-			constructor(report: Report, vulnSeverity = FindingSeverity.LOW, minCvss = 0, complianceSeverity = FindingSeverity.LOW, exceptions = new Map<string, string>()) {
+			constructor(report: Report, minCvss = 0, complianceSeverity = FindingSeverity.LOW, exceptions = new Map<string, string>()) {
 				this.complianceIssues = [];
 				this.ignoredComplianceIssues = [];
 				this.vulnerabilityIssues = [];
 				this.ignoredVulnerabilityIssues = [];
 
 				this.complianceCounts = new Map<FindingSeverity, number>();
-				this.vulnerabilityCounts = new Map<FindingSeverity, number>();
+				this.vulnerabilityCounts = new Map<string, number>();
 
 				this.exceptions = exceptions;
 
@@ -32,7 +32,7 @@ export namespace TwistlockModel {
 								if (exceptions.has(vuln.id)) {
 									this.ignoredVulnerabilityIssues.push(vuln);
 								} else {
-									if (vuln.cvss >= minCvss || TwistlockModel.SeverityUtil.isEqualOrHigher(vuln.severity, vulnSeverity)) {
+									if (vuln.cvss >= minCvss) {
 										this.addVulnerabilityIssue(vuln);
 									} else {
 										this.ignoredVulnerabilityIssues.push(vuln);
@@ -84,6 +84,7 @@ export namespace TwistlockModel {
 
 	export enum FindingSeverity {
 		CRITICAL = "critical",
+		IMPORTANT = "important",
 		HIGH = "high",
 		MEDIUM = "medium",
 		LOW = "low",
@@ -127,11 +128,14 @@ export namespace TwistlockModel {
 	export class SeverityUtil {
 		static severityScore(severity: FindingSeverity): number {
 			switch (severity) {
-				case TwistlockModel.FindingSeverity.CRITICAL: return 4;
+				case TwistlockModel.FindingSeverity.CRITICAL: return 5;
+				case TwistlockModel.FindingSeverity.IMPORTANT: return 4;
 				case TwistlockModel.FindingSeverity.HIGH: return 3;
 				case TwistlockModel.FindingSeverity.MEDIUM: return 2;
 				case TwistlockModel.FindingSeverity.LOW: return 1;
 			}
+
+			return 100;
 		}
 
 		static isEqualOrHigher(compare: FindingSeverity, withItem: FindingSeverity): boolean {
@@ -172,7 +176,7 @@ export namespace TwistlockModel {
 		cvss: number;
 		vector: string;
 		description: string;
-		severity: FindingSeverity;
+		severity: string;
 		packageName: string;
 		packageVersion: string;
 		link: string;
