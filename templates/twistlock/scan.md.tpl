@@ -2,13 +2,6 @@
 
 {% if issues.complianceIssues.length + issues.vulnerabilityIssues.length > 0 %}
 
-## Summary
-
-| Type | Critical | High | Medium | Low |
-|:--- |:---:|:---:|:---:|:---:|
-| Compliance | {{ issues.complianceCounts.get("critical") }} | {{ issues.complianceCounts.get("high") }} | {{ issues.complianceCounts.get("medium") }} | {{ issues.complianceCounts.get("low") }} |
-| Vulnerabilities | {{ issues.vulnerabilityCounts.get("critical") }} | {{ issues.vulnerabilityCounts.get("high") }} | {{ issues.vulnerabilityCounts.get("medium") }} | {{ issues.vulnerabilityCounts.get("low") }} |
-
 {%   if issues.complianceIssues.length > 0 -%}
 ## Compliance Issues
 {%     for compliance in issues.complianceIssues -%}
@@ -56,7 +49,7 @@
 | ID | Severity | Exception Cause |
 | --- | --- | --- |
 {%   for ignored in issues.ignoredVulnerabilityIssues -%}
-| {{ ignored.id }} | {{ ignored.severity }} | {{ issues.exceptions.get(ignored.id) }} |
+| {{ ignored.id }} | {{ ignored.severity }} | {{ issues.exceptions.get(ignored.id) | default("*did not reach specified thresholds*") }} |
 {%   endfor %}
 {% endif %}
 
@@ -66,6 +59,6 @@
 | ID | Exception Cause |
 | --- | --- |
 {%   for ignored in issues.ignoredComplianceIssues -%}
-| {{ ignored.id }} | {{ issues.exceptions.get(ignored.id) }} |
+| {{ ignored.id }} | {{ issues.exceptions.get(ignored.id) | default("*did not reach specified thresholds*") }} |
 {%   endfor %}
 {% endif %}

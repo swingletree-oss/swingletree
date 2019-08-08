@@ -28,8 +28,6 @@ Swingletree fails on any findings, if no `.swingletree.yaml` is available in the
 ```yaml
 plugin:
   twistlock:
-    # vulnerabilities equal or above this severity require developer action
-    thresholdVulnerability: high
     # vulnerabilities equal or above this cvss score require developer action
     thresholdCvss: 8
     # compliance issues equal or above this severity require developer action
@@ -40,6 +38,13 @@ plugin:
       CVE-1230: not applicable
       CVE-3332: also not applicable
     # CVE-Key: exclusion note
+    # Compliance-id: exclusion note
 ```
+
+| Property | Description | Default |
+| --- | --- | --- |
+| `thresholdCvss` | Vulnerabilities higher or equal to this CVSS score are targeted | `0` |
+| `thresholdCompliance` | Compliance issues higher or equal to this Twistlock severity are targeted | `low` |
+
 
 [twistlock]: https://www.twistlock.com/
