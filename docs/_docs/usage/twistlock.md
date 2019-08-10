@@ -34,7 +34,7 @@ plugin:
     thresholdCompliance: high
 
     # define false-positives to exclude them
-    exceptions:
+    whitelist:
       CVE-1230: not applicable
       CVE-3332: also not applicable
     # CVE-Key: exclusion note

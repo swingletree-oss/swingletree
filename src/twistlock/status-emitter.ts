@@ -49,7 +49,7 @@ class TwistlockStatusEmitter {
 			event.report,
 			config.thresholdCvss,
 			config.thresholdCompliance,
-			config.exceptions
+			config.whitelist
 		);
 
 		const checkRun: ChecksCreateParams = {
