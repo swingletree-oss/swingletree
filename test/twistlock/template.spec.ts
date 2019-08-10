@@ -37,7 +37,7 @@ describe("Twistlock Template", () => {
 			uut.template(Templates.TWISTLOCK_SCAN, undefined);
 		});
 
-		it("should run ZAP template with test data", () => {
+		it("should run Twistlock template with test data", () => {
 			const findingReport = new TwistlockModel.util.FindingReport(
 				testData,
 				0,
