@@ -84,9 +84,11 @@ describe("Twistlock Template", () => {
 				issues: findingReport
 			});
 
+			console.log(templateContent);
+
 			expect(templateContent).to.contain("CVE-2019-5827");
 			expect(templateContent).to.contain("is not exploitable");
-			expect(templateContent).to.contain("Ignored Vulnerabilities");
+			expect(templateContent).to.contain(`${findingReport.ignoredVulnerabilityIssues.length} ignored vulnerabilities`);
 		});
 
 		it("should not miss any issues on finding report", () => {
@@ -157,6 +159,7 @@ describe("Twistlock Template", () => {
 			expect(findingReport.complianceIssues).to.be.empty;
 			expect(findingReport.ignoredComplianceIssues).to.have.lengthOf(1);
 
+			expect(templateContent).to.contain(testData.results[0].compliances[0].title), "compliance issue title is not mentioned";
 			expect(templateContent).to.contain("did not reach specified thresholds", "template does not mention ignore cause");
 		});
 

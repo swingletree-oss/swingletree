@@ -12,9 +12,9 @@ export namespace TwistlockModel {
 			public readonly complianceCounts: Map<FindingSeverity, number>;
 			public readonly vulnerabilityCounts: Map<string, number>;
 
-			public readonly exceptions: Map<string, string>;
+			public readonly whitelist: Map<string, string>;
 
-			constructor(report: Report, minCvss = 0, complianceSeverity = FindingSeverity.LOW, exceptions = new Map<string, string>()) {
+			constructor(report: Report, minCvss = 0, complianceSeverity = FindingSeverity.LOW, whitelist = new Map<string, string>()) {
 				this.complianceIssues = [];
 				this.ignoredComplianceIssues = [];
 				this.vulnerabilityIssues = [];
@@ -23,13 +23,13 @@ export namespace TwistlockModel {
 				this.complianceCounts = new Map<FindingSeverity, number>();
 				this.vulnerabilityCounts = new Map<string, number>();
 
-				this.exceptions = exceptions;
+				this.whitelist = whitelist;
 
 				if (report.results && report.results.length > 0) {
 					report.results.forEach((result) => {
 						if (result.vulnerabilities) {
 							result.vulnerabilities.forEach((vuln) => {
-								if (exceptions.has(vuln.id)) {
+								if (whitelist.has(vuln.id)) {
 									this.ignoredVulnerabilityIssues.push(vuln);
 								} else {
 									if (vuln.cvss >= minCvss) {
@@ -96,7 +96,7 @@ export namespace TwistlockModel {
 		thresholdCvss: number;
 		thresholdCompliance: FindingSeverity;
 
-		exceptions: Map<string, string>;
+		whitelist: Map<string, string>;
 	}
 
 	export class DefaultRepoConfig implements RepoConfig {
@@ -105,7 +105,7 @@ export namespace TwistlockModel {
 		thresholdCvss: number;
 		thresholdCompliance: FindingSeverity;
 
-		exceptions: Map<string, string>;
+		whitelist: Map<string, string>;
 
 		constructor(repoConfig?: RepoConfig) {
 			if (repoConfig) {
@@ -113,10 +113,10 @@ export namespace TwistlockModel {
 				this.thresholdCompliance = repoConfig.thresholdCompliance;
 				this.thresholdCvss = repoConfig.thresholdCvss;
 				this.thresholdVulnerability = repoConfig.thresholdVulnerability;
-				this.exceptions = repoConfig.exceptions || new Map<string, string>();
+				this.whitelist = repoConfig.whitelist || new Map<string, string>();
 			} else {
 				this.enabled = false;
-				this.exceptions = new Map<string, string>();
+				this.whitelist = new Map<string, string>();
 				this.thresholdCompliance = FindingSeverity.LOW;
 				this.thresholdCvss = 0;
 				this.thresholdVulnerability = FindingSeverity.LOW;
