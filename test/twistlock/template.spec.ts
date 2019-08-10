@@ -11,6 +11,7 @@ chai.use(require("chai-things"));
 
 import { TemplateEngine, Templates } from "../../src/core/template/template-engine";
 import { TwistlockModel } from "../../src/twistlock/model";
+import { SSL_OP_NO_TLSv1_1 } from "constants";
 
 
 const sandbox = sinon.createSandbox();
@@ -127,7 +128,36 @@ describe("Twistlock Template", () => {
 			});
 
 			expect(findingReport.ignoredVulnerabilityIssues).to.contain.a.item.with.property("id", "CVE-2015-0837");
-			expect(templateContent).to.contain("did not reach specified thresholds");
+			expect(templateContent).to.contain("did not reach specified thresholds", "template does not mention ignore cause");
+		});
+
+		it("should not ignore compliance issues on cvss threshold 10", () => {
+			const findingReport = new TwistlockModel.util.FindingReport(
+				testData,
+				10,
+				TwistlockModel.FindingSeverity.LOW
+			);
+
+			expect(findingReport.complianceIssues).to.have.lengthOf(1);
+			expect(findingReport.ignoredComplianceIssues).to.be.empty;
+		});
+
+		it("should ignore compliance issues on max compliance threshold", () => {
+			const findingReport = new TwistlockModel.util.FindingReport(
+				testData,
+				11,
+				TwistlockModel.FindingSeverity.CRITICAL
+			);
+
+			const templateContent = uut.template<TwistlockModel.Template>(Templates.TWISTLOCK_SCAN, {
+				report: testData,
+				issues: findingReport
+			});
+
+			expect(findingReport.complianceIssues).to.be.empty;
+			expect(findingReport.ignoredComplianceIssues).to.have.lengthOf(1);
+
+			expect(templateContent).to.contain("did not reach specified thresholds", "template does not mention ignore cause");
 		});
 
 	});
