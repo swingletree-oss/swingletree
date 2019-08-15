@@ -1,3 +1,6 @@
+services:
+  - docker
+
 env:
   global:
     - CC_TEST_REPORTER_ID=2e3ff621caade74c60b0c8284b69010f65e7cefa8c469aece8fa405aa1ccedb4
@@ -9,6 +12,7 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
+  - "docker build -t swingletree ."
   - "npm ci"
   - "npm run test"
   - "npm run build"
