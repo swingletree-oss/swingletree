@@ -1,4 +1,4 @@
-import { ChecksCreateParams, AppsListInstallationsResponseItem } from "@octokit/rest";
+import { ChecksCreateParams } from "@octokit/rest";
 import { DATABASE_INDEX } from "../db/redis-client";
 import { Health } from "../health-service";
 import { WebhookPayloadInstallationInstallation } from "@octokit/webhooks";
@@ -7,7 +7,7 @@ import { WebhookPayloadInstallationInstallation } from "@octokit/webhooks";
  */
 export enum Events {
 	GithubCheckStatusUpdatedEvent = "core:github:checkrun:updated",
-	GithubCheckRunWriteEvent = "core:github:checkrun:write",
+	NotificationEvent = "core:notify",
 	AppInstalledEvent = "core:github:app-installed",
 	AppDeinstalledEvent = "core:github:app-deinstalled",
 	DatabaseReconnect = "core:database:reconnect",
@@ -148,14 +148,52 @@ export class CacheSyncEvent extends CoreEvent {
 
 /** Fired, when a Check Run was written to GitHub
  */
-export class GithubCheckRunWriteEvent extends RepositorySourceConfigurable {
-	payload: ChecksCreateParams;
+export class NotificationEvent extends RepositorySourceConfigurable {
+	payload: NotificationEventData;
 
-	constructor(payload: ChecksCreateParams) {
-		super(Events.GithubCheckRunWriteEvent, payload.owner, payload.repo);
+	constructor(payload: NotificationEventData) {
+		super(Events.NotificationEvent, payload.org, payload.repo);
 
 		this.payload = payload;
 	}
+}
+
+export interface NotificationEventData {
+	/**
+	 * Sender of this notification (plugin name)
+	 */
+	sender: string;
+	org: string;
+	repo: string;
+	sha: string;
+	link?: string;
+	title: string;
+	shortMessage?: string;
+	markdown?: string;
+	checkStatus?: NotificationCheckStatus;
+	annotations?: FileAnnotation[];
+}
+
+export enum NotificationCheckStatus {
+	PASSED = "passed",
+	UNDECISIVE = "undecisive",
+	BLOCKED = "blocked",
+	ANALYSIS_FAILURE = "analysis_failure"
+}
+
+export interface FileAnnotation {
+	path: string;
+	start?: number;
+	end?: number;
+	title: string;
+	detail: string;
+	severity: FileAnnotationSeverity;
+}
+
+export enum FileAnnotationSeverity {
+	FAILURE = "failure",
+	WARNING = "warning",
+	NOTICE = "notice"
 }
 
 export class GithubCheckStatusUpdatedEvent extends RepositorySourceConfigurable {

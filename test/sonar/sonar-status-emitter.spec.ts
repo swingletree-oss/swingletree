@@ -11,7 +11,7 @@ import SonarStatusEmitter from "../../src/sonar/sonar-status-emitter";
 import { ConfigurationServiceMock, EventBusMock, SonarClientMock, TemplateEngineMock } from "../mock-classes";
 import { SonarAnalysisCompleteEvent, SonarEvents } from "../../src/sonar/events";
 import EventBus from "../../src/core/event/event-bus";
-import { Events, GithubCheckRunWriteEvent } from "../../src/core/event/event-model";
+import { Events } from "../../src/core/event/event-model";
 
 describe("Sonar Status Emitter", () => {
 
@@ -86,8 +86,8 @@ describe("Sonar Status Emitter", () => {
 
 		sinon.assert.calledOnce(eventMock.emit as any);
 
-		sinon.assert.calledWith(eventMock.emit as any, sinon.match.has("eventType", Events.GithubCheckRunWriteEvent));
-		sinon.assert.calledWith(eventMock.emit as any, sinon.match.hasNested("payload.output.title", sinon.match("- Coverage: 90.1 (+2.1%)")));
+		sinon.assert.calledWith(eventMock.emit as any, sinon.match.has("eventType", Events.NotificationEvent));
+		sinon.assert.calledWith(eventMock.emit as any, sinon.match.hasNested("payload.title", sinon.match("- Coverage: 90.1 (+2.1%)")));
 	});
 
 	it("should calculate branch delta for long living branches", async () => {
@@ -98,8 +98,8 @@ describe("Sonar Status Emitter", () => {
 
 		sinon.assert.calledOnce(eventMock.emit as any);
 
-		sinon.assert.calledWith(eventMock.emit as any, sinon.match.has("eventType", Events.GithubCheckRunWriteEvent));
-		sinon.assert.calledWith(eventMock.emit as any, sinon.match.hasNested("payload.output.title", sinon.match("- Coverage: 70.6 (-19.5%)")));
+		sinon.assert.calledWith(eventMock.emit as any, sinon.match.has("eventType", Events.NotificationEvent));
+		sinon.assert.calledWith(eventMock.emit as any, sinon.match.hasNested("payload.title", sinon.match("- Coverage: 70.6 (-19.5%)")));
 	});
 
 	it("should not contain undefined annotation paths in GitHub check run", async () => {
@@ -109,7 +109,7 @@ describe("Sonar Status Emitter", () => {
 		sinon.assert.calledOnce(eventMock.emit as any);
 
 		sinon.assert.calledWith(eventMock.emit as any,
-			sinon.match.hasNested("payload.output.annotations",
+			sinon.match.hasNested("payload.annotations",
 				sinon.match.every(
 					sinon.match.has("path", sinon.match((path) => { return path; }))
 				)
@@ -123,7 +123,7 @@ describe("Sonar Status Emitter", () => {
 
 		sinon.assert.calledOnce(eventMock.emit as any);
 
-		sinon.assert.calledWith(eventMock.emit as any, sinon.match.hasNested("payload.output.annotations[0]",
+		sinon.assert.calledWith(eventMock.emit as any, sinon.match.hasNested("payload.annotations[0]",
 			sinon.match.has("path", "backend/src/main/java/testpkg/Constants.java"))
 		);
 	});

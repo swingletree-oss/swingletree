@@ -1,7 +1,6 @@
 import { injectable, inject } from "inversify";
 import EventBus from "../core/event/event-bus";
-import { GithubCheckRunWriteEvent, SwingletreeEvent } from "../core/event/event-model";
-import { ChecksCreateParams, ChecksCreateParamsOutputAnnotations, ChecksCreateParamsOutput } from "@octokit/rest";
+import { NotificationEvent, NotificationEventData, NotificationCheckStatus, FileAnnotation, FileAnnotationSeverity } from "../core/event/event-model";
 import { ConfigurationService } from "../configuration";
 import { SonarWebhookEvent, QualityGateStatus } from "./client/sonar-wehook-event";
 import SonarClient from "./client/sonar-client";
@@ -20,11 +19,11 @@ class SonarStatusEmitter {
 	private readonly templateEngine: TemplateEngine;
 
 	private readonly severityMap: any = {
-		"BLOCKER": "failure",
-		"CRITICAL": "failure",
-		"MAJOR": "failure",
-		"MINOR": "warning",
-		"INFO": "notice"
+		"BLOCKER": FileAnnotationSeverity.FAILURE,
+		"CRITICAL": FileAnnotationSeverity.FAILURE,
+		"MAJOR": FileAnnotationSeverity.FAILURE,
+		"MINOR": FileAnnotationSeverity.WARNING,
+		"INFO": FileAnnotationSeverity.NOTICE
 	};
 
 	private readonly context: string;
@@ -51,7 +50,7 @@ class SonarStatusEmitter {
 		}
 	}
 
-	private async processCoverageDeltas(output: ChecksCreateParamsOutput, summaryTemplateData: SonarCheckRunSummaryTemplate, event: SonarAnalysisCompleteEvent) {
+	private async processCoverageDeltas(summaryTemplateData: SonarCheckRunSummaryTemplate, event: SonarAnalysisCompleteEvent) {
 		try {
 			const projectKey = event.analysisEvent.project.key;
 			const currentBranch = event.analysisEvent.branch.name;
@@ -74,7 +73,7 @@ class SonarStatusEmitter {
 
 			summaryTemplateData.branchCoverage = branchCoverage;
 
-			output.title = `${output.title} - Coverage: ${branchCoverage.toFixed(1)} (${(deltaCoverage < 0 ? "" : "+")}${deltaCoverage.toFixed(1)}%)`;
+			return `Coverage: ${branchCoverage.toFixed(1)} (${(deltaCoverage < 0 ? "" : "+")}${deltaCoverage.toFixed(1)}%)`;
 		} catch (err) {
 			LOGGER.warn("failed to calculate coverage delta: ", err);
 		}
@@ -104,16 +103,16 @@ class SonarStatusEmitter {
 		return result;
 	}
 
-	private processIssues(checkRun: ChecksCreateParams, summaryTemplateData: SonarCheckRunSummaryTemplate, issueSummary: Sonar.util.IssueSummary, counters: Map<string, number>) {
+	private processIssues(annotations: FileAnnotation[], summaryTemplateData: SonarCheckRunSummaryTemplate, issueSummary: Sonar.util.IssueSummary, counters: Map<string, number>) {
 		issueSummary.issues.forEach((item) => {
 
-			const annotation: ChecksCreateParamsOutputAnnotations = {
+			const annotation: FileAnnotation = {
 				path: this.getIssueProjectPath(item, issueSummary),
-				start_line: item.line || 1,
-				end_line: item.line || 1,
+				start: item.line,
+				end: item.line,
 				title: `${item.severity} ${item.type} (${item.rule})`,
-				message: item.message,
-				annotation_level: this.severityMap[item.severity] || "notice",
+				detail: item.message,
+				severity: this.severityMap[item.severity] || FileAnnotationSeverity.NOTICE
 			};
 
 			// update counters
@@ -125,18 +124,18 @@ class SonarStatusEmitter {
 
 			// set text range, if available
 			if (item.textRange) {
-				annotation.start_line = item.textRange.startLine;
-				annotation.end_line = item.textRange.endLine;
+				annotation.start = item.textRange.startLine;
+				annotation.end = item.textRange.endLine;
 
 				// omit values to comply to api validation
-				if (annotation.start_line != annotation.end_line) {
-					annotation.start_column = item.textRange.startOffset;
-					annotation.end_column = item.textRange.endOffset;
+				if (annotation.start != annotation.end) {
+					annotation.start = item.textRange.startOffset;
+					annotation.end = item.textRange.endOffset;
 				}
 			}
 
 			if (annotation.path) {
-				checkRun.output.annotations.push(annotation);
+				annotations.push(annotation);
 			} else {
 				LOGGER.debug("skipped an annotation due to missing path.");
 			}
@@ -147,28 +146,22 @@ class SonarStatusEmitter {
 	}
 
 	public async analysisCompleteHandler(event: SonarAnalysisCompleteEvent) {
-
-		const checkRun: ChecksCreateParams = {
-			name: this.context,
-			owner: event.owner,
-			repo: event.repository,
-			status: "completed",
-			conclusion: event.analysisEvent.qualityGate.status == QualityGateStatus.OK ? "success" : "action_required",
-			started_at: new Date(event.analysisEvent.analysedAt).toISOString(),
-			completed_at: new Date(event.analysisEvent.analysedAt).toISOString(),
-			head_sha: event.commitId,
-			details_url: this.dashboardUrl(event.analysisEvent)
-		};
-
 		const summaryTemplateData: SonarCheckRunSummaryTemplate = { event: event.analysisEvent };
 
-		checkRun.output = {
-			title: `${event.analysisEvent.qualityGate.status}`,
-			summary: ""
+		const notificationData: NotificationEventData = {
+			sender: this.context,
+			link: this.dashboardUrl(event.analysisEvent),
+			sha: event.commitId,
+			org: event.owner,
+			repo: event.repository,
+			checkStatus: event.analysisEvent.qualityGate.status == QualityGateStatus.OK ? NotificationCheckStatus.PASSED : NotificationCheckStatus.BLOCKED,
+			title: `${event.analysisEvent.qualityGate.status}`
 		};
 
+
 		// calculate coverage deltas
-		await this.processCoverageDeltas(checkRun.output, summaryTemplateData, event);
+		const titleCoverage = await this.processCoverageDeltas(summaryTemplateData, event);
+		notificationData.title += ` - ${titleCoverage}`;
 
 		try {
 			const issueSummary = await this.sonarClient.getIssues(event.analysisEvent.project.key, event.analysisEvent.branch.name);
@@ -180,20 +173,14 @@ class SonarStatusEmitter {
 			}
 
 			if (issueSummary.issues.length > 0) {
-				checkRun.output.annotations = [];
+				notificationData.annotations = [];
 
-				this.processIssues(checkRun, summaryTemplateData, issueSummary, counters);
+				this.processIssues(notificationData.annotations, summaryTemplateData, issueSummary, counters);
 
-				if (checkRun.output.annotations.length >= 50) {
+				if (notificationData.annotations.length >= 50) {
 					// this is a GitHub api constraint. Annotations are limited to 50 items max.
-					LOGGER.debug("%s issues were retrieved. Limiting reported results to 50.", checkRun.output.annotations.length);
 					summaryTemplateData.annotationsCapped = true;
 					summaryTemplateData.totalIssues = issueSummary.issues.length;
-
-					// capping to 50 items
-					checkRun.output.annotations = checkRun.output.annotations.slice(0, 50);
-				} else {
-					LOGGER.debug("annotating %s issues to check result", checkRun.output.annotations.length);
 				}
 			}
 		} catch (err) {
@@ -201,9 +188,9 @@ class SonarStatusEmitter {
 		}
 
 		// add summary via template engine
-		checkRun.output.summary = this.templateEngine.template<SonarCheckRunSummaryTemplate>(Templates.CHECK_RUN_SUMMARY, summaryTemplateData);
+		notificationData.markdown = this.templateEngine.template<SonarCheckRunSummaryTemplate>(Templates.CHECK_RUN_SUMMARY, summaryTemplateData);
 
-		this.eventBus.emit(new GithubCheckRunWriteEvent(checkRun));
+		this.eventBus.emit(new NotificationEvent(notificationData));
 	}
 }
 
