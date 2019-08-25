@@ -1,7 +1,6 @@
 import { injectable, inject } from "inversify";
 import EventBus from "../core/event/event-bus";
-import { GithubCheckRunWriteEvent } from "../core/event/event-model";
-import { ChecksCreateParams } from "@octokit/rest";
+import { NotificationEventData, NotificationCheckStatus, NotificationEvent } from "../core/event/event-model";
 import { ConfigurationService } from "../configuration";
 import { LOGGER } from "../logger";
 import { Templates } from "../core/template/template-engine";
@@ -47,17 +46,6 @@ class ZapStatusEmitter {
 	public reportReceivedHandler(event: ZapReportReceivedEvent) {
 		const riskCounts = this.getRiskCounts(event.report);
 
-		const checkRun: ChecksCreateParams = {
-			name: this.context,
-			owner: event.owner,
-			repo: event.repo,
-			status: "completed",
-			conclusion: riskCounts.size == 0 ? "success" : "action_required",
-			started_at: new Date().toISOString(),
-			completed_at: new Date().toISOString(),
-			head_sha: event.commitId
-		};
-
 		const templateData: Zap.ReportTemplate = {
 			event: event,
 			counts: riskCounts
@@ -68,15 +56,20 @@ class ZapStatusEmitter {
 			totalIssueCount += count;
 		});
 
-		checkRun.output = {
+		const notificationData: NotificationEventData = {
+			sender: this.context,
+			sha: event.commitId,
+			org: event.owner,
+			repo: event.repo,
+			checkStatus: riskCounts.size == 0 ? NotificationCheckStatus.PASSED : NotificationCheckStatus.BLOCKED,
 			title: `${totalIssueCount} issues found`,
-			summary: this.templateEngine.template<Zap.ReportTemplate>(
+			markdown: this.templateEngine.template<Zap.ReportTemplate>(
 				Templates.ZAP_SCAN,
 				templateData
 			)
 		};
 
-		this.eventBus.emit(new GithubCheckRunWriteEvent(checkRun));
+		this.eventBus.emit(new NotificationEvent(notificationData));
 	}
 }
 

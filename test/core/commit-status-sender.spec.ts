@@ -10,14 +10,14 @@ import * as sinon from "sinon";
 chai.use(require("sinon-chai"));
 chai.use(require("chai-as-promised"));
 
-import { Events, GithubCheckRunWriteEvent } from "../../src/core/event/event-model";
+import { Events, NotificationEvent } from "../../src/core/event/event-model";
 
 const sandbox = sinon.createSandbox();
 
 describe("Commit Status Sender", () => {
 	let uut: CommitStatusSender;
 
-	let mockEvent: GithubCheckRunWriteEvent;
+	let mockEvent: NotificationEvent;
 
 	let eventBusMock: any;
 	let configurationMock: any;
@@ -62,7 +62,14 @@ describe("Commit Status Sender", () => {
 			githubClientMock
 		);
 
-		mockEvent = new GithubCheckRunWriteEvent(Object.assign({}, require("../mock/check-run-create.json")));
+		mockEvent = new NotificationEvent({
+			org: "test",
+			repo: "testRepo",
+			markdown: "123",
+			sender: "testSender",
+			sha: "sha123",
+			title: "test title"
+		})
 	});
 
 	afterEach(function () {
@@ -70,20 +77,15 @@ describe("Commit Status Sender", () => {
 	});
 
 	it("should register to SonarQube analysis complete event", () => {
-		sinon.assert.calledWith(eventBusMock.register, Events.GithubCheckRunWriteEvent);
+		sinon.assert.calledWith(eventBusMock.register, Events.NotificationEvent);
 	});
 
-	it("should send commit status on matching event", (done: any) => {
+	it("should send commit status on matching event", async () => {
 		githubClientMock.createCheckStatus.resolves();
 
-		uut.sendAnalysisStatus(mockEvent)
-			.then(() => {
-				sinon.assert.calledWith(eventBusMock.emit,
-					sinon.match.has("eventType", Events.GithubCheckStatusUpdatedEvent)
-				);
-				done();
-			})
-			.catch(done);
+		await uut.sendAnalysisStatus(mockEvent);
+
+		sinon.assert.calledOnce(githubClientMock.createCheckStatus);
 	});
 
 });

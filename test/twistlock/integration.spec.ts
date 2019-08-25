@@ -10,7 +10,7 @@ chai.use(require("chai-as-promised"));
 import TwistlockStatusEmitter from "../../src/twistlock/status-emitter";
 import { EventBusMock, ConfigurationServiceMock, InstallationStorageMock, TemplateEngineMock } from "../mock-classes";
 import { TwistlockReportReceivedEvent } from "../../src/twistlock/events";
-import { Events } from "../../src/core/event/event-model";
+import { Events, NotificationCheckStatus } from "../../src/core/event/event-model";
 
 
 const sandbox = sinon.createSandbox();
@@ -37,8 +37,8 @@ describe("Twistlock", () => {
 
 			sinon.assert.calledOnce(eventBusMock.emit as any);
 
-			sinon.assert.calledWith(eventBusMock.emit as any, sinon.match.has("eventType", Events.GithubCheckRunWriteEvent));
-			sinon.assert.calledWith(eventBusMock.emit as any, sinon.match.hasNested("payload.conclusion", sinon.match("action_required")));
+			sinon.assert.calledWith(eventBusMock.emit as any, sinon.match.has("eventType", Events.NotificationEvent));
+			sinon.assert.calledWith(eventBusMock.emit as any, sinon.match.hasNested("payload.checkStatus", sinon.match(NotificationCheckStatus.BLOCKED)));
 		});
 
 		it("should mark check run with success on clean report", async () => {
@@ -60,8 +60,8 @@ describe("Twistlock", () => {
 
 			sinon.assert.calledOnce(eventBusMock.emit as any);
 
-			sinon.assert.calledWith(eventBusMock.emit as any, sinon.match.has("eventType", Events.GithubCheckRunWriteEvent));
-			sinon.assert.calledWith(eventBusMock.emit as any, sinon.match.hasNested("payload.conclusion", sinon.match("success")));
+			sinon.assert.calledWith(eventBusMock.emit as any, sinon.match.has("eventType", Events.NotificationEvent));
+			sinon.assert.calledWith(eventBusMock.emit as any, sinon.match.hasNested("payload.checkStatus", sinon.match(NotificationCheckStatus.PASSED)));
 		});
 	});
 

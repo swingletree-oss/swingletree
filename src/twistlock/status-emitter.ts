@@ -1,6 +1,5 @@
 import { injectable, inject } from "inversify";
 import EventBus from "../core/event/event-bus";
-import { GithubCheckRunWriteEvent } from "../core/event/event-model";
 import { ChecksCreateParams } from "@octokit/rest";
 import { ConfigurationService } from "../configuration";
 import { LOGGER } from "../logger";
@@ -9,6 +8,7 @@ import { TemplateEngine } from "../core/template/template-engine";
 import { TwistlockEvents, TwistlockReportReceivedEvent } from "./events";
 import { TwistlockConfig } from "./config";
 import { TwistlockModel } from "./model";
+import { NotificationEventData, NotificationCheckStatus, NotificationEvent } from "../core/event/event-model";
 
 @injectable()
 class TwistlockStatusEmitter {
@@ -29,12 +29,12 @@ class TwistlockStatusEmitter {
 	}
 
 
-	private getConclusion(event: TwistlockReportReceivedEvent): "action_required" | "success" {
-		let conclusion: "success" | "action_required" = "success";
+	private getConclusion(event: TwistlockReportReceivedEvent): NotificationCheckStatus {
+		let conclusion = NotificationCheckStatus.PASSED;
 		if (event.report.results && event.report.results.length > 0) {
 			event.report.results.forEach((result) => {
 				if (result.complianceDistribution.total + result.vulnerabilityDistribution.total > 0) {
-					conclusion = "action_required";
+					conclusion = NotificationCheckStatus.BLOCKED;
 				}
 			});
 		}
@@ -52,31 +52,25 @@ class TwistlockStatusEmitter {
 			config.whitelist
 		);
 
-		const checkRun: ChecksCreateParams = {
-			name: this.context,
-			owner: event.owner,
-			repo: event.repo,
-			status: "completed",
-			conclusion: this.getConclusion(event),
-			started_at: new Date().toISOString(),
-			completed_at: new Date().toISOString(),
-			head_sha: event.commitId
-		};
-
 		const templateData: TwistlockModel.Template = {
 			report: event.report,
 			issues: issueReport
 		};
 
-		checkRun.output = {
+		const notificationData: NotificationEventData = {
+			sender: this.context,
+			sha: event.commitId,
+			org: event.owner,
+			repo: event.repo,
+			checkStatus: this.getConclusion(event),
 			title: `${issueReport.issuesCount()} issues found`,
-			summary: this.templateEngine.template<TwistlockModel.Template>(
+			markdown: this.templateEngine.template<TwistlockModel.Template>(
 				Templates.TWISTLOCK_SCAN,
 				templateData
 			)
 		};
 
-		this.eventBus.emit(new GithubCheckRunWriteEvent(checkRun));
+		this.eventBus.emit(new NotificationEvent(notificationData));
 	}
 }
 
