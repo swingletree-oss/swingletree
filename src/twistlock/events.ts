@@ -14,6 +14,7 @@ abstract class TwistlockEvent extends RepositorySourceConfigurable {
 export class TwistlockReportReceivedEvent extends TwistlockEvent {
 	commitId: string;
 	report: TwistlockModel.Report;
+	branch: string;
 
 	constructor(report: TwistlockModel.Report, owner: string, repo: string) {
 		super(TwistlockEvents.TwistlockReportReceived, owner, repo);

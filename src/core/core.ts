@@ -9,6 +9,7 @@ import InstallationStorage from "./github/client/installation-storage";
 import { SwingletreeComponent } from "../component";
 import { WebServer } from "./webserver";
 import EventConfigCache from "./event/event-config";
+import { HistoryService } from "./history/history-service";
 
 class SwingletreeCore extends SwingletreeComponent.Component {
 	private webserver: WebServer;
@@ -25,6 +26,7 @@ class SwingletreeCore extends SwingletreeComponent.Component {
 		this.eventBus = container.get<EventBus>(EventBus);
 
 		container.get<EventConfigCache>(EventConfigCache);
+		container.get<HistoryService>(HistoryService);
 	}
 
 	public run() {

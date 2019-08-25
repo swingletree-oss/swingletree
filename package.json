@@ -21,6 +21,7 @@
     "release": "semantic-release"
   },
   "dependencies": {
+    "@elastic/elasticsearch": "^7.3.0",
     "@octokit/rest": "^16.28.6",
     "@octokit/webhooks": "^6.2.2",
     "basic-auth": "^2.0.1",

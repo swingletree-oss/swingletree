@@ -12,7 +12,9 @@ export class WebServer {
 
 	private port: number;
 
-	constructor(@inject(ConfigurationService) configService: ConfigurationService) {
+	constructor(
+		@inject(ConfigurationService) configService: ConfigurationService
+	) {
 		this.app = express();
 
 		this.port = configService.getNumber(AppConfig.PORT);

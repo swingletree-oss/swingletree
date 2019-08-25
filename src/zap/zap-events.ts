@@ -14,6 +14,7 @@ abstract class ZapEvent extends RepositorySourceConfigurable {
 export class ZapReportReceivedEvent extends ZapEvent {
 	commitId: string;
 	report: Zap.Report;
+	branch: string;
 
 	constructor(report: Zap.Report, owner: string, repo: string) {
 		super(ZapEvents.ZapReportReceived, owner, repo);

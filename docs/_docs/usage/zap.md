@@ -12,7 +12,7 @@ A Swingletree webhook is published when the Zap Plugin is enabled.
 It accepts a OWASP Zap scan report in JSON format as a payload and needs some additional query parameters to link the report to a GitHub repository:
 
 ```
-POST /webhook/zap?org=[GitHub Organization]&repo=[Repository name]&sha=[Commit SHA]
+POST /webhook/zap?org=[GitHub Organization]&repo=[Repository name]&sha=[Commit SHA]&branch=[branch]
 ```
 
 It is recommended to protect your webhook endpoint. If you enabled webhook protection you will need to provide the authentication credentials via Basic Authentication.

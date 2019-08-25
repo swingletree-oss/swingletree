@@ -16,6 +16,7 @@ import { TemplateEngine } from "./core/template/template-engine";
 import HealthService from "./core/health-service";
 import { WebServer } from "./core/webserver";
 import EventConfigCache from "./core/event/event-config";
+import { HistoryService } from "./core/history/history-service";
 
 
 const container = new Container();
@@ -34,5 +35,7 @@ container.bind<GhAppInstallationHandler>(GhAppInstallationHandler).toSelf().inSi
 container.bind<RedisClientFactory>(RedisClientFactory).toSelf().inSingletonScope();
 container.bind<PageRoutes>(PageRoutes).toSelf().inSingletonScope();
 container.bind<WebServer>(WebServer).toSelf().inSingletonScope();
+container.bind<HistoryService>(HistoryService).toSelf().inSingletonScope();
+
 
 export default container;

@@ -5,6 +5,11 @@ storage:
   host: localhost # database host
   password: # database password
 
+elastic:
+  node: http://localhost:9200
+  apikey:
+  index: default
+
 # GitHub specific configuration
 github:
   app:

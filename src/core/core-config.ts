@@ -12,6 +12,12 @@ export namespace CoreConfig {
 		DATABASE = "storage:host",
 		PASSWORD = "storage:password"
 	}
+
+	export enum Elastic {
+		NODE = "elastic:node",
+		API_KEY = "elastic:apikey",
+		INDEX = "elastic:index"
+	}
 }
 
 export enum AppConfig {

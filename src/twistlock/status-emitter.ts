@@ -62,6 +62,7 @@ class TwistlockStatusEmitter {
 			sha: event.commitId,
 			org: event.owner,
 			repo: event.repo,
+			branch: event.branch,
 			checkStatus: this.getConclusion(event),
 			title: `${issueReport.issuesCount()} issues found`,
 			markdown: this.templateEngine.template<TwistlockModel.Template>(

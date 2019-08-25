@@ -152,6 +152,7 @@ class SonarStatusEmitter {
 			sender: this.context,
 			link: this.dashboardUrl(event.analysisEvent),
 			sha: event.commitId,
+			branch: event.analysisEvent.branch ? event.analysisEvent.branch.name : null,
 			org: event.owner,
 			repo: event.repo,
 			checkStatus: event.analysisEvent.qualityGate.status == QualityGateStatus.OK ? NotificationCheckStatus.PASSED : NotificationCheckStatus.BLOCKED,
