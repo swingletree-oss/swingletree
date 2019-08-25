@@ -4,7 +4,7 @@
 
 {%-   if issues.complianceIssues.length > 0 -%}
 
-## Compliance Issues
+## {{ issues.conplianceIssues.length }} Compliance Issues
 {%     for compliance in issues.complianceIssues -%}
 * **{{ compliance.severity }}:** {{ compliance.title }}
 {%     endfor %}
@@ -12,9 +12,9 @@
 
 {%   if issues.vulnerabilityIssues.length > 0 -%}
 
-## Vulnerabilities
+## {{ issues.vulnerabilityIssues.length }} Vulnerabilities
 {%     for vul in issues.vulnerabilityIssues | sort(true, false, "cvss") %}
-<details><summary><b>{{ vul.cvss }}</b> ({{ vul.severity }}): {{ vul.id }} </summary><p><ul>
+<details><summary><b>{{ vul.severity | twistlockFindingSeverity }} {{ vul.cvss }}</b>: {{ vul.id }} </summary><p><ul>
 
 | CVSS | Severity | Package | Version | Status |
 | --- | --- | --- | --- | --- |
