@@ -59,7 +59,7 @@ describe("Sonar Webhook", () => {
 
 		sinon.assert.calledWith(eventBusMock.emit, sinon.match.has("commitId", "12345"));
 		sinon.assert.calledWith(eventBusMock.emit, sinon.match.has("owner", "testOrg"));
-		sinon.assert.calledWith(eventBusMock.emit, sinon.match.has("repository", "testRepo"));
+		sinon.assert.calledWith(eventBusMock.emit, sinon.match.has("repo", "testRepo"));
 	});
 
 });

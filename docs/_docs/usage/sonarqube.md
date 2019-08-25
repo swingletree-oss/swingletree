@@ -26,6 +26,24 @@ Of course these values (at least `commitId`) need to be acquired dynamically on 
 A reference branch can be set by providing the SonarQube property `sonar.branch.target`.
 SonarQube will run the branch analysis in relation to the provided branch name.
 
+## Repository-specific Configuration
+
+Repository-specific behaviour can be configured by placing a `.swingletree.yaml` in the repository root directory. Swingletree reads from the master branch file only.
+
+Swingletree fails on any findings, if no `.swingletree.yaml` is available in the repository.
+
+```yaml
+plugin:
+  sonar:
+    # if true: require developer action if coverage is declining
+    blockCoverageLoss: false
+```
+
+| Property | Description | Default |
+| --- | --- | --- |
+| `blockCoverageLoss` | require developer action on coverage loss | `false` |
+
+
 ## More examples
 
 Swingletree Web-UI offers different code snippets specific to your currently deployed Swingletree version.

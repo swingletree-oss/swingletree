@@ -76,12 +76,10 @@ class SonarWebhook {
 		const webhookData: SonarWebhookEvent = req.body;
 
 		if (this.isWebhookEventRelevant(webhookData)) {
-			const analysisEvent = new SonarAnalysisCompleteEvent(webhookData);
 			const coordinates = webhookData.properties["sonar.analysis.repository"].split("/");
+			const analysisEvent = new SonarAnalysisCompleteEvent(webhookData, coordinates[0], coordinates[1]);
 
 			analysisEvent.commitId = webhookData.properties["sonar.analysis.commitId"];
-			analysisEvent.owner = coordinates[0];
-			analysisEvent.repository = coordinates[1];
 			analysisEvent.targetBranch = webhookData.properties["sonar.branch.target"];
 			if (await this.installationStorage.getInstallationId(coordinates[0])) {
 				this.eventBus.emit(analysisEvent);
