@@ -11,6 +11,7 @@ chai.use(require("chai-things"));
 
 import { TemplateEngine, Templates } from "../../src/core/template/template-engine";
 import { TwistlockModel } from "../../src/twistlock/model";
+import { TwistlockPlugin } from "../../src/twistlock/twistlock";
 import { SSL_OP_NO_TLSv1_1 } from "constants";
 
 
@@ -30,8 +31,10 @@ describe("Twistlock Template", () => {
 	describe("Scan Template", () => {
 		let uut: TemplateEngine;
 
+
 		beforeEach(() => {
 			uut = new TemplateEngine();
+			uut.addFilter("twistlockFindingSeverity", TwistlockPlugin.twistlockFindingSeverityFilter);
 		});
 
 		it("should compile the template", () => {

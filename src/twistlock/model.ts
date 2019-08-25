@@ -86,6 +86,7 @@ export namespace TwistlockModel {
 		CRITICAL = "critical",
 		IMPORTANT = "important",
 		HIGH = "high",
+		MODERATE = "moderate",
 		MEDIUM = "medium",
 		LOW = "low",
 		TOTAL = "total"
