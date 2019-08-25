@@ -178,12 +178,14 @@ export interface NotificationEventData {
 	org: string;
 	repo: string;
 	sha: string;
+	branch: string;
 	link?: string;
 	title: string;
 	shortMessage?: string;
 	markdown?: string;
 	checkStatus?: NotificationCheckStatus;
 	annotations?: FileAnnotation[];
+	timestamp?: Date;
 }
 
 export enum NotificationCheckStatus {

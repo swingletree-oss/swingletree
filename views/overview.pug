@@ -1,0 +1,15 @@
+extends base
+
+block content
+  div(class="container", id="app")
+    div(class="row", v-for="item in orgs")
+
+
+  script(
+    src="https://cdn.jsdelivr.net/npm/vue@2.6.10",
+    integrity="sha384-8t+aLluUVnn5SPPG/NbeZCH6TWIvaXIm/gDbutRvtEeElzxxWaZN+G/ZIEdI/f+y",
+    crossorigin="anonymous"
+  )
+  
+  script
+    include assets/overview.js

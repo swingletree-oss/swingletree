@@ -67,6 +67,7 @@ class ZapWebhook {
 		const org = req.query["org"];
 		const repo = req.query["repo"];
 		const sha = req.query["sha"];
+		const branch = req.query["branch"];
 
 		if (this.configurationService.getBoolean(ZapConfig.LOG_WEBHOOK_EVENTS)) {
 			LOGGER.debug(JSON.stringify(req.body));
@@ -74,8 +75,8 @@ class ZapWebhook {
 
 		const webhookData: Zap.Report = req.body;
 
-		if (org == null || repo == null || sha == null) {
-			res.status(400).send("missing at least one of following query parameters: org, repo, sha");
+		if (org == null || repo == null || sha == null || branch == null) {
+			res.status(400).send("missing at least one of following query parameters: org, repo, sha, branch");
 			return;
 		}
 
@@ -84,6 +85,7 @@ class ZapWebhook {
 			reportReceivedEvent.commitId = sha;
 			reportReceivedEvent.owner = org;
 			reportReceivedEvent.repo = repo;
+			reportReceivedEvent.branch = branch;
 
 			// check if installation is available
 			if (await this.installationStorage.getInstallationId(org)) {

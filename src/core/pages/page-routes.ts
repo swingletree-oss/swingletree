@@ -7,19 +7,23 @@ import { inject } from "inversify";
 import { ConfigurationService } from "../../configuration";
 import HealthService, { HealthState } from "../health-service";
 import { CoreConfig } from "../core-config";
+import { HistoryService } from "../history/history-service";
 
 @injectable()
 class PageRoutes {
 	private healthService: HealthService;
+	private historyService: HistoryService;
 
 	private publicPageUrl: string;
 
 	constructor(
 		@inject(ConfigurationService) configService: ConfigurationService,
-		@inject(HealthService) healthService: HealthService
+		@inject(HealthService) healthService: HealthService,
+		@inject(HistoryService) historyService: HistoryService
 		) {
 			this.publicPageUrl = configService.get(CoreConfig.Github.APP_PUBLIC_PAGE);
 			this.healthService = healthService;
+			this.historyService = historyService;
 	}
 
 	public filters(): any {
@@ -47,6 +51,14 @@ class PageRoutes {
 
 		router.get("/code/", (req, res) => {
 			res.render("code");
+		});
+
+		router.get("/overview", (req, res) => {
+			res.render("overview");
+		});
+
+		router.get("/api/orgs", (req, res) => {
+			res.send(this.historyService.getOrgs());
 		});
 
 		router.use("/static", express.static("static"));

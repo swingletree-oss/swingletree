@@ -61,6 +61,7 @@ class ZapStatusEmitter {
 			sha: event.commitId,
 			org: event.owner,
 			repo: event.repo,
+			branch: event.branch,
 			checkStatus: riskCounts.size == 0 ? NotificationCheckStatus.PASSED : NotificationCheckStatus.BLOCKED,
 			title: `${totalIssueCount} issues found`,
 			markdown: this.templateEngine.template<Zap.ReportTemplate>(
