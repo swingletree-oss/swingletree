@@ -153,7 +153,7 @@ class SonarStatusEmitter {
 			link: this.dashboardUrl(event.analysisEvent),
 			sha: event.commitId,
 			org: event.owner,
-			repo: event.repository,
+			repo: event.repo,
 			checkStatus: event.analysisEvent.qualityGate.status == QualityGateStatus.OK ? NotificationCheckStatus.PASSED : NotificationCheckStatus.BLOCKED,
 			title: `${event.analysisEvent.qualityGate.status}`
 		};
@@ -184,7 +184,7 @@ class SonarStatusEmitter {
 				}
 			}
 		} catch (err) {
-			LOGGER.warn("failed to retrieve SonarQube issues for check annotations. This affects %s @%s: %s", event.repository, event.commitId, err);
+			LOGGER.warn("failed to retrieve SonarQube issues for check annotations. This affects %s @%s: %s", event.repo, event.commitId, err);
 		}
 
 		// add summary via template engine

@@ -113,7 +113,11 @@ export namespace TwistlockModel {
 				this.thresholdCompliance = repoConfig.thresholdCompliance;
 				this.thresholdCvss = repoConfig.thresholdCvss;
 				this.thresholdVulnerability = repoConfig.thresholdVulnerability;
-				this.whitelist = repoConfig.whitelist || new Map<string, string>();
+				if (repoConfig.whitelist) {
+					this.whitelist = new Map<string, string>(Object.entries(repoConfig.whitelist));
+				} else {
+					this.whitelist = repoConfig.whitelist || new Map<string, string>();
+				}
 			} else {
 				this.enabled = false;
 				this.whitelist = new Map<string, string>();

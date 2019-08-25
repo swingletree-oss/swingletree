@@ -84,8 +84,6 @@ describe("Twistlock Template", () => {
 				issues: findingReport
 			});
 
-			console.log(templateContent);
-
 			expect(templateContent).to.contain("CVE-2019-5827");
 			expect(templateContent).to.contain("is not exploitable");
 			expect(templateContent).to.contain(`${findingReport.ignoredVulnerabilityIssues.length} ignored vulnerabilities`);

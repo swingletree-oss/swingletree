@@ -18,8 +18,20 @@ export enum Events {
 	EventAugmentionEvent = "core:cache:event:augment"
 }
 
-export interface RepositoryConfig {
-	plugin?: Map<string, RepositoryConfigPluginItem>;
+export interface RawRepositoryConfig {
+	plugin: any;
+}
+
+export class RepositoryConfig implements RawRepositoryConfig {
+	plugin: Map<string, RepositoryConfigPluginItem>;
+
+	constructor(config?: RawRepositoryConfig) {
+		if (config && config.plugin) {
+			this.plugin = new Map<string, RepositoryConfigPluginItem>(Object.entries(config.plugin));
+		} else {
+			this.plugin = new Map<string, RepositoryConfigPluginItem>();
+		}
+	}
 }
 
 export interface RepositoryConfigPluginItem {

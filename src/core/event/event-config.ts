@@ -1,6 +1,6 @@
 import { injectable, inject } from "inversify";
 import { LOGGER } from "../../logger";
-import { RepositoryConfig, RepositorySourceConfigurable, Events } from "./event-model";
+import { RepositoryConfig, RepositorySourceConfigurable, Events, RawRepositoryConfig } from "./event-model";
 import GithubClientService from "../github/client/github-client";
 
 import * as NodeCache from "node-cache";
@@ -8,7 +8,7 @@ import EventBus from "./event-bus";
 
 @injectable()
 class EventConfigCache {
-	private readonly TTL = 600;
+	private readonly TTL = 10;
 
 	private cache: NodeCache;
 
@@ -47,21 +47,18 @@ class EventConfigCache {
 	 * @param owner owner of the repo
 	 * @param repo repository name
 	 */
-	public get<T extends RepositoryConfig>(owner: string, repo: string): Promise<T> {
-		return new Promise<T>((resolve, reject) => {
-			const val: T = this.cache.get(`${owner}/${repo}`);
+	public async get(owner: string, repo: string): Promise<RepositoryConfig> {
+		let val: RawRepositoryConfig = this.cache.get(`${owner}/${repo}`);
 
-			if (val == undefined) {
-				LOGGER.debug("event config cache miss. Retrieving entry.");
-				resolve(this.store<T>(owner, repo));
-			} else {
-				resolve(val);
-			}
-		});
+		if (val == undefined) {
+			LOGGER.debug("event config cache miss. Retrieving entry.");
+			val = await this.store(owner, repo);
+		}
 
+		return new RepositoryConfig(val);
 	}
 
-	public async store<T extends RepositoryConfig>(owner: string, repo: string): Promise<T> {
+	public async store(owner: string, repo: string): Promise<RawRepositoryConfig> {
 		LOGGER.debug("retrieving configuration for %s/%s", owner, repo);
 		try {
 			const config = await this.github.getSwingletreeConfigFromRepository(owner, repo);
@@ -71,12 +68,6 @@ class EventConfigCache {
 			LOGGER.warn("failed to retrieve repository configuration for %s/%s: %s", owner, repo, err);
 			return null;
 		}
-	}
-
-	public load<T extends RepositoryConfig>(owner: string, repo: string): Promise<T> {
-		return new Promise<T>((resolve, reject) => {
-			resolve(this.cache.get(`${owner}/${repo}`));
-		});
 	}
 }
 
