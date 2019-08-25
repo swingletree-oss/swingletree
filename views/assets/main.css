@@ -11,3 +11,5 @@ pre {
     font-size: 80%;
     text-align: right;
 }
+
+[v-cloak] { display: none; }

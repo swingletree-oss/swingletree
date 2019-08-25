@@ -70,6 +70,23 @@ export class HistoryService {
 		});
 	}
 
+	public async getLatest(from = 0, size= 10) {
+		const searchParams: RequestParams.Search<any> = {
+			index: this.index,
+			body: {
+				from: from,
+				size: size,
+				sort: [{
+					timestamp: {
+						order: "desc"
+					}
+				}]
+			}
+		};
+
+		return (await this.client.search(searchParams)).body;
+	}
+
 	public async getLatestForSender(sender: string, branch: string) {
 		const searchParams: RequestParams.Search<any> = {
 			index: this.index,
@@ -88,13 +105,11 @@ export class HistoryService {
 						}]
 					}
 				},
-				sort: [
-					{
-						idx: {
-							order: "desc"
-						}
+				sort: [{
+					timestamp: {
+						order: "desc"
 					}
-				]
+				}]
 			}
 		};
 
@@ -108,22 +123,21 @@ export class HistoryService {
 			index: this.index,
 			body: {
 				size: 0,
-				query: {
-					match: {
-						org: search
-					}
-				},
 				aggs: {
 					orgs: {
 						terms: {
-							field: "org"
+							field: "org.keyword"
 						}
 					}
 				}
 			}
 		};
 
-		return await this.client.search(searchParams);
+		const result: ApiResponse = await this.client.search(searchParams);
+
+		return result.body.aggregations.orgs.buckets.map((item: any) => {
+			return item.key;
+		});
 	}
 
 }

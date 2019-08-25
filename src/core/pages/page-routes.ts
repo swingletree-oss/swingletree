@@ -8,6 +8,7 @@ import { ConfigurationService } from "../../configuration";
 import HealthService, { HealthState } from "../health-service";
 import { CoreConfig } from "../core-config";
 import { HistoryService } from "../history/history-service";
+import { LOGGER } from "../../logger";
 
 @injectable()
 class PageRoutes {
@@ -58,7 +59,25 @@ class PageRoutes {
 		});
 
 		router.get("/api/orgs", (req, res) => {
-			res.send(this.historyService.getOrgs());
+			this.historyService.getOrgs()
+				.then((data) => {
+					res.send(data);
+				})
+				.catch((err) => {
+					LOGGER.debug(err);
+					res.status(500).send();
+				});
+		});
+
+		router.get("/api/builds", (req, res) => {
+			this.historyService.getLatest()
+				.then((data) => {
+					res.send(data.hits);
+				})
+				.catch((err) => {
+					LOGGER.debug(err);
+					res.status(500).send();
+				});
 		});
 
 		router.use("/static", express.static("static"));

@@ -1,21 +1,26 @@
 var app = new Vue({
   el: "#app",
-  data: {
-    orgs: {},
-    error: null
+  data () {
+    return {
+      orgs: null,
+      builds: null
+    }
   },
-  mounted: () => {
-    var self = this;
-    $.ajax({
-      url: '../api/orgs',
-      method: 'GET',
-      success: (data) => {
-        self.orgs = data;
-      },
-      error: (error) => {
-        console.error(error);
-        self.error = error;
-      }
-    });
+  mounted () {
+    axios
+      .get('../api/orgs')
+      .then(response => {
+        this.orgs = response.data
+      })
+      .catch(console.error);
+
+    axios
+      .get('../api/builds')
+      .then(response => {
+        this.builds = response.data.hits.map((item) => {
+          return item._source;
+        })
+      })
+      .catch(console.error);
   }
 });
