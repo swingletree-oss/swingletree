@@ -1,13 +1,25 @@
 extends base
 
 block content
-  div(class="container", id="app")
-    div(class="row", v-for="item in orgs")
+  div(class="container", id="app" v-cloak)
+    div(class="row", v-for="item in builds")
+      span(class="badge badge-primary") {{ item.sender }}
+      span(class="badge badge-light") {{ item.org }}
+      span(class="badge badge-light") {{ item.repo }}
+      span(class="badge badge-light") {{ item.sha }}
+      span(class="badge badge-light") {{ item.branch }}
+
 
 
   script(
-    src="https://cdn.jsdelivr.net/npm/vue@2.6.10",
-    integrity="sha384-8t+aLluUVnn5SPPG/NbeZCH6TWIvaXIm/gDbutRvtEeElzxxWaZN+G/ZIEdI/f+y",
+    src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"
+    integrity="sha256-S1J4GVHHDMiirir9qsXWc8ZWw74PHHafpsHp5PXtjTs="
+    crossorigin="anonymous"
+  )
+
+  script(
+    src="https://cdn.jsdelivr.net/npm/vue@2.6.10"
+    integrity="sha384-8t+aLluUVnn5SPPG/NbeZCH6TWIvaXIm/gDbutRvtEeElzxxWaZN+G/ZIEdI/f+y"
     crossorigin="anonymous"
   )
   
