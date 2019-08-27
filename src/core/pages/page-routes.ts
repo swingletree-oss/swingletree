@@ -42,6 +42,7 @@ class PageRoutes {
 		router.use("/", (req: Request, res: Response, next: NextFunction) => {
 			res.locals.appPublicPage = this.publicPageUrl;
 			res.locals.healthStates = this.healthService.getStates(HealthState.DOWN);
+			res.locals.moment = require("moment");
 			next();
 		});
 
@@ -54,18 +55,19 @@ class PageRoutes {
 			res.render("code");
 		});
 
-		router.get("/overview", (req, res) => {
-			res.render("overview");
-		});
-
-		router.get("/api/orgs", (req, res) => {
-			this.historyService.getOrgs()
-				.then((data) => {
-					res.send(data);
+		router.get("/builds", (req, res) => {
+			Promise.all([
+				this.historyService.getOrgs(),
+				this.historyService.getLatest()
+			]).then((data) => {
+				res.locals.orgs = data[0];
+				res.locals.builds = data[1];
+				console.log(res.locals.builds.hits.total);
+					res.render("overview");
 				})
 				.catch((err) => {
-					LOGGER.debug(err);
-					res.status(500).send();
+					LOGGER.warn("failed to render build overview");
+					LOGGER.warn(err);
 				});
 		});
 
