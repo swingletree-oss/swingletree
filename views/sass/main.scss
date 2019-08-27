@@ -1,0 +1,102 @@
+@import "_variables.scss";
+
+.popover {
+  box-shadow: 0px 0px 0px 2px #ffc107;
+  max-width: 400px;
+}
+
+pre {
+  margin-top: 0px;
+}
+
+[x-relative-date] {
+  font-size: 80%;
+  text-align: right;
+}
+
+.build-item {
+  margin-bottom: .3em;
+  padding: 2px;
+
+  border: 1px solid #aaa;
+  border-radius: 3px;
+
+  .build-icon {
+    width: 5em;
+    border-right: 3px dotted #ddd;
+    padding: 3px;
+
+    .icon {
+      height: 100%;
+      vertical-align: text-top;
+    }
+  }
+
+  .build-info {
+
+    .header {
+      position: relative;
+      font-size: 0.7em;
+
+      .sender-name {
+        font-weight: bold;
+        display: inline-block;
+        min-width: 120px;
+      }
+
+      .status {
+        color: $muted-color;
+        position: absolute;
+        display: inline-block;
+        right: 0px;
+      }
+    }
+
+    .coordinates {
+      color: $muted-color;
+      font-size: .8em;
+      vertical-align: middle;
+
+      .org {
+        
+      }
+
+      .repo {
+        &:before {
+          content: '/';
+          padding: 0px 2px;
+          font-size: 1.1em;
+        }
+      }
+
+      .sha {
+        &:before {
+          content: '@';
+          padding: 0px 2px;
+          font-size: 1.1em;
+        }
+      }
+
+      .branch {
+      }
+    }
+  }
+
+  .icon {
+    &.blocked {
+      color: $failure-color;
+    }
+
+    &.passed {
+      color: $success-color;
+    }
+
+    &.undecisive {
+      color: $neutral-color;
+    }
+
+    &.analysis_failure {
+      color: $warning-color;
+    }
+  }
+}
