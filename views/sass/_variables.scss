@@ -1,8 +1,10 @@
-$muted-color: #999;
+
+$primary: #344040;
+$secondary: #6d7a86;
 
 
 // extra colors
-$failure-color: rgb(104, 14, 14);
-$warning-color: rgb(100, 104, 14);
-$success-color: rgb(14, 104, 14);
-$neutral-color: rgb(77, 77, 175);
+$failure-color: rgb(130, 10, 10);
+$warning-color: rgb(130, 130, 10);
+$success-color: rgb(50, 113, 130);
+$neutral-color: rgba(0, 0, 0, 0);
