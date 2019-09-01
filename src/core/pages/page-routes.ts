@@ -35,6 +35,16 @@ class PageRoutes {
 		};
 	}
 
+	private componentIcon(componentId: string) {
+		switch (componentId) {
+			case "security/twistlock": return "shield-alt";
+			case "security/zap": return "crosshairs";
+			case "sonarqube": return "bug";
+		}
+
+		return "question";
+	}
+
 	public getRoute(): Router {
 		const router = Router();
 
@@ -42,43 +52,40 @@ class PageRoutes {
 		router.use("/", (req: Request, res: Response, next: NextFunction) => {
 			res.locals.appPublicPage = this.publicPageUrl;
 			res.locals.healthStates = this.healthService.getStates(HealthState.DOWN);
+
+			res.locals.componentIcon = this.componentIcon;
 			res.locals.moment = require("moment");
 			next();
 		});
 
 		// index page route
 		router.get("/", (req, res) => {
+			res.locals.basePath = ".";
+
 			res.render("index");
 		});
 
 		router.get("/code/", (req, res) => {
+			res.locals.basePath = "..";
+
 			res.render("code");
 		});
 
 		router.get("/builds", (req, res) => {
+			res.locals.basePath = "..";
+
 			Promise.all([
 				this.historyService.getOrgs(),
-				this.historyService.getLatest()
+				this.historyService.getLatest(0, 20)
 			]).then((data) => {
-				res.locals.orgs = data[0];
-				res.locals.builds = data[1];
-				console.log(res.locals.builds.hits.total);
-					res.render("overview");
+					res.locals.orgs = data[0];
+					res.locals.builds = data[1];
+
+					res.render("builds");
 				})
 				.catch((err) => {
 					LOGGER.warn("failed to render build overview");
 					LOGGER.warn(err);
-				});
-		});
-
-		router.get("/api/builds", (req, res) => {
-			this.historyService.getLatest()
-				.then((data) => {
-					res.send(data.hits);
-				})
-				.catch((err) => {
-					LOGGER.debug(err);
-					res.status(500).send();
 				});
 		});
 

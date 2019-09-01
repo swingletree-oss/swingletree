@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "npm run build && node bin/main.js",
-    "sass": "node-sass views/sass/main.scss -o static/css",
+    "sass": "node-sass views/sass/main.scss -o static/css --output-style compressed",
     "sass:watch": "npm run sass -- -w",
     "build": "npm run sass && npm run build-ts && npm run tslint",
     "test": "ts-mocha --exit",
@@ -61,6 +61,7 @@
     "@types/redis": "^2.8.13",
     "@types/request": "^2.48.2",
     "@types/sinon": "^7.0.13",
+    "bootstrap-scss": "^4.3.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chai-things": "^0.2.0",

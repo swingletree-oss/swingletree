@@ -2,22 +2,20 @@ doctype html
 html
     head
         title Swingletree
-        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous")
+        link(rel="stylesheet" href=`${ basePath }/static/css/main.css`)
 
         link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/solid.css" integrity="sha384-Rw5qeepMFvJVEZdSo1nDQD5B6wX0m7c5Z/pLNvjkB14W6Yki1hKbSEQaX9ffUbWe" crossorigin="anonymous")
         link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/brands.css" integrity="sha384-VGCZwiSnlHXYDojsRqeMn3IVvdzTx5JEuHgqZ3bYLCLUBV8rvihHApoA1Aso2TZA" crossorigin="anonymous")
         link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/fontawesome.css" integrity="sha384-GVa9GOgVQgOk+TNYXu7S/InPTfSDTtBalSgkgqQ7sCik56N9ztlkoTr2f/T44oKV" crossorigin="anonymous")
-        
-        link(rel="stylesheet" href="/static/css/main.css")
 
-        link(rel="apple-touch-icon" sizes="180x180" href="./static/icon/apple-touch-icon.png")
-        link(rel="icon" type="image/png" sizes="32x32" href="./static/icon/favicon-32x32.png")
-        link(rel="icon" type="image/png" sizes="16x16" href="./static/icon/favicon-16x16.png")
-        link(rel="manifest" href="./static/icon/site.webmanifest")
-        link(rel="mask-icon" href="./static/icon/safari-pinned-tab.svg" color="#5bbad5")
-        link(rel="shortcut icon" href="./static/icon/favicon.ico")
+        link(rel="apple-touch-icon" sizes="180x180" href=`${ basePath }/static/icon/apple-touch-icon.png`)
+        link(rel="icon" type="image/png" sizes="32x32" href=`${ basePath }/static/icon/favicon-32x32.png`)
+        link(rel="icon" type="image/png" sizes="16x16" href=`${ basePath }/static/icon/favicon-16x16.png`)
+        link(rel="manifest" href=`${ basePath }/static/icon/site.webmanifest`)
+        link(rel="mask-icon" href=`${ basePath }/static/icon/safari-pinned-tab.svg` color="#5bbad5")
+        link(rel="shortcut icon" href=`${ basePath }/static/icon/favicon.ico`)
         meta(name="msapplication-TileColor" content="#da532c")
-        meta(name="msapplication-config" content="./static/icon/browserconfig.xml")
+        meta(name="msapplication-config" content=`${ basePath }/static/icon/browserconfig.xml`)
         meta(name="theme-color" content="#ffffff")
 
         meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
@@ -28,48 +26,50 @@ html
             include assets/base.js
 
     body(style="padding-top:5rem")
-        nav(class="navbar navbar-expand-md navbar-dark bg-dark fixed-top")
-            div(class="container")
-                a(class="navbar-brand mr-3" href="./")
-                    img(src="./static/icon.svg" width="30" height="30" class="mr-2 d-inline-block align-top" alt="")
-                    .
-                        Swingletree
+        nav(class="navbar navbar-dark bg-dark navbar-expand-md fixed-top")
+            a(class="navbar-brand mr-3" href="./")
+                img(src="/static/icon.svg" width="30" height="30" class="mr-2 d-inline-block align-top" alt="")
+                .
+                    Swingletree
 
-                ul(class="navbar-nav mr-auto")
+            ul(class="navbar-nav mr-auto")
+                li(class="nav-item")
                     if appPublicPage
-                        li(class="nav-item")
-                            a(class="nav-link" href=appPublicPage + "/installations/new")
-                                i(class="fas fa-fw mr-1 fa-plus")
-                                .
-                                    Install
+                        a(class="nav-link" href=appPublicPage + "/installations/new")
+                            i(class="fas fa-fw mr-1 fa-plus")
+                            .
+                                Install
+                    a(class="nav-link" href="/builds/")
+                        .
+                            Builds
+            
+            ul(class="navbar-nav")
+                if healthStates.length > 0
+                    li(class="nav-item")
+                        a(class="nav-link" data-toggle="popover" data-placement="bottom" title="Service information")
+                            i(class="fas fa-fw mr-1 fa-exclamation-circle text-warning")
+                            span(id="health-po-content" style="display:none")
+                                span Swingletree has detected issues which may lead to a service interruption
+                                hr
+                                ul(class="list-unstyled" style="margin:0px")
+                                    each health in healthStates
+                                        li 
+                                            i(class="fas fa-fw mr-1 fa-exclamation text-danger")
+                                            .
+                                                #[b #{health.service}:]
+                                            div(style="padding-left:1.5em") #{health.detail}
+                                            div.muted(x-relative-date=health.timestamp)
+                li(class="nav-item")
+                    a(class="nav-link" href="./code")
+                        i(class="fas fa-fw mr-1 fa-code")
+                        .
+                            Snippets
                 
-                ul(class="navbar-nav")
-                    if healthStates.length > 0
-                        li(class="nav-item")
-                            a(class="nav-link" data-toggle="popover" data-placement="bottom" title="Service information")
-                                i(class="fas fa-fw mr-1 fa-exclamation-circle text-warning")
-                                span(id="health-po-content" style="display:none")
-                                    span Swingletree has detected issues which may lead to a service interruption
-                                    hr
-                                    ul(class="list-unstyled" style="margin:0px")
-                                        each health in healthStates
-                                            li 
-                                                i(class="fas fa-fw mr-1 fa-exclamation text-danger")
-                                                .
-                                                    #[b #{health.service}:]
-                                                div(style="padding-left:1.5em") #{health.detail}
-                                                div.muted(x-relative-date=health.timestamp)
-                    li(class="nav-item")
-                        a(class="nav-link" href="./code")
-                            i(class="fas fa-fw mr-1 fa-code")
-                            .
-                                Snippets
-                    
-                    li(class="nav-item")
-                        a(class="nav-link" href="https://github.com/error418/swingletree")
-                            i(class="fab fa-fw mr-1 fa-github")
-                            .
-                                GitHub
+                li(class="nav-item")
+                    a(class="nav-link" href="https://github.com/error418/swingletree")
+                        i(class="fab fa-fw mr-1 fa-github")
+                        .
+                            GitHub
                         
         
         block content

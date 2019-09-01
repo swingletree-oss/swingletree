@@ -1,0 +1,37 @@
+extends base
+
+block content
+  div(class="container")
+
+    div.row
+      table(class="table table-sm build-list")
+        thead
+          th(colspan=2) Component
+          th Source
+          th Message
+          th Conclusion
+          th Processed
+
+        tbody
+          each build, index in builds.hits.hits
+            tr(data-toggle="collapse" data-target=`#build-item-${ index }` class="accordion-toggle build-row")
+              td
+                span(class=`fas fa-fw fa-${ componentIcon(build._source.sender) }`)
+              td #{ build._source.sender }
+              td
+                span.coordinates
+                  span(class="org") #{build._source.org}
+                  span(class="repo") #{build._source.repo}
+                  span(class="sha") #{ build._source.sha.substring(0,5) }
+              td #{build._source.title}
+              td #{ build._source.checkStatus }
+              td 
+                if build._source.timestamp
+                  . 
+                    #{ moment(build._source.timestamp).fromNow() }
+            tr
+              td(colspan="5" class="detail-row")
+                div(class="collapse build-detail" id=`build-item-${ index }`)
+                  span detail
+
+

@@ -1,4 +1,5 @@
 @import "_variables.scss";
+@import "../../node_modules/bootstrap-scss/bootstrap.scss";
 
 .popover {
   box-shadow: 0px 0px 0px 2px #ffc107;
@@ -14,89 +15,54 @@ pre {
   text-align: right;
 }
 
+td.detail-row {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  border: 0px;
+}
+
+.build-detail {
+  padding-left: 1em;
+  padding-top: 2px;
+  padding-bottom: 5px;
+}
+
+.coordinates {
+  vertical-align: middle;
+
+  .org {
+    
+  }
+
+  .repo {
+    &:before {
+      content: '/';
+      padding: 0px 2px;
+      font-size: 1.1em;
+    }
+  }
+
+  .sha {
+    &:before {
+      content: '@';
+      padding: 0px 2px;
+      font-size: 1.1em;
+    }
+  }
+
+  .branch {
+
+  }
+}
+
+.build-row {
+}
+
+.build-list {
+  vertical-align: middle;
+  font-size: .8em;
+}
+
 .build-item {
-  margin-bottom: .3em;
-  padding: 2px;
 
-  border: 1px solid #aaa;
-  border-radius: 3px;
-
-  .build-icon {
-    width: 5em;
-    border-right: 3px dotted #ddd;
-    padding: 3px;
-
-    .icon {
-      height: 100%;
-      vertical-align: text-top;
-    }
-  }
-
-  .build-info {
-
-    .header {
-      position: relative;
-      font-size: 0.7em;
-
-      .sender-name {
-        font-weight: bold;
-        display: inline-block;
-        min-width: 120px;
-      }
-
-      .status {
-        color: $muted-color;
-        position: absolute;
-        display: inline-block;
-        right: 0px;
-      }
-    }
-
-    .coordinates {
-      color: $muted-color;
-      font-size: .8em;
-      vertical-align: middle;
-
-      .org {
-        
-      }
-
-      .repo {
-        &:before {
-          content: '/';
-          padding: 0px 2px;
-          font-size: 1.1em;
-        }
-      }
-
-      .sha {
-        &:before {
-          content: '@';
-          padding: 0px 2px;
-          font-size: 1.1em;
-        }
-      }
-
-      .branch {
-      }
-    }
-  }
-
-  .icon {
-    &.blocked {
-      color: $failure-color;
-    }
-
-    &.passed {
-      color: $success-color;
-    }
-
-    &.undecisive {
-      color: $neutral-color;
-    }
-
-    &.analysis_failure {
-      color: $warning-color;
-    }
-  }
 }
