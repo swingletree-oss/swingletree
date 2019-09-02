@@ -9,6 +9,7 @@ chai.use(require("sinon-chai"));
 import { RepositorySourceConfigurable, RepositoryConfig } from "../../src/core/event/event-model";
 import EventConfigCache from "../../src/core/event/event-config";
 import { EventBusMock, GithubClientServiceMock } from "../mock-classes";
+import { Swingletree } from "../../src/core/model";
 
 const sandbox = sinon.createSandbox();
 
@@ -31,14 +32,18 @@ describe("Event Config Cache", () => {
 
 
 	it("should react on augmentation events", async () => {
+		const source = new Swingletree.GithubSource();
+		source.owner = "org";
+		source.repo = "repo";
+
 		const event: RepositorySourceConfigurable = {
 			id: "testId",
-			owner: "org",
-			repo: "repo",
+			source: source,
 			eventType: "testType",
 			getEventType: sinon.stub(),
 			augmented: false,
-			getPluginConfig: sinon.stub()
+			getPluginConfig: sinon.stub(),
+			isConfigurable: sinon.stub().returns(true)
 		};
 
 		await uut.eventAugmentionHandler(event);

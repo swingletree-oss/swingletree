@@ -1,12 +1,11 @@
 "use strict";
 
-import { suite, test, describe } from "mocha";
-import { expect, assert } from "chai";
 import * as chai from "chai";
+import { describe } from "mocha";
 import * as sinon from "sinon";
-import ZapWebhook from "../../src/zap/zap-webhook";
-import { EventBusMock, ConfigurationServiceMock, InstallationStorageMock } from "../mock-classes";
 import { mockReq, mockRes } from "sinon-express-mock";
+import ZapWebhook from "../../src/zap/zap-webhook";
+import { ConfigurationServiceMock, EventBusMock, InstallationStorageMock } from "../mock-classes";
 
 chai.use(require("sinon-chai"));
 
@@ -33,12 +32,13 @@ describe("Zap Webhook", () => {
 
 
 
-	["org", "repo", "sha"].forEach((prop) => {
+	["org", "repo", "sha", "branch"].forEach((prop) => {
 		it(`should answer with 400 when missing ${prop} parameter`, async () => {
 			requestMock.query = {
 				org: "org",
 				repo: "repo",
-				sha: "sha"
+				sha: "sha",
+				branch: "branch"
 			};
 
 			requestMock.query[prop] = undefined;
@@ -58,7 +58,8 @@ describe("Zap Webhook", () => {
 		requestMock.query = {
 			org: "org",
 			repo: "repo",
-			sha: "sha"
+			sha: "sha",
+			branch: "branch"
 		};
 
 		requestMock.body = {};
@@ -73,7 +74,8 @@ describe("Zap Webhook", () => {
 		requestMock.query = {
 			org: "org",
 			repo: "repo",
-			sha: "sha"
+			sha: "sha",
+			branch: "branch"
 		};
 
 		requestMock.body = {

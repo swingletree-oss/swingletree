@@ -4,8 +4,9 @@ import { LOGGER } from "../../logger";
 import GithubClientService from "./client/github-client";
 import { injectable, inject } from "inversify";
 import EventBus from "../event/event-bus";
-import { Events, NotificationEvent, NotificationCheckStatus } from "../event/event-model";
+import { Events, NotificationEvent } from "../event/event-model";
 import { ChecksCreateParams, ChecksCreateParamsOutputAnnotations } from "@octokit/rest";
+import { Swingletree } from "../model";
 
 
 /** Sends Commit Status Requests to GitHub
@@ -27,20 +28,27 @@ class CommitStatusSender {
 
 	public async sendAnalysisStatus(event: NotificationEvent) {
 
+		if (!(event.payload.source instanceof Swingletree.GithubSource)) {
+			LOGGER.debug("skipping GitHub notification. This event is not targeting a github repository");
+			return;
+		}
+
+		const githubSource = event.source as Swingletree.GithubSource;
+
 		try {
-			if (!(await this.githubClientService.isOrganizationKnown(event.owner))) {
-				LOGGER.debug("ignoring webhook event for unknown organization %s.", event.owner);
+			if (!(await this.githubClientService.isOrganizationKnown(githubSource.owner))) {
+				LOGGER.debug("ignoring webhook event for unknown organization %s.", githubSource.owner);
 				return;
 			}
 		} catch (err) {
-			LOGGER.error("failed to look up organization %s in installation cache", event.owner);
+			LOGGER.error("failed to look up organization %s in installation cache", githubSource.owner);
 			return;
 		}
 
 		const checkCreateParams: ChecksCreateParams = {
-			head_sha: event.payload.sha,
-			owner: event.owner,
-			repo: event.repo,
+			head_sha: githubSource.sha,
+			owner: githubSource.owner,
+			repo: githubSource.repo,
 			details_url: event.payload.link,
 			name: event.payload.sender,
 			output: {
@@ -51,10 +59,10 @@ class CommitStatusSender {
 
 		if (event.payload.checkStatus) {
 			switch (event.payload.checkStatus) {
-				case NotificationCheckStatus.PASSED: checkCreateParams.conclusion = "success"; break;
-				case NotificationCheckStatus.BLOCKED: checkCreateParams.conclusion = "action_required"; break;
-				case NotificationCheckStatus.UNDECISIVE: checkCreateParams.conclusion = "neutral"; break;
-				case NotificationCheckStatus.ANALYSIS_FAILURE: checkCreateParams.conclusion = "failure"; break;
+				case Swingletree.Conclusion.PASSED: checkCreateParams.conclusion = "success"; break;
+				case Swingletree.Conclusion.BLOCKED: checkCreateParams.conclusion = "action_required"; break;
+				case Swingletree.Conclusion.UNDECISIVE: checkCreateParams.conclusion = "neutral"; break;
+				case Swingletree.Conclusion.ANALYSIS_FAILURE: checkCreateParams.conclusion = "failure"; break;
 			}
 
 			checkCreateParams.status = "completed";
@@ -71,7 +79,10 @@ class CommitStatusSender {
 				LOGGER.debug("annotating %s issues to check result", event.payload.annotations.length);
 			}
 
-			checkCreateParams.output.annotations = event.payload.annotations.map(item => {
+			checkCreateParams.output.annotations = event.payload.annotations
+			.filter(i => i instanceof Swingletree.FileAnnotation)
+			.map(annotation => {
+				const item = annotation as Swingletree.FileAnnotation;
 				return {
 					path: item.path,
 					start_line: item.start || 1,
@@ -87,10 +98,10 @@ class CommitStatusSender {
 		this.githubClientService
 			.createCheckStatus(checkCreateParams)
 			.then(() => {
-				LOGGER.info("check status update (%s) for %s/%s@%s was sent to github", checkCreateParams.conclusion, event.owner, event.repo, event.payload.sha);
+				LOGGER.info("check status update (%s) for %s/%s@%s was sent to github", checkCreateParams.conclusion, githubSource.owner, githubSource.repo, githubSource.sha);
 			})
 			.catch((error: any) => {
-				LOGGER.error("could not persist check status for %s with commit id %s", event.repo, event.payload.sha);
+				LOGGER.error("could not persist check status for %s with commit id %s", githubSource.repo, githubSource.sha);
 				LOGGER.error(error);
 			});
 

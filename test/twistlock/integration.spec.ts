@@ -10,7 +10,8 @@ chai.use(require("chai-as-promised"));
 import TwistlockStatusEmitter from "../../src/twistlock/status-emitter";
 import { EventBusMock, ConfigurationServiceMock, InstallationStorageMock, TemplateEngineMock } from "../mock-classes";
 import { TwistlockReportReceivedEvent } from "../../src/twistlock/events";
-import { Events, NotificationCheckStatus } from "../../src/core/event/event-model";
+import { Events } from "../../src/core/event/event-model";
+import { Swingletree } from "../../src/core/model";
 
 
 const sandbox = sinon.createSandbox();
@@ -27,10 +28,13 @@ describe("Twistlock", () => {
 				new TemplateEngineMock()
 			);
 
+			const source = new Swingletree.GithubSource();
+			source.owner = "org";
+			source.repo = "repo";
+
 			const event = new TwistlockReportReceivedEvent(
 				require("../mock/twistlock-report-all.json"),
-				"org",
-				"repo"
+				source
 			);
 
 			uut.reportReceivedHandler(event);
@@ -38,7 +42,7 @@ describe("Twistlock", () => {
 			sinon.assert.calledOnce(eventBusMock.emit as any);
 
 			sinon.assert.calledWith(eventBusMock.emit as any, sinon.match.has("eventType", Events.NotificationEvent));
-			sinon.assert.calledWith(eventBusMock.emit as any, sinon.match.hasNested("payload.checkStatus", sinon.match(NotificationCheckStatus.BLOCKED)));
+			sinon.assert.calledWith(eventBusMock.emit as any, sinon.match.hasNested("payload.checkStatus", sinon.match(Swingletree.Conclusion.BLOCKED)));
 		});
 
 		it("should mark check run with success on clean report", async () => {
@@ -50,10 +54,13 @@ describe("Twistlock", () => {
 				new TemplateEngineMock()
 			);
 
+			const source = new Swingletree.GithubSource();
+			source.owner = "org";
+			source.repo = "repo";
+
 			const event = new TwistlockReportReceivedEvent(
 				require("../mock/twistlock-report-clean.json"),
-				"org",
-				"repo"
+				source
 			);
 
 			uut.reportReceivedHandler(event);
@@ -61,7 +68,7 @@ describe("Twistlock", () => {
 			sinon.assert.calledOnce(eventBusMock.emit as any);
 
 			sinon.assert.calledWith(eventBusMock.emit as any, sinon.match.has("eventType", Events.NotificationEvent));
-			sinon.assert.calledWith(eventBusMock.emit as any, sinon.match.hasNested("payload.checkStatus", sinon.match(NotificationCheckStatus.PASSED)));
+			sinon.assert.calledWith(eventBusMock.emit as any, sinon.match.hasNested("payload.checkStatus", sinon.match(Swingletree.Conclusion.PASSED)));
 		});
 	});
 

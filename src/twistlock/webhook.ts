@@ -11,6 +11,7 @@ import InstallationStorage from "../core/github/client/installation-storage";
 import { TwistlockModel } from "./model";
 import { TwistlockConfig } from "./config";
 import { TwistlockReportReceivedEvent } from "./events";
+import { Swingletree } from "../core/model";
 
 /** Provides a Webhook for Sonar
  */
@@ -78,12 +79,14 @@ class TwistlockWebhook {
 			return;
 		}
 
+		const source = new Swingletree.GithubSource();
+		source.owner = org;
+		source.repo = repo;
+		source.branch = [ branch ];
+		source.sha = sha;
+
 		if (this.isWebhookEventRelevant(webhookData)) {
-			const reportReceivedEvent = new TwistlockReportReceivedEvent(webhookData, org, repo);
-			reportReceivedEvent.commitId = sha;
-			reportReceivedEvent.owner = org;
-			reportReceivedEvent.repo = repo;
-			reportReceivedEvent.branch = branch;
+			const reportReceivedEvent = new TwistlockReportReceivedEvent(webhookData, source);
 
 			// check if installation is available
 			if (await this.installationStorage.getInstallationId(org)) {

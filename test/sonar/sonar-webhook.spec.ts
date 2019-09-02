@@ -57,9 +57,9 @@ describe("Sonar Webhook", () => {
 
 		await uut.webhook({ body: testData } as Request, responseMock);
 
-		sinon.assert.calledWith(eventBusMock.emit, sinon.match.has("commitId", "12345"));
-		sinon.assert.calledWith(eventBusMock.emit, sinon.match.has("owner", "testOrg"));
-		sinon.assert.calledWith(eventBusMock.emit, sinon.match.has("repo", "testRepo"));
+		sinon.assert.calledWith(eventBusMock.emit, sinon.match.hasNested("source.sha", "12345"));
+		sinon.assert.calledWith(eventBusMock.emit, sinon.match.hasNested("source.owner", "testOrg"));
+		sinon.assert.calledWith(eventBusMock.emit, sinon.match.hasNested("source.repo", "testRepo"));
 	});
 
 });

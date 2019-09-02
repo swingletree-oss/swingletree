@@ -1,4 +1,5 @@
-import { SwingletreeEvent, RepositorySourceConfigurable } from "../core/event/event-model";
+import { RepositorySourceConfigurable } from "../core/event/event-model";
+import { Swingletree } from "../core/model";
 import { Zap } from "./zap-model";
 
 export enum ZapEvents {
@@ -6,8 +7,8 @@ export enum ZapEvents {
 }
 
 abstract class ZapEvent extends RepositorySourceConfigurable {
-	constructor(eventType: ZapEvents, owner: string, repo: string) {
-		super(eventType, owner, repo);
+	constructor(eventType: ZapEvents, source: Swingletree.ScmSource) {
+		super(eventType, source);
 	}
 }
 
@@ -16,8 +17,8 @@ export class ZapReportReceivedEvent extends ZapEvent {
 	report: Zap.Report;
 	branch: string;
 
-	constructor(report: Zap.Report, owner: string, repo: string) {
-		super(ZapEvents.ZapReportReceived, owner, repo);
+	constructor(report: Zap.Report, source: Swingletree.ScmSource) {
+		super(ZapEvents.ZapReportReceived, source);
 
 		this.report = report;
 	}

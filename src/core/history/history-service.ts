@@ -3,9 +3,10 @@ import { injectable, inject } from "inversify";
 import { ConfigurationService } from "../../configuration";
 import { CoreConfig } from "../core-config";
 import EventBus from "../event/event-bus";
-import { Events, NotificationEvent, NotificationEventData } from "../event/event-model";
+import { Events, NotificationEvent } from "../event/event-model";
 import { LOGGER } from "../../logger";
 import { exists } from "fs";
+import { Swingletree } from "../model";
 
 @injectable()
 export class HistoryService {
@@ -29,7 +30,7 @@ export class HistoryService {
 	}
 
 	private async getEntry(sender: string, org: string, repo: string, sha: string) {
-		const result: ApiResponse<SearchResponse<NotificationEventData>> = await this.client.search({
+		const result: ApiResponse<SearchResponse<Swingletree.AnalysisReport>> = await this.client.search({
 			index: this.index,
 			body: {
 				size: 1,
@@ -58,7 +59,7 @@ export class HistoryService {
 	}
 
 	public async handleNotificationEvent(event: NotificationEvent) {
-		LOGGER.info("creating history entry (%s) %s/%s@%s", event.payload.sender, event.owner, event.repo, event.payload.sha);
+		LOGGER.info("creating history entry (%s) %s", event.payload.sender, event.source.toRefString());
 
 		if (!event.payload.timestamp) {
 			event.payload.timestamp = new Date();
@@ -113,7 +114,7 @@ export class HistoryService {
 			}
 		};
 
-		const result: ApiResponse<SearchResponse<NotificationEventData>> = await this.client.search(searchParams);
+		const result: ApiResponse<SearchResponse<Swingletree.AnalysisReport>> = await this.client.search(searchParams);
 
 		return result;
 	}
