@@ -33,12 +33,13 @@ describe("Twistlock Webhook", () => {
 
 
 
-	["org", "repo", "sha"].forEach((prop) => {
+	["org", "repo", "sha", "branch"].forEach((prop) => {
 		it(`should answer with 400 when missing ${prop} parameter`, async () => {
 			requestMock.query = {
 				org: "org",
 				repo: "repo",
-				sha: "sha"
+				sha: "sha",
+				branch: "branch"
 			};
 
 			requestMock.query[prop] = undefined;
@@ -58,7 +59,8 @@ describe("Twistlock Webhook", () => {
 		requestMock.query = {
 			org: "org",
 			repo: "repo",
-			sha: "sha"
+			sha: "sha",
+			branch: "branch"
 		};
 
 		requestMock.body = {};
@@ -73,7 +75,8 @@ describe("Twistlock Webhook", () => {
 		requestMock.query = {
 			org: "org",
 			repo: "repo",
-			sha: "sha"
+			sha: "sha",
+			branch: "branch"
 		};
 
 		requestMock.body = {

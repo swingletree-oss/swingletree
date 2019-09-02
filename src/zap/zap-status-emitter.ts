@@ -1,10 +1,9 @@
-import { injectable, inject } from "inversify";
-import EventBus from "../core/event/event-bus";
-import { NotificationEventData, NotificationCheckStatus, NotificationEvent } from "../core/event/event-model";
+import { inject, injectable } from "inversify";
 import { ConfigurationService } from "../configuration";
-import { LOGGER } from "../logger";
-import { Templates } from "../core/template/template-engine";
-import { TemplateEngine } from "../core/template/template-engine";
+import EventBus from "../core/event/event-bus";
+import { NotificationEvent } from "../core/event/event-model";
+import { Swingletree } from "../core/model";
+import { TemplateEngine, Templates } from "../core/template/template-engine";
 import { ZapConfig } from "./zap-config";
 import { ZapEvents, ZapReportReceivedEvent } from "./zap-events";
 import { Zap } from "./zap-model";
@@ -56,13 +55,10 @@ class ZapStatusEmitter {
 			totalIssueCount += count;
 		});
 
-		const notificationData: NotificationEventData = {
+		const notificationData: Swingletree.AnalysisReport = {
 			sender: this.context,
-			sha: event.commitId,
-			org: event.owner,
-			repo: event.repo,
-			branch: event.branch,
-			checkStatus: riskCounts.size == 0 ? NotificationCheckStatus.PASSED : NotificationCheckStatus.BLOCKED,
+			source: event.source,
+			checkStatus: riskCounts.size == 0 ? Swingletree.Conclusion.PASSED : Swingletree.Conclusion.BLOCKED,
 			title: `${totalIssueCount} issues found`,
 			markdown: this.templateEngine.template<Zap.ReportTemplate>(
 				Templates.ZAP_SCAN,

@@ -15,6 +15,7 @@ import { SonarAnalysisCompleteEvent, SonarEvents } from "../../src/sonar/events"
 import * as yaml from "js-yaml";
 import * as fs from "fs";
 import { SonarWebhookEvent } from "../../src/sonar/client/sonar-wehook-event";
+import { Swingletree } from "../../src/core/model";
 
 const sandbox = sinon.createSandbox();
 
@@ -51,8 +52,11 @@ describe("Sonar Repository Config", () => {
 
 
 	it("should read sonar repository configuration", async () => {
+		const source = new Swingletree.GithubSource();
+		source.owner = "testOwner";
+		source.repo = "testRepo";
 
-		const event = new SonarAnalysisCompleteEvent(analysisEvent, "testOwner", "testRepo");
+		const event = new SonarAnalysisCompleteEvent(analysisEvent, source);
 
 		await uut.eventAugmentionHandler(event);
 

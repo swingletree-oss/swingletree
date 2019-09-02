@@ -1,23 +1,23 @@
 import { SwingletreeEvent, Events, RepositorySourceConfigurable } from "../core/event/event-model";
 import { SonarWebhookEvent } from "./client/sonar-wehook-event";
+import { Swingletree } from "../core/model";
 
 export enum SonarEvents {
 	SonarAnalysisComplete = "sonar:analysis-complete"
 }
 
 abstract class SonarEvent extends RepositorySourceConfigurable {
-	constructor(eventType: SonarEvents, owner: string, repo: string) {
-		super(eventType, owner, repo);
+	constructor(eventType: SonarEvents, source: Swingletree.ScmSource) {
+		super(eventType, source);
 	}
 }
 
 export class SonarAnalysisCompleteEvent extends SonarEvent {
-	commitId: string;
 	analysisEvent: SonarWebhookEvent;
 	targetBranch?: string;
 
-	constructor(analysisEvent: SonarWebhookEvent, owner: string, repo: string) {
-		super(SonarEvents.SonarAnalysisComplete, owner, repo);
+	constructor(analysisEvent: SonarWebhookEvent, source: Swingletree.ScmSource) {
+		super(SonarEvents.SonarAnalysisComplete, source);
 
 		this.analysisEvent = analysisEvent;
 	}

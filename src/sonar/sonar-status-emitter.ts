@@ -1,6 +1,6 @@
 import { injectable, inject } from "inversify";
 import EventBus from "../core/event/event-bus";
-import { NotificationEvent, NotificationEventData, NotificationCheckStatus, FileAnnotation, FileAnnotationSeverity } from "../core/event/event-model";
+import { NotificationEvent } from "../core/event/event-model";
 import { ConfigurationService } from "../configuration";
 import { SonarWebhookEvent, QualityGateStatus } from "./client/sonar-wehook-event";
 import SonarClient from "./client/sonar-client";
@@ -11,6 +11,7 @@ import { Sonar } from "./client/sonar-issue";
 import { SonarEvents, SonarAnalysisCompleteEvent } from "./events";
 import { SonarCheckRunSummaryTemplate } from "./sonar-template";
 import { SonarConfig } from "./sonar-config";
+import { Swingletree } from "../core/model";
 
 @injectable()
 class SonarStatusEmitter {
@@ -19,11 +20,11 @@ class SonarStatusEmitter {
 	private readonly templateEngine: TemplateEngine;
 
 	private readonly severityMap: any = {
-		"BLOCKER": FileAnnotationSeverity.FAILURE,
-		"CRITICAL": FileAnnotationSeverity.FAILURE,
-		"MAJOR": FileAnnotationSeverity.FAILURE,
-		"MINOR": FileAnnotationSeverity.WARNING,
-		"INFO": FileAnnotationSeverity.NOTICE
+		"BLOCKER": Swingletree.Severity.BLOCKER,
+		"CRITICAL": Swingletree.Severity.BLOCKER,
+		"MAJOR": Swingletree.Severity.MAJOR,
+		"MINOR": Swingletree.Severity.WARNING,
+		"INFO": Swingletree.Severity.INFO
 	};
 
 	private readonly context: string;
@@ -103,17 +104,18 @@ class SonarStatusEmitter {
 		return result;
 	}
 
-	private processIssues(annotations: FileAnnotation[], summaryTemplateData: SonarCheckRunSummaryTemplate, issueSummary: Sonar.util.IssueSummary, counters: Map<string, number>) {
+	private processIssues(annotations: Swingletree.Annotation[], summaryTemplateData: SonarCheckRunSummaryTemplate, issueSummary: Sonar.util.IssueSummary, counters: Map<string, number>) {
 		issueSummary.issues.forEach((item) => {
 
-			const annotation: FileAnnotation = {
+			const annotation: Swingletree.FileAnnotation = new Swingletree.FileAnnotation();
+			Object.assign(annotation, {
 				path: this.getIssueProjectPath(item, issueSummary),
 				start: item.line,
 				end: item.line,
 				title: `${item.severity} ${item.type} (${item.rule})`,
 				detail: item.message,
-				severity: this.severityMap[item.severity] || FileAnnotationSeverity.NOTICE
-			};
+				severity: this.severityMap[item.severity] || Swingletree.Severity.INFO
+			} as Swingletree.FileAnnotation);
 
 			// update counters
 			if (counters.has(item.type)) {
@@ -148,14 +150,13 @@ class SonarStatusEmitter {
 	public async analysisCompleteHandler(event: SonarAnalysisCompleteEvent) {
 		const summaryTemplateData: SonarCheckRunSummaryTemplate = { event: event.analysisEvent };
 
-		const notificationData: NotificationEventData = {
+		(event.source as Swingletree.GithubSource).branch = event.analysisEvent.branch ? [ event.analysisEvent.branch.name ] : null ;
+
+		const notificationData: Swingletree.AnalysisReport = {
 			sender: this.context,
 			link: this.dashboardUrl(event.analysisEvent),
-			sha: event.commitId,
-			branch: event.analysisEvent.branch ? event.analysisEvent.branch.name : null,
-			org: event.owner,
-			repo: event.repo,
-			checkStatus: event.analysisEvent.qualityGate.status == QualityGateStatus.OK ? NotificationCheckStatus.PASSED : NotificationCheckStatus.BLOCKED,
+			source: event.source,
+			checkStatus: event.analysisEvent.qualityGate.status == QualityGateStatus.OK ? Swingletree.Conclusion.PASSED : Swingletree.Conclusion.BLOCKED,
 			title: `${event.analysisEvent.qualityGate.status}`
 		};
 
@@ -185,7 +186,7 @@ class SonarStatusEmitter {
 				}
 			}
 		} catch (err) {
-			LOGGER.warn("failed to retrieve SonarQube issues for check annotations. This affects %s @%s: %s", event.repo, event.commitId, err);
+			LOGGER.warn("failed to retrieve SonarQube issues for check annotations. This affects %s : %s", event.source.toRefString(), err);
 		}
 
 		// add summary via template engine

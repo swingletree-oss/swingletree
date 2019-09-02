@@ -2,6 +2,7 @@ import { ChecksCreateParams } from "@octokit/rest";
 import { DATABASE_INDEX } from "../db/redis-client";
 import { Health } from "../health-service";
 import { WebhookPayloadInstallationInstallation } from "@octokit/webhooks";
+import { Swingletree } from "../model";
 
 /** Contains event identifiers.
  */
@@ -57,17 +58,20 @@ export abstract class SwingletreeEvent {
  *  to all descendants of this event class.
  */
 export abstract class RepositorySourceConfigurable extends SwingletreeEvent {
-	owner: string;
-	repo: string;
+	source: Swingletree.ScmSource;
 	config?: RepositoryConfig;
 
 	/** Set to true, if event has been augmented by event cache service */
 	augmented = false;
 
-	constructor(eventType: Events | string, owner: string, repo: string) {
+	constructor(eventType: Events | string, source: Swingletree.ScmSource) {
 		super(eventType);
-		this.owner = owner;
-		this.repo = repo;
+
+		this.source = source;
+	}
+
+	public isConfigurable(): boolean {
+		return this.source.type == Swingletree.ScmType.GITHUB;
 	}
 
 	public getPluginConfig<T extends RepositoryConfigPluginItem>(plugin: string): T {
@@ -89,15 +93,12 @@ abstract class CoreEvent extends SwingletreeEvent {
 export class CheckSuiteRequestedEvent extends RepositorySourceConfigurable {
 	rerequested: boolean;
 	checkSuiteId: number;
-	branch: string;
-	commitSha: string;
 
-	constructor(checkSuiteId: number, owner: string, repo: string, branch: string, commitSha: string, rerequested = false) {
-		super(Events.GitHubCheckSuiteRequestedEvent, owner, repo);
+	constructor(checkSuiteId: number, source: Swingletree.GithubSource, rerequested = false) {
+		super(Events.GitHubCheckSuiteRequestedEvent, source);
 
 		this.checkSuiteId = checkSuiteId;
-		this.branch = branch;
-		this.commitSha = commitSha;
+		this.source = source;
 		this.rerequested = rerequested;
 	}
 }
@@ -161,62 +162,12 @@ export class CacheSyncEvent extends CoreEvent {
 /** Fired, when a Check Run was written to GitHub
  */
 export class NotificationEvent extends RepositorySourceConfigurable {
-	payload: NotificationEventData;
+	payload: Swingletree.AnalysisReport;
 
-	constructor(payload: NotificationEventData) {
-		super(Events.NotificationEvent, payload.org, payload.repo);
+	constructor(payload: Swingletree.AnalysisReport) {
+		super(Events.NotificationEvent, payload.source);
 
 		this.payload = payload;
-	}
-}
-
-export interface NotificationEventData {
-	/**
-	 * Sender of this notification (plugin name)
-	 */
-	sender: string;
-	org: string;
-	repo: string;
-	sha: string;
-	branch: string;
-	link?: string;
-	title: string;
-	shortMessage?: string;
-	markdown?: string;
-	checkStatus?: NotificationCheckStatus;
-	annotations?: FileAnnotation[];
-	timestamp?: Date;
-}
-
-export enum NotificationCheckStatus {
-	PASSED = "passed",
-	UNDECISIVE = "undecisive",
-	BLOCKED = "blocked",
-	ANALYSIS_FAILURE = "analysis_failure"
-}
-
-export interface FileAnnotation {
-	path: string;
-	start?: number;
-	end?: number;
-	title: string;
-	detail: string;
-	severity: FileAnnotationSeverity;
-}
-
-export enum FileAnnotationSeverity {
-	FAILURE = "failure",
-	WARNING = "warning",
-	NOTICE = "notice"
-}
-
-export class GithubCheckStatusUpdatedEvent extends RepositorySourceConfigurable {
-	checkRunData: ChecksCreateParams;
-
-	constructor(checkRunData: ChecksCreateParams) {
-		super(Events.GithubCheckStatusUpdatedEvent, checkRunData.owner, checkRunData.repo);
-
-		this.checkRunData = checkRunData;
 	}
 }
 

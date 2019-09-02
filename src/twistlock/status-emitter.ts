@@ -1,14 +1,12 @@
-import { injectable, inject } from "inversify";
-import EventBus from "../core/event/event-bus";
-import { ChecksCreateParams } from "@octokit/rest";
+import { inject, injectable } from "inversify";
 import { ConfigurationService } from "../configuration";
-import { LOGGER } from "../logger";
-import { Templates } from "../core/template/template-engine";
-import { TemplateEngine } from "../core/template/template-engine";
-import { TwistlockEvents, TwistlockReportReceivedEvent } from "./events";
+import EventBus from "../core/event/event-bus";
+import { NotificationEvent } from "../core/event/event-model";
+import { Swingletree } from "../core/model";
+import { TemplateEngine, Templates } from "../core/template/template-engine";
 import { TwistlockConfig } from "./config";
+import { TwistlockEvents, TwistlockReportReceivedEvent } from "./events";
 import { TwistlockModel } from "./model";
-import { NotificationEventData, NotificationCheckStatus, NotificationEvent } from "../core/event/event-model";
 
 @injectable()
 class TwistlockStatusEmitter {
@@ -29,12 +27,12 @@ class TwistlockStatusEmitter {
 	}
 
 
-	private getConclusion(event: TwistlockReportReceivedEvent): NotificationCheckStatus {
-		let conclusion = NotificationCheckStatus.PASSED;
+	private getConclusion(event: TwistlockReportReceivedEvent): Swingletree.Conclusion {
+		let conclusion = Swingletree.Conclusion.PASSED;
 		if (event.report.results && event.report.results.length > 0) {
 			event.report.results.forEach((result) => {
 				if (result.complianceDistribution.total + result.vulnerabilityDistribution.total > 0) {
-					conclusion = NotificationCheckStatus.BLOCKED;
+					conclusion = Swingletree.Conclusion.BLOCKED;
 				}
 			});
 		}
@@ -57,12 +55,9 @@ class TwistlockStatusEmitter {
 			issues: issueReport
 		};
 
-		const notificationData: NotificationEventData = {
+		const notificationData: Swingletree.AnalysisReport = {
 			sender: this.context,
-			sha: event.commitId,
-			org: event.owner,
-			repo: event.repo,
-			branch: event.branch,
+			source: event.source,
 			checkStatus: this.getConclusion(event),
 			title: `${issueReport.issuesCount()} issues found`,
 			markdown: this.templateEngine.template<TwistlockModel.Template>(

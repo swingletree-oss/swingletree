@@ -12,6 +12,7 @@ import { ConfigurationServiceMock, EventBusMock, SonarClientMock, TemplateEngine
 import { SonarAnalysisCompleteEvent, SonarEvents } from "../../src/sonar/events";
 import EventBus from "../../src/core/event/event-bus";
 import { Events } from "../../src/core/event/event-model";
+import { Swingletree } from "../../src/core/model";
 
 describe("Sonar Status Emitter", () => {
 
@@ -49,12 +50,18 @@ describe("Sonar Status Emitter", () => {
 			new TemplateEngineMock()
 		);
 
+		const source = new Swingletree.GithubSource();
+		source.owner = "test";
+		source.repo = "testrepo";
+		source.sha = "abc";
+
 		analysisData = {
 			id: "id",
 			getEventType: sinon.stub(),
-			owner: "test",
-			repository: "testrepo",
-			commitId: "abc",
+			source: source,
+			augmented: true,
+			isConfigurable: sinon.stub().returns(true),
+			getPluginConfig: sinon.stub(),
 			eventType: SonarEvents.SonarAnalysisComplete,
 			analysisEvent: {
 				analysedAt: (new Date()).toISOString(),

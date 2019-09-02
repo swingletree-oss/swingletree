@@ -5,6 +5,7 @@ import GithubClientService from "../github/client/github-client";
 
 import * as NodeCache from "node-cache";
 import EventBus from "./event-bus";
+import { Swingletree } from "../model";
 
 @injectable()
 class EventConfigCache {
@@ -30,12 +31,18 @@ class EventConfigCache {
 	}
 
 	public async eventAugmentionHandler(event: RepositorySourceConfigurable) {
-		LOGGER.debug("augmenting event %s for %s/%s", event.eventType, event.owner, event.repo);
+		if (event.isConfigurable()) {
+			const githubSource = event.source as Swingletree.GithubSource;
 
-		try {
-			event.config = await this.get(event.owner, event.repo);
-		} catch (err) {
-			LOGGER.warn("failed to augment event: %s", err);
+			LOGGER.debug("augmenting event %s for %s/%s", event.eventType, githubSource.owner, githubSource.repo);
+
+			try {
+				event.config = await this.get(githubSource.owner, githubSource.repo);
+			} catch (err) {
+				LOGGER.warn("failed to augment event: %s", err);
+			}
+		} else {
+			LOGGER.debug("Augmention not possible for event. Skipping.");
 		}
 
 		event.augmented = true;

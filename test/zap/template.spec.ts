@@ -1,15 +1,14 @@
 "use strict";
 
-import { suite, test, describe } from "mocha";
-import { expect, assert } from "chai";
 import * as chai from "chai";
+import { expect } from "chai";
+import { describe } from "mocha";
 import * as sinon from "sinon";
 import { TemplateEngine, Templates } from "../../src/core/template/template-engine";
 import { ZapPlugin } from "../../src/zap/zap";
-import { Sonar } from "../../src/sonar/client/sonar-issue";
-import { SonarCheckRunSummaryTemplate } from "../../src/sonar/sonar-template";
-import { Zap } from "../../src/zap/zap-model";
 import { ZapReportReceivedEvent } from "../../src/zap/zap-events";
+import { Zap } from "../../src/zap/zap-model";
+import { Swingletree } from "../../src/core/model";
 
 chai.use(require("sinon-chai"));
 
@@ -50,8 +49,12 @@ describe("Zap Template", () => {
 			counts.set(Zap.Riskcode.LOW, 56);
 			counts.set(Zap.Riskcode.MEDIUM, 1337);
 
+			const source = new Swingletree.GithubSource();
+			source.owner = "org";
+			source.repo = "repo";
+
 			const templateContent = uut.template<Zap.ReportTemplate>(Templates.ZAP_SCAN, {
-				event: new ZapReportReceivedEvent(zapTestData, "org", "repo"),
+				event: new ZapReportReceivedEvent(zapTestData, source),
 				counts: counts
 			});
 

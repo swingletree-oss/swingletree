@@ -11,6 +11,7 @@ import { LOGGER } from "../logger";
 import { SonarAnalysisCompleteEvent } from "./events";
 import InstallationStorage from "../core/github/client/installation-storage";
 import { SonarConfig } from "./sonar-config";
+import { Swingletree } from "../core/model";
 
 /** Provides a Webhook for Sonar
  */
@@ -77,10 +78,15 @@ class SonarWebhook {
 
 		if (this.isWebhookEventRelevant(webhookData)) {
 			const coordinates = webhookData.properties["sonar.analysis.repository"].split("/");
-			const analysisEvent = new SonarAnalysisCompleteEvent(webhookData, coordinates[0], coordinates[1]);
 
-			analysisEvent.commitId = webhookData.properties["sonar.analysis.commitId"];
-			analysisEvent.targetBranch = webhookData.properties["sonar.branch.target"];
+			const source = new Swingletree.GithubSource();
+			source.owner = coordinates[0];
+			source.repo = coordinates[1];
+			source.sha = webhookData.properties["sonar.analysis.commitId"];
+			source.branch = [ webhookData.properties["sonar.branch.target"] ];
+
+			const analysisEvent = new SonarAnalysisCompleteEvent(webhookData, source);
+
 			if (await this.installationStorage.getInstallationId(coordinates[0])) {
 				this.eventBus.emit(analysisEvent);
 			} else {

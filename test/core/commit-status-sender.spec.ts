@@ -11,6 +11,7 @@ chai.use(require("sinon-chai"));
 chai.use(require("chai-as-promised"));
 
 import { Events, NotificationEvent } from "../../src/core/event/event-model";
+import { Swingletree } from "../../src/core/model";
 
 const sandbox = sinon.createSandbox();
 
@@ -62,14 +63,17 @@ describe("Commit Status Sender", () => {
 			githubClientMock
 		);
 
+		const source = new Swingletree.GithubSource();
+		source.owner = "test";
+		source.repo = "testRepo";
+		source.sha = "sha123";
+
 		mockEvent = new NotificationEvent({
-			org: "test",
-			repo: "testRepo",
 			markdown: "123",
 			sender: "testSender",
-			sha: "sha123",
+			source: source,
 			title: "test title"
-		})
+		});
 	});
 
 	afterEach(function () {

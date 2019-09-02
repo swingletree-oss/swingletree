@@ -12,6 +12,7 @@ import { CoreConfig } from "../core-config";
 import { WebhookPayloadCheckSuite, WebhookPayloadInstallation } from "@octokit/webhooks";
 import { GithubWebhookEventType } from "./model/gh-webhook-event";
 import GithubClientService from "./client/github-client";
+import { Swingletree } from "../model";
 
 const GithubWebHookHandler = require("express-github-webhook");
 
@@ -78,12 +79,15 @@ class GithubWebhook {
 
 		try {
 			if (data.action == "requested" || data.action == "rerequested") {
+				const source = new Swingletree.GithubSource();
+				source.owner = data.repository.owner.login;
+				source.repo = repo;
+				source.branch = [ data.check_suite.head_branch ];
+				source.sha = data.check_suite.head_sha;
+
 				const event = new CheckSuiteRequestedEvent(
 						data.check_suite.id,
-						data.repository.owner.login,
-						repo,
-						data.check_suite.head_branch,
-						data.check_suite.head_sha,
+						source,
 						data.action == "rerequested"
 					);
 
