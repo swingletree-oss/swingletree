@@ -9,7 +9,9 @@ import InstallationStorage from "./github/client/installation-storage";
 import { SwingletreeComponent } from "../component";
 import { WebServer } from "./webserver";
 import EventConfigCache from "./event/event-config";
-import { HistoryService } from "./history/history-service";
+import { HistoryService, ElasticHistoryService, NoopHistoryService } from "./history/history-service";
+import { ConfigurationService } from "../configuration";
+import { CoreConfig } from "./core-config";
 
 class SwingletreeCore extends SwingletreeComponent.Component {
 	private webserver: WebServer;
@@ -20,13 +22,22 @@ class SwingletreeCore extends SwingletreeComponent.Component {
 	constructor() {
 		super("core");
 
+		const configService = container.get<ConfigurationService>(ConfigurationService);
+		if (configService.getBoolean(CoreConfig.Elastic.ENABLED)) {
+			LOGGER.info("Registering Elastic Storage Service");
+			container.bind<HistoryService>(HistoryService).to(ElasticHistoryService).inSingletonScope();
+		} else {
+			LOGGER.info("Elastic is disabled. Will not write any Notification Events to Elastic.");
+			container.bind<HistoryService>(HistoryService).to(NoopHistoryService).inSingletonScope();
+		}
+		container.get<HistoryService>(HistoryService);
+
 		this.webserver = container.get<WebServer>(WebServer);
 		this.githubWebhook = container.get<GithubWebhook>(GithubWebhook);
 		this.pageRoutes = container.get<PageRoutes>(PageRoutes);
 		this.eventBus = container.get<EventBus>(EventBus);
 
 		container.get<EventConfigCache>(EventConfigCache);
-		container.get<HistoryService>(HistoryService);
 	}
 
 	public run() {

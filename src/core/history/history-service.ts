@@ -1,4 +1,4 @@
-import { Client, RequestParams,	ApiResponse } from "@elastic/elasticsearch";
+import { Client, RequestParams,	ApiResponse, RequestEvent } from "@elastic/elasticsearch";
 import { injectable, inject } from "inversify";
 import { ConfigurationService } from "../../configuration";
 import { CoreConfig } from "../core-config";
@@ -8,8 +8,18 @@ import { LOGGER } from "../../logger";
 import { exists } from "fs";
 import { Swingletree } from "../model";
 
+
 @injectable()
-export class HistoryService {
+export abstract class HistoryService {
+	abstract getLatest(from: number, size: number): Promise<RequestEvent<any, any>>;
+	abstract getLatestForSender(sender: string, branch: string): Promise<RequestEvent<any, any>>;
+	abstract getOrgs(search?: string): Promise<RequestEvent<any, any>>;
+
+	abstract isEnabled(): boolean;
+}
+
+@injectable()
+export class ElasticHistoryService implements HistoryService {
 	private readonly client: Client;
 	private readonly index: string;
 
@@ -27,6 +37,10 @@ export class HistoryService {
 		this.index = configService.get(CoreConfig.Elastic.INDEX);
 
 		eventBus.register(Events.NotificationEvent, this.handleNotificationEvent, this);
+	}
+
+	public isEnabled() {
+		return true;
 	}
 
 	private async getEntry(sender: string, org: string, repo: string, sha: string) {
@@ -142,6 +156,31 @@ export class HistoryService {
 	}
 
 }
+
+@injectable()
+export class NoopHistoryService implements HistoryService {
+	constructor() {
+		LOGGER.info("NOOP History Service registered.");
+	}
+
+	public isEnabled() {
+		return false;
+	}
+
+	public async getLatest(from: number, size: number) {
+		return Promise.resolve(null);
+	}
+
+	public async getLatestForSender(sender: string, branch: string) {
+		return Promise.resolve(null);
+	}
+
+	public async getOrgs(search: string) {
+		return Promise.resolve(null);
+	}
+}
+
+
 
 interface SearchBody {
 	from?: number;

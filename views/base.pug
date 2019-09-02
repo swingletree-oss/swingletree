@@ -27,7 +27,7 @@ html
 
     body(style="padding-top:5rem")
         nav(class="navbar navbar-dark bg-dark navbar-expand-md fixed-top")
-            a(class="navbar-brand mr-3" href="./")
+            a(class="navbar-brand mr-3" href=`./${ basePath }`)
                 img(src="/static/icon.svg" width="30" height="30" class="mr-2 d-inline-block align-top" alt="")
                 .
                     Swingletree
@@ -39,9 +39,10 @@ html
                             i(class="fas fa-fw mr-1 fa-plus")
                             .
                                 Install
-                    a(class="nav-link" href="/builds/")
-                        .
-                            Builds
+                    if isBuildHistoryEnabled
+                        a(class="nav-link" href="/builds/")
+                            .
+                                Builds
             
             ul(class="navbar-nav")
                 if healthStates.length > 0
@@ -70,6 +71,6 @@ html
                         i(class="fab fa-fw mr-1 fa-github")
                         .
                             GitHub
-                        
+                            
         
         block content

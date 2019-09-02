@@ -15,6 +15,8 @@ class PageRoutes {
 	private healthService: HealthService;
 	private historyService: HistoryService;
 
+	private readonly isBuildHistoryEnabled: boolean;
+
 	private publicPageUrl: string;
 
 	constructor(
@@ -25,6 +27,8 @@ class PageRoutes {
 			this.publicPageUrl = configService.get(CoreConfig.Github.APP_PUBLIC_PAGE);
 			this.healthService = healthService;
 			this.historyService = historyService;
+
+			this.isBuildHistoryEnabled = historyService.isEnabled();
 	}
 
 	public filters(): any {
@@ -52,6 +56,7 @@ class PageRoutes {
 		router.use("/", (req: Request, res: Response, next: NextFunction) => {
 			res.locals.appPublicPage = this.publicPageUrl;
 			res.locals.healthStates = this.healthService.getStates(HealthState.DOWN);
+			res.locals.isBuildHistoryEnabled = this.isBuildHistoryEnabled;
 
 			res.locals.componentIcon = this.componentIcon;
 			res.locals.moment = require("moment");
@@ -71,23 +76,25 @@ class PageRoutes {
 			res.render("code");
 		});
 
-		router.get("/builds", (req, res) => {
-			res.locals.basePath = "..";
+		if (this.historyService.isEnabled()) {
+			router.get("/builds", (req, res) => {
+				res.locals.basePath = "..";
 
-			Promise.all([
-				this.historyService.getOrgs(),
-				this.historyService.getLatest(0, 20)
-			]).then((data) => {
-					res.locals.orgs = data[0];
-					res.locals.builds = data[1];
+				Promise.all([
+					this.historyService.getOrgs(),
+					this.historyService.getLatest(0, 20)
+				]).then((data) => {
+						res.locals.orgs = data[0];
+						res.locals.builds = data[1];
 
-					res.render("builds");
-				})
-				.catch((err) => {
-					LOGGER.warn("failed to render build overview");
-					LOGGER.warn(err);
-				});
-		});
+						res.render("builds");
+					})
+					.catch((err) => {
+						LOGGER.warn("failed to render build overview");
+						LOGGER.warn(err);
+					});
+			});
+		}
 
 		router.use("/static", express.static("static"));
 

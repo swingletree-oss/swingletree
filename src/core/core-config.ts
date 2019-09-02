@@ -14,6 +14,7 @@ export namespace CoreConfig {
 	}
 
 	export enum Elastic {
+		ENABLED = "elastic:enabled",
 		NODE = "elastic:node",
 		API_KEY = "elastic:apikey",
 		INDEX = "elastic:index"
