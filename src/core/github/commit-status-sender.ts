@@ -53,7 +53,7 @@ class CommitStatusSender {
 			name: event.payload.sender,
 			output: {
 				title: event.payload.title,
-				summary: event.payload.markdown || event.payload.shortMessage
+				summary: event.markdown || event.payload.shortMessage
 			}
 		};
 

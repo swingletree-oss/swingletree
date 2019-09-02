@@ -163,6 +163,7 @@ export class CacheSyncEvent extends CoreEvent {
  */
 export class NotificationEvent extends RepositorySourceConfigurable {
 	payload: Swingletree.AnalysisReport;
+	markdown: string;
 
 	constructor(payload: Swingletree.AnalysisReport) {
 		super(Events.NotificationEvent, payload.source);

@@ -60,13 +60,15 @@ class ZapStatusEmitter {
 			source: event.source,
 			checkStatus: riskCounts.size == 0 ? Swingletree.Conclusion.PASSED : Swingletree.Conclusion.BLOCKED,
 			title: `${totalIssueCount} issues found`,
-			markdown: this.templateEngine.template<Zap.ReportTemplate>(
-				Templates.ZAP_SCAN,
-				templateData
-			)
 		};
 
-		this.eventBus.emit(new NotificationEvent(notificationData));
+		const notificationEvent = new NotificationEvent(notificationData);
+		notificationEvent.markdown = this.templateEngine.template<Zap.ReportTemplate>(
+			Templates.ZAP_SCAN,
+			templateData
+		);
+
+		this.eventBus.emit(notificationEvent);
 	}
 }
 
