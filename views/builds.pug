@@ -14,24 +14,35 @@ block content
 
         tbody
           each build, index in builds.hits.hits
-            tr(data-toggle="collapse" data-target=`#build-item-${ index }` class="accordion-toggle build-row")
+            - var item = build._source;
+            tr(data-target=`#build-item-${ index }`) 
+              //- data-toggle="collapse"  class="accordion-toggle build-row"
               td
-                span(class=`fas fa-fw fa-${ componentIcon(build._source.sender) }`)
-              td #{ build._source.sender }
+                span(class=`fas fa-fw fa-${ componentIcon(item.sender) }`)
+              td #{ item.sender }
               td
                 span.coordinates
-                  span(class="org") #{build._source.org}
-                  span(class="repo") #{build._source.repo}
-                  span(class="sha") #{ build._source.sha.substring(0,5) }
+                  span(class="org") #{ item.source.owner }
+                  span(class="repo") #{ item.source.repo }
+                  span(class="sha") #{ item.source.sha.substring(0,5) }
               td #{build._source.title}
-              td #{ build._source.checkStatus }
               td 
-                if build._source.timestamp
+                case build._source.checkStatus
+                  when "passed"
+                    span(class="badge badge-info") #{ item.checkStatus }
+                  when "undecisive"
+                    span(class="badge badge-dark") #{ item.checkStatus }
+                  when "blocked"
+                    span(class="badge badge-danger") #{ item.checkStatus }
+                  when "analysis_failure"
+                    span(class="badge badge-warning") #{ item.checkStatus }
+                      
+              td 
+                if item.timestamp
                   . 
-                    #{ moment(build._source.timestamp).fromNow() }
+                    #{ moment(item.timestamp).fromNow() }
             tr
               td(colspan="5" class="detail-row")
                 div(class="collapse build-detail" id=`build-item-${ index }`)
-                  span detail
 
 
