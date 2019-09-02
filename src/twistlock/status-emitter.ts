@@ -60,13 +60,15 @@ class TwistlockStatusEmitter {
 			source: event.source,
 			checkStatus: this.getConclusion(event),
 			title: `${issueReport.issuesCount()} issues found`,
-			markdown: this.templateEngine.template<TwistlockModel.Template>(
-				Templates.TWISTLOCK_SCAN,
-				templateData
-			)
 		};
 
-		this.eventBus.emit(new NotificationEvent(notificationData));
+		const notificationEvent = new NotificationEvent(notificationData);
+		notificationEvent.markdown = this.templateEngine.template<TwistlockModel.Template>(
+			Templates.TWISTLOCK_SCAN,
+			templateData
+		);
+
+		this.eventBus.emit(notificationEvent);
 	}
 }
 

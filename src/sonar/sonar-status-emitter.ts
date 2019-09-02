@@ -189,10 +189,12 @@ class SonarStatusEmitter {
 			LOGGER.warn("failed to retrieve SonarQube issues for check annotations. This affects %s : %s", event.source.toRefString(), err);
 		}
 
-		// add summary via template engine
-		notificationData.markdown = this.templateEngine.template<SonarCheckRunSummaryTemplate>(Templates.CHECK_RUN_SUMMARY, summaryTemplateData);
+		const notificationEvent = new NotificationEvent(notificationData);
 
-		this.eventBus.emit(new NotificationEvent(notificationData));
+		// add summary via template engine
+		notificationEvent.markdown = this.templateEngine.template<SonarCheckRunSummaryTemplate>(Templates.CHECK_RUN_SUMMARY, summaryTemplateData);
+
+		this.eventBus.emit(notificationEvent);
 	}
 }
 
