@@ -9,6 +9,7 @@ import HealthService, { HealthState } from "../health-service";
 import { CoreConfig } from "../core-config";
 import { HistoryService } from "../history/history-service";
 import { LOGGER } from "../../logger";
+import { query } from "winston";
 
 @injectable()
 class PageRoutes {
@@ -78,20 +79,34 @@ class PageRoutes {
 
 		if (this.historyService.isEnabled()) {
 			router.get("/builds", (req, res) => {
+				req.query.page = parseInt(req.query.page, 10);
+				const queryPage = (isNaN(req.query.page)) ? 0 : req.query.page;
+
+				const pageSize = 20;
+				const fromIndex = pageSize * queryPage;
+
 				res.locals.basePath = "..";
 
 				Promise.all([
 					this.historyService.getOrgs(),
-					this.historyService.getLatest(0, 20)
+					this.historyService.getLatest(fromIndex, pageSize)
 				]).then((data) => {
 						res.locals.orgs = data[0];
 						res.locals.builds = data[1];
+
+						res.locals.paging = {
+							total: data[1].hits.total.value,
+							pages: Math.ceil(data[1].hits.total.value / pageSize),
+							pageSize: pageSize,
+							current: queryPage
+						};
 
 						res.render("builds");
 					})
 					.catch((err) => {
 						LOGGER.warn("failed to render build overview");
 						LOGGER.warn(err);
+						console.log(err);
 					});
 			});
 		}
