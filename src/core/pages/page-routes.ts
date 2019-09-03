@@ -89,7 +89,7 @@ class PageRoutes {
 
 				Promise.all([
 					this.historyService.getOrgs(),
-					this.historyService.getLatest(fromIndex, pageSize)
+					(req.query.query) ? this.historyService.search(req.query.query, fromIndex, pageSize) : this.historyService.getLatest(fromIndex, pageSize)
 				]).then((data) => {
 						res.locals.orgs = data[0];
 						res.locals.builds = data[1];
@@ -100,6 +100,8 @@ class PageRoutes {
 							pageSize: pageSize,
 							current: queryPage
 						};
+
+						res.locals.query = req.query.query;
 
 						res.render("builds");
 					})

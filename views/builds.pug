@@ -4,63 +4,76 @@ block content
   div(class="container")
 
     div.row
-      table(class="table table-sm build-list")
-        thead
-          th(colspan=2) Component
-          th Source
-          th Message
-          th Conclusion
-          th Processed
+      div(class="col-md-4 offset-md-8")
+        form(action="." method="get")
+          div(class="input-group input-group-sm mb-3")
+            div.input-group-prepend
+              span.input-group-text
+                span(class="fas fa-search")
+            input(type="text" class="form-control" name="query" aria-label="search" value=query)
+            div.input-group-append
+              button(class="btn btn-outline-secondary" type="submit") Search
 
-        tbody
-          each build, index in builds.hits.hits
-            - var item = build._source;
-            tr(data-target=`#build-item-${ index }`) 
-              //- data-toggle="collapse"  class="accordion-toggle build-row"
-              td
-                span(class=`fas fa-fw fa-${ componentIcon(item.sender) }`)
-              td #{ item.sender }
-              td
-                span.coordinates
-                  span(class="org") #{ item.source.owner }
-                  span(class="repo") #{ item.source.repo }
-                  span(class="sha") #{ item.source.sha.substring(0,5) }
-              td #{build._source.title}
-              td 
-                case build._source.checkStatus
-                  when "passed"
-                    span(class="badge badge-info") #{ item.checkStatus }
-                  when "undecisive"
-                    span(class="badge badge-dark") #{ item.checkStatus }
-                  when "blocked"
-                    span(class="badge badge-danger") #{ item.checkStatus }
-                  when "analysis_failure"
-                    span(class="badge badge-warning") #{ item.checkStatus }
-                      
-              td 
-                if item.timestamp
-                  . 
-                    #{ moment(item.timestamp).fromNow() }
-            tr
-              td(colspan="5" class="detail-row")
-                div(class="collapse build-detail" id=`build-item-${ index }`)
+    div.row
+      div.col-12
+        table(class="table table-sm build-list")
+          thead
+            th(colspan=2) Component
+            th Source
+            th Message
+            th Conclusion
+            th Processed
 
-    - var pageDisplay = 7;
-    - var start = Math.max(0, paging.current - Math.floor(pageDisplay / 2));
-    - var end = Math.min(paging.pages, start + pageDisplay);
-    - var i = start;
-    - var paginatorMax = Math.min( paging.pages, paging.current + (pageDisplay - i));
-    nav
-      ul(class="pagination pagination-sm justify-content-center")
-        li(class=`page-item ${ paging.current == 0 ? 'disabled' : '' }`)
-          a.page-link(href=`?page=${ paging.current - 1 }` aria-label="Previous")
-            span(class="fas fa-chevron-left" aria-hidden="true")
+          tbody
+            each build, index in builds.hits.hits
+              - var item = build._source;
+              tr(data-target=`#build-item-${ index }`) 
+                //- data-toggle="collapse"  class="accordion-toggle build-row"
+                td
+                  span(class=`fas fa-fw fa-${ componentIcon(item.sender) }`)
+                td #{ item.sender }
+                td
+                  span.coordinates
+                    span(class="org") #{ item.source.owner }
+                    span(class="repo") #{ item.source.repo }
+                    span(class="sha") #{ item.source.sha.substring(0,5) }
+                td #{build._source.title}
+                td 
+                  case build._source.checkStatus
+                    when "passed"
+                      span(class="badge badge-info") #{ item.checkStatus }
+                    when "undecisive"
+                      span(class="badge badge-dark") #{ item.checkStatus }
+                    when "blocked"
+                      span(class="badge badge-danger") #{ item.checkStatus }
+                    when "analysis_failure"
+                      span(class="badge badge-warning") #{ item.checkStatus }
+                        
+                td 
+                  if item.timestamp
+                    . 
+                      #{ moment(item.timestamp).fromNow() }
+              tr
+                td(colspan="5" class="detail-row")
+                  div(class="collapse build-detail" id=`build-item-${ index }`)
 
-        while i < end
-          li(class=`page-item ${ (i == paging.current)? 'active' : '' }`)
-            a.page-link(href=`?page=${i}`) #{ i + 1 }
-          - i++;
+      div.col-12
+        - var pageDisplay = 7;
+        - var start = Math.max(0, paging.current - Math.floor(pageDisplay / 2));
+        - var end = Math.min(paging.pages, start + pageDisplay);
+        - var i = start;
+        - var paginatorMax = Math.min( paging.pages, paging.current + (pageDisplay - i));
+        nav
+          ul(class="pagination pagination-sm justify-content-center")
+            li(class=`page-item ${ paging.current == 0 ? 'disabled' : '' }`)
+              a.page-link(href=`?page=${ paging.current - 1 }${ query ? '&query=' + query : '' }` aria-label="Previous")
+                span(class="fas fa-chevron-left" aria-hidden="true")
 
-        li(class=`page-item ${ paging.current + 1 > paging.pages ? 'disabled' : '' }`)
-          a.page-link(href=`?page=${ paging.current + 1 }` aria-label="Previous")
-            span(class="fas fa-chevron-right" aria-hidden="true")
+            while i < end
+              li(class=`page-item ${ (i == paging.current)? 'active' : '' }`)
+                a.page-link(href=`?page=${i}${ query ? '&query=' + query : '' }`) #{ i + 1 }
+              - i++;
+
+            li(class=`page-item ${ paging.current + 1 > paging.pages ? 'disabled' : '' }`)
+              a.page-link(href=`?page=${ paging.current + 1 }${ query ? '&query=' + query : '' }` aria-label="Previous")
+                span(class="fas fa-chevron-right" aria-hidden="true")
