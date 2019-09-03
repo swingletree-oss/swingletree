@@ -11,7 +11,7 @@ import { Swingletree } from "../model";
 
 @injectable()
 export abstract class HistoryService {
-	abstract getLatest(from: number, size: number): Promise<RequestEvent<any, any>>;
+	abstract getLatest(from: number, size: number): Promise<any>;
 	abstract getLatestForSender(sender: string, branch: string): Promise<RequestEvent<any, any>>;
 	abstract getOrgs(search?: string): Promise<RequestEvent<any, any>>;
 
@@ -84,6 +84,7 @@ export class ElasticHistoryService implements HistoryService {
 	}
 
 	public async getLatest(from = 0, size= 10) {
+		LOGGER.debug("get latest entries from %s, size %s", from, size);
 		const searchParams: RequestParams.Search<any> = {
 			index: this.index,
 			body: {

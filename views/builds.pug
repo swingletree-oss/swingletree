@@ -45,4 +45,22 @@ block content
               td(colspan="5" class="detail-row")
                 div(class="collapse build-detail" id=`build-item-${ index }`)
 
+    - var pageDisplay = 7;
+    - var start = Math.max(0, paging.current - Math.floor(pageDisplay / 2));
+    - var end = Math.min(paging.pages, start + pageDisplay);
+    - var i = start;
+    - var paginatorMax = Math.min( paging.pages, paging.current + (pageDisplay - i));
+    nav
+      ul(class="pagination pagination-sm justify-content-center")
+        li(class=`page-item ${ paging.current == 0 ? 'disabled' : '' }`)
+          a.page-link(href=`?page=${ paging.current - 1 }` aria-label="Previous")
+            span(class="fas fa-chevron-left" aria-hidden="true")
 
+        while i < end
+          li(class=`page-item ${ (i == paging.current)? 'active' : '' }`)
+            a.page-link(href=`?page=${i}`) #{ i + 1 }
+          - i++;
+
+        li(class=`page-item ${ paging.current + 1 > paging.pages ? 'disabled' : '' }`)
+          a.page-link(href=`?page=${ paging.current + 1 }` aria-label="Previous")
+            span(class="fas fa-chevron-right" aria-hidden="true")
