@@ -8,8 +8,10 @@ storage:
 elastic:
   enabled: false
   node: http://localhost:9200
-  apikey:
-  index: default
+  auth: # elastic nodejs auth object
+    username: 'elastic'
+    password: 'changeme'
+  index: swingletree
 
 # GitHub specific configuration
 github:

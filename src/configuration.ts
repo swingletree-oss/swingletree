@@ -39,6 +39,10 @@ export class ConfigurationService {
 		return value;
 	}
 
+	public getObject(key: string): any {
+		return this.config.get(key);
+	}
+
 	public getConfig() {
 		return this.config.get();
 	}

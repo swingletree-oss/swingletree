@@ -29,9 +29,7 @@ export class ElasticHistoryService implements HistoryService {
 	) {
 		this.client = new Client({
 			node: configService.get(CoreConfig.Elastic.NODE),
-			auth: {
-				apiKey: configService.get(CoreConfig.Elastic.API_KEY)
-			}
+			auth: configService.getObject(CoreConfig.Elastic.AUTH)
 		});
 
 		this.index = configService.get(CoreConfig.Elastic.INDEX);
