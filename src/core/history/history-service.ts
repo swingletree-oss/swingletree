@@ -12,6 +12,7 @@ import { Swingletree } from "../model";
 @injectable()
 export abstract class HistoryService {
 	abstract getLatest(from: number, size: number): Promise<any>;
+	abstract search(query: string, from: number, size: number): Promise<any>;
 	abstract getLatestForSender(sender: string, branch: string): Promise<RequestEvent<any, any>>;
 	abstract getOrgs(search?: string): Promise<RequestEvent<any, any>>;
 
@@ -41,33 +42,22 @@ export class ElasticHistoryService implements HistoryService {
 		return true;
 	}
 
-	private async getEntry(sender: string, org: string, repo: string, sha: string) {
+	public async search(query: string, from = 0, size = 10) {
+
 		const result: ApiResponse<SearchResponse<Swingletree.AnalysisReport>> = await this.client.search({
 			index: this.index,
+			from: from,
+			size: size,
 			body: {
-				size: 1,
 				query: {
-					bool: {
-						must: [],
-						filter: [{
-								bool: {
-									must: [
-										{ match: { "org.keyword": org }},
-										{ match: { "repo.keyword": repo }},
-										{ match: { "sha.keyword": sha }}
-									]
-								}
-						}]
+					simple_query_string: {
+						query : query
 					}
 				}
 			}
 		});
 
-		if (result.body.hits.total.value > 0) {
-			return result.body.hits.hits[0];
-		} else {
-			return null;
-		}
+		return result.body;
 	}
 
 	public async handleNotificationEvent(event: NotificationEvent) {
@@ -167,6 +157,10 @@ export class NoopHistoryService implements HistoryService {
 	}
 
 	public async getLatest(from: number, size: number) {
+		return Promise.resolve(null);
+	}
+
+	public async search(query: string, from: number, size: number) {
 		return Promise.resolve(null);
 	}
 
