@@ -58,6 +58,7 @@ class PageRoutes {
 			res.locals.appPublicPage = this.publicPageUrl;
 			res.locals.healthStates = this.healthService.getStates(HealthState.DOWN);
 			res.locals.isBuildHistoryEnabled = this.isBuildHistoryEnabled;
+			res.locals.path = req.path;
 
 			res.locals.componentIcon = this.componentIcon;
 			res.locals.moment = require("moment");
