@@ -2,6 +2,10 @@
 # Swingletree page custom css
 ---
 
+html {
+  font-size: .8em;
+}
+
 h1,h2,h3,h4 {
   &.underline {
     border-bottom: 2px dotted #ddd;
