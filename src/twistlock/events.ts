@@ -13,9 +13,7 @@ abstract class TwistlockEvent extends RepositorySourceConfigurable {
 }
 
 export class TwistlockReportReceivedEvent extends TwistlockEvent {
-	commitId: string;
 	report: TwistlockModel.Report;
-	branch: string;
 
 	constructor(report: TwistlockModel.Report, source: Swingletree.ScmSource) {
 		super(TwistlockEvents.TwistlockReportReceived, source);
