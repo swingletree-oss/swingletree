@@ -39,7 +39,7 @@ html
                             .
                                 Install
                     if isBuildHistoryEnabled
-                        a(class=`nav-link ${path.endsWith('/builds/') ? 'active' : '' }` href="/builds/")
+                        a(class=`nav-link ${path.endsWith('/builds/') ? 'active' : '' }` href=`${ basePath }/builds/`)
                             .
                                 Builds
             
@@ -60,7 +60,7 @@ html
                                             div(style="padding-left:1.5em") #{health.detail}
                                             div.muted(x-relative-date) #{ moment(health.timestamp).fromNow() }
                 li(class="nav-item")
-                    a(class="nav-link" href="./code")
+                    a(class="nav-link" href=`${ basePath }/code`)
                         i(class="fas fa-fw mr-1 fa-code")
                         .
                             Snippets
