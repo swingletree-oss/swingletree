@@ -109,7 +109,6 @@ class PageRoutes {
 					.catch((err) => {
 						LOGGER.warn("failed to render build overview");
 						LOGGER.warn(err);
-						console.log(err);
 					});
 			});
 		}
