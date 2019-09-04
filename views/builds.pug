@@ -4,15 +4,15 @@ block content
   div(class="container")
 
     div.row
-      div(class="col-md-4 offset-md-8")
+      div.col-md-8
+        h3 Build Overview
+      div(class="col-md-4")
         form(action="." method="get")
           div(class="input-group input-group-sm mb-3")
-            div.input-group-prepend
-              span.input-group-text
-                span(class="fas fa-search")
-            input(type="text" class="form-control" name="query" aria-label="search" value=query)
+            input(type="text" class="form-control" name="query" aria-label="search" placeholder="Search" value=query)
             div.input-group-append
-              button(class="btn btn-outline-secondary" type="submit") Search
+              button(class="btn btn-outline-secondary" type="submit")
+                span(class="fas fa-search")
 
     div.row
       div.col-12
