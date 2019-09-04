@@ -4,11 +4,11 @@
   - installation
   - configure
 
-- title: Usage
+- title: Plugins
   docs:
-  - usage/sonarqube
-  - usage/twistlock
-  - usage/zap
+  - plugins/sonarqube
+  - plugins/twistlock
+  - plugins/zap
   - problems
 
 - title: Extend Swingletree

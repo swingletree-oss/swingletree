@@ -1,6 +1,6 @@
 ---
-title: Sonarqube Plugin usage
-permalink: /docs/usage/sonarqube/
+title: Sonarqube
+permalink: /docs/plugins/sonarqube/
 redirect_from: /docs/index.html
 ---
 

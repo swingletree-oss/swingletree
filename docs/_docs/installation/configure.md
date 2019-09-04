@@ -31,6 +31,17 @@ Environment variables override file configuration values.
 | `SONAR_CONTEXT`       | Sets the check-run name of Swingletree Sonar                      | `sonarqube` |
 | `SONAR_DEBUG`         | Controls debug mode of the sonar client                           | `false` |
 
+### ElasticSearch configuration
+
+| Variable                 | Description                                                       | Default |
+| ---------------------    | ----------------------------------------------------------------- | ------- |
+| `ELASTIC_ENABLED`        | Enables Elastic storage and Swingletree audit capabilities.       | `false` |
+| `ELASTIC_NODE`           | Elasticsearch server node                                         | *none* |
+| `ELASTIC_AUTH_USERNAME`  | Authentication Username                                           | *none*  |
+| `ELASTIC_AUTH_PASSWORD`  | Authentication Password                                           | *none*  |
+| `ELASTIC_INDEX`          | Elasticsearch index to use                                        | `swingletree` |
+
+
 ### Twistlock configuration
 
 | Variable              | Description                                                       | Default |

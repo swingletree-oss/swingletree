@@ -1,6 +1,6 @@
 ---
-title: Twistlock Plugin usage
-permalink: /docs/usage/twistlock/
+title: Twistlock
+permalink: /docs/plugins/twistlock/
 redirect_from: /docs/index.html
 ---
 

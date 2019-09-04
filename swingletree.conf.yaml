@@ -9,8 +9,9 @@ elastic:
   enabled: false
   node: http://localhost:9200
   auth: # elastic nodejs auth object
-    username: 'elastic'
-    password: 'changeme'
+    username:
+    password:
+    apiKey:
   index: swingletree
 
 # GitHub specific configuration
