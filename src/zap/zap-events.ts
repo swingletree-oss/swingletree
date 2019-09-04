@@ -13,9 +13,7 @@ abstract class ZapEvent extends RepositorySourceConfigurable {
 }
 
 export class ZapReportReceivedEvent extends ZapEvent {
-	commitId: string;
 	report: Zap.Report;
-	branch: string;
 
 	constructor(report: Zap.Report, source: Swingletree.ScmSource) {
 		super(ZapEvents.ZapReportReceived, source);
