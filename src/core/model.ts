@@ -7,18 +7,34 @@ export namespace Swingletree {
 	}
 
 	export enum Conclusion {
+		/** all is ok */
 		PASSED = "passed",
+		/** can not decide if this is ok */
 		UNDECISIVE = "undecisive",
+		/** is not ok */
 		BLOCKED = "blocked",
+		/** something went wrong */
 		ANALYSIS_FAILURE = "analysis_failure"
 	}
 
 	/** Annotation superclass */
 	export abstract class Annotation {
 		readonly type: AnnotationType;
+
+		/** Title of the annotation */
 		title: string;
-		detail: string;
+
+		/** Some detail information */
+		detail?: string;
+
+		/** Link to extra information */
+		href?: string;
+
+		/** Severity of the Annotation */
 		severity: Severity;
+
+		/** Extra information concerning the annotation */
+		metadata?: Object;
 
 		constructor(type: AnnotationType) {
 			this.type = type;
@@ -28,8 +44,11 @@ export namespace Swingletree {
 	/** An annotation, which can point to a specific file in the analysis context
 	 */
 	export class FileAnnotation extends Annotation {
+		/** path to the file */
 		path: string;
+		/** starting line targeted by the annotation */
 		start?: number;
+		/** ending line targeted by the annotation */
 		end?: number;
 
 		constructor() {
@@ -51,17 +70,27 @@ export namespace Swingletree {
 	}
 
 	export interface AnalysisReport {
-		/**
-		 * Sender of this notification (plugin name)
-		 */
+		/** Sender of this notification (plugin name) */
 		sender: string;
+		/** SCM source of the report */
 		source: ScmSource;
+		/** link to details */
 		link?: string;
+
+		/** additional information */
+		metadata?: Object;
+
+		/** title of the report */
 		title: string;
+		/** short description of the report */
 		shortMessage?: string;
+		/** markdown content of the report */
 		markdown?: string;
+		/** conclusion of the report */
 		checkStatus?: Swingletree.Conclusion;
+		/** annotations of the report */
 		annotations?: Swingletree.Annotation[];
+		/** timestamp of the report */
 		timestamp?: Date;
 	}
 

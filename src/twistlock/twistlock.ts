@@ -32,16 +32,16 @@ export class TwistlockPlugin extends SwingletreeComponent.Component {
 		webserver.addRouter("/webhook/twistlock", container.get<TwistlockWebhook>(TwistlockWebhook).getRoute());
 
 		// add template filter for severity icons
-		container.get<TemplateEngine>(TemplateEngine).addFilter("twistlockFindingSeverity", TwistlockPlugin.twistlockFindingSeverityFilter);
+		container.get<TemplateEngine>(TemplateEngine).addFilter("twistlockVulnSeverity", TwistlockPlugin.twistlockVulnerabilitySeverityFilter);
 	}
 
-	public static twistlockFindingSeverityFilter(type: TwistlockModel.FindingSeverity | string) {
-		if (type == TwistlockModel.FindingSeverity.CRITICAL) return ":bangbang:";
-		if (type == TwistlockModel.FindingSeverity.HIGH) return ":exclamation:";
-		if (type == TwistlockModel.FindingSeverity.IMPORTANT) return ":red_circle:";
-		if (type == TwistlockModel.FindingSeverity.MODERATE) return ":small_red_triangle:";
-		if (type == TwistlockModel.FindingSeverity.MEDIUM) return " :small_red_triangle_down:";
-		if (type == TwistlockModel.FindingSeverity.LOW) return ":small_orange_diamond:";
+	public static twistlockVulnerabilitySeverityFilter(type: TwistlockModel.VulnerabilitySeverity | string) {
+		if (type == TwistlockModel.VulnerabilitySeverity.CRITICAL) return ":bangbang:";
+		if (type == TwistlockModel.VulnerabilitySeverity.HIGH) return ":exclamation:";
+		if (type == TwistlockModel.VulnerabilitySeverity.IMPORTANT) return ":red_circle:";
+		if (type == TwistlockModel.VulnerabilitySeverity.MODERATE) return ":small_red_triangle:";
+		if (type == TwistlockModel.VulnerabilitySeverity.MEDIUM) return " :small_red_triangle_down:";
+		if (type == TwistlockModel.VulnerabilitySeverity.LOW) return ":small_orange_diamond:";
 
 		return type;
 	}

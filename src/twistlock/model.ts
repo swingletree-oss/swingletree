@@ -1,4 +1,5 @@
 import { RepositoryConfigPluginItem } from "../core/event/event-model";
+import { Swingletree } from "../core/model";
 
 export namespace TwistlockModel {
 
@@ -9,18 +10,18 @@ export namespace TwistlockModel {
 			public readonly vulnerabilityIssues: TwistlockModel.Vulnerability[];
 			public readonly ignoredVulnerabilityIssues: TwistlockModel.Vulnerability[];
 
-			public readonly complianceCounts: Map<FindingSeverity, number>;
+			public readonly complianceCounts: Map<TwistlockSeverity, number>;
 			public readonly vulnerabilityCounts: Map<string, number>;
 
 			public readonly whitelist: Map<string, string>;
 
-			constructor(report: Report, minCvss = 0, complianceSeverity = FindingSeverity.LOW, whitelist = new Map<string, string>()) {
+			constructor(report: Report, minCvss = 0, complianceSeverity = TwistlockSeverity.LOW, whitelist = new Map<string, string>()) {
 				this.complianceIssues = [];
 				this.ignoredComplianceIssues = [];
 				this.vulnerabilityIssues = [];
 				this.ignoredVulnerabilityIssues = [];
 
-				this.complianceCounts = new Map<FindingSeverity, number>();
+				this.complianceCounts = new Map<TwistlockSeverity, number>();
 				this.vulnerabilityCounts = new Map<string, number>();
 
 				this.whitelist = whitelist;
@@ -43,7 +44,7 @@ export namespace TwistlockModel {
 
 						if (result.compliances) {
 							result.compliances.forEach((comp) => {
-								if (TwistlockModel.SeverityUtil.isEqualOrHigher(comp.severity, complianceSeverity)) {
+								if (TwistlockModel.SeverityUtil.isComplianceEqualOrHigher(comp.severity, complianceSeverity)) {
 									this.addComplianceIssue(comp);
 								} else {
 									this.ignoredComplianceIssues.push(comp);
@@ -82,29 +83,19 @@ export namespace TwistlockModel {
 		}
 	}
 
-	export enum FindingSeverity {
-		CRITICAL = "critical",
-		IMPORTANT = "important",
-		HIGH = "high",
-		MODERATE = "moderate",
-		MEDIUM = "medium",
-		LOW = "low",
-		TOTAL = "total"
-	}
-
 	export interface RepoConfig extends RepositoryConfigPluginItem {
-		thresholdVulnerability: FindingSeverity;
+		thresholdVulnerability: TwistlockSeverity;
 		thresholdCvss: number;
-		thresholdCompliance: FindingSeverity;
+		thresholdCompliance: TwistlockSeverity;
 
 		whitelist: Map<string, string>;
 	}
 
 	export class DefaultRepoConfig implements RepoConfig {
 		enabled: boolean;
-		thresholdVulnerability: FindingSeverity;
+		thresholdVulnerability: TwistlockSeverity;
 		thresholdCvss: number;
-		thresholdCompliance: FindingSeverity;
+		thresholdCompliance: TwistlockSeverity;
 
 		whitelist: Map<string, string>;
 
@@ -122,32 +113,14 @@ export namespace TwistlockModel {
 			} else {
 				this.enabled = false;
 				this.whitelist = new Map<string, string>();
-				this.thresholdCompliance = FindingSeverity.LOW;
+				this.thresholdCompliance = TwistlockSeverity.LOW;
 				this.thresholdCvss = 0;
-				this.thresholdVulnerability = FindingSeverity.LOW;
+				this.thresholdVulnerability = TwistlockSeverity.LOW;
 			}
 		}
 	}
 
 
-	export class SeverityUtil {
-		static severityScore(severity: FindingSeverity): number {
-			switch (severity) {
-				case TwistlockModel.FindingSeverity.CRITICAL: return 5;
-				case TwistlockModel.FindingSeverity.IMPORTANT: return 4;
-				case TwistlockModel.FindingSeverity.HIGH: return 3;
-				case TwistlockModel.FindingSeverity.MEDIUM: return 2;
-				case TwistlockModel.FindingSeverity.LOW: return 1;
-			}
-
-			return 100;
-		}
-
-		static isEqualOrHigher(compare: FindingSeverity, withItem: FindingSeverity): boolean {
-			return this.severityScore(compare) >= this.severityScore(withItem);
-		}
-
-	}
 
 	export interface Report {
 		results: Result[];
@@ -172,7 +145,7 @@ export namespace TwistlockModel {
 
 	export interface Compliance {
 		title: string;
-		severity: FindingSeverity;
+		severity: TwistlockSeverity;
 	}
 
 	export interface Vulnerability {
@@ -181,15 +154,99 @@ export namespace TwistlockModel {
 		cvss: number;
 		vector: string;
 		description: string;
-		severity: string;
+		severity: VulnerabilitySeverity;
 		packageName: string;
 		packageVersion: string;
 		link: string;
 		riskFactors: any;
 	}
 
+	export enum VulnerabilitySeverity {
+		UNIMPORTANT = "unimportant",
+		UNASSIGNED = "unassigned",
+		NEGLIGIBLE = "negligible",
+		LOW = "low",
+		MEDIUM = "medium",
+		MODERATE = "moderate",
+		HIGH = "high",
+		IMPORTANT = "important",
+		CRITICAL = "critical"
+	}
+
+	export enum TwistlockSeverity {
+		LOW = "low",
+		MEDIUM = "medium",
+		HIGH = "high",
+		CRITICAL = "critical"
+	}
+
 	export interface Template {
 		report: Report;
 		issues: TwistlockModel.util.FindingReport;
+	}
+
+	export class SeverityUtil {
+		private static readonly twistlockOrder = [
+			TwistlockSeverity.LOW,
+			TwistlockSeverity.MEDIUM,
+			TwistlockSeverity.HIGH,
+			TwistlockSeverity.CRITICAL
+		];
+
+		private static readonly vulnerabilityOrder = [
+			VulnerabilitySeverity.UNIMPORTANT,
+			VulnerabilitySeverity.UNASSIGNED,
+			VulnerabilitySeverity.NEGLIGIBLE,
+			VulnerabilitySeverity.LOW,
+			VulnerabilitySeverity.MEDIUM,
+			VulnerabilitySeverity.MODERATE,
+			VulnerabilitySeverity.HIGH,
+			VulnerabilitySeverity.IMPORTANT,
+			VulnerabilitySeverity.CRITICAL
+		];
+
+		private static compareSeverity(order: any[], compare: any, other: any): boolean {
+			if (compare == other) return true;
+
+			for (const i in order) {
+				if (order[i] == compare) {
+					return false;
+				}
+
+				if (order[i] == other) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		static isVulnerabilityEqualOrHigher(compare: VulnerabilitySeverity, other: VulnerabilitySeverity): boolean {
+			return SeverityUtil.compareSeverity(this.vulnerabilityOrder, compare, other);
+		}
+
+		static isComplianceEqualOrHigher(compare: TwistlockSeverity, other: TwistlockSeverity): boolean {
+			return SeverityUtil.compareSeverity(this.twistlockOrder, compare, other);
+		}
+
+		static convertCompliance(severity: TwistlockSeverity): Swingletree.Severity {
+			switch (severity) {
+				case TwistlockSeverity.LOW: return Swingletree.Severity.INFO;
+				case TwistlockSeverity.MEDIUM: return Swingletree.Severity.WARNING;
+				case TwistlockSeverity.HIGH: return Swingletree.Severity.MAJOR;
+				case TwistlockSeverity.CRITICAL: return Swingletree.Severity.BLOCKER;
+			}
+
+			return Swingletree.Severity.INFO;
+		}
+
+		static convertVulnerability(severity: VulnerabilitySeverity): Swingletree.Severity {
+			if (!this.isVulnerabilityEqualOrHigher(severity, VulnerabilitySeverity.MEDIUM)) return Swingletree.Severity.INFO;
+			if (!this.isVulnerabilityEqualOrHigher(severity, VulnerabilitySeverity.HIGH)) return Swingletree.Severity.WARNING;
+			if (!this.isVulnerabilityEqualOrHigher(severity, VulnerabilitySeverity.IMPORTANT)) return Swingletree.Severity.MAJOR;
+
+			return Swingletree.Severity.BLOCKER;
+		}
+
 	}
 }
