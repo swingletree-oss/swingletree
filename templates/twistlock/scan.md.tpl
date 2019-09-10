@@ -14,7 +14,7 @@
 
 ## {{ issues.vulnerabilityIssues.length }} Vulnerabilities
 {%     for vul in issues.vulnerabilityIssues | sort(true, false, "cvss") %}
-<details><summary><b>{{ vul.severity | twistlockFindingSeverity }} {{ vul.cvss }}</b>: {{ vul.id }} </summary><p><ul>
+<details><summary><b>{{ vul.severity | twistlockVulnSeverity }} {{ vul.cvss }}</b>: {{ vul.id }} </summary><p><ul>
 
 | CVSS | Severity | Package | Version | Status |
 | --- | --- | --- | --- | --- |

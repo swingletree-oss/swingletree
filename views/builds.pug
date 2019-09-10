@@ -27,17 +27,16 @@ block content
           tbody
             each build, index in builds.hits.hits
               - var item = build._source;
-              tr(data-target=`#build-item-${ index }`) 
-                //- data-toggle="collapse"  class="accordion-toggle build-row"
+              tr(data-target=`#build-item-${ index }` data-toggle="collapse"  class="accordion-toggle build-row")
                 td
                   span(class=`fas fa-fw fa-${ componentIcon(item.sender) }`)
-                td #{ item.sender }
+                td=item.sender
                 td
                   span.coordinates
                     span(class="org") #{ item.source.owner }
                     span(class="repo") #{ item.source.repo }
                     span(class="sha") #{ item.source.sha.substring(0,5) }
-                td #{build._source.title}
+                td=build._source.title
                 td 
                   case build._source.checkStatus
                     when "passed"
@@ -54,8 +53,35 @@ block content
                     . 
                       #{ moment(item.timestamp).fromNow() }
               tr
-                td(colspan="5" class="detail-row")
+                td(colspan="6" class="detail-row")
                   div(class="collapse build-detail" id=`build-item-${ index }`)
+                    div.row
+                      div.col-md-5
+                        h5.detail-section Metadata
+                        if item.metadata
+                          table(class="table table-sm build-list")
+                            tbody
+                              each key, index in Object.keys(item.metadata)
+                                tr
+                                  td=key
+                                  td=item.metadata[key]
+                        else
+                          span None
+                      div.col-md-7
+                        h5.detail-section Annotations
+                        if item.annotations && item.annotations.length > 0
+                          table(class="table table-sm build-list")
+                            thead
+                              th Severity
+                              th Title
+                            tbody
+                              each annotation, index in item.annotations
+                                tr
+                                  td=annotation.severity
+                                  td=annotation.title
+                        else
+                          div None
+
 
       div.col-12
         - var pageDisplay = 7;
@@ -74,6 +100,6 @@ block content
                 a.page-link(href=`?page=${i}${ query ? '&query=' + query : '' }`) #{ i + 1 }
               - i++;
 
-            li(class=`page-item ${ paging.current + 1 > paging.pages ? 'disabled' : '' }`)
+            li(class=`page-item ${ paging.current + 2 > paging.pages ? 'disabled' : '' }`)
               a.page-link(href=`?page=${ paging.current + 1 }${ query ? '&query=' + query : '' }` aria-label="Previous")
                 span(class="fas fa-chevron-right" aria-hidden="true")

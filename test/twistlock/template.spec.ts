@@ -34,7 +34,7 @@ describe("Twistlock Template", () => {
 
 		beforeEach(() => {
 			uut = new TemplateEngine();
-			uut.addFilter("twistlockFindingSeverity", TwistlockPlugin.twistlockFindingSeverityFilter);
+			uut.addFilter("twistlockVulnSeverity", TwistlockPlugin.twistlockVulnerabilitySeverityFilter);
 		});
 
 		it("should compile the template", () => {
@@ -45,7 +45,7 @@ describe("Twistlock Template", () => {
 			const findingReport = new TwistlockModel.util.FindingReport(
 				testData,
 				0,
-				TwistlockModel.FindingSeverity.LOW
+				TwistlockModel.TwistlockSeverity.LOW
 			);
 
 			const templateContent = uut.template<TwistlockModel.Template>(Templates.TWISTLOCK_SCAN, {
@@ -63,7 +63,7 @@ describe("Twistlock Template", () => {
 			const findingReport = new TwistlockModel.util.FindingReport(
 				testData,
 				0,
-				TwistlockModel.FindingSeverity.LOW,
+				TwistlockModel.TwistlockSeverity.LOW,
 				exceptions
 			);
 
@@ -78,7 +78,7 @@ describe("Twistlock Template", () => {
 			const findingReport = new TwistlockModel.util.FindingReport(
 				testData,
 				0,
-				TwistlockModel.FindingSeverity.LOW,
+				TwistlockModel.TwistlockSeverity.LOW,
 				exceptions
 			);
 
@@ -96,7 +96,7 @@ describe("Twistlock Template", () => {
 			const findingReport = new TwistlockModel.util.FindingReport(
 				testData,
 				0,
-				TwistlockModel.FindingSeverity.LOW
+				TwistlockModel.TwistlockSeverity.LOW
 			);
 
 			expect(findingReport.vulnerabilityIssues.length).to.equal(testData.results[0].vulnerabilities.length);
@@ -107,7 +107,7 @@ describe("Twistlock Template", () => {
 			const findingReport = new TwistlockModel.util.FindingReport(
 				testData,
 				10,
-				TwistlockModel.FindingSeverity.CRITICAL
+				TwistlockModel.TwistlockSeverity.CRITICAL
 			);
 
 			expect(findingReport.ignoredVulnerabilityIssues.length).to.equal(testData.results[0].vulnerabilities.length);
@@ -121,7 +121,7 @@ describe("Twistlock Template", () => {
 			const findingReport = new TwistlockModel.util.FindingReport(
 				testData,
 				10,
-				TwistlockModel.FindingSeverity.LOW,
+				TwistlockModel.TwistlockSeverity.LOW,
 				exceptions
 			);
 
@@ -138,7 +138,7 @@ describe("Twistlock Template", () => {
 			const findingReport = new TwistlockModel.util.FindingReport(
 				testData,
 				10,
-				TwistlockModel.FindingSeverity.LOW
+				TwistlockModel.TwistlockSeverity.LOW
 			);
 
 			expect(findingReport.complianceIssues).to.have.lengthOf(1);
@@ -149,7 +149,7 @@ describe("Twistlock Template", () => {
 			const findingReport = new TwistlockModel.util.FindingReport(
 				testData,
 				11,
-				TwistlockModel.FindingSeverity.CRITICAL
+				TwistlockModel.TwistlockSeverity.CRITICAL
 			);
 
 			const templateContent = uut.template<TwistlockModel.Template>(Templates.TWISTLOCK_SCAN, {

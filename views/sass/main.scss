@@ -1,6 +1,20 @@
 @import "_variables.scss";
 @import "../../node_modules/bootstrap-scss/bootstrap.scss";
 
+
+@function readableColor($color) {  
+  @if (lightness( $color ) > 40) {
+    @return black;
+  }
+  @else {
+    @return white;
+  }
+}
+
+body {
+  min-height: 100vh;
+}
+
 .popover {
   box-shadow: 0px 0px 0px 2px #ffc107;
   max-width: 400px;
@@ -15,12 +29,6 @@ pre {
   text-align: right;
 }
 
-td.detail-row {
-  padding-top: 0px;
-  padding-bottom: 0px;
-  border: 0px;
-}
-
 .build-detail {
   padding-left: 1em;
   padding-top: 2px;
@@ -29,10 +37,6 @@ td.detail-row {
 
 .coordinates {
   vertical-align: middle;
-
-  .org {
-    
-  }
 
   .repo {
     &:before {
@@ -50,12 +54,6 @@ td.detail-row {
     }
   }
 
-  .branch {
-
-  }
-}
-
-.build-row {
 }
 
 .build-list {
@@ -63,6 +61,25 @@ td.detail-row {
   font-size: .8em;
 }
 
-.build-item {
+td.detail-row {
+  box-shadow: inset 0px 11px 8px -10px $gray-500, inset 0px -11px 8px -10px $gray-500;
+  background-color: $gray-100;
 
+  padding-top: 0px;
+  padding-bottom: 0px;
+
+  border-top: 0px;
+  border-bottom: 0px;
+  border-left: 1px solid $gray-200;
+  border-right: 1px solid $gray-200;
+
+  .build-detail {
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+ 
+  .detail-section {
+    font-size: 1.2em;
+    color: $text-muted;
+  }
 }

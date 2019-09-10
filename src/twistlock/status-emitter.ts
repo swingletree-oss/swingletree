@@ -55,11 +55,37 @@ class TwistlockStatusEmitter {
 			issues: issueReport
 		};
 
+		const annotations: Swingletree.ProjectAnnotation[] = [];
+		issueReport.complianceIssues.forEach(issue => {
+			const annotation = new Swingletree.ProjectAnnotation();
+			annotation.title = issue.title;
+			annotation.severity = TwistlockModel.SeverityUtil.convertCompliance(issue.severity);
+
+			annotations.push(annotation);
+		});
+
+		issueReport.vulnerabilityIssues.forEach(issue => {
+			const annotation = new Swingletree.ProjectAnnotation();
+			annotation.title = issue.id;
+			annotation.href = issue.link;
+			annotation.severity = TwistlockModel.SeverityUtil.convertVulnerability(issue.severity);
+			annotation.metadata = {
+				vector: issue.vector,
+				status: issue.status,
+				package: issue.packageName,
+				version: issue.packageVersion,
+				cvss: issue.cvss
+			};
+
+			annotations.push(annotation);
+		});
+
 		const notificationData: Swingletree.AnalysisReport = {
 			sender: this.context,
 			source: event.source,
 			checkStatus: this.getConclusion(event),
 			title: `${issueReport.issuesCount()} issues found`,
+			annotations: annotations
 		};
 
 		const notificationEvent = new NotificationEvent(notificationData);

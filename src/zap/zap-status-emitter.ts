@@ -26,40 +26,43 @@ class ZapStatusEmitter {
 		eventBus.register(ZapEvents.ZapReportReceived, this.reportReceivedHandler, this);
 	}
 
-	public getRiskCounts(report: Zap.Report): Map<Zap.Riskcode, number> {
-		const counters = new Map<Zap.Riskcode, number>();
+	public getAnnotations(report: Zap.Report): Swingletree.Annotation[] {
+		const annotations: Swingletree.Annotation[] = [];
 
 		report.site.forEach((site) => {
 			site.alerts.forEach((alert) => {
-				if (counters.has(alert.riskcode)) {
-					counters.set(alert.riskcode, counters.get(alert.riskcode) + 1);
-				} else {
-					counters.set(alert.riskcode, 1);
-				}
+				const annotation = new Swingletree.ProjectAnnotation();
+				annotation.title = alert.alert;
+				annotation.severity = Zap.SeverityUtil.convert(alert.riskcode);
+				annotation.metadata = {
+					riskdesc: alert.riskdesc,
+					riskcode: alert.riskcode,
+					confidence: alert.confidence
+				};
+
+				annotations.push(annotation);
 			});
 		});
 
-		return counters;
+		return annotations;
 	}
 
 	public reportReceivedHandler(event: ZapReportReceivedEvent) {
-		const riskCounts = this.getRiskCounts(event.report);
+		const annotations = this.getAnnotations(event.report);
 
 		const templateData: Zap.ReportTemplate = {
-			event: event,
-			counts: riskCounts
+			event: event
 		};
-
-		let totalIssueCount = 0;
-		riskCounts.forEach((count) => {
-			totalIssueCount += count;
-		});
 
 		const notificationData: Swingletree.AnalysisReport = {
 			sender: this.context,
 			source: event.source,
-			checkStatus: riskCounts.size == 0 ? Swingletree.Conclusion.PASSED : Swingletree.Conclusion.BLOCKED,
-			title: `${totalIssueCount} issues found`,
+			checkStatus: annotations.length == 0 ? Swingletree.Conclusion.PASSED : Swingletree.Conclusion.BLOCKED,
+			title: `${annotations.length} issues found`,
+			metadata: {
+				zapVersion: event.report["@version"]
+			},
+			annotations: annotations
 		};
 
 		const notificationEvent = new NotificationEvent(notificationData);

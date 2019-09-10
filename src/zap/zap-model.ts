@@ -1,6 +1,7 @@
 import { TemplateData } from "../core/template/template-engine";
 import { ZapReportReceivedEvent } from "./zap-events";
 import { RepositoryConfigPluginItem } from "../core/event/event-model";
+import { Swingletree } from "../core/model";
 
 export namespace Zap {
 
@@ -53,6 +54,19 @@ export namespace Zap {
 		INFORMATIONAL = 0
 	}
 
+	export class SeverityUtil {
+		public static convert(riskcode: Riskcode) {
+			switch (riskcode) {
+				case Riskcode.INFORMATIONAL: return Swingletree.Severity.INFO;
+				case Riskcode.LOW: return Swingletree.Severity.WARNING;
+				case Riskcode.MEDIUM: return Swingletree.Severity.MAJOR;
+				case Riskcode.HIGH: return Swingletree.Severity.BLOCKER;
+			}
+
+			return Swingletree.Severity.INFO;
+		}
+	}
+
 	export enum Confidence {
 		USER_CONFIRMED = 4,
 		HIGH = 3,
@@ -63,6 +77,5 @@ export namespace Zap {
 
 	export interface ReportTemplate extends TemplateData {
 		event: ZapReportReceivedEvent;
-		counts: Map<Riskcode, number>;
 	}
 }
