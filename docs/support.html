@@ -1,0 +1,49 @@
+---
+layout: default
+---
+
+{% include header-banner.html %}
+
+<script type="text/javascript">
+    function ml(usr, dmn) {
+        document.write('<a href=\"mailto:' + usr + '@' + dmn + '\">' + usr + '@' + dmn + '</a>');
+    }
+</script>
+
+<div class="container">
+    <div class="col-sm-12">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fas fa-fw fa-info-circle"></i> Enterprise usage
+            </div>
+            <div class="panel-body">
+                We are offering professional services for enterprises to support the development of Swingletree.<br/>
+                Feel free to start a conversation using the e-mail address below.
+            </div>
+        </div>
+
+        <h3>Contact</h3>
+
+        <p>
+
+        </p>
+
+        <div>
+            <i class="far fa-fw fa-envelope"></i>
+            <script>ml("contact", "illjut.de")</script>
+            <noscript>contact -at- illjut de</noscript>
+        </div>
+
+        <div>
+            <i class="fab fa-fw fa-github"></i>
+            <a href="{{ site.git_address}}">{{ site.git_address }}</a>
+        </div>
+
+        <div>
+            <i class="fab fa-fw fa-github"></i>
+            <a href="{{ site.git_address}}/issues">GitHub issues</a>
+        </div>
+
+    </div>
+</div>
