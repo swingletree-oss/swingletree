@@ -50,6 +50,49 @@ class PageRoutes {
 		return "question";
 	}
 
+	private enableHistoryService(router: Router) {
+		router.get("/builds", (req, res) => {
+			req.query.page = parseInt(req.query.page, 10);
+			const queryPage = (isNaN(req.query.page)) ? 0 : req.query.page;
+
+			const pageSize = 20;
+			const fromIndex = pageSize * queryPage;
+
+			res.locals.basePath = "..";
+
+			Promise.all([
+				this.historyService.getOrgs(),
+				(req.query.query) ? this.historyService.search(req.query.query, fromIndex, pageSize) : this.historyService.getLatest(fromIndex, pageSize)
+			]).then((data) => {
+					res.locals.orgs = data[0];
+					res.locals.builds = data[1];
+
+					res.locals.paging = {
+						total: data[1].hits.total.value,
+						pages: Math.ceil(data[1].hits.total.value / pageSize),
+						pageSize: pageSize,
+						current: queryPage
+					};
+
+					res.locals.query = req.query.query;
+
+					res.render("builds");
+				})
+				.catch((err) => {
+					LOGGER.warn("failed to render build overview");
+					LOGGER.warn(err);
+				});
+		});
+	}
+
+	private enableCodeSnippetPage(router: Router) {
+		router.get("/code/", (req, res) => {
+			res.locals.basePath = "..";
+
+			res.render("code");
+		});
+	}
+
 	public getRoute(): Router {
 		const router = Router();
 
@@ -72,45 +115,10 @@ class PageRoutes {
 			res.render("index");
 		});
 
-		router.get("/code/", (req, res) => {
-			res.locals.basePath = "..";
-
-			res.render("code");
-		});
+		this.enableCodeSnippetPage(router);
 
 		if (this.historyService.isEnabled()) {
-			router.get("/builds", (req, res) => {
-				req.query.page = parseInt(req.query.page, 10);
-				const queryPage = (isNaN(req.query.page)) ? 0 : req.query.page;
-
-				const pageSize = 20;
-				const fromIndex = pageSize * queryPage;
-
-				res.locals.basePath = "..";
-
-				Promise.all([
-					this.historyService.getOrgs(),
-					(req.query.query) ? this.historyService.search(req.query.query, fromIndex, pageSize) : this.historyService.getLatest(fromIndex, pageSize)
-				]).then((data) => {
-						res.locals.orgs = data[0];
-						res.locals.builds = data[1];
-
-						res.locals.paging = {
-							total: data[1].hits.total.value,
-							pages: Math.ceil(data[1].hits.total.value / pageSize),
-							pageSize: pageSize,
-							current: queryPage
-						};
-
-						res.locals.query = req.query.query;
-
-						res.render("builds");
-					})
-					.catch((err) => {
-						LOGGER.warn("failed to render build overview");
-						LOGGER.warn(err);
-					});
-			});
+			this.enableHistoryService(router);
 		}
 
 		router.use("/static", express.static("static"));
