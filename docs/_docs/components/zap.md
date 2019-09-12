@@ -1,6 +1,6 @@
 ---
-title: Zap
-permalink: /docs/plugins/zap/
+title: Zap Plugin
+permalink: /docs/components/zap/
 redirect_from: /docs/index.html
 ---
 
