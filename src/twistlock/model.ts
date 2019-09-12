@@ -55,22 +55,24 @@ export namespace TwistlockModel {
 				}
 			}
 
+			private updateCounterMap(countMap: Map<any, number>, severity: any) {
+				if (countMap.has(severity)) {
+					if (countMap.has(severity)) {
+						countMap.set(severity, countMap.get(severity) + 1);
+					}
+				} else {
+					countMap.set(severity, 1);
+				}
+			}
+
 			private addComplianceIssue(issue: Compliance) {
 				this.complianceIssues.push(issue);
-				if (this.complianceCounts.has(issue.severity)) {
-					this.complianceCounts.set(issue.severity, this.complianceCounts.get(issue.severity) + 1);
-				} else {
-					this.complianceCounts.set(issue.severity, 1);
-				}
+				this.updateCounterMap(this.complianceCounts, issue.severity);
 			}
 
 			private addVulnerabilityIssue(issue: Vulnerability) {
 				this.vulnerabilityIssues.push(issue);
-				if (this.vulnerabilityCounts.has(issue.severity)) {
-					this.vulnerabilityCounts.set(issue.severity, this.vulnerabilityCounts.get(issue.severity) + 1);
-				} else {
-					this.vulnerabilityCounts.set(issue.severity, 1);
-				}
+				this.updateCounterMap(this.vulnerabilityCounts, issue.severity);
 			}
 
 			public issuesCount(): number {
