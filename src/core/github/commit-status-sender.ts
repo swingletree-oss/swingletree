@@ -26,6 +26,34 @@ class CommitStatusSender {
 		this.githubClientService = githubClientService;
 	}
 
+	private convertToConclusion(conclusion: Swingletree.Conclusion): "success" | "action_required" | "neutral" | "failure" {
+		let result: "success" | "action_required" | "neutral" | "failure" = "neutral";
+
+		switch (conclusion) {
+			case Swingletree.Conclusion.PASSED: result = "success"; break;
+			case Swingletree.Conclusion.BLOCKED: result = "action_required"; break;
+			case Swingletree.Conclusion.UNDECISIVE: result = "neutral"; break;
+			case Swingletree.Conclusion.ANALYSIS_FAILURE: result = "failure"; break;
+		}
+
+		return result;
+	}
+
+	private convertToCheckAnnotations(annotations: Swingletree.Annotation[]): ChecksCreateParamsOutputAnnotations[] {
+		return annotations.filter(i => i instanceof Swingletree.FileAnnotation)
+			.map(annotation => {
+				const item = annotation as Swingletree.FileAnnotation;
+				return {
+					path: item.path,
+					start_line: item.start || 1,
+					end_line: item.end || 1,
+					title: item.title,
+					message: item.detail,
+					annotation_level: item.severity
+				} as ChecksCreateParamsOutputAnnotations;
+			});
+		}
+
 	public async sendAnalysisStatus(event: NotificationEvent) {
 
 		if (!(event.payload.source instanceof Swingletree.GithubSource)) {
@@ -58,13 +86,7 @@ class CommitStatusSender {
 		};
 
 		if (event.payload.checkStatus) {
-			switch (event.payload.checkStatus) {
-				case Swingletree.Conclusion.PASSED: checkCreateParams.conclusion = "success"; break;
-				case Swingletree.Conclusion.BLOCKED: checkCreateParams.conclusion = "action_required"; break;
-				case Swingletree.Conclusion.UNDECISIVE: checkCreateParams.conclusion = "neutral"; break;
-				case Swingletree.Conclusion.ANALYSIS_FAILURE: checkCreateParams.conclusion = "failure"; break;
-			}
-
+			checkCreateParams.conclusion = this.convertToConclusion(event.payload.checkStatus);
 			checkCreateParams.status = "completed";
 		}
 
@@ -79,19 +101,7 @@ class CommitStatusSender {
 				LOGGER.debug("annotating %s issues to check result", event.payload.annotations.length);
 			}
 
-			checkCreateParams.output.annotations = event.payload.annotations
-			.filter(i => i instanceof Swingletree.FileAnnotation)
-			.map(annotation => {
-				const item = annotation as Swingletree.FileAnnotation;
-				return {
-					path: item.path,
-					start_line: item.start || 1,
-					end_line: item.end || 1,
-					title: item.title,
-					message: item.detail,
-					annotation_level: item.severity
-				} as ChecksCreateParamsOutputAnnotations;
-			});
+			checkCreateParams.output.annotations = this.convertToCheckAnnotations(event.payload.annotations);
 		}
 
 		// send check run status to GitHub

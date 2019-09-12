@@ -36,14 +36,18 @@ export class TwistlockPlugin extends SwingletreeComponent.Component {
 	}
 
 	public static twistlockVulnerabilitySeverityFilter(type: TwistlockModel.VulnerabilitySeverity | string) {
-		if (type == TwistlockModel.VulnerabilitySeverity.CRITICAL) return ":bangbang:";
-		if (type == TwistlockModel.VulnerabilitySeverity.HIGH) return ":exclamation:";
-		if (type == TwistlockModel.VulnerabilitySeverity.IMPORTANT) return ":red_circle:";
-		if (type == TwistlockModel.VulnerabilitySeverity.MODERATE) return ":small_red_triangle:";
-		if (type == TwistlockModel.VulnerabilitySeverity.MEDIUM) return " :small_red_triangle_down:";
-		if (type == TwistlockModel.VulnerabilitySeverity.LOW) return ":small_orange_diamond:";
+		let result = type;
 
-		return type;
+		switch (type) {
+			case TwistlockModel.VulnerabilitySeverity.CRITICAL:		result = ":bangbang:"; break;
+			case TwistlockModel.VulnerabilitySeverity.HIGH: 			result = ":exclamation:"; break;
+			case TwistlockModel.VulnerabilitySeverity.IMPORTANT: 	result = ":red_circle:"; break;
+			case TwistlockModel.VulnerabilitySeverity.MODERATE: 	result = ":small_red_triangle:"; break;
+			case TwistlockModel.VulnerabilitySeverity.MEDIUM: 		result = ":small_red_triangle_down:"; break;
+			case TwistlockModel.VulnerabilitySeverity.LOW: 				result = ":small_orange_diamond:"; break;
+		}
+
+		return result;
 	}
 
 	public isEnabled(): boolean {
