@@ -61,6 +61,65 @@ pre {
   font-size: .8em;
 }
 
+.build-row {
+  cursor: pointer;
+}
+
+@mixin severity-icon {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 1.2em;
+  padding: 2px;
+  border-radius: 3px;
+}
+
+.severity {
+  text-align: center;
+  display: inline-block;
+
+  width: 2.5em;
+
+  padding-left: 2px;
+  padding-right: 2px;
+
+  &.blocker {
+    color: $white;
+    
+    &:before {
+      @include severity-icon();
+      background-color: $black;
+      content: "\f714";
+    }
+  }
+
+  &.major {
+    color: $danger;
+
+    &:before {
+      @include severity-icon();
+      content: "\f102";
+    }
+  }
+
+  &.warning {
+    color: $warning;
+
+    &:before {
+      @include severity-icon();
+      content: "\f106";
+    }
+  }
+
+  &.info {
+    color: $info;
+
+    &:before {
+      @include severity-icon();
+      content: "\f129";
+    }
+  }
+}
+
 td.detail-row {
   box-shadow: inset 0px 11px 8px -10px $gray-500, inset 0px -11px 8px -10px $gray-500;
   background-color: $gray-100;
@@ -74,6 +133,11 @@ td.detail-row {
   border-right: 1px solid $gray-200;
 
   .build-detail {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .build-detail-content {
     padding-top: 1em;
     padding-bottom: 1em;
   }
