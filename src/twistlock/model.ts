@@ -34,7 +34,8 @@ export namespace TwistlockModel {
 									this.ignoredVulnerabilityIssues.push(vuln);
 								} else {
 									if (vuln.cvss >= minCvss) {
-										this.addVulnerabilityIssue(vuln);
+										this.vulnerabilityIssues.push(vuln);
+										this.updateCounterMap(this.vulnerabilityCounts, vuln.severity);
 									} else {
 										this.ignoredVulnerabilityIssues.push(vuln);
 									}
@@ -45,7 +46,8 @@ export namespace TwistlockModel {
 						if (result.compliances) {
 							result.compliances.forEach((comp) => {
 								if (TwistlockModel.SeverityUtil.isComplianceEqualOrHigher(comp.severity, complianceSeverity)) {
-									this.addComplianceIssue(comp);
+									this.complianceIssues.push(comp);
+									this.updateCounterMap(this.complianceCounts, comp.severity);
 								} else {
 									this.ignoredComplianceIssues.push(comp);
 								}
@@ -63,16 +65,6 @@ export namespace TwistlockModel {
 				} else {
 					countMap.set(severity, 1);
 				}
-			}
-
-			private addComplianceIssue(issue: Compliance) {
-				this.complianceIssues.push(issue);
-				this.updateCounterMap(this.complianceCounts, issue.severity);
-			}
-
-			private addVulnerabilityIssue(issue: Vulnerability) {
-				this.vulnerabilityIssues.push(issue);
-				this.updateCounterMap(this.vulnerabilityCounts, issue.severity);
 			}
 
 			public issuesCount(): number {
