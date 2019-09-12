@@ -4,11 +4,12 @@
   - installation
   - configure
 
-- title: Plugins
+- title: Components
   docs:
-  - plugins/sonarqube
-  - plugins/twistlock
-  - plugins/zap
+  - components/elastic
+  - components/sonarqube
+  - components/twistlock
+  - components/zap
   - problems
 
 - title: Extend Swingletree
