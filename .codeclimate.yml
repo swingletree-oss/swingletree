@@ -9,7 +9,7 @@ exclude_patterns:
 checks:
   method-lines:
     config:
-      threshold: 40
+      threshold: 60
   method-complexity:
     config:
       threshold: 6
