@@ -38,9 +38,9 @@ nav:
   - id: showcase
     url: /showcase.html
     name: Showcase
-  - id: support
-    url: /support.html
-    name: Support
+#  - id: support
+#    url: /support.html
+#    name: Support
 
 # theme options from https://bootswatch.com/
 # comment out this to use default Bootstrap
