@@ -6,7 +6,7 @@ layout: default
 
 <div class="container">
 
-    <h3 class="underline">Core Features</h3>
+    <h1 class="underline no-top-margin">Core Features</h1>
 
     <div class="row text-center">
         <div class="col-md-6">
@@ -19,7 +19,7 @@ layout: default
             <h4 class="text-center">GitHub Integration</h4>
             <p>
                 No need to jump between tools to see what failed your Quality Gate. Swingletree uses the GitHub
-                Checks API to annotate findings in your repositories.
+                Checks API to annotate findings in your commits and pull requests.
             </p>
         </div>
         <div class="col-md-6">
@@ -60,9 +60,22 @@ layout: default
                 Install to your GitHub organization and you are ready to go. No machine user required for GitHub Enterprise instances.
             </p>
         </div>
+        <div class="col-sm-12 separator"></div>
+        <div class="col-md-offset-3 col-md-6">
+            <span class="text-center">
+                <span class="fa-stack fa-2x">
+                    <i class="fas fa-circle fa-stack-2x feat"></i>
+                    <i class="fa-stack-1x fas fa-dungeon fa-inverse"></i>
+                </span>
+            </span>
+            <h4 class="text-center">Quality Gates</h4>
+            <p>
+                Quality Gates are configurable (depends on plugin) and are enforced using GitHub Check Runs.
+            </p>
+        </div>
     </div>
 
-    <h3 class="underline" style="margin-top:2em">Integrations</h3>
+    <h1 class="underline" style="margin-top:2em">Integrations</h1>
 
     <div class="row text-center">
         <div class="col-md-6">
@@ -88,10 +101,11 @@ layout: default
             <h4 class="text-center">Twistlock Scan Reports</h4>
             <p>
                 Swingletree can process Twistlock Security Scan Reports.
+                Security findings are transformed to a readable format and are published to the according commit in GitHub.
             </p>
         </div>
         <div class="col-sm-12 separator"></div>
-        <div class="col-sm-12">
+        <div class="col-md-offset-3 col-md-6">
             <span class="text-center">
                 <span class="fa-stack fa-2x">
                     <i class="fas fa-circle fa-stack-2x feat"></i>
@@ -101,6 +115,7 @@ layout: default
             <h4 class="text-center">OWASP Zap Reports</h4>
             <p>
                 Swingletree can process OWASP Zap Scan JSON-reports.
+                Security findings are transformed to a readable format and are published to the according commit in GitHub.
             </p>
         </div>
     </div>

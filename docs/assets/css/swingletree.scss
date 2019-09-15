@@ -6,14 +6,10 @@ html {
   font-size: .8em;
 }
 
-h1,h2,h3,h4 {
-  &.underline {
-    border-bottom: 2px dotted #ddd;
-    //text-align: center;
-    padding-bottom: 0.2em;
-    margin-bottom: 1.2em;
-  }
+body {
+  padding-top: 100px;
 }
+
 
 .separator {
   padding-top: 1.5em;
@@ -26,5 +22,45 @@ h1,h2,h3,h4 {
 }
 
 .footer {
-  font-size: .65em;
+  font-size: .75em;
+}
+
+.obfuscate {
+  unicode-bidi:bidi-override;
+  direction: rtl;
+}
+
+// Section Headings
+
+h1,h2,h3,h4,h5 {
+  &.underline {
+    border-bottom: 2px dotted #ddd;
+    //text-align: center;
+    padding-bottom: 0.2em;
+    margin-bottom: 1.2em;
+  }
+
+  &.no-top-margin {
+    margin-top: 0;
+  }
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.7em;
+}
+
+h3 {
+  font-size: 1.5em;
+}
+
+h4 {
+  font-size: 1.4em;
+}
+
+h5 {
+  font-size: 1.2em;
 }

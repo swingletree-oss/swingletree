@@ -6,12 +6,7 @@ sectionid: support
 ---
 
 {% include header-banner.html %}
-
-<script type="text/javascript">
-    function ml(usr, dmn) {
-        document.write('<a href=\"mailto:' + usr + '@' + dmn + '\">' + usr + '@' + dmn + '</a>');
-    }
-</script>
+{% include mail-obfuscate.html %}
 
 <div class="container">
     <div class="row">
@@ -31,17 +26,18 @@ sectionid: support
                     </ul>
 
                     Feel free to start a conversation by sending us an e-mail to
-                    <script>ml("contact", "illjut.de")</script><noscript>contact -at- illjut de</noscript>
+                    <script>printMailRef("contact", "illjut.de")</script>
+                    <noscript>contact -at- illjut de</noscript>
                 </div>
             </div>
         </div>
 
         <div class="col-md-4">
-            <h3 class="underline">Contact</h3>
+            <h3 class="underline no-top-margin">Contact</h3>
 
             <div>
                 <i class="far fa-fw fa-envelope"></i>
-                <script>ml("contact", "illjut.de")</script>
+                <script>printMailRef("contact", "illjut.de")</script>
                 <noscript>contact -at- illjut de</noscript>
             </div>
 
