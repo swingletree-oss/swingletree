@@ -34,7 +34,7 @@ analytics:
   enable: true
   id: UA-111350981-3
 
-  head:
+head:
   include: head-ext.html
 
 nav:
