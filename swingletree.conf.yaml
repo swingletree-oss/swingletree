@@ -24,6 +24,13 @@ github:
   secret: # this is the webhook secret. You should set it.
   debug: false # runs octokit in debug mode. Use this only for debug, since this can reveal secret tokens in the logs!
 
+# Nebula specific configuration
+nebula:
+  enabled: false
+  secret: # basic auth password protecting the webhook
+  context: gradle/zap # defines the check status name
+  debug: false # log zap webhook event requests on debug level
+
 # SonarQube specific configuration
 sonar:
   enabled: true
