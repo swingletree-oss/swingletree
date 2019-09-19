@@ -9,7 +9,7 @@ import HealthService, { HealthState } from "../health-service";
 import { CoreConfig } from "../core-config";
 import { HistoryService } from "../history/history-service";
 import { LOGGER } from "../../logger";
-import { query } from "winston";
+import { SwingletreeUtil } from "../../util";
 
 @injectable()
 class PageRoutes {
@@ -93,6 +93,12 @@ class PageRoutes {
 		});
 	}
 
+	private flatten(object: any) {
+		const result = SwingletreeUtil.flattenObject(object);
+		console.log(JSON.stringify(result, null, 2));
+		return result;
+	}
+
 	public getRoute(): Router {
 		const router = Router();
 
@@ -102,6 +108,7 @@ class PageRoutes {
 			res.locals.healthStates = this.healthService.getStates(HealthState.DOWN);
 			res.locals.isBuildHistoryEnabled = this.isBuildHistoryEnabled;
 			res.locals.path = req.path;
+			res.locals.flatten = this.flatten;
 
 			res.locals.componentIcon = this.componentIcon;
 			res.locals.moment = require("moment");

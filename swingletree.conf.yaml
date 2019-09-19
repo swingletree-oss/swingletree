@@ -28,7 +28,7 @@ github:
 nebula:
   enabled: false
   secret: # basic auth password protecting the webhook
-  context: gradle/zap # defines the check status name
+  context: gradle/nebula # defines the check status name
   debug: false # log zap webhook event requests on debug level
 
 # SonarQube specific configuration
