@@ -62,10 +62,11 @@ block content
                           if item.metadata
                             table(class="table table-sm build-list")
                               tbody
-                                each key, index in Object.keys(item.metadata)
+                                -var flatMetadata = flatten(item.metadata)
+                                each key in Object.keys(flatMetadata)
                                   tr
                                     td=key
-                                    td=item.metadata[key]
+                                    td=flatMetadata[key]
                           else
                             span None
                         div.col-md-7
