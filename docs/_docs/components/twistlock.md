@@ -6,6 +6,14 @@ redirect_from: /docs/index.html
 
 [Twistlock][twistlock] is a security scanner for containers. It can scan docker containers for vulnerabilities and compliance violations.
 
+## Features
+
+The Swingletree Twistlock Plugin offers following functionalities:
+
+* Attaches Twistlock findings to GitHub Pull Requests by evaluating the Twistlock scan report.
+
+Processed data is persisted to ElasticSearch (if enabled) and can be processed to reports using Kibana or Grafana.
+
 ## Sending a scan report to Swingletree
 
 A Swingletree webhook is published when the Twistlock Plugin is enabled.
