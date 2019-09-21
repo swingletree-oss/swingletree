@@ -6,6 +6,15 @@ redirect_from: /docs/index.html
 
 Swingletree needs some context when receiving webhook events from SonarQube. Therefore some additional analysis properties need to be set when running a `sonar-scanner` during your CI build.
 
+## Features
+
+The Swingletree SonarQube Plugin offers following functionalities:
+
+* Attaches SonarQube findings to Pull Request via GitHub Check Run annotations
+
+Processed data is persisted to ElasticSearch (if enabled) and can be processed to reports using Kibana or Grafana.
+
+
 ## General CI build configuration
 
 * `sonar.analysis.commitId`, containing the commit id
