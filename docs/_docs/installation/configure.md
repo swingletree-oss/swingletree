@@ -51,6 +51,16 @@ Environment variables override file configuration values.
 | `TWISTLOCK_CONTEXT`   | Sets the check-run name of Swingletree Twistlock                  | `security/twistlock` |
 | `TWISTLOCK_DEBUG`     | Controls debug mode of the Twistlock webhook                      | `false` |
 
+### Nebula configuration
+
+| Variable              | Description                                                       | Default |
+| --------------------- | ----------------------------------------------------------------- | ------- |
+| `NEBULA_ENABLED`         | Enables the Swingletree Nebula Plugin.                         | `false` |
+| `NEBULA_SECRET`          | Enables and sets the Basic Authentication password for the Swingletree Nebula webhook. | *none* |
+| `NEBULA_CONTEXT`         | Sets the check-run name of Swingletree Nebula plugin           | `gradle/nebula` |
+| `NEBULA_DEBUG`           | Controls debug mode of the Nebula webhook                      | `false` |
+
+
 ### Zap configuration
 
 | Variable              | Description                                                       | Default |

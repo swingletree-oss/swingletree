@@ -61,6 +61,9 @@ block content
                           h5.detail-section Metadata
                           if item.metadata
                             table(class="table table-sm build-list")
+                              thead
+                                th Property
+                                th Value
                               tbody
                                 -var flatMetadata = flatten(item.metadata)
                                 each key in Object.keys(flatMetadata)

@@ -45,6 +45,7 @@ class PageRoutes {
 			case "security/twistlock": return "shield-alt";
 			case "security/zap": return "crosshairs";
 			case "sonarqube": return "bug";
+			case "gradle/nebula": return "toolbox";
 		}
 
 		return "question";
@@ -95,7 +96,6 @@ class PageRoutes {
 
 	private flatten(object: any) {
 		const result = SwingletreeUtil.flattenObject(object);
-		console.log(JSON.stringify(result, null, 2));
 		return result;
 	}
 

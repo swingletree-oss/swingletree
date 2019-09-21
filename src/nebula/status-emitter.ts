@@ -26,12 +26,37 @@ export class NebulaStatusEmitter {
 	public getAnnotations(report: NebulaModel.Report): Swingletree.Annotation[] {
 		const annotations: Swingletree.Annotation[] = [];
 
+		if (report.payload.build.tests) {
+			report.payload.build.tests
+				.filter((item) => item.result.status == NebulaModel.ResultValue.FAILURE)
+				.forEach((failure) => {
+					const annotation = new Swingletree.ProjectAnnotation();
+					annotation.title = `Failed Test: ${failure.className} ${failure.methodName}`;
+					annotation.detail = `${failure.suiteName} ${failure.className} ${failure.methodName}`;
+					annotation.severity = Swingletree.Severity.BLOCKER;
+					annotations.push(annotation);
+				});
+
+			report.payload.build.tests
+				.filter((item) => item.result.status == NebulaModel.ResultValue.SKIPPED)
+				.forEach((skipped) => {
+					const annotation = new Swingletree.ProjectAnnotation();
+					annotation.title = `Skipped Test: ${skipped.className} ${skipped.methodName}`;
+					annotation.detail = `${skipped.suiteName} ${skipped.className} ${skipped.methodName}`;
+					annotation.severity = Swingletree.Severity.INFO;
+					annotations.push(annotation);
+				});
+		}
+
 		return annotations;
 	}
 
 	public reportReceivedHandler(event: NebulaEvents.ReportReceivedEvent) {
 		const annotations = this.getAnnotations(event.report);
 		const build = event.report.payload.build;
+
+		const failedTestCount = build.tests.filter((item) => item.result.status == NebulaModel.ResultValue.FAILURE).length;
+		const skippedTestCount = build.tests.filter((item) => item.result.status == NebulaModel.ResultValue.SKIPPED).length;
 
 		const notificationData: Swingletree.AnalysisReport = {
 			sender: this.context,
@@ -48,7 +73,10 @@ export class NebulaStatusEmitter {
 					version: build.info.build.gradle.version
 				},
 				build: {
-					elapsedTime: build.elapsedTime
+					id: build.buildId,
+					elapsedTime: build.elapsedTime,
+					startTime: build.startTime,
+					finishedTime: build.finishedTime
 				},
 				test: {
 					count: build.testCount
@@ -56,6 +84,14 @@ export class NebulaStatusEmitter {
 			},
 			annotations: annotations
 		};
+
+		if (skippedTestCount > 0) {
+			notificationData.title += `, ${skippedTestCount} skipped`;
+		}
+
+		if (failedTestCount > 0) {
+			notificationData.title += `, ${failedTestCount} failed`;
+		}
 
 		const notificationEvent = new NotificationEvent(notificationData);
 		this.eventBus.emit(notificationEvent);
