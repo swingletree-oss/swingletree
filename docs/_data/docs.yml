@@ -7,6 +7,7 @@
 - title: Components
   docs:
   - components/elastic
+  - components/nebula
   - components/sonarqube
   - components/twistlock
   - components/zap
