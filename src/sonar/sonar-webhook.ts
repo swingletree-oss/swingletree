@@ -12,6 +12,7 @@ import { SonarAnalysisCompleteEvent } from "./events";
 import InstallationStorage from "../core/github/client/installation-storage";
 import { SonarConfig } from "./sonar-config";
 import { Swingletree } from "../core/model";
+import { WebServer } from "../core/webserver";
 
 /** Provides a Webhook for Sonar
  */
@@ -42,23 +43,12 @@ class SonarWebhook {
 		return false;
 	}
 
-	private authenticationMiddleware(secret: string) {
-		return (req: Request, res: Response, next: NextFunction) => {
-			const auth = BasicAuth(req);
-			if (auth && secret === auth.pass) {
-				next();
-			} else {
-				res.sendStatus(401);
-			}
-		};
-	}
-
 	public getRoute(): Router {
 		const router = Router();
 		const secret = this.configurationService.get(SonarConfig.SECRET);
 
 		if (secret && secret.trim().length > 0) {
-			router.use(this.authenticationMiddleware(secret));
+			router.use(WebServer.simpleAuthenticationMiddleware(secret));
 		} else {
 			LOGGER.warn("SonarQube webhook is not protected. Consider setting a sonar secret in the Swingletree configuration.");
 		}

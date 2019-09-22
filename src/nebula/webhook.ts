@@ -12,6 +12,7 @@ import { NebulaConfig } from "./config";
 import { NebulaEvents } from "./events";
 import InstallationStorage from "../core/github/client/installation-storage";
 import { NebulaModel } from "./model";
+import { WebServer } from "../core/webserver";
 
 
 /** Provides a Webhook for Sonar
@@ -36,23 +37,12 @@ export class NebulaWebhook {
 		return event.payload.build.result.status != NebulaModel.ResultValue.UNKNOWN;
 	}
 
-	private authenticationMiddleware(secret: string) {
-		return (req: Request, res: Response, next: NextFunction) => {
-			const auth = BasicAuth(req);
-			if (auth && secret === auth.pass) {
-				next();
-			} else {
-				res.sendStatus(401);
-			}
-		};
-	}
-
 	public getRoute(): Router {
 		const router = Router();
 		const secret = this.configurationService.get(NebulaConfig.SECRET);
 
 		if (secret && secret.trim().length > 0) {
-			router.use(this.authenticationMiddleware(secret));
+			router.use(WebServer.simpleAuthenticationMiddleware(secret));
 		} else {
 			LOGGER.warn("gradle-metrics webhook is not protected. Consider setting a gradle-metrics secret in the Swingletree configuration.");
 		}

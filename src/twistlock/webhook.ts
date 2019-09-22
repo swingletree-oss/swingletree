@@ -12,6 +12,7 @@ import { TwistlockModel } from "./model";
 import { TwistlockConfig } from "./config";
 import { TwistlockReportReceivedEvent } from "./events";
 import { Swingletree } from "../core/model";
+import { WebServer } from "../core/webserver";
 
 /** Provides a Webhook for Sonar
  */
@@ -35,23 +36,12 @@ class TwistlockWebhook {
 		return event.results && event.results.length > 0;
 	}
 
-	private authenticationMiddleware(secret: string) {
-		return (req: Request, res: Response, next: NextFunction) => {
-			const auth = BasicAuth(req);
-			if (auth && secret === auth.pass) {
-				next();
-			} else {
-				res.sendStatus(401);
-			}
-		};
-	}
-
 	public getRoute(): Router {
 		const router = Router();
 		const secret = this.configurationService.get(TwistlockConfig.SECRET);
 
 		if (secret && secret.trim().length > 0) {
-			router.use(this.authenticationMiddleware(secret));
+			router.use(WebServer.simpleAuthenticationMiddleware(secret));
 		} else {
 			LOGGER.warn("Twistlock webhook is not protected. Consider setting a Twistlock secret in the Swingletree configuration.");
 		}

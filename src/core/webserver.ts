@@ -5,12 +5,25 @@ import * as compression from "compression";
 import { LOGGER } from "../logger";
 import { ConfigurationService } from "../configuration";
 import { AppConfig } from "./core-config";
+import { Request, Response, NextFunction } from "express-serve-static-core";
+import * as BasicAuth from "basic-auth";
 
 @injectable()
 export class WebServer {
 	private app: express.Express;
 
 	private port: number;
+
+	public static simpleAuthenticationMiddleware(secret: string) {
+		return (req: Request, res: Response, next: NextFunction) => {
+			const auth = BasicAuth(req);
+			if (auth && secret === auth.pass) {
+				next();
+			} else {
+				res.sendStatus(401);
+			}
+		};
+	}
 
 	constructor(
 		@inject(ConfigurationService) configService: ConfigurationService
