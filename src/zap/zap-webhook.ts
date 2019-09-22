@@ -12,6 +12,7 @@ import { Zap } from "./zap-model";
 import InstallationStorage from "../core/github/client/installation-storage";
 import { ZapReportReceivedEvent } from "./zap-events";
 import { Swingletree } from "../core/model";
+import { WebServer } from "../core/webserver";
 
 /** Provides a Webhook for Sonar
  */
@@ -37,23 +38,12 @@ class ZapWebhook {
 		return event.site !== undefined;
 	}
 
-	private authenticationMiddleware(secret: string) {
-		return (req: Request, res: Response, next: NextFunction) => {
-			const auth = BasicAuth(req);
-			if (auth && secret === auth.pass) {
-				next();
-			} else {
-				res.sendStatus(401);
-			}
-		};
-	}
-
 	public getRoute(): Router {
 		const router = Router();
 		const secret = this.configurationService.get(ZapConfig.SECRET);
 
 		if (secret && secret.trim().length > 0) {
-			router.use(this.authenticationMiddleware(secret));
+			router.use(WebServer.simpleAuthenticationMiddleware(secret));
 		} else {
 			LOGGER.warn("Zap webhook is not protected. Consider setting a zap secret in the Swingletree configuration.");
 		}
