@@ -1,23 +1,21 @@
 "use strict";
 
-import { Router, Request, Response, NextFunction } from "express";
-import { injectable } from "inversify";
-import { inject } from "inversify";
-import EventBus from "../core/event/event-bus";
+import { Request, Response, Router } from "express";
+import { inject, injectable } from "inversify";
 import { ConfigurationService } from "../configuration";
-import * as BasicAuth from "basic-auth";
+import { ComponentWebhook } from "../core/components/abstract-webhook";
+import EventBus from "../core/event/event-bus";
+import InstallationStorage from "../core/github/client/installation-storage";
+import { Swingletree } from "../core/model";
 import { LOGGER } from "../logger";
 import { ZapConfig } from "./zap-config";
-import { Zap } from "./zap-model";
-import InstallationStorage from "../core/github/client/installation-storage";
 import { ZapReportReceivedEvent } from "./zap-events";
-import { Swingletree } from "../core/model";
-import { WebServer } from "../core/webserver";
+import { Zap } from "./zap-model";
 
 /** Provides a Webhook for Sonar
  */
 @injectable()
-class ZapWebhook {
+class ZapWebhook extends ComponentWebhook {
 	public static readonly IGNORE_ID = "sonar";
 
 	private eventBus: EventBus;
@@ -29,6 +27,8 @@ class ZapWebhook {
 		@inject(ConfigurationService) configurationService: ConfigurationService,
 		@inject(InstallationStorage) installationStorage: InstallationStorage
 	) {
+		super("Zap");
+
 		this.eventBus = eventBus;
 		this.configurationService = configurationService;
 		this.installationStorage = installationStorage;
@@ -38,18 +38,8 @@ class ZapWebhook {
 		return event.site !== undefined;
 	}
 
-	public getRoute(): Router {
-		const router = Router();
-		const secret = this.configurationService.get(ZapConfig.SECRET);
-
-		if (secret && secret.trim().length > 0) {
-			router.use(WebServer.simpleAuthenticationMiddleware(secret));
-		} else {
-			LOGGER.warn("Zap webhook is not protected. Consider setting a zap secret in the Swingletree configuration.");
-		}
+	initializeRouterMappings(router: Router) {
 		router.post("/", this.webhook);
-
-		return router;
 	}
 
 	public webhook = async (req: Request, res: Response) => {
