@@ -8,6 +8,12 @@ import { NebulaEvents } from "./events";
 import { NebulaModel } from "./model";
 
 
+interface ResultCount {
+	failed: number;
+	skipped: number;
+	success: number;
+	unknown: number;
+}
 @injectable()
 export class NebulaStatusEmitter {
 	private readonly eventBus: EventBus;
@@ -51,12 +57,31 @@ export class NebulaStatusEmitter {
 		return annotations;
 	}
 
+	private countTestResults(build: NebulaModel.BuildMetrics): ResultCount {
+		const counts: ResultCount = { failed: 0, skipped: 0, success: 0, unknown: 0 };
+
+		build.tests.reduce(
+			(counter, currentValue) => {
+				switch (currentValue.result.status) {
+					case NebulaModel.ResultValue.FAILURE: counter.failed++; break;
+					case NebulaModel.ResultValue.SUCCESS: counter.success++; break;
+					case NebulaModel.ResultValue.SKIPPED: counter.skipped++; break;
+					case NebulaModel.ResultValue.UNKNOWN:
+					default: counter.unknown++; break;
+				}
+				return counter;
+			},
+			counts
+		);
+
+		return counts;
+	}
+
 	public reportReceivedHandler(event: NebulaEvents.ReportReceivedEvent) {
 		const annotations = this.getAnnotations(event.report);
 		const build = event.report.payload.build;
 
-		const failedTestCount = build.tests.filter((item) => item.result.status == NebulaModel.ResultValue.FAILURE).length;
-		const skippedTestCount = build.tests.filter((item) => item.result.status == NebulaModel.ResultValue.SKIPPED).length;
+		const counts = this.countTestResults(build);
 
 		const notificationData: Swingletree.AnalysisReport = {
 			sender: this.context,
@@ -85,12 +110,12 @@ export class NebulaStatusEmitter {
 			annotations: annotations
 		};
 
-		if (skippedTestCount > 0) {
-			notificationData.title += `, ${skippedTestCount} skipped`;
+		if (counts.skipped > 0) {
+			notificationData.title += `, ${counts.skipped} skipped`;
 		}
 
-		if (failedTestCount > 0) {
-			notificationData.title += `, ${failedTestCount} failed`;
+		if (counts.failed > 0) {
+			notificationData.title += `, ${counts.failed} failed`;
 		}
 
 		const notificationEvent = new NotificationEvent(notificationData);
