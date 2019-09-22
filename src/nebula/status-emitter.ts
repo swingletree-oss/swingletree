@@ -29,29 +29,40 @@ export class NebulaStatusEmitter {
 		eventBus.register(NebulaEvents.EventType.REPORT_RECEIVED, this.reportReceivedHandler, this);
 	}
 
-	public getAnnotations(report: NebulaModel.Report): Swingletree.Annotation[] {
+	private retrieveAnnotationsFor(resultValue: NebulaModel.ResultValue, build: NebulaModel.BuildMetrics, targetSeverity: Swingletree.Severity, titlePrefix: string): Swingletree.Annotation[] {
 		const annotations: Swingletree.Annotation[] = [];
 
-		if (report.payload.build.tests) {
-			report.payload.build.tests
-				.filter((item) => item.result.status == NebulaModel.ResultValue.FAILURE)
-				.forEach((failure) => {
-					const annotation = new Swingletree.ProjectAnnotation();
-					annotation.title = `Failed Test: ${failure.className} ${failure.methodName}`;
-					annotation.detail = `${failure.suiteName} ${failure.className} ${failure.methodName}`;
-					annotation.severity = Swingletree.Severity.BLOCKER;
-					annotations.push(annotation);
-				});
+		build.tests
+			.filter((item) => item.result.status == resultValue)
+			.forEach((item) => {
+				const annotation = new Swingletree.ProjectAnnotation();
+				annotation.title = `${titlePrefix}: ${item.className} ${item.methodName}`;
+				annotation.detail = `${item.suiteName} ${item.className} ${item.methodName}`;
+				annotation.severity = targetSeverity;
+				annotations.push(annotation);
+			});
 
-			report.payload.build.tests
-				.filter((item) => item.result.status == NebulaModel.ResultValue.SKIPPED)
-				.forEach((skipped) => {
-					const annotation = new Swingletree.ProjectAnnotation();
-					annotation.title = `Skipped Test: ${skipped.className} ${skipped.methodName}`;
-					annotation.detail = `${skipped.suiteName} ${skipped.className} ${skipped.methodName}`;
-					annotation.severity = Swingletree.Severity.INFO;
-					annotations.push(annotation);
-				});
+		return annotations;
+	}
+
+	public getAnnotations(report: NebulaModel.Report): Swingletree.Annotation[] {
+		let annotations: Swingletree.Annotation[] = [];
+
+		if (report.payload.build.tests) {
+			annotations = annotations.concat(
+				this.retrieveAnnotationsFor(
+					NebulaModel.ResultValue.FAILURE,
+					report.payload.build,
+					Swingletree.Severity.BLOCKER,
+					"Failed Test"
+				),
+				this.retrieveAnnotationsFor(
+					NebulaModel.ResultValue.SKIPPED,
+					report.payload.build,
+					Swingletree.Severity.INFO,
+					"Skipped Test"
+				)
+			);
 		}
 
 		return annotations;
