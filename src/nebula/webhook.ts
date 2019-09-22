@@ -1,24 +1,22 @@
 "use strict";
 
-import { Router, Request, Response, NextFunction } from "express";
-import { injectable } from "inversify";
-import { inject } from "inversify";
-import EventBus from "../core/event/event-bus";
+import { Request, Response, Router } from "express";
+import { inject, injectable } from "inversify";
 import { ConfigurationService } from "../configuration";
-import * as BasicAuth from "basic-auth";
-import { LOGGER } from "../logger";
+import { ComponentWebhook } from "../core/components/abstract-webhook";
+import EventBus from "../core/event/event-bus";
+import InstallationStorage from "../core/github/client/installation-storage";
 import { Swingletree } from "../core/model";
+import { LOGGER } from "../logger";
 import { NebulaConfig } from "./config";
 import { NebulaEvents } from "./events";
-import InstallationStorage from "../core/github/client/installation-storage";
 import { NebulaModel } from "./model";
-import { WebServer } from "../core/webserver";
 
 
 /** Provides a Webhook for Sonar
  */
 @injectable()
-export class NebulaWebhook {
+export class NebulaWebhook extends ComponentWebhook {
 	private eventBus: EventBus;
 	private configurationService: ConfigurationService;
 	private installationStorage: InstallationStorage;
@@ -28,6 +26,8 @@ export class NebulaWebhook {
 		@inject(ConfigurationService) configurationService: ConfigurationService,
 		@inject(InstallationStorage) installationStorage: InstallationStorage
 	) {
+		super("Gradle Metrics");
+
 		this.eventBus = eventBus;
 		this.configurationService = configurationService;
 		this.installationStorage = installationStorage;
@@ -37,18 +37,9 @@ export class NebulaWebhook {
 		return event.payload.build.result.status != NebulaModel.ResultValue.UNKNOWN;
 	}
 
-	public getRoute(): Router {
-		const router = Router();
-		const secret = this.configurationService.get(NebulaConfig.SECRET);
 
-		if (secret && secret.trim().length > 0) {
-			router.use(WebServer.simpleAuthenticationMiddleware(secret));
-		} else {
-			LOGGER.warn("gradle-metrics webhook is not protected. Consider setting a gradle-metrics secret in the Swingletree configuration.");
-		}
+	initializeRouterMappings(router: Router) {
 		router.post("/", this.webhook);
-
-		return router;
 	}
 
 	public webhook = async (req: Request, res: Response) => {
