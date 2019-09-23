@@ -34,7 +34,11 @@ export class NebulaWebhook extends ComponentWebhook {
 	}
 
 	private isWebhookEventRelevant(event: NebulaModel.Report) {
-		return event.payload.build.result.status != NebulaModel.ResultValue.UNKNOWN;
+
+		return event.payload &&
+			event.payload.build &&
+			event.payload.build.result &&
+			event.payload.build.result.status != NebulaModel.ResultValue.UNKNOWN;
 	}
 
 
@@ -58,6 +62,7 @@ export class NebulaWebhook extends ComponentWebhook {
 			req.body.payload.build = JSON.parse(req.body.payload.build);
 		} catch (err) {
 			LOGGER.warn("failed to parse gradle-metrics build payload. Skipping event.");
+			res.status(400).send("could not parse build payload. Check your request.");
 			return;
 		}
 
