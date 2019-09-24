@@ -26,15 +26,43 @@ class TwistlockStatusEmitter {
 		eventBus.register(TwistlockEvents.TwistlockReportReceived, this.reportReceivedHandler, this);
 	}
 
+	private getAnnotations(issueReport: TwistlockModel.util.FindingReport): Swingletree.Annotation[] {
+		const annotations: Swingletree.ProjectAnnotation[] = [];
 
-	private getConclusion(event: TwistlockReportReceivedEvent): Swingletree.Conclusion {
+		issueReport.complianceIssues.forEach(issue => {
+			const annotation = new Swingletree.ProjectAnnotation();
+			annotation.title = issue.title;
+			annotation.severity = TwistlockModel.SeverityUtil.convertToSwingletreeSeverity(issue.severity);
+
+			annotations.push(annotation);
+		});
+
+		issueReport.vulnerabilityIssues.forEach(issue => {
+			const severity = TwistlockModel.SeverityUtil.getTwistlockSeverityFromRiskFactor(issue.riskFactors);
+			const annotation = new Swingletree.ProjectAnnotation();
+			annotation.title = issue.id;
+			annotation.href = issue.link;
+			annotation.severity = TwistlockModel.SeverityUtil.convertToSwingletreeSeverity(severity);
+			annotation.metadata = {
+				vector: issue.vector,
+				status: issue.status,
+				package: issue.packageName,
+				version: issue.packageVersion,
+				cvss: issue.cvss
+			};
+
+			annotations.push(annotation);
+		});
+
+		return annotations;
+	}
+
+	private getConclusion(annotations: Swingletree.Annotation[]): Swingletree.Conclusion {
 		let conclusion = Swingletree.Conclusion.PASSED;
-		if (event.report.results && event.report.results.length > 0) {
-			event.report.results.forEach((result) => {
-				if (result.complianceDistribution.total + result.vulnerabilityDistribution.total > 0) {
-					conclusion = Swingletree.Conclusion.BLOCKED;
-				}
-			});
+		const hasBlocker = annotations.find(it => { return it.severity == Swingletree.Severity.BLOCKER; });
+
+		if (hasBlocker) {
+			conclusion = Swingletree.Conclusion.BLOCKED;
 		}
 
 		return conclusion;
@@ -55,35 +83,12 @@ class TwistlockStatusEmitter {
 			issues: issueReport
 		};
 
-		const annotations: Swingletree.ProjectAnnotation[] = [];
-		issueReport.complianceIssues.forEach(issue => {
-			const annotation = new Swingletree.ProjectAnnotation();
-			annotation.title = issue.title;
-			annotation.severity = TwistlockModel.SeverityUtil.convertCompliance(issue.severity);
-
-			annotations.push(annotation);
-		});
-
-		issueReport.vulnerabilityIssues.forEach(issue => {
-			const annotation = new Swingletree.ProjectAnnotation();
-			annotation.title = issue.id;
-			annotation.href = issue.link;
-			annotation.severity = TwistlockModel.SeverityUtil.convertVulnerability(issue.severity);
-			annotation.metadata = {
-				vector: issue.vector,
-				status: issue.status,
-				package: issue.packageName,
-				version: issue.packageVersion,
-				cvss: issue.cvss
-			};
-
-			annotations.push(annotation);
-		});
+		const annotations = this.getAnnotations(issueReport);
 
 		const notificationData: Swingletree.AnalysisReport = {
 			sender: this.context,
 			source: event.source,
-			checkStatus: this.getConclusion(event),
+			checkStatus: this.getConclusion(annotations),
 			title: `${issueReport.issuesCount()} issues found`,
 			annotations: annotations
 		};

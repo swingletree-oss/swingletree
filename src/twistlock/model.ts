@@ -152,7 +152,7 @@ export namespace TwistlockModel {
 		packageName: string;
 		packageVersion: string;
 		link: string;
-		riskFactors: any;
+		riskFactors: Object;
 	}
 
 	export enum VulnerabilitySeverity {
@@ -180,7 +180,7 @@ export namespace TwistlockModel {
 	}
 
 	export class SeverityUtil {
-		private static readonly twistlockOrder = [
+		private static readonly twistlockOrder: TwistlockSeverity[] = [
 			TwistlockSeverity.LOW,
 			TwistlockSeverity.MEDIUM,
 			TwistlockSeverity.HIGH,
@@ -223,15 +223,30 @@ export namespace TwistlockModel {
 			return SeverityUtil.compareSeverity(this.twistlockOrder, compare, other);
 		}
 
-		static convertCompliance(severity: TwistlockSeverity): Swingletree.Severity {
+		static convertToSwingletreeSeverity(severity: TwistlockSeverity): Swingletree.Severity {
 			switch (severity) {
 				case TwistlockSeverity.LOW: return Swingletree.Severity.INFO;
 				case TwistlockSeverity.MEDIUM: return Swingletree.Severity.WARNING;
-				case TwistlockSeverity.HIGH: return Swingletree.Severity.MAJOR;
+				case TwistlockSeverity.HIGH: return Swingletree.Severity.BLOCKER;
 				case TwistlockSeverity.CRITICAL: return Swingletree.Severity.BLOCKER;
 			}
 
 			return Swingletree.Severity.INFO;
+		}
+
+		static getTwistlockSeverityFromRiskFactor(riskFactors: Object): TwistlockSeverity {
+			if (riskFactors) {
+				const keys = Object.keys(riskFactors);
+				for (let k = 0; k < keys.length; k++) {
+					for (let s = 0; s < this.twistlockOrder.length; s++) {
+						if (keys[k].toLowerCase() == `${this.twistlockOrder[s]} severity`.toLowerCase()) {
+							return this.twistlockOrder[s] as TwistlockSeverity;
+						}
+					}
+				}
+			}
+
+			return TwistlockModel.TwistlockSeverity.LOW;
 		}
 
 		static convertVulnerability(severity: VulnerabilitySeverity): Swingletree.Severity {
