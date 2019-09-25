@@ -58,20 +58,44 @@ block content
                     div.build-detail-content
                       div.row
                         div.col-md-5
-                          h5.detail-section Metadata
-                          if item.metadata
-                            table(class="table table-sm build-list")
-                              thead
-                                th Property
-                                th Value
-                              tbody
-                                -var flatMetadata = flatten(item.metadata)
-                                each key in Object.keys(flatMetadata)
-                                  tr
-                                    td=key
-                                    td=flatMetadata[key]
-                          else
-                            span None
+                          div.col-xs-12
+                            h5.detail-section Repository Coordinates
+                            if item.source
+                              table(class="table table-sm build-list")
+                                tbody
+                                  -var flatMetadata = flatten(item.source, true)
+                                  each key in Object.keys(flatMetadata)
+                                    tr
+                                      th=key
+                                      if Array.isArray(flatMetadata[key])
+                                        td
+                                          each i in flatMetadata[key]
+                                            div=i
+                                      else
+                                        td=flatMetadata[key]
+                                          
+                            else
+                              span None
+                          div.col-xs-12
+                            h5.detail-section Metadata
+                            if item.metadata
+                              table(class="table table-sm build-list")
+                                thead
+                                  th Property
+                                  th Value
+                                tbody
+                                  -var flatMetadata = flatten(item.metadata, true)
+                                  each key in Object.keys(flatMetadata)
+                                    tr
+                                      th=key
+                                      if Array.isArray(flatMetadata[key])
+                                        td
+                                          each i in flatMetadata[key]
+                                            div=i
+                                      else
+                                        td=flatMetadata[key]
+                            else
+                              span None
                         div.col-md-7
                           h5.detail-section Annotations
                           if item.annotations && item.annotations.length > 0
