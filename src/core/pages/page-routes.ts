@@ -94,8 +94,8 @@ class PageRoutes {
 		});
 	}
 
-	private flatten(object: any) {
-		const result = SwingletreeUtil.flattenObject(object);
+	private flatten(object: any, preserveArrays: boolean) {
+		const result = SwingletreeUtil.flattenObject(object, preserveArrays);
 		return result;
 	}
 
