@@ -39,6 +39,19 @@ class CommitStatusSender {
 		return result;
 	}
 
+	private convertSwingletreeSeverity(severity: Swingletree.Severity): "notice" | "warning" | "failure" {
+		let result: "notice" | "warning" | "failure" = "notice";
+
+		switch (severity) {
+			case Swingletree.Severity.BLOCKER: result = "failure"; break;
+			case Swingletree.Severity.MAJOR:
+			case Swingletree.Severity.WARNING: result = "warning"; break;
+			case Swingletree.Severity.WARNING: result = "warning"; break;
+		}
+
+		return result;
+	}
+
 	private convertToCheckAnnotations(annotations: Swingletree.Annotation[]): ChecksCreateParamsOutputAnnotations[] {
 		return annotations.filter(i => i instanceof Swingletree.FileAnnotation)
 			.map(annotation => {
@@ -49,7 +62,7 @@ class CommitStatusSender {
 					end_line: item.end || 1,
 					title: item.title,
 					message: item.detail,
-					annotation_level: item.severity
+					annotation_level: this.convertSwingletreeSeverity(item.severity)
 				} as ChecksCreateParamsOutputAnnotations;
 			});
 		}
@@ -112,7 +125,7 @@ class CommitStatusSender {
 			})
 			.catch((error: any) => {
 				LOGGER.error("could not persist check status for %s with commit id %s", githubSource.repo, githubSource.sha);
-				LOGGER.error(error);
+				LOGGER.error(JSON.stringify(error, null, 2));
 			});
 
 		return checkCreateParams;
