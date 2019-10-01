@@ -26,7 +26,7 @@ export class NebulaWebhook extends ComponentWebhook {
 		@inject(ConfigurationService) configurationService: ConfigurationService,
 		@inject(InstallationStorage) installationStorage: InstallationStorage
 	) {
-		super("Gradle Metrics");
+		super("Gradle Metrics", configurationService.get(NebulaConfig.SECRET));
 
 		this.eventBus = eventBus;
 		this.configurationService = configurationService;

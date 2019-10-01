@@ -25,7 +25,7 @@ class TwistlockWebhook extends ComponentWebhook {
 		@inject(ConfigurationService) configurationService: ConfigurationService,
 		@inject(InstallationStorage) installationStorage: InstallationStorage
 	) {
-		super("Twistlock");
+		super("Twistlock", configurationService.get(TwistlockConfig.SECRET));
 
 		this.eventBus = eventBus;
 		this.configurationService = configurationService;
