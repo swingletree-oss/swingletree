@@ -27,7 +27,7 @@ class SonarWebhook extends ComponentWebhook {
 		@inject(ConfigurationService) configurationService: ConfigurationService,
 		@inject(InstallationStorage) installationStorage: InstallationStorage
 	) {
-		super("SonarQube");
+		super("SonarQube", configurationService.get(SonarConfig.SECRET));
 
 		this.eventBus = eventBus;
 		this.configurationService = configurationService;

@@ -11,6 +11,7 @@ import { LOGGER } from "../logger";
 import { ZapConfig } from "./zap-config";
 import { ZapReportReceivedEvent } from "./zap-events";
 import { Zap } from "./zap-model";
+import { config } from "winston";
 
 /** Provides a Webhook for Sonar
  */
@@ -27,7 +28,7 @@ class ZapWebhook extends ComponentWebhook {
 		@inject(ConfigurationService) configurationService: ConfigurationService,
 		@inject(InstallationStorage) installationStorage: InstallationStorage
 	) {
-		super("Zap");
+		super("Zap", configurationService.get(ZapConfig.SECRET));
 
 		this.eventBus = eventBus;
 		this.configurationService = configurationService;
