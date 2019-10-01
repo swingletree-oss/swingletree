@@ -46,7 +46,7 @@ class CommitStatusSender {
 			case Swingletree.Severity.BLOCKER: result = "failure"; break;
 			case Swingletree.Severity.MAJOR:
 			case Swingletree.Severity.WARNING: result = "warning"; break;
-			case Swingletree.Severity.WARNING: result = "warning"; break;
+			case Swingletree.Severity.INFO: result = "notice"; break;
 		}
 
 		return result;

@@ -101,4 +101,31 @@ describe("Commit Status Sender", () => {
 		expect(result.output.annotations).to.be.undefined;
 	});
 
+
+	it("should convert swingletree severities", () => {
+		const conversionMap = new Map<Swingletree.Severity, String>();
+
+		conversionMap.set(Swingletree.Severity.BLOCKER, "failure");
+		conversionMap.set(Swingletree.Severity.MAJOR, "warning");
+		conversionMap.set(Swingletree.Severity.WARNING, "warning");
+		conversionMap.set(Swingletree.Severity.INFO, "notice");
+
+		conversionMap.forEach((value, key) => {
+			expect((uut as any).convertSwingletreeSeverity(key)).to.be.equal(value, `${key} should convert to ${value}`);
+		});
+	});
+
+	it("should convert swingletree conclusions", () => {
+		const conversionMap = new Map<Swingletree.Conclusion, String>();
+
+		conversionMap.set(Swingletree.Conclusion.ANALYSIS_FAILURE, "failure");
+		conversionMap.set(Swingletree.Conclusion.BLOCKED, "action_required");
+		conversionMap.set(Swingletree.Conclusion.PASSED, "success");
+		conversionMap.set(Swingletree.Conclusion.UNDECISIVE, "neutral");
+
+		conversionMap.forEach((value, key) => {
+			expect((uut as any).convertToConclusion(key)).to.be.equal(value, `${key} should convert to ${value}`);
+		});
+	});
+
 });
