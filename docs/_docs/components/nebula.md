@@ -19,8 +19,9 @@ The Swingletree Plugin offers following functionalites:
   * Java version
   * Project version
   * Project name
+  * Executed Tasks
 
-Processed data is persisted to ElasticSearch (if enabled) and can be processed to reports using Kibana or Grafana.
+Processed data is persisted to ElasticSearch (if enabled) and can be processed to reports using Kibana or Grafana. Information, which could contain sensitive information (like environment variables) are not processed and persisted.
 
 ### Build Status decision
 
