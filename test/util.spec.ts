@@ -49,8 +49,6 @@ describe("ConfigurationService", () => {
 
 			const result = SwingletreeUtil.flattenObject(testObj, true);
 
-			console.log(result);
-
 			expect(result["a.d.e"]).to.be.equal("f");
 			expect(result["a.d.g"]).to.be.equal("h");
 			expect(result["a.b"]).to.be.equal("c");
