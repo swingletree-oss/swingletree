@@ -72,7 +72,8 @@ describe("Commit Status Sender", () => {
 			markdown: "123",
 			sender: "testSender",
 			source: source,
-			title: "test title"
+			title: "test title",
+			annotations: []
 		});
 	});
 
@@ -90,6 +91,14 @@ describe("Commit Status Sender", () => {
 		await uut.sendAnalysisStatus(mockEvent);
 
 		sinon.assert.calledOnce(githubClientMock.createCheckStatus);
+	});
+
+	it("should not set an empty annotation array in the CheckRun request", async () => {
+		githubClientMock.createCheckStatus.resolves();
+
+		const result = await uut.sendAnalysisStatus(mockEvent);
+
+		expect(result.output.annotations).to.be.undefined;
 	});
 
 });

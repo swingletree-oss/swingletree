@@ -53,7 +53,7 @@ class CommitStatusSender {
 	}
 
 	private convertToCheckAnnotations(annotations: Swingletree.Annotation[]): ChecksCreateParamsOutputAnnotations[] {
-		return annotations.filter(i => i instanceof Swingletree.FileAnnotation)
+		const converted = annotations.filter(i => i instanceof Swingletree.FileAnnotation)
 			.map(annotation => {
 				const item = annotation as Swingletree.FileAnnotation;
 				return {
@@ -65,7 +65,13 @@ class CommitStatusSender {
 					annotation_level: this.convertSwingletreeSeverity(item.severity)
 				} as ChecksCreateParamsOutputAnnotations;
 			});
+
+		if (converted.length == 0) {
+			return undefined;
 		}
+
+		return converted;
+	}
 
 	public async sendAnalysisStatus(event: NotificationEvent) {
 
