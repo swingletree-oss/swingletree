@@ -18,6 +18,7 @@ describe("ConfigurationService", () => {
 
 	beforeEach(() => {
 		envBackup = Object.assign({}, process.env);
+		process.env = {};
 	});
 
 	afterEach(() => {
