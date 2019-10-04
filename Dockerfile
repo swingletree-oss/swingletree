@@ -8,6 +8,7 @@ WORKDIR /usr/src/swingletree
 
 RUN npm set registry "${NPM_REGISTRY}"
 RUN npm i
+RUN npm run sass
 RUN npm run build
 RUN npm prune --production
 
