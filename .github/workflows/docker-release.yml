@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Set Release
-        run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
+      run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
     - name: Build the Docker image
       run: >
         echo $GITHUB_PACKAGE_SECRET | docker login docker.pkg.github.com --username error418 && \
