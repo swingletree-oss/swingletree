@@ -1,0 +1,21 @@
+name: Semantic Release
+
+on:
+  push:
+    branches:
+    - "master"
+
+jobs:
+  release:
+    container:
+      image: node:10-alpine
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Initialize
+      run: npm i
+    - name: Run tests
+      run: npm test
+    - name: Release Codebase
+      run: GH_TOKEN=$GITHUB_PACKAGE_SECRET npm release
