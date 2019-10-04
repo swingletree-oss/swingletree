@@ -20,4 +20,6 @@ jobs:
     - name: Run tests
       run: npm test
     - name: Release Codebase
-      run: GH_TOKEN=$GITHUB_PACKAGE_SECRET npm run release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_PACKAGE_SECRET }}
+      run: npm run release
