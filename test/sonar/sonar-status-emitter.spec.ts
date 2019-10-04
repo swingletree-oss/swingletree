@@ -135,4 +135,18 @@ describe("Sonar Status Emitter", () => {
 		);
 	});
 
+	it("should set start and end lines", async () => {
+		analysisData.analysisEvent.project.key = "component-subproject-test";
+
+		const result = await uut.analysisCompleteHandler(analysisData);
+
+		const annotation = result.payload.annotations.find(it => {
+			return (it instanceof Swingletree.FileAnnotation) &&
+				(it as Swingletree.FileAnnotation).metadata["hash"] == "3d6a09cb1d3c2ab9cb077ee21a0c5cae";
+		}) as Swingletree.FileAnnotation;
+
+		expect(annotation.start).to.be.equal(14);
+		expect(annotation.end).to.be.equal(15);
+	});
+
 });

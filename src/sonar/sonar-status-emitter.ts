@@ -114,7 +114,10 @@ class SonarStatusEmitter {
 				end: item.line,
 				title: `${item.severity} ${item.type} (${item.rule})`,
 				detail: item.message,
-				severity: this.severityMap[item.severity] || Swingletree.Severity.INFO
+				severity: this.severityMap[item.severity] || Swingletree.Severity.INFO,
+				metadata: {
+					hash: item.hash
+				} as Object
 			} as Swingletree.FileAnnotation);
 
 			// update counters
@@ -128,12 +131,6 @@ class SonarStatusEmitter {
 			if (item.textRange) {
 				annotation.start = item.textRange.startLine;
 				annotation.end = item.textRange.endLine;
-
-				// omit values to comply to api validation
-				if (annotation.start != annotation.end) {
-					annotation.start = item.textRange.startOffset;
-					annotation.end = item.textRange.endOffset;
-				}
 			}
 
 			if (annotation.path) {
@@ -195,6 +192,8 @@ class SonarStatusEmitter {
 		notificationEvent.markdown = this.templateEngine.template<SonarCheckRunSummaryTemplate>(Templates.CHECK_RUN_SUMMARY, summaryTemplateData);
 
 		this.eventBus.emit(notificationEvent);
+
+		return notificationEvent;
 	}
 }
 
