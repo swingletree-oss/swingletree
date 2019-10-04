@@ -1,0 +1,22 @@
+name: Docker Image CI
+
+on:
+  push:
+    tags:
+    - "*"
+
+jobs:
+
+  build:
+ 
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set Release
+        run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:10})
+    - name: Build the Docker image
+      run: >
+        echo $GITHUB_PACKAGE_SECRET | docker login docker.pkg.github.com --username error418 && \
+        docker build . --file Dockerfile --tag docker.pkg.github.com/error418/swingletree/app:$RELEASE_VERSION && \
+        docker push docker.pkg.github.com/error418/swingletree/app:$RELEASE_VERSION
