@@ -1,4 +1,0 @@
-plugin:
-  sonar:
-    enabled: true
-    blockCoverageLoss: true

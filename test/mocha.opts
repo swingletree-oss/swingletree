@@ -1,4 +1,0 @@
-test/**/*.spec.ts
---recursive
---require reflect-metadata
---require ./test/mocha.env.js

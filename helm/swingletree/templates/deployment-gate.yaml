@@ -1,0 +1,66 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: gate
+  labels:
+    app: gate
+    chart: {{ template "swingletree.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: gate
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: gate
+        release: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: config
+          secret:
+            secretName: {{ .Release.Name }}-config
+        - name: appkey
+          secret:
+            secretName: {{ .Release.Name }}-config
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.registry }}:{{ .Values.images.gate }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          env:
+            - name: SCOTTY_URL
+              value: "http://scotty.{{ .Release.Namespace }}:{{ .Values.swingletree.scotty.port }}"
+          volumeMounts:
+            - name: config
+              mountPath: /opt/swingletree/swingletree.conf.yaml
+              subPath: swingletree.conf.yaml
+              readOnly: true
+          ports:
+            - name: http
+              containerPort: {{ .Values.swingletree.gate.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

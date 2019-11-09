@@ -4,10 +4,16 @@
 
 replicaCount: 1
 
-image:
-  repository: werkbank/swingletree
-  tag: latest
-  pullPolicy: IfNotPresent
+images:
+  gate: gate:latest
+  scotty: scotty:latest
+  plugin:
+    sonar: sonar:latest
+    nebula: nebula:latest
+    zap: zap:latest
+    twistlock: twistlock:latest
+pullPolicy: IfNotPresent
+registry: 
 
 service:
   type: ClusterIP
@@ -17,46 +23,79 @@ service:
 github_app_key: # set using `--set-file github_app_key=/path/to/file` when running helm
 
 swingletree: # swingletree configuration
-  port: 3000
 
-  # storage configuration
-  storage:
-    host: localhost # database host
-    # password is taken from redis.password
-
-  # GitHub specific configuration
-  github:
-    app:
-      id: # The AppId of your GitHub app instance (not installation!)
+  deck: # deck configuration
+    port: 3000
+    elastic:
+      enabled: false
+      node: http://localhost:9200
+      auth: # elastic nodejs auth object
+        username:
+        password:
+        apiKey:
+      index: swingletree
+    features:
+      dashboard: true
+    github:
       page: # the GitHub App public page. Will be referenced in the Swingletree landing page.
-      keyfile: gh-app.pem # the key file of your GitHub App (you retrieve this from the App settings page)
-    base: https://api.github.com # Github Api base url
-    secret: # this is the webhook secret. You should set it.
-    debug: false # runs octokit in debug mode. Use this only for debug, since this can reveal secret tokens in the logs!
 
-  # SonarQube specific configuration
+  gate:
+    port: 3020
+    api:
+      token: abc
+    plugins:
+      - id: twistlock
+        base: "http;//plugin-twistlock.swingletree:3000"
+      - id: zap
+        base: "http;//plugin-zap.swingletree:3000"
+      - id: sonarqube
+        base: "http;//plugin-sonar.swingletree:3000"
+      - id: nebula
+        base: "http;//plugin-nebula.swingletree:3000"
+        
+  scotty:
+    port: 3000
+    storage: # storage configuration
+      host: localhost # database host
+      password: # database password
+    elastic:
+      enabled: false
+      node: http://localhost:9200
+      auth: # elastic nodejs auth object
+        username:
+        password:
+        apiKey:
+      index: swingletree
+    github: # GitHub specific configuration
+      app:
+        id: # The AppId of your GitHub app instance (not installation!)
+        page: # the GitHub App public page. Will be referenced in the Swingletree landing page.
+        keyfile: gh-app.pem # the key file of your GitHub App (you retrieve this from the App settings page)
+      base: https://api.github.com # Github Api base url
+      secret: # this is the webhook secret. You should set it.
+      debug: false # runs octokit in debug mode. Use this only for debug, since this can reveal secret tokens in the logs!
+
+  nebula:
+    context: gradle/nebula # defines the check status name
+    debug: false # log zap webhook event requests on debug level
+    port: 3000
+
+  zap:
+    context: security/zap # defines the check status name
+    debug: false # log zap webhook event requests on debug level
+    port: 3000
+
+  twistlock:
+    context: security/twistlock
+    port: 3000
+
   sonar:
-    enabled: true
+    port: 3000
     secret: # basic auth password protecting the webhook
     base: # SonarQube base url
     context: sonarqube # defines the check status name
     token: # API token
     debug: false # log SonarQube webhook event requests on debug level
-
-  # Zap specific configuration
-  zap:
-    enabled: false
-    secret: # basic auth password protecting the webhook
-    context: security/zap # defines the check status name
-    debug: false # log zap webhook event requests on debug level
-
-  # Twistlock specific configuration
-  twistlock:
-    enabled: false
-    secret: # basic auth password protecting the webhook
-    context: security/twistlock # defines the check status name
-    debug: false # log zap webhook event requests on debug level
-
 
 redis: # stable/redis
   enabled: true

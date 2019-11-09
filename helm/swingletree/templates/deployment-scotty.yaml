@@ -1,0 +1,76 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: scotty
+  labels:
+    app: scotty
+    chart: {{ template "swingletree.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: scotty
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: scotty
+        release: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: config
+          secret:
+            secretName: {{ .Release.Name }}-config
+        - name: appkey
+          secret:
+            secretName: {{ .Release.Name }}-config
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.registry }}:{{ .Values.images.scotty }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          env:
+            {{ if .Values.redis.password }}
+            - name: STORAGE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-config
+                  key: redis-credential
+            {{ end }}
+            - name: SCOTTY_URL
+              value: "http://scotty.{{ .Release.Namespace }}:{{ .Values.swingletree.scotty.port }}"
+          volumeMounts:
+            - name: config
+              mountPath: /opt/swingletree/swingletree.conf.yaml
+              subPath: swingletree.conf.yaml
+              readOnly: true
+            - name: appkey
+              mountPath: /opt/swingletree/gh-app.pem
+              subPath: gh-app.pem
+          ports:
+            - name: http
+              containerPort: {{ .Values.swingletree.scotty.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
