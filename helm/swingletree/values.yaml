@@ -5,15 +5,17 @@
 replicaCount: 1
 
 images:
-  gate: gate:latest
-  scotty: scotty:latest
+  deck: deck/deck:1.0.3
+  gate: gate/gate:1.0.2
+  scotty: scotty/scotty:1.0.0
   plugin:
-    sonar: sonar:latest
-    nebula: nebula:latest
-    zap: zap:latest
-    twistlock: twistlock:latest
+    nebula: plugin-nebula/plugin-nebula:1.0.2
+    sonar: plugin-sonarqube/plugin-sonarqube:1.0.2
+    twistlock: plugin-twistlock/plugin-twistlock:1.0.2
+    zap: plugin-zap/plugin-zap:1.0.2
 pullPolicy: IfNotPresent
-registry: 
+registry: docker.pkg.github.com/swingletree-oss/
+imagePullSecret: regcred
 
 service:
   type: ClusterIP
@@ -40,18 +42,18 @@ swingletree: # swingletree configuration
       page: # the GitHub App public page. Will be referenced in the Swingletree landing page.
 
   gate:
-    port: 3020
+    port: 3000
     api:
       token: abc
     plugins:
       - id: twistlock
-        base: "http;//plugin-twistlock.swingletree:3000"
+        base: "http://plugin-twistlock.default:3000"
       - id: zap
-        base: "http;//plugin-zap.swingletree:3000"
+        base: "http://plugin-zap.default:3000"
       - id: sonarqube
-        base: "http;//plugin-sonar.swingletree:3000"
+        base: "http://plugin-sonar.default:3000"
       - id: nebula
-        base: "http;//plugin-nebula.swingletree:3000"
+        base: "http://plugin-nebula.default:3000"
         
   scotty:
     port: 3000
@@ -103,13 +105,21 @@ redis: # stable/redis
   password: # set your database password with this value
 
 ingress:
-  enabled: false
-  annotations: {}
+  enabled: true
+  deck:
+    path: /deck(/|$)(.*)
+    hosts:
+      - minikube
+  gate:
+    path: /gate(/|$)(.*)
+    hosts:
+      - minikube
+
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-  path: /
-  hosts:
-    - chart-example.local
+
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

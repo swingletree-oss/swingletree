@@ -1,29 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "swingletree.fullname" . }}
-  labels:
-    app: {{ template "swingletree.name" . }}
-    chart: {{ template "swingletree.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-spec:
-  type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    app: {{ template "swingletree.name" . }}
-    release: {{ .Release.Name }}
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: gate
+  name: swing-gate
   labels:
     app: gate
     chart: {{ template "swingletree.chart" . }}
@@ -45,7 +23,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: scotty
+  name: swing-scotty
   labels:
     app: scotty
     chart: {{ template "swingletree.chart" . }}
@@ -67,7 +45,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: deck
+  name: swing-deck
   labels:
     app: deck
     chart: {{ template "swingletree.chart" . }}

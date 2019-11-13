@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: plugin-zap
@@ -26,29 +26,33 @@ spec:
         - name: appkey
           secret:
             secretName: {{ .Release.Name }}-config
+      {{ if .Values.imagePullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
+      {{ end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.registry }}:{{ .Values.images.plugin.zap }}"
+          image: "{{ .Values.registry }}{{ .Values.images.plugin.zap }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
-            - name: SCOTTY_URL
-              value: "http://scotty.{{ .Release.Namespace }}:{{ .Values.swingletree.scotty.port }}"
+            - name: SCOTTY_CLIENT_URL
+              value: "http://swing-scotty.{{ .Release.Namespace }}:{{ .Values.swingletree.scotty.port }}"
           volumeMounts:
             - name: config
-              mountPath: /opt/swingletree/swingletree.conf.yaml
+              mountPath: /opt/plugin-zap/swingletree.conf.yaml
               subPath: swingletree.conf.yaml
               readOnly: true
           ports:
             - name: http
-              containerPort: {{ .Values.swingletree.gate.port }}
+              containerPort: {{ .Values.swingletree.zap.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /health
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /health
               port: http
           resources:
 {{ toYaml .Values.resources | indent 12 }}

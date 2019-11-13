@@ -1,7 +1,7 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gate
+  name: swing-gate
   labels:
     app: gate
     chart: {{ template "swingletree.chart" . }}
@@ -26,16 +26,20 @@ spec:
         - name: appkey
           secret:
             secretName: {{ .Release.Name }}-config
+      {{ if .Values.imagePullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
+      {{ end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.registry }}:{{ .Values.images.gate }}"
+          image: "{{ .Values.registry }}{{ .Values.images.gate }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
             - name: SCOTTY_URL
               value: "http://scotty.{{ .Release.Namespace }}:{{ .Values.swingletree.scotty.port }}"
           volumeMounts:
             - name: config
-              mountPath: /opt/swingletree/swingletree.conf.yaml
+              mountPath: /opt/gate/swingletree.conf.yaml
               subPath: swingletree.conf.yaml
               readOnly: true
           ports:
@@ -44,11 +48,11 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /health
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /health
               port: http
           resources:
 {{ toYaml .Values.resources | indent 12 }}

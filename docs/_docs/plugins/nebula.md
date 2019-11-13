@@ -21,7 +21,7 @@ The Swingletree Plugin offers following functionalites:
   * Project name
   * Executed Tasks
 
-Processed data is persisted to ElasticSearch (if enabled) and can be processed to reports using Kibana or Grafana. Information, which could contain sensitive information (like environment variables) are not processed and persisted.
+Processed data is persisted to ElasticSearch (if enabled in Scotty) and can be processed to reports using Kibana or Grafana. Information, which could contain sensitive information (like environment variables) are not processed and persisted.
 
 ### Build Status decision
 
@@ -54,8 +54,6 @@ if (thisIsCiBuild) { // needs to be specified by you
   }
 }
 ```
-
-It is recommended to protect your webhook endpoint. If you enabled webhook protection you will need to provide the authentication credentials via Basic Authentication. The CI server can pass the credentials using inline credentials in the `restUri`-property (like `https://webhook:secret@swingletreeurl/webhook/nebula`)
 
 Swingletree will process the report and send a Check Run Status with the context `gradle/nebula` to the given GitHub coordinates.
 

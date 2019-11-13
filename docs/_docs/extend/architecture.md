@@ -9,26 +9,28 @@ redirect_from: /docs/index.html
 
 Swingletree is divided into components, which communicate via an Event Bus.
 
-#### Core Component
+#### Scotty
 
-The Core component handles interactions with GitHub.
+The Scotty component handles interactions with GitHub and ElasticSearch.
 
 * GitHub App installation management
 * Authentication with GitHub
 * Provide GitHub API access
 * Token caching
-* Template Engine
-* GitHub Webhook event propagation to Event Bus
+* ElasticSearch persistence management
 
 ![component core](../../assets/images/component-core.png)
 
-#### SonarQube Component
+#### Gate
 
-The SonarQube component handles interactions with SonarQube
+Gate functions as an entrypoint for requests, authenticating and routing to the underlying services.
 
-* Query SonarQube API
-* Calculate metrics related to SonarQube
-* Provide Sonar Webhook endpoint
-* Construct GitHub CheckRuns
+#### Deck
 
-![component sonar](../../assets/images/component-sonar.png)
+Deck provides the Swingletree UI
+
+#### Plugins
+
+![component core](../../assets/images/report-comms-flow.png)
+
+Plugins are implemented as services, which are registered to Gate. They are invoked using ReST, process the provided report and POST the results to Scotty.

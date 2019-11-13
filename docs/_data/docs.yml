@@ -7,13 +7,17 @@
 - title: Components
   docs:
   - components/elastic
-  - components/nebula
-  - components/sonarqube
-  - components/twistlock
-  - components/zap
-  - problems
+  - components/deck
+  - components/gate
+  - components/scotty
+
+- title: Plugins
+  docs:
+  - plugins/nebula
+  - plugins/sonarqube
+  - plugins/twistlock
+  - plugins/zap
 
 - title: Extend Swingletree
   docs:
   - architecture
-  - eventbus

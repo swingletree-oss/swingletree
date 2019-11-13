@@ -1,7 +1,7 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deck
+  name: swing-deck
   labels:
     app: deck
     chart: {{ template "swingletree.chart" . }}
@@ -26,25 +26,26 @@ spec:
         - name: appkey
           secret:
             secretName: {{ .Release.Name }}-config
+      {{ if .Values.imagePullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
+      {{ end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.registry }}:{{ .Values.images.deck }}"
+          image: "{{ .Values.registry }}{{ .Values.images.deck }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
           volumeMounts:
             - name: config
-              mountPath: /opt/swingletree/swingletree.conf.yaml
+              mountPath: /opt/deck/swingletree.conf.yaml
               subPath: swingletree.conf.yaml
               readOnly: true
-            - name: appkey
-              mountPath: /opt/swingletree/gh-app.pem
-              subPath: gh-app.pem
           ports:
             - name: http
               containerPort: {{ .Values.swingletree.deck.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /health
               port: http
           readinessProbe:
             httpGet:
