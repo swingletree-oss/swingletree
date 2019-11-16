@@ -28,35 +28,48 @@ If you intend to use ElasticSearch to store your analysis reports you will need
 * Twistlock Plugin
   * *No dependencies* 
 
-## Kubernetes
-
-Swingletree is intended to be installed into a Kubernetes cluster. Use the provided `bake.sh` script in the `helm` directory and deploy the resulting manifest.
-Make sure to configure Swingletree by editing `helm/swingletree/values.yaml` or `bake.sh --configure` before baking your deployment manifest.
+---
 
 ## Preparation
 
-1. Create Swingletree GitHub App
+Create Swingletree GitHub App
   * Retrieve GitHub App Id
   * Retrieve GitHub App private key file
   * Set permissions (See section below)
-2. Configure Plugins according to their documentation
 
-## GitHub Application
+### GitHub Application
 
 In case you want to run your own Swingletree you will need to create a GitHub App on Github.com (or your GitHub Enterprise instance). Follow the instructions on this [GitHub Guide][create-gh-app] to create one.
 
-### Permissions
+#### Permissions
 
 When creating your GitHub App you will need to specify the permissions required by the App. If the permissions are not granted, Swingletree will not be able to operate properly.
 
 * Read and Write access are required for `Checks`
 * Read access is required for `Contents`
 
-### GitHub App Private Key
+#### GitHub App Private Key
 
 You will notice that a private key file named `gh-app.pem` (by default) is required on startup. Swingletree needs this file to authenticate with GitHub.
 
 After you have created your GitHub App, you can generate and download the key from the App configuration page.
 
+---
+
+## Install to Kubernetes
+
+Swingletree is a composite of services. It is recommended to use the helm chart provided with Swingletree to perform your installation.
+
+### Swingletree Configuration
+
+1. Configure your values in [values.yaml][helm-values]. You will find comments describing the values in the file.
+2. Bake your manifest using `helm/bake.sh`
+
+### Deployment
+
+Run `kubectl apply -f [deployment manifest]` to deploy Swingletree to your cluster.
+
+
 
 [create-gh-app]: https://developer.github.com/apps/building-github-apps/creating-a-github-app/
+[helm-values]: https://github.com/swingletree-oss/swingletree/blob/master/helm/swingletree/values.yaml

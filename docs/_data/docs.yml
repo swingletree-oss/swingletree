@@ -1,8 +1,8 @@
-- title: Getting Started
+- title: General
   docs:
   - home
   - installation
-  - configure
+  - yoke-cli
 
 - title: Components
   docs:

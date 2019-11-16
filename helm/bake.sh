@@ -60,7 +60,7 @@ if [ -e $GITHUB_KEYFILE ]; then
   echo " > baking your manifest into $TARGET"
   helm template $BASEDIR/swingletree \
     -n $NAMESPACE \
-    --set swingletree.scotty.github.app.id=$GITHUB_APPID \
+    --set github.app.id=$GITHUB_APPID \
     --set-file github_app_key=$GITHUB_KEYFILE \
     > $TARGET
 else

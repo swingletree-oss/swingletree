@@ -1,6 +1,6 @@
 ---
 title: Gradle Nebula Plugin
-permalink: /docs/components/nebula/
+permalink: /docs/plugins/nebula/
 redirect_from: /docs/index.html
 ---
 

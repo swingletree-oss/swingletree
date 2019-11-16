@@ -1,6 +1,6 @@
 ---
 title: Twistlock Plugin
-permalink: /docs/components/twistlock/
+permalink: /docs/plugins/twistlock/
 redirect_from: /docs/index.html
 ---
 

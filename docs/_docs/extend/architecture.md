@@ -19,18 +19,23 @@ The Scotty component handles interactions with GitHub and ElasticSearch.
 * Token caching
 * ElasticSearch persistence management
 
-![component core](../../assets/images/component-core.png)
-
 #### Gate
 
 Gate functions as an entrypoint for requests, authenticating and routing to the underlying services.
 
 #### Deck
 
-Deck provides the Swingletree UI
+Deck provides the Swingletree UI.
 
 #### Plugins
 
-![component core](../../assets/images/report-comms-flow.png)
-
 Plugins are implemented as services, which are registered to Gate. They are invoked using ReST, process the provided report and POST the results to Scotty.
+
+<div class="mermaid">
+sequenceDiagram
+Gate ->> +Plugin: Prepared Report
+Plugin ->> Scotty: Request Repository configuration 
+Plugin -x +Scotty: Send Analysis Report
+Scotty -->> GitHub: Send Check Run
+Scotty -->> -ElasticSearch: Store History
+</div>

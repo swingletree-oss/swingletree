@@ -56,12 +56,16 @@ scotty: # not needed yet :)
 
 ## Plugin configuration
 nebula:
+  enabled: true
   context: gradle/nebula
 zap:
+  enabled: true
   context: security/zap
 twistlock:
+  enabled: true
   context: security/twistlock
 sonar:
+  enabled: true
   context: sonarqube
 
 
