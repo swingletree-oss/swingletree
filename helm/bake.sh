@@ -1,16 +1,16 @@
 #!/bin/bash
 
+BASEDIR=$(dirname "$0")
 TEMP=`getopt -o vdm: --long gh-appid:,gh-keyfile: -- "$@"`
 
 if [ $? != 0 ] ; then echo "missing arguments. terminating..." >&2 ; exit 1 ; fi
 
-# Note the quotes around `$TEMP': they are essential!
 eval set -- "$TEMP"
 
 GITHUB_KEYFILE=
 GITHUB_APPID=
 
-TARGET=swingletree-bake.yml
+TARGET=$BASEDIR/swingletree-bake.yml
 
 while true; do
   case "$1" in
@@ -33,7 +33,7 @@ fi
 
 if [ -e $GITHUB_KEYFILE ]; then
   echo " > baking your manifest into $TARGET"
-  helm template swingletree \
+  helm template $BASEDIR/swingletree \
     --set swingletree.scotty.github.app.id=$GITHUB_APPID \
     --set-file github_app_key=$GITHUB_KEYFILE \
     > $TARGET
