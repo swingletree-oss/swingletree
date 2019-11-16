@@ -37,6 +37,10 @@ spec:
           env:
             - name: SCOTTY_CLIENT_URL
               value: "http://swing-scotty.{{ .Release.Namespace }}:{{ .Values.swingletree.scotty.port }}"
+            - name: SONAR_URLS_SCOTTY
+              value: "http://swing-scotty.{{ .Release.Namespace }}:{{ .Values.swingletree.scotty.port }}"
+            - name: LOG_LEVEL
+              value: {{ .Values.log.level }}
           volumeMounts:
             - name: config
               mountPath: /opt/plugin-sonarqube/swingletree.conf.yaml

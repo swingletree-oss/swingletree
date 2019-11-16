@@ -38,7 +38,7 @@ spec:
             - name: SCOTTY_CLIENT_URL
               value: "http://swing-scotty.{{ .Release.Namespace }}:{{ .Values.swingletree.scotty.port }}"
             - name: LOG_LEVEL
-              value: debug
+              value: {{ .Values.log.level }}
             - name: TWISTLOCK_URLS_SCOTTY
               value: "http://swing-scotty.{{ .Release.Namespace }}:{{ .Values.swingletree.scotty.port }}"
           volumeMounts:

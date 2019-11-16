@@ -37,7 +37,7 @@ spec:
           env:
             {{ if .Values.redis.enabled }}
             - name: SCOTTY_STORAGE_HOST
-              value: "swingletree-cache.{{ .Release.Namespace }}"
+              value: "{{ .Values.redis.fullnameOverride }}-master.{{ .Release.Namespace }}"
             {{ end }}
             {{ if .Values.redis.password }}
             - name: SCOTTY_STORAGE_PASSWORD
@@ -46,6 +46,8 @@ spec:
                   name: {{ .Release.Name }}-config
                   key: redis-credential
             {{ end }}
+            - name: LOG_LEVEL
+              value: {{ .Values.log.level }}
           volumeMounts:
             - name: config
               mountPath: /opt/scotty/swingletree.conf.yaml

@@ -5,14 +5,14 @@
 replicaCount: 1
 
 images:
-  deck: deck/deck:1.0.3
+  deck: deck/deck:1.1.0
   gate: gate/gate:1.0.2
-  scotty: scotty/scotty:1.0.0
+  scotty: scotty/scotty:1.0.2
   plugin:
-    nebula: plugin-nebula/plugin-nebula:1.0.2
+    nebula: plugin-nebula/plugin-nebula:1.0.3
     sonar: plugin-sonarqube/plugin-sonarqube:1.0.2
     twistlock: plugin-twistlock/plugin-twistlock:1.0.2
-    zap: plugin-zap/plugin-zap:1.0.2
+    zap: plugin-zap/plugin-zap:1.0.3
 pullPolicy: IfNotPresent
 registry: docker.pkg.github.com/swingletree-oss/
 imagePullSecret: regcred
@@ -24,10 +24,14 @@ service:
 # github app key file content
 github_app_key: # set using `--set-file github_app_key=/path/to/file` when running helm
 
+log:
+  level: debug
+
 swingletree: # swingletree configuration
 
   deck: # deck configuration
     port: 3000
+    path: "/deck"
     elastic:
       enabled: false
       node: http://localhost:9200
@@ -101,8 +105,10 @@ swingletree: # swingletree configuration
 
 redis: # stable/redis
   enabled: true
+  cluster:
+    enabled: false
   fullnameOverride: swingletree-cache
-  password: # set your database password with this value
+  password: sjsfgkaseciubjh2 # set your database password with this value
 
 ingress:
   enabled: true

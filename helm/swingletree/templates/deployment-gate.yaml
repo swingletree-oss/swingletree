@@ -35,8 +35,10 @@ spec:
           image: "{{ .Values.registry }}{{ .Values.images.gate }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
-            - name: SCOTTY_URL
+            - name: SCOTTY_URL # cjeck gate scotty client
               value: "http://scotty.{{ .Release.Namespace }}:{{ .Values.swingletree.scotty.port }}"
+            - name: LOG_LEVEL
+              value: {{ .Values.log.level }}
           volumeMounts:
             - name: config
               mountPath: /opt/gate/swingletree.conf.yaml
