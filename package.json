@@ -1,0 +1,31 @@
+{
+  "name": "@swingletree-oss/swingletree",
+  "description": "Enforce SonarQube quality gate checks in your GitHub pull requests",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:swingletree-oss/swingletree.git"
+  },
+  "main": "index.js",
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "npm run build && node bin/main.js",
+    "sass": "node-sass views/sass/main.scss -o static/css --output-style compressed",
+    "sass:watch": "npm run sass -- -w",
+    "build": "npm run sass && npm run build-ts && npm run tslint",
+    "test": "ts-mocha --exit",
+    "build-ts": "tsc",
+    "watch-ts": "tsc -w",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "debug": "npm run build && npm run watch-debug",
+    "watch-debug": "nodemon --inspect bin/main.js",
+    "release": "semantic-release"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "semantic-release": "^15.13.30"
+  },
+  "license": "GPL-3.0",
+  "private": true
+}
