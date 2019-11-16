@@ -35,8 +35,6 @@ spec:
           image: "{{ .Values.registry }}{{ .Values.images.gate }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
-            - name: SCOTTY_URL # cjeck gate scotty client
-              value: "http://scotty.{{ .Release.Namespace }}:{{ .Values.swingletree.scotty.port }}"
             - name: LOG_LEVEL
               value: {{ .Values.log.level }}
           volumeMounts:
@@ -46,7 +44,7 @@ spec:
               readOnly: true
           ports:
             - name: http
-              containerPort: {{ .Values.swingletree.gate.port }}
+              containerPort: 3000
               protocol: TCP
           livenessProbe:
             httpGet:

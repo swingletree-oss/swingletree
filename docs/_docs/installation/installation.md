@@ -28,12 +28,18 @@ If you intend to use ElasticSearch to store your analysis reports you will need
 * Twistlock Plugin
   * *No dependencies* 
 
-## Steps
+## Kubernetes
+
+Swingletree is intended to be installed into a Kubernetes cluster. Use the provided `bake.sh` script in the `helm` directory and deploy the resulting manifest.
+Make sure to configure Swingletree by editing `helm/swingletree/values.yaml` or `bake.sh --configure` before baking your deployment manifest.
+
+## Preparation
 
 1. Create Swingletree GitHub App
-2. Create SonarQube webhook for Swingletree
-2. Configure Swingletree
-3. Run Swingletree
+  * Retrieve GitHub App Id
+  * Retrieve GitHub App private key file
+  * Set permissions (See section below)
+2. Configure Plugins according to their documentation
 
 ## GitHub Application
 
@@ -43,7 +49,8 @@ In case you want to run your own Swingletree you will need to create a GitHub Ap
 
 When creating your GitHub App you will need to specify the permissions required by the App. If the permissions are not granted, Swingletree will not be able to operate properly.
 
-Read and Write access are required for `Checks`
+* Read and Write access are required for `Checks`
+* Read access is required for `Contents`
 
 ### GitHub App Private Key
 
@@ -53,4 +60,3 @@ After you have created your GitHub App, you can generate and download the key fr
 
 
 [create-gh-app]: https://developer.github.com/apps/building-github-apps/creating-a-github-app/
-[sonar-webhook]: https://docs.sonarqube.org/display/SONAR/Webhooks

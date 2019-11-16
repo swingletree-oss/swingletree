@@ -10,7 +10,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.swingletree.gate.port }}
+    - port: 3000
       targetPort: http
       protocol: TCP
       name: http
@@ -32,7 +32,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.swingletree.scotty.port }}
+    - port: 3000
       targetPort: http
       protocol: TCP
       name: http
@@ -54,7 +54,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.swingletree.deck.port }}
+    - port: 3000
       targetPort: http
       protocol: TCP
       name: http
@@ -76,7 +76,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.swingletree.nebula.port }}
+    - port: 3000
       targetPort: http
       protocol: TCP
       name: http
@@ -98,7 +98,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.swingletree.zap.port }}
+    - port: 3000
       targetPort: http
       protocol: TCP
       name: http
@@ -120,7 +120,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.swingletree.twistlock.port }}
+    - port: 3000
       targetPort: http
       protocol: TCP
       name: http
@@ -142,7 +142,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.swingletree.sonar.port }}
+    - port: 3000
       targetPort: http
       protocol: TCP
       name: http

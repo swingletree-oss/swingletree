@@ -8,4 +8,4 @@ Take a look at our [GitHub Page][swingletree] for more information (and the Swin
 
 [code-climate]: https://codeclimate.com/github/error418/swingletree/maintainability
 [dockerhub-repo]: https://hub.docker.com/r/werkbank/swingletree/tags/
-[swingletree]: https://error418.github.io/swingletree/
+[swingletree]: https://swingletree-oss.github.io/swingletree/

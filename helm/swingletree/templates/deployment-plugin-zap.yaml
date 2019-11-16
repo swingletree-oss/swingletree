@@ -35,10 +35,6 @@ spec:
           image: "{{ .Values.registry }}{{ .Values.images.plugin.zap }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
-            - name: ZAP_URLS_SCOTTY
-              value: "http://swing-scotty.{{ .Release.Namespace }}:{{ .Values.swingletree.scotty.port }}"
-            - name: SCOTTY_CLIENT_URL
-              value: "http://swing-scotty.{{ .Release.Namespace }}:{{ .Values.swingletree.scotty.port }}"
             - name: LOG_LEVEL
               value: {{ .Values.log.level }}
           volumeMounts:
@@ -48,7 +44,7 @@ spec:
               readOnly: true
           ports:
             - name: http
-              containerPort: {{ .Values.swingletree.zap.port }}
+              containerPort: 3000
               protocol: TCP
           livenessProbe:
             httpGet:

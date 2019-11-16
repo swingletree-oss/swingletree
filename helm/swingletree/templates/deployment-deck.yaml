@@ -44,7 +44,7 @@ spec:
               readOnly: true
           ports:
             - name: http
-              containerPort: {{ .Values.swingletree.deck.port }}
+              containerPort: 3000
               protocol: TCP
           livenessProbe:
             httpGet:
