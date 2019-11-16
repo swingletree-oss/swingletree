@@ -1,7 +1,18 @@
 #!/bin/bash
 
 BASEDIR=$(dirname "$0")
-TEMP=`getopt -o vdm: --long gh-appid:,gh-keyfile: -- "$@"`
+TEMP=`getopt -o h --long gh-appid:,gh-keyfile:,help -- "$@"`
+
+HELP="""
+Swingletree HELM template bake utility
+
+ This script supports you baking a swingletree manifest
+
+ Options:
+   --gh-keyfile       Path to the GitHub App private key file
+   --gh-appid         GitHub App Id
+
+"""
 
 if [ $? != 0 ] ; then echo "missing arguments. terminating..." >&2 ; exit 1 ; fi
 
@@ -16,6 +27,7 @@ while true; do
   case "$1" in
     --gh-keyfile ) GITHUB_KEYFILE="$2"; shift 2 ;;
     --gh-appid ) GITHUB_APPID="$2"; shift 2 ;;
+    -h | --help ) echo "$HELP"; exit 0; shift ;;
     -- ) shift; break ;;
     * ) break ;;
   esac
@@ -41,3 +53,5 @@ else
   echo " ! $GITHUB_KEYFILE does not exist"
   exit 1
 fi
+
+echo " done."
