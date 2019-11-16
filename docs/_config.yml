@@ -10,9 +10,9 @@ lang: de-DE
 logo: assets/images/icon.svg
 
 baseurl: "/swingletree" # the subpath of your site, e.g. /blog/
-url: "https://error418.github.io" # the base hostname & protocol for your site
-git_address: https://github.com/error418/swingletree
-git_edit_address: https://github.com/error418/swingletree/blob/master/docs
+url: "https://swingletree-oss.github.io" # the base hostname & protocol for your site
+git_address: https://github.com/swingletree-oss/swingletree
+git_edit_address: https://github.com/swingletree-oss/swingletree/blob/master/docs
 
 blog:
   enable: false
