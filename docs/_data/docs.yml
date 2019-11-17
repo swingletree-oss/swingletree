@@ -1,8 +1,13 @@
 - title: General
   docs:
   - home
-  - installation
   - yoke-cli
+
+- title: Installation
+  docs:
+  - install/prerequisites
+  - install/prepare
+  - install/k8s
 
 - title: Components
   docs:

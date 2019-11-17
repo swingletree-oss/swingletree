@@ -14,8 +14,15 @@ The Swingletree SonarQube Plugin offers following functionalities:
 
 Processed data is persisted to ElasticSearch (if enabled) and can be processed to reports using Kibana or Grafana.
 
+## Sending a report to Swingletree
 
-## General CI build configuration
+This plugin retrieves its data via a SonarQube webhook. Yoke CLI is not required to send reports.
+
+### SonarQube webhook
+
+SonarQube needs to send a notification to Swingletree when the SonarQube analysis has finished processing. Add a SonarQube webhook via the SonarQube UI (administrator privileges required) using the webhook endpoint `https://gate.swingletree.example/report/sonarqube`.
+
+### CI build configuration
 
 * `sonar.analysis.commitId`, containing the commit id
 * `sonar.analysis.repository`, containing the full repository path
@@ -30,12 +37,12 @@ sonar-scanner \
 
 Of course these values (at least `commitId`) need to be acquired dynamically on each build.
 
-## Reference branch analysis
+### Reference branch analysis
 
 A reference branch can be set by providing the SonarQube property `sonar.branch.target`.
 SonarQube will run the branch analysis in relation to the provided branch name.
 
-## Repository-specific Configuration
+### Repository-specific Configuration
 
 Repository-specific behaviour can be configured by placing a `.swingletree.yaml` in the repository root directory. Swingletree reads from the master branch file only.
 

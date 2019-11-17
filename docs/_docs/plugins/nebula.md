@@ -29,6 +29,8 @@ Swingletree blocks Pull Requests if tests are failing in the Gradle build.
 
 ## Sending a metrics report to Swingletree
 
+This plugin sends its data using the Nebula [Gradle Metrics Plugin][gradle-metrics]. Yoke CLI is not required to send reports.
+
 The Nebula webhook is published when the Nebula Plugin is enabled.
 It accepts a Nebula Gradle Metrics Plugin report as a payload and needs some additional http headers to link the report to a GitHub repository:
 
@@ -44,7 +46,7 @@ if (thisIsCiBuild) { // needs to be specified by you
 
   metrics {
       dispatcherType = 'REST'
-      restUri = 'https://swingletree/webhook/nebula' // can be injected by CI server using properties or env vars
+      restUri = 'https://gate.swingletree/report/nebula' // can be injected by CI server using properties or env vars
 
       // header values need to be extracted and set
       headers['X-swingletree-org'] = <GitHub Organization>
