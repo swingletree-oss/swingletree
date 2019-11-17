@@ -3,24 +3,48 @@
 set -e
 
 BASEDIR=$(dirname "$0")
-TEMP=`getopt -o h,n: --long namespace:,gh-appid:,configure,gh-keyfile:,help -- "$@"`
+CHART=swingletree
+VALUES_CONFIG=$BASEDIR/$CHART/values.yaml
 
 HELP="""
 Swingletree HELM template bake utility
 
  This script supports you baking a swingletree manifest. You can customize the
- deployment by changing values in $BASEDIR/
- 
+ deployment by changing values in $VALUES_CONFIG
 
  Options:
-   --gh-keyfile       Path to the GitHub App private key file
-   --gh-appid         GitHub App Id
+   --gh-keyfile         Path to the GitHub App private key file
+   --gh-appid           GitHub App Id
 
-   -n | --namespace   Sets the k8s target namespace
+   -n | --namespace     Sets the k8s target namespace
 
-   --configure        Opens the values.yml in vi
+   --configure          Opens the template values.yaml in vi
+
+   -k | --skip-update   Skips the HELM chart update
 
 """
+
+TEMP=`getopt -o h,k,n: --long namespace:,gh-appid:,configure,skip-update,gh-keyfile:,help -- "$@"`
+
+function printHelp {
+  echo "$HELP"  
+}
+
+function applyTemplate {
+  if [ $SKIP_UPDATE -eq 0 ]; then
+    echo " >> Updating Chart dependencies. You can skip this by using -k flag."
+    echo "-------------------------------------------------- "
+    helm dependency update $CHART
+    echo "-------------------------------------------------- "
+    echo
+  fi
+  echo " > baking your manifest into $TARGET"
+  helm template $BASEDIR/swingletree \
+    -n $NAMESPACE \
+    --set github.app.id=$GITHUB_APPID \
+    --set-file github_app_key=$GITHUB_KEYFILE \
+    > $TARGET
+}
 
 if [ $? != 0 ] ; then echo "missing arguments. terminating..." >&2 ; exit 1 ; fi
 
@@ -29,6 +53,7 @@ eval set -- "$TEMP"
 GITHUB_KEYFILE=
 GITHUB_APPID=
 NAMESPACE=default
+SKIP_UPDATE=0
 
 TARGET=$BASEDIR/swingletree-bake.yml
 
@@ -37,32 +62,35 @@ while true; do
     --gh-keyfile ) GITHUB_KEYFILE="$2"; shift 2 ;;
     --gh-appid ) GITHUB_APPID="$2"; shift 2 ;;
     -n | --namespace ) NAMESPACE="$2"; shift 2 ;;
-    --configure ) vi $BASEDIR/swingletree/values.yaml; exit $?; shift ;;
-    -h | --help ) echo "$HELP"; exit 0; shift ;;
+    --configure ) vi $VALUES_CONFIG; exit $?; shift ;;
+    -k | --skip-update ) SKIP_UPDATE=1; shift ;;
+    -h | --help ) printHelp; exit 0; shift ;;
     -- ) shift; break ;;
     * ) break ;;
   esac
 done
 
+MISSING_OPTS=0
+
 if [ -z $GITHUB_APPID ]; then
   echo " ! option --gh-appid is missing"
-  exit 1
+  MISSING_OPTS=1
 fi
 
 if [ -z $GITHUB_KEYFILE ]; then
   echo " ! option --gh-keyfile is missing"
+  MISSING_OPTS=1
+fi
+
+if [ $MISSING_OPTS -gt 0 ]; then
+  printHelp
   exit 1
 fi
 
 echo
 
 if [ -e $GITHUB_KEYFILE ]; then
-  echo " > baking your manifest into $TARGET"
-  helm template $BASEDIR/swingletree \
-    -n $NAMESPACE \
-    --set github.app.id=$GITHUB_APPID \
-    --set-file github_app_key=$GITHUB_KEYFILE \
-    > $TARGET
+  applyTemplate
 else
   echo " ! $GITHUB_KEYFILE does not exist"
   exit 1
