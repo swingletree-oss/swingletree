@@ -62,6 +62,9 @@ spec:
     app: deck
     release: {{ .Release.Name }}
 
+
+{{ if .Values.nebula.enabled -}}
+
 ---
 
 apiVersion: v1
@@ -83,6 +86,10 @@ spec:
   selector:
     app: plugin-nebula
     release: {{ .Release.Name }}
+
+{{- end }}
+
+{{ if .Values.zap.enabled -}}
 
 ---
 
@@ -106,6 +113,11 @@ spec:
     app: plugin-zap
     release: {{ .Release.Name }}
 
+
+{{- end }}
+
+{{ if .Values.twistlock.enabled -}}
+
 ---
 
 apiVersion: v1
@@ -128,6 +140,11 @@ spec:
     app: plugin-twistlock
     release: {{ .Release.Name }}
 
+
+{{- end }}
+
+{{ if .Values.zap.enabled -}}
+
 ---
 
 apiVersion: v1
@@ -149,3 +166,5 @@ spec:
   selector:
     app: plugin-sonar
     release: {{ .Release.Name }}
+
+{{- end }}
