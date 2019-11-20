@@ -38,7 +38,8 @@ plugins:
 
 ## Feature flags
 features:
-  dashboard: true
+  dashboard: true # enable the deck dashboard
+  yoke: https://github.com/error418/yoke/releases # yoke download url
 
 ## Swingletree core service configuration
 ### deck configuration
@@ -119,7 +120,7 @@ ingress:
   gate:
     path: /
     hosts:
-      - gate,swingletree.minikube
+      - gate.swingletree.minikube
 
   annotations:
     # nginx.ingress.kubernetes.io/rewrite-target: /$2
