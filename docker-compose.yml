@@ -3,6 +3,8 @@ version: "3.3"
 services:
   deck:
     container_name: deck
+    env_file:
+      - ./compose.env
     environment:
       DECK_PORT: 3000
     build:
@@ -11,6 +13,8 @@ services:
       - "3000:3000"
   scotty:
     container_name: scotty
+    env_file: 
+      - ./compose.env
     environment:
       SCOTTY_PORT: 3000
       SCOTTY_STORAGE_HOST: redis
@@ -23,17 +27,33 @@ services:
       - "3000"
   gate:
     container_name: gate
+    env_file: 
+      - ./compose.env
     environment:
       GATE_PORT: 3001
     build:
       context: ../gate/
     ports:
       - "3001:3001"
+
   redis:
     container_name: redis
     image: redis
+    logging:
+      driver: none
     expose:
       - "6379"
+  
+  elastic:
+    container_name: elastic
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
+    logging:
+      driver: none
+    environment:
+      discovery.type: single-node
+    expose:
+      - "9200"
+      - "9300"
 
 
   plugin-nebula:
