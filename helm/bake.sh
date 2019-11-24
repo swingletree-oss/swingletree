@@ -15,6 +15,7 @@ Swingletree HELM template bake utility
  Options:
    --gh-keyfile         Path to the GitHub App private key file
    --gh-appid           GitHub App Id
+   --redis-password     Ask for redis password and set it. Omitting this will generate a password.
 
    -n | --namespace     Sets the k8s target namespace
 
@@ -24,7 +25,7 @@ Swingletree HELM template bake utility
 
 """
 
-TEMP=`getopt -o h,k,n: --long namespace:,gh-appid:,configure,skip-update,gh-keyfile:,help -- "$@"`
+TEMP=`getopt -o h,k,n: --long namespace:,gh-appid:,redis-password,configure,skip-update,gh-keyfile:,help -- "$@"`
 
 function printHelp {
   echo "$HELP"  
@@ -42,6 +43,7 @@ function applyTemplate {
   helm template $BASEDIR/swingletree \
     -n $NAMESPACE \
     --set github.app.id=$GITHUB_APPID \
+    --set redis.password=$REDIS_PASS \
     --set-file github_app_key=$GITHUB_KEYFILE \
     > $TARGET
 }
@@ -54,6 +56,8 @@ GITHUB_KEYFILE=
 GITHUB_APPID=
 NAMESPACE=default
 SKIP_UPDATE=0
+REDIS_PASS=$(pwgen 20 1)
+echo $REDIS_PASS
 
 TARGET=$BASEDIR/swingletree-bake.yml
 
@@ -64,6 +68,7 @@ while true; do
     -n | --namespace ) NAMESPACE="$2"; shift 2 ;;
     --configure ) vi $VALUES_CONFIG; exit $?; shift ;;
     -k | --skip-update ) SKIP_UPDATE=1; shift ;;
+    --redis-password ) REDIS_PASS=$(read -sp " > set redis password: "); shift ;;
     -h | --help ) printHelp; exit 0; shift ;;
     -- ) shift; break ;;
     * ) break ;;

@@ -14,6 +14,13 @@ elastic:
 redis:
   password: # set your database password with this value
 
+  # redis helm dependency configuration ---
+  enabled: true # enables the redis helm dependency chart
+  cluster:
+    enabled: false
+  fullnameOverride: swingletree-cache
+
+
 ## GitHub configuration
 github:
   app:
@@ -114,13 +121,6 @@ github_app_key: # set using the bake.sh option --gh-keyfile
 # log level of all swingletree pods
 log:
   level: info
-
-# redis dependency configuration
-redis: # stable/redis
-  enabled: true
-  cluster:
-    enabled: false
-  fullnameOverride: swingletree-cache
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
