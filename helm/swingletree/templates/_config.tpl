@@ -12,11 +12,11 @@ gate:
   api:
     token: {{ .Values.gate.api.token }}
   plugins:
-  {{ range $pluginId, $pluginConfig := .Values.plugins -}}
+    {{- range $pluginId, $pluginConfig := .Values.plugins }}
     {{ $pluginId }}:
       enabled: {{ $pluginConfig.enabled }}
       base: "http://plugin-{{ $pluginId }}.{{ $.Release.Namespace }}:3000"
-  {{ end -}}
+    {{- end }}
   port: 3000
 scotty:
   storage:
