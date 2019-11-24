@@ -32,21 +32,21 @@ scotty:
 nebula:
   context: {{ .Values.plugins.nebula.context }}
   urls:
-    scotty: "swing-scotty.{{ .Release.Namespace }}:3000"
+    scotty: "http://swing-scotty.{{ .Release.Namespace }}:3000"
   port: 3000
 {{- end }}
 {{ if .Values.plugins.zap.enabled -}}
 zap:
   context: {{ .Values.plugins.zap.context }}
   urls:
-    scotty: "swing-scotty.{{ .Release.Namespace }}:3000"
+    scotty: "http://swing-scotty.{{ .Release.Namespace }}:3000"
   port: 3000
 {{- end }}
 {{ if .Values.plugins.twistlock.enabled -}}
 twistlock:
   context: {{ .Values.plugins.twistlock.context }}
   urls:
-    scotty: "swing-scotty.{{ .Release.Namespace }}:3000"
+    scotty: "http://swing-scotty.{{ .Release.Namespace }}:3000"
   port: 3000
 {{- end }}
 {{ if .Values.plugins.sonar.enabled -}}
@@ -55,7 +55,7 @@ sonar:
   context: {{ .Values.sonar.context }}
   token: {{ .Values.plugins.sonar.token }}
   urls:
-    scotty: "swing-scotty.{{ .Release.Namespace }}:3000"
+    scotty: "http://swing-scotty.{{ .Release.Namespace }}:3000"
   port: 3000
 {{- end }}
 {{- end -}}
