@@ -1,4 +1,4 @@
-{{- if .Values.zap.enabled -}}
+{{- if .Values.plugins.zap.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

@@ -63,7 +63,7 @@ spec:
     release: {{ .Release.Name }}
 
 
-{{ if .Values.nebula.enabled -}}
+{{ if .Values.plugins.nebula.enabled -}}
 
 ---
 
@@ -89,7 +89,7 @@ spec:
 
 {{- end }}
 
-{{ if .Values.zap.enabled -}}
+{{ if .Values.plugins.zap.enabled -}}
 
 ---
 
@@ -116,7 +116,7 @@ spec:
 
 {{- end }}
 
-{{ if .Values.twistlock.enabled -}}
+{{ if .Values.plugins.twistlock.enabled -}}
 
 ---
 
@@ -143,7 +143,7 @@ spec:
 
 {{- end }}
 
-{{ if .Values.zap.enabled -}}
+{{ if .Values.plugins.zap.enabled -}}
 
 ---
 

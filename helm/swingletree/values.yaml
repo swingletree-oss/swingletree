@@ -29,13 +29,6 @@ sonar:
   base: # SonarQube base url
   token: # SonarQube Server API token
 
-## Enabled plugins
-plugins:
-  - twistlock
-  - zap
-  - sonarqube
-  - nebula
-
 ## Feature flags
 features:
   dashboard: true # enable the deck dashboard
@@ -56,18 +49,19 @@ scotty: # not needed yet :)
 
 
 ## Plugin configuration
-nebula:
-  enabled: true
-  context: gradle/nebula
-zap:
-  enabled: true
-  context: security/zap
-twistlock:
-  enabled: true
-  context: security/twistlock
-sonar:
-  enabled: true
-  context: sonarqube
+plugins:
+  nebula:
+    enabled: true
+    context: gradle/nebula
+  zap:
+    enabled: true
+    context: security/zap
+  twistlock:
+    enabled: true
+    context: security/twistlock
+  sonar:
+    enabled: true
+    context: sonarqube
 
 
 

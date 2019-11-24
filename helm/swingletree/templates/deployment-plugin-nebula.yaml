@@ -1,4 +1,4 @@
-{{- if .Values.nebula.enabled -}}
+{{- if .Values.plugins.nebula.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

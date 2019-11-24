@@ -12,9 +12,10 @@ gate:
   api:
     token: {{ .Values.gate.api.token }}
   plugins:
-  {{ range $plugin := .Values.plugins -}}
-  - id: {{ . }}
-    base: "http://plugin-{{ . }}.{{ $.Release.Namespace }}:3000"
+  {{ range $pluginId, $pluginConfig := .Values.plugins -}}
+    {{ $pluginId }}:
+      enabled: {{ $pluginConfig.enabled }}
+      base: "http://plugin-{{ $pluginId }}.{{ $.Release.Namespace }}:3000"
   {{ end -}}
   port: 3000
 scotty:
@@ -26,26 +27,35 @@ scotty:
   github:
 {{ toYaml .Values.github | indent 4 }}
   port: 3000
+
+{{ if .Values.plugins.nebula.enabled -}}
 nebula:
-  context: {{ .Values.nebula.context }}
+  context: {{ .Values.plugins.nebula.context }}
   urls:
     scotty: "swing-scotty.{{ .Release.Namespace }}:3000"
   port: 3000
+{{- end }}
+{{ if .Values.plugins.zap.enabled -}}
 zap:
-  context: {{ .Values.zap.context }}
+  context: {{ .Values.plugins.zap.context }}
   urls:
     scotty: "swing-scotty.{{ .Release.Namespace }}:3000"
   port: 3000
+{{- end }}
+{{ if .Values.plugins.twistlock.enabled -}}
 twistlock:
-  context: {{ .Values.twistlock.context }}
+  context: {{ .Values.plugins.twistlock.context }}
   urls:
     scotty: "swing-scotty.{{ .Release.Namespace }}:3000"
   port: 3000
+{{- end }}
+{{ if .Values.plugins.sonar.enabled -}}
 sonar:
   base: {{ .Values.sonar.base }}
   context: {{ .Values.sonar.context }}
-  token: {{ .Values.sonar.token }}
+  token: {{ .Values.plugins.sonar.token }}
   urls:
     scotty: "swing-scotty.{{ .Release.Namespace }}:3000"
   port: 3000
+{{- end }}
 {{- end -}}
