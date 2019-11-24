@@ -63,6 +63,24 @@ plugins:
     enabled: true
     context: sonarqube
 
+# ingress configuration
+ingress:
+  enabled: true
+  deck:
+    path: /
+    hosts:
+      - swingletree.minikube
+  gate:
+    path: /
+    hosts:
+      - gate.swingletree.minikube
+
+  annotations:
+    # nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+
+  tls: []
 
 
 #######################################################################################
@@ -73,17 +91,17 @@ replicaCount: 1
 
 # images to use for this deployment
 images:
-  deck: deck/deck:1.1.0
-  gate: gate/gate:1.0.2
-  scotty: scotty/scotty:1.0.2
+  deck: deck/deck:1.2.1
+  gate: gate/gate:1.2.1
+  scotty: scotty/scotty:1.0.4
   plugin:
-    nebula: plugin-nebula/plugin-nebula:1.0.3
-    sonar: plugin-sonarqube/plugin-sonarqube:1.0.2
-    twistlock: plugin-twistlock/plugin-twistlock:1.0.2
-    zap: plugin-zap/plugin-zap:1.0.3
+    nebula: plugin-nebula/plugin-nebula:1.1.1
+    sonar: plugin-sonarqube/plugin-sonarqube:1.1.1
+    twistlock: plugin-twistlock/plugin-twistlock:1.1.1
+    zap: plugin-zap/plugin-zap:1.1.0
 pullPolicy: IfNotPresent
 registry: docker.pkg.github.com/swingletree-oss/
-imagePullSecret: regcred
+#imagePullSecret: regcred
 
 # default service configuration
 service:
@@ -103,28 +121,6 @@ redis: # stable/redis
   cluster:
     enabled: false
   fullnameOverride: swingletree-cache
-
-# ingress configuration
-ingress:
-  enabled: true
-  deck:
-    path: /
-    hosts:
-      - swingletree.minikube
-  gate:
-    path: /
-    hosts:
-      - gate.swingletree.minikube
-
-  annotations:
-    # nginx.ingress.kubernetes.io/rewrite-target: /$2
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
