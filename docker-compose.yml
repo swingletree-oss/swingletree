@@ -51,6 +51,8 @@ services:
       driver: none
     environment:
       discovery.type: single-node
+    ports:
+      - "9200:9200"
     expose:
       - "9200"
       - "9300"
