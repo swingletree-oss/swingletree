@@ -6,76 +6,88 @@ layout: default
 
 <div class="container">
 
-    <h1 class="underline no-top-margin">Core Features</h1>
-
-    <div class="row text-center">
-        <div class="col-md-6">
-            <span class="text-center">
+    <div class="row" style="margin-top:2em">
+        <div class="col-md-3 col-md-offset-1" style="text-align:center">
+            <div style="height:5em">
                 <span class="fa-stack fa-2x">
                     <i class="fas fa-circle fa-stack-2x feat"></i>
                     <i class="fa-stack-1x fab fa-github fa-inverse"></i>
                 </span>
-            </span>
-            <h4 class="text-center">GitHub Integration</h4>
-            <p>
-                No need to jump between tools to see what failed your Quality Gate. Swingletree uses the GitHub
-                Checks API to annotate findings in your commits and pull requests.
-            </p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">GitHub Integration</h4>
+                <p class="card-text">
+                    No need to jump between tools to see what failed your Quality Gate. Swingletree uses the GitHub
+                    Checks API to annotate findings in your commits and pull requests.
+                </p>
+            </div>
         </div>
-        <div class="col-md-6">
-            <span class="text-center">
+        <div class="col-md-3 col-md-offset-1" style="text-align:center">
+            <div style="height:5em">
                 <span class="fa-stack fa-2x">
                     <i class="fas fa-circle fa-stack-2x feat"></i>
                     <i class="fa-stack-1x fas fa-database fa-inverse"></i>
                 </span>
-            </span>
-            <h4 class="text-center">Persisted</h4>
-            <p>
-                Build reports are persisted in GitHub using Check-Runs, which are attached to the commit.
-                This way you are also able to view the results of past build reports.
-            </p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Auditable</h4>
+                <p class="card-text">
+                    Swingletree stores the results of received build reports in GitHub and
+                    ElasticSearch.
+                </p>
+            </div>
         </div>
-        <div class="col-sm-12 separator"></div>
-        <div class="col-md-6">
-            <span class="text-center">
+        <div class="col-md-3 col-md-offset-1" style="text-align:center">
+            <div style="height:5em">
                 <span class="fa-stack fa-2x">
                     <i class="fas fa-circle fa-stack-2x feat"></i>
                     <i class="fa-stack-1x far fa-chart-bar fa-inverse"></i>
                 </span>
-            </span>
-            <h4 class="text-center">Searchable</h4>
-            <p>
-                Swingletree can persist all analysis reports to ElasticSearch. Reports can be created using established tools like Kibana or Grafana.
-            </p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Keep track</h4>
+                <p class="card-text">
+                     Swingletree persists each received report to ElasticSearch. Grafana and Kibana
+                     can process the stored data to graphs. 
+                </p>
+            </div>
         </div>
-        <div class="col-md-6">
-            <span class="text-center">
+    </div>
+
+
+    <div class="row" style="padding-top:2em">
+        <div class="col-md-3 col-md-offset-3" style="text-align:center">
+            <div style="height:5em">
                 <span class="fa-stack fa-2x">
                     <i class="fas fa-circle fa-stack-2x feat"></i>
-                    <i class="fa-stack-1x fas fa-feather fa-inverse"></i>
+                    <i class="fa-stack-1x fas fa-database fa-inverse"></i>
                 </span>
-            </span>
-            <h4 class="text-center">Ease of use</h4>
-            <p>
-                Install to your GitHub organization and you are ready to go. No machine user required for GitHub Enterprise instances.
-            </p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Extendable</h4>
+                <p class="card-text">
+                    Swingletree provides a framework for custom plugins. Integrate your custom tooling
+                    with your own plugin.
+                </p>
+            </div>
         </div>
-        <div class="col-sm-12 separator"></div>
-        <div class="col-md-offset-3 col-md-6">
-            <span class="text-center">
+        <div class="col-md-3 col-md-offset-1" style="text-align:center">
+            <div style="height:5em">
                 <span class="fa-stack fa-2x">
                     <i class="fas fa-circle fa-stack-2x feat"></i>
                     <i class="fa-stack-1x fas fa-dungeon fa-inverse"></i>
                 </span>
-            </span>
-            <h4 class="text-center">Quality Gates</h4>
-            <p>
-                Quality Gates are configurable (depends on plugin) and are enforced using GitHub Check Runs.
-            </p>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Quality Gates</h4>
+                <p class="card-text">
+                     Quality Gates are configurable and are enforced using GitHub Check Runs.
+                </p>
+            </div>
         </div>
     </div>
 
-    <h1 class="underline" style="margin-top:2em">Integrations</h1>
+    <h1 class="underline" style="margin-top:2em">Plugins</h1>
 
     <div class="row text-center">
         <div class="col-md-6">
