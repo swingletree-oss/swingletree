@@ -17,8 +17,6 @@ jobs:
       run: apk add git
     - name: Initialize
       run: npm i
-    - name: Run tests
-      run: npm test
     - name: Release Codebase
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_PACKAGE_SECRET }}
