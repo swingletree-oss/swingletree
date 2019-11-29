@@ -28,6 +28,27 @@
   Swingletree -> Cache: update installation cache
 @enduml
 
+@startuml report-comms-flow
+  skinparam monochrome true
+
+  Gate -> Plugin: pass report
+
+  activate Plugin
+  Plugin -> Scotty: (optional) request repository configuration contents
+  activate Scotty
+  Scotty -> GitHub: retrieve repository configuration
+  Scotty -> Plugin
+  deactivate Scotty
+
+  Plugin -> Scotty: send processed Report
+  deactivate Plugin
+  activate Scotty
+  Scotty -> Cache: read installation information
+  Scotty -> GitHub: send Check Run contents
+  Scotty -> ElasticSearch: persist Report
+  deactivate Scotty
+@enduml
+
 @startuml component-core
   skinparam monochrome true
 

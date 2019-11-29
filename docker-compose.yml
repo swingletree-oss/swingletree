@@ -1,0 +1,95 @@
+version: "3.3"
+
+services:
+  deck:
+    container_name: deck
+    env_file:
+      - ./compose.env
+    environment:
+      DECK_PORT: 3000
+    build:
+      context: ../deck/
+    ports:
+      - "3000:3000"
+  scotty:
+    container_name: scotty
+    env_file: 
+      - ./compose.env
+    environment:
+      SCOTTY_PORT: 3000
+      SCOTTY_STORAGE_HOST: redis
+      SCOTTY_GITHUB_APP_ID: ${GH_APPID}
+    build:
+      context: ../scotty/
+    volumes:
+      - ../scotty/gh-app.pem:/opt/scotty/gh-app.pem
+    expose:
+      - "3000"
+  gate:
+    container_name: gate
+    env_file: 
+      - ./compose.env
+    environment:
+      GATE_PORT: 3001
+    build:
+      context: ../gate/
+    ports:
+      - "3001:3001"
+
+  redis:
+    container_name: redis
+    image: redis
+    logging:
+      driver: none
+    expose:
+      - "6379"
+  
+  elastic:
+    container_name: elastic
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
+    logging:
+      driver: none
+    environment:
+      discovery.type: single-node
+    ports:
+      - "9200:9200"
+    expose:
+      - "9200"
+      - "9300"
+
+
+  plugin-nebula:
+    container_name: plugin-nebula
+    environment:
+      NEBULA_PORT: 3010
+    build:
+      context: ../plugin-nebula/
+    expose:
+      - "3010"
+
+  plugin-sonarqube:
+    container_name: plugin-sonarqube
+    environment:
+      SONAR_PORT: 3020
+    build:
+      context: ../plugin-sonarqube/
+    expose:
+      - "3020"
+
+  plugin-twistlock:
+    container_name: plugin-twistlock
+    environment:
+      TWISTLOCK_PORT: 3030
+    build:
+      context: ../plugin-twistlock/
+    expose:
+      - "3030"
+
+  plugin-zap:
+    container_name: plugin-zap
+    environment:
+      ZAP_PORT: 3040
+    build:
+      context: ../plugin-zap/
+    expose:
+      - "3040"

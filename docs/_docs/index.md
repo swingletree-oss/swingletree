@@ -2,20 +2,36 @@
 title: General
 permalink: /docs/home/
 redirect_from: /docs/index.html
+mermaid: true
 ---
 
-## Setup
+Welcome to the Swingletree documentation.
 
-Swingletree can be run with multiple instances. A redis database is used as a common cache.
-A cache refresh is triggered when a specific cache flag entry is absent in the redis database.
+Please use the navigation to left to pick a section of your interest.
 
-## Startup
+## Swingletree Workflow
 
-A Swingletree instance performs following actions when starting up:
-
-1. Check if a cache refresh is required
-    * Query GitHub for installations
-    * update cache with retrieved installations
-    * set cache flag
-
-![startup flow](../../assets/images/startup-flow.png)
+<div class="mermaid">
+    graph TD
+    subgraph CI Build
+      A(Report A)
+      B(Report B) 
+      C(Report C)
+      tool(Tool A)
+      yoke[yoke cli]
+    end
+    
+    gh(GitHub)
+    elastic(ElasticSearch)
+    swing[Swingletree]
+    
+    A --collect--> yoke
+    B --collect--> yoke
+    C --collect--> yoke
+    
+    yoke --report--> swing
+    tool --report--> swing
+    
+    swing --> gh
+    swing --> elastic
+</div>

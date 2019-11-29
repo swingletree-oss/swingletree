@@ -1,19 +1,170 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "swingletree.fullname" . }}
+  name: swing-gate
   labels:
-    app: {{ template "swingletree.name" . }}
+    app: gate
     chart: {{ template "swingletree.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
+    - port: 3000
       targetPort: http
       protocol: TCP
       name: http
   selector:
-    app: {{ template "swingletree.name" . }}
+    app: gate
     release: {{ .Release.Name }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: swing-scotty
+  labels:
+    app: scotty
+    chart: {{ template "swingletree.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 3000
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: scotty
+    release: {{ .Release.Name }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: swing-deck
+  labels:
+    app: deck
+    chart: {{ template "swingletree.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 3000
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: deck
+    release: {{ .Release.Name }}
+
+
+{{ if .Values.plugins.nebula.enabled -}}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: plugin-nebula
+  labels:
+    app: plugin-nebula
+    chart: {{ template "swingletree.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 3000
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: plugin-nebula
+    release: {{ .Release.Name }}
+
+{{- end }}
+
+{{ if .Values.plugins.zap.enabled -}}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: plugin-zap
+  labels:
+    app: plugin-zap
+    chart: {{ template "swingletree.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 3000
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: plugin-zap
+    release: {{ .Release.Name }}
+
+
+{{- end }}
+
+{{ if .Values.plugins.twistlock.enabled -}}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: plugin-twistlock
+  labels:
+    app: plugin-twistlock
+    chart: {{ template "swingletree.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 3000
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: plugin-twistlock
+    release: {{ .Release.Name }}
+
+
+{{- end }}
+
+{{ if .Values.plugins.zap.enabled -}}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: plugin-sonar
+  labels:
+    app: plugin-sonar
+    chart: {{ template "swingletree.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 3000
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: plugin-sonar
+    release: {{ .Release.Name }}
+
+{{- end }}

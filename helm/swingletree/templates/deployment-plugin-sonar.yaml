@@ -1,0 +1,72 @@
+{{- if .Values.plugins.sonar.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plugin-sonar
+  labels:
+    app: plugin-sonar
+    chart: {{ template "swingletree.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: plugin-sonar
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: plugin-sonar
+        release: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: config
+          secret:
+            secretName: {{ .Release.Name }}-config
+        - name: appkey
+          secret:
+            secretName: {{ .Release.Name }}-config
+      {{ if .Values.imagePullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret }}
+      {{ end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.registry }}{{ .Values.images.plugin.sonar }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          env:
+            - name: LOG_LEVEL
+              value: {{ .Values.log.level }}
+          volumeMounts:
+            - name: config
+              mountPath: /opt/plugin-sonarqube/swingletree.conf.yaml
+              subPath: swingletree.conf.yaml
+              readOnly: true
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+{{- end }}

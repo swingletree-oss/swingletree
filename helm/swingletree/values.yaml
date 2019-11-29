@@ -1,80 +1,126 @@
-# Default values for swingletree.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+# Swingletree HELM configuration
+
+## ElasticSearch configuration (history not available if disabled)
+elastic:
+  enabled: false
+  node: http://localhost:9200
+  index: swingletree
+  auth: # elastic nodejs auth object
+    username:
+    password:
+    apiKey:
+
+## Redis configuration
+redis:
+  password: # set your database password with this value
+
+  # redis helm dependency configuration ---
+  enabled: true # enables the redis helm dependency chart
+  cluster:
+    enabled: false
+  fullnameOverride: swingletree-cache
+
+
+## GitHub configuration
+github:
+  app:
+    id: # The AppId of your GitHub app instance (not installation!)
+    page: # the GitHub App public page. Will be referenced in the Swingletree landing page.
+    keyfile: gh-app.pem # the key file of your GitHub App (you retrieve this from the App settings page)
+  base: https://api.github.com # Github Api base url
+  secret: # this is the webhook secret. You should set it.
+  debug: false # runs octokit in debug mode. Use this only for debug, since this can reveal secret tokens in the logs!
+
+## SonarQube configuration
+sonar:
+  base: # SonarQube base url
+  token: # SonarQube Server API token
+
+## Feature flags
+features:
+  dashboard: true # enable the deck dashboard
+  yoke: https://github.com/error418/yoke/releases # yoke download url
+
+## Swingletree core service configuration
+### deck configuration
+deck:
+  path: # set this to the reverse proxy path, if deck is running behind a path in a reverse proxy
+
+### gate configuration
+gate:
+  api:
+    token: # authentication secret for gate plugin endpoints. Set this.
+
+### scotty configuration
+scotty: # not needed yet :)
+
+
+## Plugin configuration
+plugins:
+  nebula:
+    enabled: true
+    context: gradle/nebula
+  zap:
+    enabled: true
+    context: security/zap
+  twistlock:
+    enabled: true
+    context: security/twistlock
+  sonar:
+    enabled: true
+    context: sonarqube
+
+# ingress configuration
+ingress:
+  enabled: true
+  deck:
+    path: /
+    hosts:
+      - swingletree.minikube
+  gate:
+    path: /
+    hosts:
+      - gate.swingletree.minikube
+
+  annotations:
+    # nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+
+  tls: []
+
+
+#######################################################################################
+# Advanced section
+#--------------------------------------------------------------------------------------
 
 replicaCount: 1
 
-image:
-  repository: werkbank/swingletree
-  tag: latest
-  pullPolicy: IfNotPresent
+# images to use for this deployment
+images:
+  deck: deck/deck:1.2.1
+  gate: gate/gate:1.2.1
+  scotty: scotty/scotty:1.0.4
+  plugin:
+    nebula: plugin-nebula/plugin-nebula:1.1.1
+    sonar: plugin-sonarqube/plugin-sonarqube:1.1.1
+    twistlock: plugin-twistlock/plugin-twistlock:1.1.1
+    zap: plugin-zap/plugin-zap:1.1.0
+pullPolicy: IfNotPresent
+registry: docker.pkg.github.com/swingletree-oss/
+#imagePullSecret: regcred
 
+# default service configuration
 service:
   type: ClusterIP
   port: 3000
 
 # github app key file content
-github_app_key: # set using `--set-file github_app_key=/path/to/file` when running helm
+github_app_key: # set using the bake.sh option --gh-keyfile
 
-swingletree: # swingletree configuration
-  port: 3000
-
-  # storage configuration
-  storage:
-    host: localhost # database host
-    # password is taken from redis.password
-
-  # GitHub specific configuration
-  github:
-    app:
-      id: # The AppId of your GitHub app instance (not installation!)
-      page: # the GitHub App public page. Will be referenced in the Swingletree landing page.
-      keyfile: gh-app.pem # the key file of your GitHub App (you retrieve this from the App settings page)
-    base: https://api.github.com # Github Api base url
-    secret: # this is the webhook secret. You should set it.
-    debug: false # runs octokit in debug mode. Use this only for debug, since this can reveal secret tokens in the logs!
-
-  # SonarQube specific configuration
-  sonar:
-    enabled: true
-    secret: # basic auth password protecting the webhook
-    base: # SonarQube base url
-    context: sonarqube # defines the check status name
-    token: # API token
-    debug: false # log SonarQube webhook event requests on debug level
-
-  # Zap specific configuration
-  zap:
-    enabled: false
-    secret: # basic auth password protecting the webhook
-    context: security/zap # defines the check status name
-    debug: false # log zap webhook event requests on debug level
-
-  # Twistlock specific configuration
-  twistlock:
-    enabled: false
-    secret: # basic auth password protecting the webhook
-    context: security/twistlock # defines the check status name
-    debug: false # log zap webhook event requests on debug level
-
-
-redis: # stable/redis
-  enabled: true
-  fullnameOverride: swingletree-cache
-  password: # set your database password with this value
-
-ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  path: /
-  hosts:
-    - chart-example.local
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+# log level of all swingletree pods
+log:
+  level: info
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
