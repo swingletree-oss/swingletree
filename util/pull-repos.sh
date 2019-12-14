@@ -10,10 +10,16 @@ COMPONENTS=(
   plugin-sonarqube
   plugin-twistlock
   plugin-zap
+  harness
+  yoke
 )
 
 GIT_BASE="swingletree-oss"
 
 for repo in "${COMPONENTS[@]}"; do
-  git -C $BASEDIR/../../$repo pull
+  if [ -e $BASEDIR/../../$repo ]; then
+    git -C $BASEDIR/../../$repo pull
+  else
+    echo "> skipping $repo (repository not present on file system)"
+  fi
 done
