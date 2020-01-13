@@ -1,7 +1,11 @@
 # Swingletree
 
-Swingletree gives you the possibility to integrate a variety of software quality tools into GitHub to secure the quality of your software.
+Swingletree enables you to integrate a variety of software quality tools into GitHub to secure the quality of your software.
+
+This repository is used to store management utilites and organize issues of Swingletree. Repositories of the Swingletree components are located in the [Swingletree GitHub Organization][organization].
 
 Take a look at our [GitHub Page][swingletree] for more information (and the Swingletree documentation).
 
+
 [swingletree]: https://swingletree-oss.github.io/swingletree/
+[organization]: https://github.com/swingletree-oss
