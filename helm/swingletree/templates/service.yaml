@@ -143,7 +143,7 @@ spec:
 
 {{- end }}
 
-{{ if .Values.plugins.zap.enabled -}}
+{{ if .Values.plugins.sonar.enabled -}}
 
 ---
 
