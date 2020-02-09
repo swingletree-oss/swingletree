@@ -93,3 +93,13 @@ services:
       context: ../plugin-zap/
     expose:
       - "3040"
+
+  plugin-testng:
+    container_name: plugin-testng
+    environment:
+      TESTNG_PORT: 3050
+      LOG_LEVEL: info
+    build:
+      context: ../plugin-testng/
+    expose:
+      - "3050"
