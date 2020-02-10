@@ -10,8 +10,9 @@ Swingletree is a composite of services. It is recommended to use the helm chart 
 
 ### Swingletree Configuration
 
-1. Configure your values in [values.yaml][helm-values]. You will find comments describing the values in the file.
-2. Bake your manifest using `helm/bake.sh`
+1. Clone the [Swingletree Management Repository](https://github.com/swingletree-oss/swingletree)
+2. Configure your values in [helm/swingletree/values.yaml][helm-values]. You will find comments describing the values in the file.
+3. Bake your manifest using `helm/bake.sh`
 
 ### Deployment
 
