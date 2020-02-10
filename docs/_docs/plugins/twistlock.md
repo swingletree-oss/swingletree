@@ -17,7 +17,7 @@ Processed data is persisted to ElasticSearch (if enabled) and can be processed t
 ## Sending a scan report to Swingletree
 
 <div class="well well-sm">
-  Yoke CLI can be used to send a Twistlock scan report. See the docs to learn how to send reports with ease.
+  Yoke CLI can be used to send a Twistlock scan report. See the docs covering yoke to learn how to send reports with ease.
 </div>
 
 A Swingletree webhook is published when the Twistlock Plugin is enabled.
