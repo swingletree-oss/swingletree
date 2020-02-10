@@ -1,0 +1,1 @@
+git commit -m "feat($1): update to \`$3\` [changes](https://github.com/swingletree-oss/$1/compare/v$2...v$3)"
