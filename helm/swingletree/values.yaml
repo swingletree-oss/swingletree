@@ -103,7 +103,7 @@ replicaCount: 1
 images:
   deck: deck/deck:1.3.0
   gate: gate/gate:1.3.0
-  scotty: scotty/scotty:1.0.4
+  scotty: scotty/scotty:1.0.5
   plugin:
     nebula: plugin-nebula/plugin-nebula:1.1.1
     sonar: plugin-sonarqube/plugin-sonarqube:1.1.1
