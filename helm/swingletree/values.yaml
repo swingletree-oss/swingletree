@@ -108,7 +108,7 @@ images:
     nebula: plugin-nebula/plugin-nebula:1.1.2
     sonar: plugin-sonarqube/plugin-sonarqube:1.1.2
     twistlock: plugin-twistlock/plugin-twistlock:1.1.2
-    zap: plugin-zap/plugin-zap:1.1.0
+    zap: plugin-zap/plugin-zap:1.1.2
 pullPolicy: IfNotPresent
 registry: docker.pkg.github.com/swingletree-oss/
 #imagePullSecret: regcred
