@@ -106,7 +106,7 @@ images:
   scotty: scotty/scotty:1.0.5
   plugin:
     nebula: plugin-nebula/plugin-nebula:1.1.2
-    sonar: plugin-sonarqube/plugin-sonarqube:1.1.1
+    sonar: plugin-sonarqube/plugin-sonarqube:1.1.2
     twistlock: plugin-twistlock/plugin-twistlock:1.1.1
     zap: plugin-zap/plugin-zap:1.1.0
 pullPolicy: IfNotPresent
