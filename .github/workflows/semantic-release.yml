@@ -6,11 +6,21 @@ on:
     - "master"
 
 jobs:
+  helm:
+    runs-on: alpine/helm:2.16.1
+    steps:
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '13.x'
+    - name: retrieve dependencies
+      run: helm dependency update helm/swingletree
+    - name: package chart
+      run: helm package helm/swingletree
+
   release:
     container:
-      image: node:10-alpine
+      image: node:13-alpine
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v1
     - name: Install Git

@@ -2,3 +2,17 @@ branch: "master"
 noCI: true
 dryRun: false
 npmPublish: false
+plugins:
+- "@semantic-release/commit-analyzer"
+- "@semantic-release/release-notes-generator"
+- ["@semantic-release/exec", {
+    "publishCmd": "./.release.sh ${nextRelease.version}"
+  }]
+- [ "@semantic-release/github", {
+      "assets": [
+        {
+          "path": "helm/dist/swingletree-*.tgz",
+          "label": "helm chart"
+        }
+      ]
+  ]
