@@ -24,6 +24,8 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@semantic-release/exec": "^5.0.0",
+    "@semantic-release/github": "^7.0.3",
     "semantic-release": "^15.13.30"
   },
   "license": "GPL-3.0",
