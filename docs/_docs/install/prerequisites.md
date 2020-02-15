@@ -23,4 +23,4 @@ If you intend to use ElasticSearch to store your analysis reports you will need
 * Zap Plugin
   * *No dependencies*
 * Twistlock Plugin
-  * *No dependencies* 
+  * *No dependencies*
