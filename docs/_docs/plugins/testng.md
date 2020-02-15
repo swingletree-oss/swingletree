@@ -4,7 +4,7 @@ permalink: /docs/plugins/testng/
 redirect_from: /docs/index.html
 ---
 
-TestNG is a testing framework.
+[TestNG](https://testng.org/doc/) is a testing framework. Test results can be aggregated to a xml report, which this plugin is able to read.
 
 ## Features
 
