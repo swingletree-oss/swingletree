@@ -4,7 +4,7 @@ remote_theme: error418/jekyll-doc-theme
 title: Swingletree
 email: 
 description:  >-
-  Simplify your build feedback
+  Swingletree is a GitHub App enabling you to integrate and observe the results of your CI/CD pipeline tools
 lang: de-DE
 
 logo: assets/images/icon.svg
@@ -88,3 +88,6 @@ collections:
 #  posts:
 #    permalink: /blog/:year/:month/:day/:title/
 #    output: true
+
+twitter:
+  username: swingletree-oss
