@@ -17,7 +17,7 @@ function currentRelease {
 }
 
 function upgrade {
-  sed -ir 's/^(\s*version:\s*)([[:digit:]]+\.?)+(\s*#'$1'_VERSION)$/\1'$2'\3/gm' $BASEDIR/../helm/swingletree/values.yaml
+  sed -i -r 's/^(\s*version:\s*)([[:digit:]]+\.?)+(\s*#'$1'_VERSION)$/\1'$2'\3/gm' $BASEDIR/../helm/swingletree/values.yaml
 }
 
 COMPONENTS=(
@@ -39,6 +39,6 @@ for repo in "${COMPONENTS[@]}"; do
   else
     printf " UPGRADE  %-20s %-10s -> %-10s needs upgrade\n" $repo $CURRENT $LATEST
     upgrade $repo $LATEST
-    #addCommit $repo $CURRENT $LATEST
+    addCommit $repo $CURRENT $LATEST
   fi
 done
