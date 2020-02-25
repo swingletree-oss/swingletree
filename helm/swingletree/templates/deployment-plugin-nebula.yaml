@@ -33,7 +33,7 @@ spec:
       {{ end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.registry }}{{ .Values.images.plugin.nebula }}"
+          image: "{{ .Values.registry }}{{ .Values.images.plugin-nebula.repo }}:{{ .Values.images.plugin-nebula.version }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
             - name: LOG_LEVEL

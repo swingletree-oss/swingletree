@@ -32,7 +32,7 @@ spec:
       {{ end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.registry }}{{ .Values.images.gate }}"
+          image: "{{ .Values.registry }}{{ .Values.images.gate.repo }}:{{ .Values.images.gate.version }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
             - name: LOG_LEVEL
