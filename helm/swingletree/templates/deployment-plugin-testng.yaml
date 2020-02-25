@@ -33,7 +33,7 @@ spec:
       {{ end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.registry }}{{ .Values.images.plugin.testng }}"
+          image: "{{ .Values.registry }}{{ .Values.images.plugin-testng.repo }}:{{ .Values.images.plugin-testng.version }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
             - name: LOG_LEVEL

@@ -33,7 +33,7 @@ spec:
       {{ end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.registry }}{{ .Values.images.plugin.sonar }}"
+          image: "{{ .Values.registry }}{{ .Values.images.plugin-sonarqube.repo }}:{{ .Values.images.plugin-sonarqube.version }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
             - name: LOG_LEVEL

@@ -33,7 +33,7 @@ spec:
       {{ end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.registry }}{{ .Values.images.plugin.twistlock }}"
+          image: "{{ .Values.registry }}{{ .Values.images.plugin-twistlock.repo }}:{{ .Values.images.plugin-twistlock.version }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
             - name: LOG_LEVEL

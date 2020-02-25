@@ -32,7 +32,7 @@ spec:
       {{ end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.registry }}{{ .Values.images.scotty }}"
+          image: "{{ .Values.registry }}{{ .Values.images.scotty.repo }}:{{ .Values.images.scotty.version }}"
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
             - name: LOG_LEVEL
