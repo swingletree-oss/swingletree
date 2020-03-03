@@ -33,9 +33,9 @@ Swingletree will process the report and send a Check Run Status with the context
 
 ## Repository-specific Configuration
 
-Repository-specific behaviour can be configured by placing a `.swingletree.yaml` in the repository root directory. Swingletree reads from the master branch file only.
+Repository-specific behaviour can be configured by placing a `.swingletree.yml` in the repository root directory. Swingletree reads from the master branch file only.
 
-Swingletree fails on any findings, if no `.swingletree.yaml` is available in the repository.
+Swingletree fails on any findings, if no `.swingletree.yml` is available in the repository.
 
 ```yaml
 plugin:
