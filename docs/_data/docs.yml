@@ -1,6 +1,7 @@
 - title: General
   docs:
   - home
+  - dashboards
   - yoke-cli
 
 - title: Installation

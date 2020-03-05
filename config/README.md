@@ -1,0 +1,1 @@
+This directory contains extra configuration files for auxiliary software.
