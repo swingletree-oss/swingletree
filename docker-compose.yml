@@ -1,6 +1,9 @@
 version: "3.3"
 
 services:
+
+# --- CORE SERVICES
+
   deck:
     container_name: deck
     env_file:
@@ -19,6 +22,8 @@ services:
       SCOTTY_PORT: 3000
       SCOTTY_STORAGE_HOST: redis
       SCOTTY_GITHUB_APP_ID: ${GH_APPID}
+      LOG_LEVEL: info
+      SCOTTY_GITHUB_DEBUG: "false"
     build:
       context: ../scotty/
     volumes:
@@ -43,7 +48,69 @@ services:
       driver: none
     expose:
       - "6379"
-  
+
+
+# --- PLUGIN SERVICES
+
+  plugin-nebula:
+    container_name: plugin-nebula
+    env_file: 
+      - ./compose.env
+    environment:
+      NEBULA_PORT: 3010
+    build:
+      context: ../plugin-nebula/
+    expose:
+      - "3010"
+
+  plugin-sonarqube:
+    container_name: plugin-sonarqube
+    env_file: 
+      - ./compose.env
+    environment:
+      SONAR_PORT: 3020
+      LOG_LEVEL: info
+    build:
+      context: ../plugin-sonarqube/
+    expose:
+      - "3020"
+
+  plugin-twistlock:
+    container_name: plugin-twistlock
+    env_file: 
+      - ./compose.env
+    environment:
+      TWISTLOCK_PORT: 3030
+    build:
+      context: ../plugin-twistlock/
+    expose:
+      - "3030"
+
+  plugin-zap:
+    container_name: plugin-zap
+    env_file: 
+      - ./compose.env
+    environment:
+      ZAP_PORT: 3040
+    build:
+      context: ../plugin-zap/
+    expose:
+      - "3040"
+
+  plugin-testng:
+    container_name: plugin-testng
+    env_file: 
+      - ./compose.env
+    environment:
+      TESTNG_PORT: 3050
+    build:
+      context: ../plugin-testng/
+    expose:
+      - "3050"
+
+
+# --- AUXILIARY COMPONENTS
+
   elastic:
     container_name: elastic
     image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
@@ -57,9 +124,21 @@ services:
       - "9200"
       - "9300"
 
+  sonarqube:
+    container_name: sonarqube
+    image: sonarqube:8.2-community
+    logging:
+      driver: none
+    ports:
+      - "9010:9000"
+    expose:
+      - "9000"
+
   kibana:
     container_name: kibana
     image: docker.elastic.co/kibana/kibana:7.3.1
+    logging:
+      driver: none
     environment:
       ELASTICSEARCH_HOSTS: http://elastic:9200
     ports:
@@ -76,49 +155,3 @@ services:
       - "9000:3000"
     expose:
       - "9000"
-
-  plugin-nebula:
-    container_name: plugin-nebula
-    environment:
-      NEBULA_PORT: 3010
-    build:
-      context: ../plugin-nebula/
-    expose:
-      - "3010"
-
-  plugin-sonarqube:
-    container_name: plugin-sonarqube
-    environment:
-      SONAR_PORT: 3020
-    build:
-      context: ../plugin-sonarqube/
-    expose:
-      - "3020"
-
-  plugin-twistlock:
-    container_name: plugin-twistlock
-    environment:
-      TWISTLOCK_PORT: 3030
-    build:
-      context: ../plugin-twistlock/
-    expose:
-      - "3030"
-
-  plugin-zap:
-    container_name: plugin-zap
-    environment:
-      ZAP_PORT: 3040
-    build:
-      context: ../plugin-zap/
-    expose:
-      - "3040"
-
-  plugin-testng:
-    container_name: plugin-testng
-    environment:
-      TESTNG_PORT: 3050
-      LOG_LEVEL: info
-    build:
-      context: ../plugin-testng/
-    expose:
-      - "3050"
