@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e pipefail
+
 BASEDIR=$(dirname "$0")
 
 VALUES_YAML=$BASEDIR/../helm/swingletree/values.yaml
@@ -17,7 +19,7 @@ function latestRelease {
 }
 
 function currentRelease {
-  yq -r '.images["'$1'"].version' $BASEDIR/../helm/swingletree/values.yaml
+  yq r $BASEDIR/../helm/swingletree/values.yaml '.images["'$1'"].version'
 }
 
 function upgrade {
