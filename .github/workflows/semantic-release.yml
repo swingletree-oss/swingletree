@@ -9,7 +9,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     container:
-      image: alpine/helm:2.16.1
+      image: alpine/helm:3.1.1
     steps:
     - uses: actions/checkout@v1
     - name: Install Git
