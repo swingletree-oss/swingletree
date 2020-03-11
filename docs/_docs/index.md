@@ -31,17 +31,25 @@ Yoke simpifies collecting and sending reports to Swingletree. It can be used to 
     
     gh(GitHub)
     elastic(ElasticSearch)
-    swing[Swingletree]
+
+    subgraph Swingletree
+      gate
+      plugin
+      scotty
+    end
     
     A --collect--> yoke
     B --collect--> yoke
     C --collect--> yoke
     
-    yoke --report--> swing
-    tool --report--> swing
+    yoke --report--> gate
+    tool --report--> gate
     
-    swing --> gh
-    swing --> elastic
+    gate --routes--> plugin
+    plugin --> scotty
+
+    scotty --> gh
+    scotty --> elastic
 </div>
 
 Swingletree processes the reports and attaches the information to the commits in GitHub. It also persists the report data
