@@ -124,7 +124,7 @@ images:
     version: 1.1.2                 #plugin-zap_VERSION
   plugin-testng:
     repo: plugin-testng/plugin-testng
-    version: 1.0.0                 #plugin-testng_VERSION
+    version: 1.1.0                 #plugin-testng_VERSION
 pullPolicy: IfNotPresent
 registry: docker.pkg.github.com/swingletree-oss/
 #imagePullSecret: regcred
