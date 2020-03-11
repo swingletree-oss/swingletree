@@ -19,7 +19,7 @@ If you intend to use ElasticSearch to store your analysis reports you will need
 
 * SonarQube Plugin
   * Sonarqube Developer Edition (minimum)
-  * Version 7.x (tested with 7.6)
+  * Version 8.x (tested with 7.6 and 8.2)
 * Zap Plugin
   * *No dependencies*
 * Twistlock Plugin
