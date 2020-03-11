@@ -19,7 +19,7 @@ function latestRelease {
 }
 
 function currentRelease {
-  yq r $BASEDIR/../helm/swingletree/values.yaml '.images["'$1'"].version'
+  yq r $BASEDIR/../helm/swingletree/values.yaml "images.$1.version"
 }
 
 function upgrade {
