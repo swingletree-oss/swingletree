@@ -2,9 +2,13 @@
 
 BASEDIR=$(dirname "$0")
 
+VALUES_YAML=$BASEDIR/../helm/swingletree/values.yaml
+
 function addCommit {
   CMESSAGE="feat($1): update component from \`$2\` to \`$3\` [view changes](https://github.com/swingletree-oss/$1/compare/v$2...v$3)"
   echo " > adding commit:   $CMESSAGE"
+
+  git add $VALUES_YAML
   git commit -m "$CMESSAGE"
 }
 
@@ -17,7 +21,7 @@ function currentRelease {
 }
 
 function upgrade {
-  sed -i -r 's/^(\s*version:\s*)([[:digit:]]+\.?)+(\s*#'$1'_VERSION)$/\1'$2'\3/gm' $BASEDIR/../helm/swingletree/values.yaml
+  sed -i -r 's/^(\s*version:\s*)([[:digit:]]+\.?)+(\s*#'$1'_VERSION)$/\1'$2'\3/gm' $VALUES_YAML
 }
 
 COMPONENTS=(
