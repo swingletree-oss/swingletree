@@ -10,4 +10,4 @@ Deck provides the web-interface of Swingletree.
 
 Swingletree UI offers you the `Builds` menu option, which enables you to search and view the details of the latest analysis reports.
 
-<img class="showcase" style="max-width:95%" src="../../../assets/images/analysis-report-detail.png" />
+<img class="showcase" style="max-width:95%" src="../../../assets/images/build-overview.png" />
