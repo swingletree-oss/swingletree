@@ -109,6 +109,13 @@ ingress:
 
 replicaCount: 1
 
+# Custom CA to trust
+certificates:
+  ca:
+    enabled: false # use custom CA
+    value: # CA certificate contents (use bake.sh option --custom-ca-file to set this on bake)
+
+
 # images to use for this deployment
 images:
   deck:
@@ -137,6 +144,8 @@ images:
     version: 1.1.0                 #plugin-testng_VERSION
 pullPolicy: IfNotPresent
 registry: docker.pkg.github.com/swingletree-oss/
+
+# configure your image pull secret if you need to pull from a private registry
 #imagePullSecret: regcred
 
 # default service configuration
