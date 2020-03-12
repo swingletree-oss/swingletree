@@ -23,13 +23,10 @@ spec:
         - name: config
           secret:
             secretName: swingletree-config
-        - name: appkey
-          secret:
-            secretName: swingletree-config
-      {{ if .Values.imagePullSecret }}
+      {{- if .Values.imagePullSecret }}
       imagePullSecrets:
         - name: {{ .Values.imagePullSecret }}
-      {{ end }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.registry }}{{ .Values.images.scotty.repo }}:{{ .Values.images.scotty.version }}"
@@ -37,12 +34,22 @@ spec:
           env:
             - name: LOG_LEVEL
               value: {{ .Values.log.level }}
+            {{- if .Values.certificates.ca.enabled }}
+            - name: NODE_EXTRA_CA_CERTS
+              value: /opt/cert/ca.pem
+            {{- end }}
           volumeMounts:
             - name: config
               mountPath: /opt/scotty/swingletree.conf.yaml
               subPath: swingletree.conf.yaml
               readOnly: true
-            - name: appkey
+            {{- if .Values.certificates.ca.enabled }}
+            - name: config
+              mountPath: /opt/cert/ca.pem
+              subPath: ca
+              readOnly: true
+            {{- end }}
+            - name: config
               mountPath: /opt/scotty/gh-app.pem
               subPath: gh-app.pem
           ports:

@@ -16,6 +16,7 @@ Swingletree HELM template bake utility
    --gh-keyfile         Path to the GitHub App private key file
    --gh-appid           GitHub App Id
    --redis-password     Ask for redis password and set it. Omitting this will generate a password.
+   --custom-ca-file     Set custom CA to trust in containers
 
    -n | --namespace     Sets the k8s target namespace
 
@@ -25,7 +26,7 @@ Swingletree HELM template bake utility
 
 """
 
-TEMP=`getopt -o h,k,n: --long namespace:,gh-appid:,redis-password,configure,skip-update,gh-keyfile:,help -- "$@"`
+TEMP=`getopt -o h,k,n: --long namespace:,gh-appid:,custom-ca-file:,redis-password,configure,skip-update,gh-keyfile:,help -- "$@"`
 
 function printHelp {
   echo "$HELP"  
@@ -40,12 +41,21 @@ function applyTemplate {
     echo
   fi
   echo " > baking your manifest into $TARGET"
+  
+  EXTRA_PROPS=
+  if [ -z $CUSTOM_CA_FILE ]; then
+    echo " > skipping custom CA file import"
+  else
+    echo " > adding custom CA to deployment"
+    EXTRA_PROPS="--set-file certificates.ca.value=$CUSTOM_CA_FILE --set certificates.ca.enabled=true"
+  fi
+
   helm template $BASEDIR/swingletree \
     -n $NAMESPACE \
     --set github.app.id=$GITHUB_APPID \
     --set redis.password=$REDIS_PASS \
     --set-file github_app_key=$GITHUB_KEYFILE \
-    > $TARGET
+    $EXTRA_PROPS > $TARGET
 }
 
 if [ $? != 0 ] ; then echo "missing arguments. terminating..." >&2 ; exit 1 ; fi
@@ -57,6 +67,7 @@ GITHUB_APPID=
 NAMESPACE=default
 SKIP_UPDATE=0
 REDIS_PASS=$(pwgen 20 1)
+CUSTOM_CA_FILE=
 
 TARGET=$BASEDIR/swingletree-bake.yml
 
@@ -65,6 +76,7 @@ while true; do
     --gh-keyfile ) GITHUB_KEYFILE="$2"; shift 2 ;;
     --gh-appid ) GITHUB_APPID="$2"; shift 2 ;;
     -n | --namespace ) NAMESPACE="$2"; shift 2 ;;
+    --custom-ca-file ) CUSTOM_CA_FILE="$2"; shift 2 ;;
     --configure ) vi $VALUES_CONFIG; exit $?; shift ;;
     -k | --skip-update ) SKIP_UPDATE=1; shift ;;
     --redis-password ) REDIS_PASS=$(read -sp " > set redis password: "); shift ;;
