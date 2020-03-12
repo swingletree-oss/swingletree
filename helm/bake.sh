@@ -57,7 +57,6 @@ GITHUB_APPID=
 NAMESPACE=default
 SKIP_UPDATE=0
 REDIS_PASS=$(pwgen 20 1)
-echo $REDIS_PASS
 
 TARGET=$BASEDIR/swingletree-bake.yml
 
