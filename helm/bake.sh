@@ -105,6 +105,6 @@ echo
 echo "============================================================"
 echo " Your manifest is ready for deployment. Deploy it using:"
 echo
-echo " kubectl apply -f $TARGET"
+echo " kubectl apply --namespace $NAMESPACE -f $TARGET"
 echo "============================================================"
 echo

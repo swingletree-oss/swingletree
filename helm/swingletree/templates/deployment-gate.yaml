@@ -22,10 +22,10 @@ spec:
       volumes:
         - name: config
           secret:
-            secretName: {{ .Release.Name }}-config
+            secretName: swingletree-config
         - name: appkey
           secret:
-            secretName: {{ .Release.Name }}-config
+            secretName: swingletree-config
       {{ if .Values.imagePullSecret }}
       imagePullSecrets:
         - name: {{ .Values.imagePullSecret }}
