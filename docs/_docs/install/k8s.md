@@ -20,7 +20,7 @@ You will need [helm](https://helm.sh/) to bake your Swingletree deployment manif
 
 #### Custom CA
 
-`bake.sh` provides an option to add a certificate authority (CA). The services of swingletree will trust the given CA when provided.
+`bake.sh` provides an option to add a certificate authority (CA). The services of Swingletree will trust the given CA when provided.
 
 #### Private Registries
 
