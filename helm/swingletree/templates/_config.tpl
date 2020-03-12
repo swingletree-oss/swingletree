@@ -11,6 +11,8 @@ deck:
 gate: 
   api:
     token: {{ .Values.gate.api.token }}
+  github:
+{{ toYaml .Values.github | indent 4 }}
   plugins:
     {{- range $pluginId, $pluginConfig := .Values.plugins }}
     {{ $pluginId }}:
