@@ -19,6 +19,16 @@ redis:
   cluster:
     enabled: false
   fullnameOverride: swingletree-cache
+  image:
+    registry: docker.io
+  persistence:
+    enabled: false
+  master:
+    persistence:
+      enabled: false
+  slave:
+    persistence:
+      enabled: false
 
 
 ## GitHub configuration
