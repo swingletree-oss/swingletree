@@ -6,7 +6,7 @@ deck:
   features:
 {{ toYaml .Values.features | indent 4 }}
   github:
-    page: {{ .Values.github.page }}
+    page: {{ .Values.github.app.page }}
   port: 3000
 gate: 
   api:
