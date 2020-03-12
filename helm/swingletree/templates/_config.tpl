@@ -52,8 +52,14 @@ twistlock:
 {{ if .Values.plugins.sonar.enabled -}}
 sonar:
   base: {{ .Values.sonar.base }}
-  context: {{ .Values.sonar.context }}
-  token: {{ .Values.plugins.sonar.token }}
+  context: {{ .Values.plugins.sonar.context }}
+  token: {{ .Values.sonar.token }}
+  urls:
+    scotty: "http://swing-scotty.{{ .Release.Namespace }}:3000"
+  port: 3000
+{{- end }}
+{{ if .Values.plugins.testng.enabled -}}
+testng:
   urls:
     scotty: "http://swing-scotty.{{ .Release.Namespace }}:3000"
   port: 3000
