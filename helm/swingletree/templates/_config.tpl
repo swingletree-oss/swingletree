@@ -7,6 +7,18 @@ deck:
 {{ toYaml .Values.features | indent 4 }}
   github:
     page: {{ .Values.github.app.page }}
+  cookies:
+{{ toYaml .Values.cookies | indent 4 }}
+  auth:
+    jwt:
+      secret: {{ .Values.jwt.secret }}
+    github:
+      clientID: {{ .Values.github.clientID }}
+      clientSecret: {{ .Values.github.clientSecret }}
+      authorizationURL: {{ .Values.github.authorizationURL }}
+      tokenURL: {{ .Values.github.tokenURL }}
+      userProfileURL: {{ .Values.github.userProfileURL }}
+      callbackURL: {{ .Values.github.callbackURL }}
   port: 3000
 gate: 
   api:

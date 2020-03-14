@@ -30,6 +30,13 @@ redis:
     persistence:
       enabled: false
 
+# cookie settings
+cookies:
+  secure: true # use secure cookies (https on ingress required)
+
+# jwt settings used by deck
+jwt:
+  secret: # if you do not set this a random secret will be generated on startup of deck (not compatible when running more than one deck instance)
 
 ## GitHub configuration
 github:
@@ -38,7 +45,13 @@ github:
     page: # the GitHub App public page. Will be referenced in the Swingletree landing page.
     keyfile: gh-app.pem # the key file of your GitHub App (you retrieve this from the App settings page)
   base: https://api.github.com # Github Api base url
-  secret: # this is the webhook secret. You should set it.
+  secret: # this is the github app webhook secret. You should set it
+  clientID: # client id of the github app
+  clientSecret: # client secret of the github app
+  authorizationURL: https://github.com/login/oauth/authorize # adjust this, if you are running GitHub Enterprise
+  tokenURL: https://github.com/login/oauth/access_token # adjust this, if you are running GitHub Enterprise
+  userProfileURL: https://api.github.com/user # adjust this, if you are running GitHub Enterprise
+  callbackURL: http://localhost:3020/auth/github/callback # adjust this, if you are running GitHub Enterprise
   debug: false # runs octokit in debug mode. Use this only for debug, since this can reveal secret tokens in the logs!
 
 ## SonarQube configuration
@@ -48,7 +61,7 @@ sonar:
 
 ## Feature flags
 features:
-  dashboard: true # enable the deck dashboard
+  login: true # enable authentication via github for deck
   yoke: https://github.com/error418/yoke/releases # yoke download url
 
 ## Swingletree core service configuration
@@ -59,11 +72,14 @@ deck:
 ### gate configuration
 gate:
   api:
-    token: # authentication secret for gate plugin endpoints. Set this.
+    token: # authentication secret for gate plugin endpoints. Set this to a value.
 
 ### scotty configuration
 scotty: # not needed yet :)
 
+
+# github app key file content
+github_app_key: # set using the bake.sh option --gh-keyfile or via --set-file when using HELM
 
 ## Plugin configuration
 plugins:
@@ -152,9 +168,6 @@ registry: docker.pkg.github.com/swingletree-oss/
 service:
   type: ClusterIP
   port: 3000
-
-# github app key file content
-github_app_key: # set using the bake.sh option --gh-keyfile
 
 # log level of all swingletree pods
 log:
