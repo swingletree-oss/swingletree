@@ -86,18 +86,23 @@ plugins:
   nebula:
     enabled: true
     context: gradle/nebula
+    insecure: false # disable authentication for this plugin endpoint
   zap:
     enabled: true
     context: security/zap
+    insecure: false # disable authentication for this plugin endpoint
   twistlock:
     enabled: true
     context: security/twistlock
+    insecure: false # disable authentication for this plugin endpoint
   sonar:
     enabled: true
     context: sonarqube
+    insecure: false # disable authentication for this plugin endpoint
   testng:
     enabled: true
     context: test/testng
+    insecure: false # disable authentication for this plugin endpoint
 
 # ingress configuration
 ingress:

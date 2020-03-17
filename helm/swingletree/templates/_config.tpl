@@ -30,6 +30,7 @@ gate:
     {{ $pluginId }}:
       enabled: {{ $pluginConfig.enabled }}
       base: "http://plugin-{{ $pluginId }}.{{ $.Release.Namespace }}:3000"
+      insecure: {{ $pluginConfig.insecure }}
     {{- end }}
   port: 3000
 scotty:
