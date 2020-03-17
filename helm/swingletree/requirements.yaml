@@ -1,5 +1,5 @@
 dependencies:
   - name: redis
     version: 9.5.2
-    repository: https://kubernetes-charts.storage.googleapis.com/
+    repository: https://kubernetes-charts.storage.googleapis.com/ # specify your HELM proxy, if you do not have direct access to the public chart storage (mostly in enterprise environments)
     condition: redis.enabled

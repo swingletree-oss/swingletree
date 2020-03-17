@@ -20,7 +20,7 @@ redis:
     enabled: false
   fullnameOverride: swingletree-cache
   image:
-    registry: docker.io
+    registry: docker.io # set this to your procy registry, if you have no direct access to GitHub Package Registry (mosty in enterprise environments)
   persistence:
     enabled: false
   master:
@@ -62,7 +62,7 @@ sonar:
 ## Feature flags
 features:
   login: true # enable authentication via github for deck
-  yoke: https://github.com/error418/yoke/releases # yoke download url
+  yoke: https://github.com/swingletree-oss/yoke/releases # yoke download url
 
 ## Swingletree core service configuration
 ### deck configuration
@@ -164,7 +164,7 @@ images:
     repo: plugin-testng/plugin-testng
     version: 1.1.0                 #plugin-testng_VERSION
 pullPolicy: IfNotPresent
-registry: docker.pkg.github.com/swingletree-oss/
+registry: docker.pkg.github.com/swingletree-oss/ # set this to your procy registry, if you have no direct access to GitHub Package Registry (mosty in enterprise environments)
 
 # configure your image pull secret if you need to pull from a private registry
 #imagePullSecret: regcred
