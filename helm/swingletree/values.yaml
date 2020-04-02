@@ -144,7 +144,7 @@ images:
     version: 1.4.5                 #deck_VERSION
   gate:
     repo: gate/gate
-    version: 1.4.0                 #gate_VERSION
+    version: 1.4.1                 #gate_VERSION
   scotty:
     repo: scotty/scotty
     version: 1.1.1                 #scotty_VERSION
