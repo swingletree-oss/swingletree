@@ -156,7 +156,7 @@ images:
     version: 1.1.5                 #plugin-sonarqube_VERSION
   plugin-twistlock:
     repo: plugin-twistlock/plugin-twistlock
-    version: 1.1.2                 #plugin-twistlock_VERSION
+    version: 1.1.3                 #plugin-twistlock_VERSION
   plugin-zap:
     repo: plugin-zap/plugin-zap
     version: 1.1.2                 #plugin-zap_VERSION
