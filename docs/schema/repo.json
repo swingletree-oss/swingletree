@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://swingletree.github.io/swingletree/schema/repo",
+
+  "definitions": {
+    "pluginReport": {
+      "type": "object",
+      "required": [ "plugin", "report" ],
+      "properties": {
+        "plugin": {
+          "type": "string",
+          "title": "Plugin to handle the report",
+          "examples": [ "testng", "zap", "twistlock", "nebula" ]
+        },
+        "contenttype": {
+          "type": "string",
+          "title": "MIME Content type of the report",
+          "examples": [ "application/json" ]
+        },
+        "report": {
+          "type": "string",
+          "title": "Path to the report",
+          "examples": [ "path/to/your/report" ]
+        }
+      }
+    }
+  },
+
+  "title": "Swingletree Repository Config Schema",
+  "type": "object",
+  "additionalItems": true,
+  "properties": {
+    "yoke": {
+      "title": "Yoke CLI configuration",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/pluginReport"
+      }
+    },
+    "plugin": {
+      "title": "Additional plugin configuration",
+      "type": "object",
+      "additionalItems": true
+    }
+  }
+}
