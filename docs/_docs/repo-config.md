@@ -1,6 +1,6 @@
 ---
 title: Repository Config
-permalink: /docs/repoconf/
+permalink: /docs/repo-config/
 redirect_from: /docs/index.html
 mermaid: false
 ---
