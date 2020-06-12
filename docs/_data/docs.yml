@@ -3,6 +3,7 @@
   - home
   - dashboards
   - yoke-cli
+  - repo-config
 
 - title: Installation
   docs:
