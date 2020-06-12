@@ -20,7 +20,7 @@ In case you want to run your own Swingletree you will need to create a GitHub Ap
 When creating your GitHub App you will need to specify the permissions required by the App. If the permissions are not granted, Swingletree will not be able to operate properly.
 
 * Read and Write access are required for `Checks`
-* Read access is required for `Contents`
+* Read access is required for `Single File`, set `Path` to `.swingletree.yml`
 
 #### GitHub App Private Key
 
