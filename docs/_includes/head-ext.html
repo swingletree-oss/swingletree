@@ -4,5 +4,16 @@
 
 {% if page.mermaid==true -%}
   <script src="https://unpkg.com/mermaid@8.5.2/dist/mermaid.min.js" integrity="sha384-dV0RNdYNgPqjamYrB83Q21NNeuYk1jpKyUBkKQrT+c7krNFk4k39ktYZV4mOdMV1" crossorigin="anonymous"></script>
-  <script>mermaid.initialize({startOnLoad:true,theme:"neutral"});</script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      mermaid.initialize({
+        startOnLoad:true,
+        theme:"neutral",
+        flowchart:{
+          useMaxWidth:false,
+          htmlLabels:false
+        }
+      });
+    }, false);
+  </script>
 {%- endif %}
