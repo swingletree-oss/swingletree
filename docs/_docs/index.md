@@ -25,10 +25,10 @@ Yoke simpifies collecting and sending reports to Swingletree. It can be used to 
       A(Report A)
       B(Report B) 
       C(Report C)
-      tool(Tool A)
+      tool(CI/CD Tool)
       yoke[yoke cli]
     end
-    
+
     gh(GitHub)
     elastic(ElasticSearch)
 
@@ -38,9 +38,9 @@ Yoke simpifies collecting and sending reports to Swingletree. It can be used to 
       scotty
     end
     
-    A --collect--> yoke
-    B --collect--> yoke
-    C --collect--> yoke
+    yoke --collect--> A
+    yoke --collect--> B
+    yoke --collect--> C
     
     yoke --report--> gate
     tool --report--> gate
