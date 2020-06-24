@@ -15,7 +15,7 @@ git_address: https://github.com/swingletree-oss/swingletree
 git_edit_address: https://github.com/swingletree-oss/swingletree/blob/master/docs
 
 blog:
-  enable: false
+  enable: true
 
 css:
   extra:
@@ -85,9 +85,9 @@ collections:
   docs:
     permalink: /:collection/:path/
     output: true
-#  posts:
-#    permalink: /blog/:year/:month/:day/:title/
-#    output: true
+  posts:
+    permalink: /blog/:year/:month/:day/:title/
+    output: true
 
 twitter:
   username: swingletree-oss
