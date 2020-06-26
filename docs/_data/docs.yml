@@ -20,11 +20,12 @@
 
 - title: Plugins
   docs:
+  - plugins/junit
   - plugins/nebula
   - plugins/sonarqube
+  - plugins/testng
   - plugins/twistlock
   - plugins/zap
-  - plugins/testng
 
 - title: Extend Swingletree
   docs:

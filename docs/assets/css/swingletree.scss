@@ -25,9 +25,28 @@ body {
   font-size: .75em;
 }
 
+.mr-2 {
+  margin-right: 0.2em;
+}
+
 .obfuscate {
   unicode-bidi:bidi-override;
   direction: rtl;
+}
+
+.sponsorware-badge {
+  &::before {
+    content: "";
+    display:inline-block;
+    height:1.2em;
+    width:1.2em;
+    background-size: 1.2em 1.2em;
+    margin-right: 0.4em;
+    vertical-align: middle;
+    background-image: url("{{ 'assets/images/sponsorware.svg' | relative_url }}");
+    background-repeat: no-repeat;
+    
+  }
 }
 
 // Section Headings
