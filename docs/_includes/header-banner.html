@@ -15,6 +15,12 @@
             <li class="list-inline-item">
                 <a class="btn btn-primary" href="{{ "/docs/home/" | prepend: site.baseurl }}" role="button">Learn more</a>
             </li>
+
+{%- if site.sponsor -%}
+            <li class="list-inline-item">
+{%- include sponsor.html -%}
+            </li>
+{%- endif -%}
         </ul>
     </div>
 </div>

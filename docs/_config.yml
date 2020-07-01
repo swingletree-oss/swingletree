@@ -14,6 +14,8 @@ url: "https://swingletree-oss.github.io" # the base hostname & protocol for your
 git_address: https://github.com/swingletree-oss/swingletree
 git_edit_address: https://github.com/swingletree-oss/swingletree/blob/master/docs
 
+sponsor: error418
+
 blog:
   enable: true
 

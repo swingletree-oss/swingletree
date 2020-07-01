@@ -5,7 +5,7 @@ redirect_from: /docs/index.html
 ---
 
 <div class="well well-sm">
-  <span class="sponsorware-badge">This plugin is a <a href="{{ '/support.html' | relative_url }}">Sponsorware</a> feature</span>
+  <span class="sponsorware-badge">This plugin is a <a href="{{ '/support.html#sponsorware' | relative_url }}">Sponsorware</a> feature</span>
 </div>
 
 [JUnit](https://junit.org/) is a testing framework. Test results can be aggregated to a xml report, which this plugin is able to read.
