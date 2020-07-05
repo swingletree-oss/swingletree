@@ -2,14 +2,36 @@
 
 Swingletree enables you to integrate a variety of software quality tools into GitHub to secure the quality of your software.
 
+## Management Repository
+
 This repository is used to store management utilites and organize issues of Swingletree. Repositories of the Swingletree components are located in the [Swingletree GitHub Organization][organization].
 
 Take a look at our [GitHub Page][swingletree] for more information (and the Swingletree documentation).
 
+## Screenshots
 
-## Sponsorware
+A quick tour of some of the features. Please visit the [GitHub Page][swingletree] for a more detailed tour.
 
-Please visit our [GitHub Page][swingletree] for an explaination :blush:
+### Pull Request Blocking
+
+Swingletree blocks Pull Request if plugins report findings in your code
+
+> ![](docs/assets/images/pr-merge-block.png)
+
+### Inline Annotations
+
+Swingletree annotates the Code in GitHub with the findings to give Developers instant feedback
+
+> ![](docs/assets/images/pull-request-files.png)
+
+### Build Overview
+
+Build information is collected and stored for easy access
+
+> ![](docs/assets/images/build-overview.png)
+
+
+
 
 ## Maintainer
 
