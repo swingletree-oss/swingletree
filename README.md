@@ -16,19 +16,19 @@ A quick tour of some of the features. Please visit the [GitHub Page][swingletree
 
 Swingletree blocks Pull Request if plugins report findings in your code
 
-<img width="80%" src="docs/assets/images/pr-merge-block.png">
+<kbd><img width="80%" src="docs/assets/images/pr-merge-block.png"></kbd>
 
 ### Inline Annotations
 
 Swingletree annotates the Code in GitHub with the findings to give Developers instant feedback
 
-<img width="80%" src="docs/assets/images/pull-request-files.png">
+<kbd><img width="80%" src="docs/assets/images/pull-request-files.png"></kbd>
 
 ### Build Overview
 
 Build information is collected and stored for easy access
 
-<img width="80%" src="docs/assets/images/build-overview.png">
+<kbd><img width="80%" src="docs/assets/images/build-overview.png"></kbd>
 
 
 
