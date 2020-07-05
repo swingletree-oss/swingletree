@@ -1,3 +1,5 @@
+<img src="docs/assets/images/icon.svg" width="100" align="right">
+
 # Swingletree
 
 Swingletree enables you to integrate a variety of software quality tools into GitHub to secure the quality of your software.
