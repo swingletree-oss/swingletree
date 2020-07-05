@@ -10,7 +10,7 @@ Take a look at our [GitHub Page][swingletree] for more information (and the Swin
 
 ## Screenshots
 
-A quick tour of some of the features. Please visit the [GitHub Page][swingletree] for a more detailed tour.
+A quick tour of some of the features. Please visit the [GitHub Page Showcase][showcase] for a more detailed tour.
 
 ### Pull Request Blocking
 
@@ -39,4 +39,5 @@ Swingletree is developed and maintained by Michael Gerbig (@error418)
 
 
 [swingletree]: https://swingletree-oss.github.io/swingletree/
+[showcase]: https://swingletree-oss.github.io/swingletree/showcase.html
 [organization]: https://github.com/swingletree-oss
