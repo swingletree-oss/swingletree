@@ -104,7 +104,7 @@ plugins:
     context: test/testng
     insecure: false # disable authentication for this plugin endpoint
   junit:
-    enabled: true
+    enabled: false
     context: test/junit
     insecure: false # disable authentication for this plugin endpoint
 
