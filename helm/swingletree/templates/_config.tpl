@@ -79,4 +79,10 @@ testng:
     scotty: "http://swing-scotty.{{ .Release.Namespace }}:3000"
   port: 3000
 {{- end }}
+{{ if .Values.plugins.junit.enabled -}}
+junit:
+  urls:
+    scotty: "http://swing-scotty.{{ .Release.Namespace }}:3000"
+  port: 3000
+{{- end }}
 {{- end -}}
