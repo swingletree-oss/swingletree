@@ -103,6 +103,10 @@ plugins:
     enabled: true
     context: test/testng
     insecure: false # disable authentication for this plugin endpoint
+  junit:
+    enabled: true
+    context: test/junit
+    insecure: false # disable authentication for this plugin endpoint
 
 # ingress configuration
 ingress:
@@ -163,6 +167,9 @@ images:
   plugin-testng:
     repo: plugin-testng/plugin-testng
     version: 1.1.1                 #plugin-testng_VERSION
+  plugin-junit:
+    repo: plugin-junit/plugin-junit
+    version: 1.0.0                 #plugin-junit_VERSION
 pullPolicy: IfNotPresent
 registry: docker.pkg.github.com/swingletree-oss/ # set this to your procy registry, if you have no direct access to GitHub Package Registry (mosty in enterprise environments)
 
