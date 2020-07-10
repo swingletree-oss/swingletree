@@ -8,16 +8,16 @@
 
         <ul class="list-inline">
 {%- unless page.id == "showcase" -%}
-            <li class="list-inline-item">
+            <li class="list-inline-item mt-3">
                 <a class="btn btn-primary" href="{{ "/showcase" | prepend: site.baseurl }}" role="button">Showcase</a>
             </li>
 {%- endunless -%}
-            <li class="list-inline-item">
+            <li class="list-inline-item mt-3">
                 <a class="btn btn-primary" href="{{ "/docs/home/" | prepend: site.baseurl }}" role="button">Learn more</a>
             </li>
 
 {%- if site.sponsor -%}
-            <li class="list-inline-item">
+            <li class="list-inline-item mt-3">
 {%- include sponsor.html -%}
             </li>
 {%- endif -%}
