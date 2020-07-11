@@ -163,7 +163,7 @@ images:
     version: 1.1.5                 #plugin-twistlock_VERSION
   plugin-zap:
     repo: plugin-zap/plugin-zap
-    version: 1.1.3                 #plugin-zap_VERSION
+    version: 1.1.5                 #plugin-zap_VERSION
   plugin-testng:
     repo: plugin-testng/plugin-testng
     version: 1.1.1                 #plugin-testng_VERSION
