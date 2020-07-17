@@ -108,6 +108,17 @@ services:
     expose:
       - "3050"
 
+  plugin-junit:
+    container_name: plugin-junit
+    env_file: 
+      - ./compose.env
+    environment:
+      TESTNG_PORT: 3050
+    build:
+      context: ../plugin-junit/
+    expose:
+      - "3060"
+
 
 # --- AUXILIARY COMPONENTS
 
@@ -134,6 +145,20 @@ services:
     expose:
       - "9000"
 
+
+  gitea:
+    container_name: gitea
+    image: gitea/gitea:1.12
+    logging:
+      driver: none
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    ports:
+      - "8080:3000"
+    expose:
+      - "3000"
+
   kibana:
     container_name: kibana
     image: docker.elastic.co/kibana/kibana:7.3.1
@@ -152,6 +177,6 @@ services:
     logging:
       driver: none
     ports:
-      - "9000:3000"
+      - "9000:9000"
     expose:
       - "9000"
