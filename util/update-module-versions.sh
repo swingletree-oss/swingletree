@@ -5,6 +5,7 @@ set -e pipefail
 BASEDIR=$(dirname "$0")
 
 VALUES_YAML=$BASEDIR/../helm/swingletree/values.yaml
+COMPOSE_YAML=$BASEDIR/../docker-compose.yml
 
 function addCommit {
   CMESSAGE="$SCOPE($1): update component from \`$2\` to \`$3\` [view changes](https://github.com/swingletree-oss/$1/compare/v$2...v$3)"
@@ -19,11 +20,19 @@ function latestRelease {
 }
 
 function currentRelease {
-  yq r $BASEDIR/../helm/swingletree/values.yaml "images.$1.version"
+  yq r $VALUES_YAML "images.$1.version"
+}
+
+function currentReleaseCompose {
+  yq r $COMPOSE_YAML "images.$1.version"
 }
 
 function upgrade {
   sed -i -r 's/^(\s*version:\s*)([[:digit:]]+\.?)+(\s*#'$1'_VERSION)$/\1'$2'\3/gm' $VALUES_YAML
+}
+
+function upgradeCompose {
+  sed -i -r 's/^(\s*image:\s*)(.*?):([[:digit:]]+\.?)+(\s*#'$1'_VERSION)$/\1\2:'$2'\4/gm' $COMPOSE_YAML
 }
 
 COMPONENTS=(
@@ -35,6 +44,7 @@ COMPONENTS=(
   'plugin-twistlock'
   'plugin-zap'
   'plugin-testng'
+  'plugin-junit'
 )
 
 VER_REGEX='([0-9]+)\.([0-9]+)\.([0-9]+)'
@@ -45,7 +55,6 @@ for repo in "${COMPONENTS[@]}"; do
   if [ "$CURRENT" == "$LATEST" ]; then
     printf " OK       %-20s %-10s    %-10s is already on latest version\n" $repo $CURRENT
   else
-
     if [[ $CURRENT =~ $VER_REGEX ]]; then
       CURRENT_MAJOR=${BASH_REMATCH[1]}
       CURRENT_MINOR=${BASH_REMATCH[2]}
@@ -75,6 +84,7 @@ for repo in "${COMPONENTS[@]}"; do
     printf " UPGRADE  %-20s %-10s -> %-10s needs upgrade ($SCOPE)\n" $repo $CURRENT $LATEST
 
     upgrade $repo $LATEST
+    upgradeCompose $repo $LATEST
     addCommit $repo $CURRENT $LATEST
   fi
 done
