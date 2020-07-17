@@ -11,6 +11,7 @@ TWISTLOCK_TESTDATA_ALL=$BASEDIR/../../plugin-twistlock/test/mock/twistlock-repor
 TWISTLOCK_TESTDATA_CLEAN=$BASEDIR/../../plugin-twistlock/test/mock/twistlock-report-clean.json
 ZAP_TESTDATA=$BASEDIR/../../plugin-zap/test/mock/zap-report.json
 TESTNG_TESTDATA=$BASEDIR/../../plugin-testng/test/mock/testng-report.xml
+JUNIT_TESTDATA=$BASEDIR/../../plugin-junit/test/mock/report.xml
 
 OWNER=
 REPO=
@@ -48,4 +49,8 @@ echo
 
 echo "send testng"
 curl -H "Content-Type: application/xml" -X POST -d "@$TESTNG_TESTDATA" http://$URL/report/testng$QUERY_PARAMS
+echo
+
+echo "send junit"
+curl -H "Content-Type: application/xml" -X POST -d "@$JUNIT_TESTDATA" http://$URL/report/junit$QUERY_PARAMS
 echo
