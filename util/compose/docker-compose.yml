@@ -1,0 +1,183 @@
+version: "3.3"
+
+services:
+
+# --- CORE SERVICES
+
+  deck:
+    container_name: deck
+    env_file:
+      - ./compose.env
+    environment:
+      DECK_PORT: 3000
+    build:
+      context: ../../../deck/
+    ports:
+      - "3000:3000"
+  scotty:
+    container_name: scotty
+    env_file: 
+      - ./compose.env
+    environment:
+      SCOTTY_PORT: 3000
+      SCOTTY_STORAGE_HOST: redis
+      SCOTTY_GITHUB_APP_ID: ${GH_APPID}
+      LOG_LEVEL: info
+      SCOTTY_GITHUB_DEBUG: "false"
+    build:
+      context: ../../../scotty/
+    volumes:
+      - ../scotty/gh-app.pem:/opt/scotty/gh-app.pem
+    expose:
+      - "3000"
+  gate:
+    container_name: gate
+    env_file: 
+      - ./compose.env
+    environment:
+      GATE_PORT: 3001
+    build:
+      context: ../../../gate/
+    ports:
+      - "3001:3001"
+
+  redis:
+    container_name: redis
+    image: redis
+    logging:
+      driver: none
+    expose:
+      - "6379"
+
+
+# --- PLUGIN SERVICES
+
+  plugin-nebula:
+    container_name: plugin-nebula
+    image: docker.pkg.github.com/swingletree-oss/plugin-nebula/plugin-nebula:0.0.0
+    restart: always
+    env_file: 
+      - ./compose.env
+    environment:
+      NEBULA_PORT: 3010
+    build:
+      context: ../../../plugin-nebula/
+    expose:
+      - "3010"
+
+  plugin-sonarqube:
+    container_name: plugin-sonarqube
+    env_file: 
+      - ./compose.env
+    environment:
+      SONAR_PORT: 3020
+      LOG_LEVEL: info
+    build:
+      context: ../../../plugin-sonarqube/
+    expose:
+      - "3020"
+
+  plugin-twistlock:
+    container_name: plugin-twistlock
+    image: 
+    env_file: 
+      - ./compose.env
+    environment:
+      TWISTLOCK_PORT: 3030
+    expose:
+      - "3030"
+
+  plugin-zap:
+    container_name: plugin-zap
+    env_file: 
+      - ./compose.env
+    environment:
+      ZAP_PORT: 3040
+    build:
+      context: ../../../plugin-zap/
+    expose:
+      - "3040"
+
+  plugin-testng:
+    container_name: plugin-testng
+    env_file: 
+      - ./compose.env
+    environment:
+      TESTNG_PORT: 3050
+    build:
+      context: ../../../plugin-testng/
+    expose:
+      - "3050"
+
+  plugin-junit:
+    container_name: plugin-junit
+    env_file: 
+      - ./compose.env
+    environment:
+      TESTNG_PORT: 3050
+    build:
+      context: ../../../plugin-junit/
+    expose:
+      - "3060"
+
+
+# --- AUXILIARY COMPONENTS
+
+  elastic:
+    container_name: elastic
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
+    logging:
+      driver: none
+    environment:
+      discovery.type: single-node
+    ports:
+      - "9200:9200"
+    expose:
+      - "9200"
+      - "9300"
+
+  sonarqube:
+    container_name: sonarqube
+    image: sonarqube:8.2-community
+    logging:
+      driver: none
+    ports:
+      - "9010:9000"
+    expose:
+      - "9000"
+
+
+  gitea:
+    container_name: gitea
+    image: gitea/gitea:1.12
+    logging:
+      driver: none
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    ports:
+      - "8080:3000"
+    expose:
+      - "3000"
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:7.3.1
+    logging:
+      driver: none
+    environment:
+      ELASTICSEARCH_HOSTS: http://elastic:9200
+    ports:
+      - "5601:5601"
+    expose:
+      - "5601"
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    logging:
+      driver: none
+    ports:
+      - "9000:9000"
+    expose:
+      - "9000"
