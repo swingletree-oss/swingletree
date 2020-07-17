@@ -5,7 +5,7 @@ set -e pipefail
 BASEDIR=$(dirname "$0")
 
 VALUES_YAML=$BASEDIR/../helm/swingletree/values.yaml
-COMPOSE_YAML=$BASEDIR/../docker-compose.yml
+COMPOSE_YAML=$BASEDIR/../compose/docker-compose.yml
 
 function addCommit {
   CMESSAGE="$SCOPE($1): update component from \`$2\` to \`$3\` [view changes](https://github.com/swingletree-oss/$1/compare/v$2...v$3)"

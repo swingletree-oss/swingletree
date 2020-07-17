@@ -1,0 +1,128 @@
+deck:
+  path: 
+  elastic:
+    auth:
+      apiKey: null
+      password: null
+      username: null
+    enabled: true
+    index: swingletree
+    node: http://elastic:9200
+  features:
+    login: false # disable when using gitea
+    yoke: https://github.com/swingletree-oss/yoke/releases
+  github:
+    page: 
+  cookies:
+    secure: true
+  auth:
+    jwt:
+      secret: # shared secret
+    github:
+      clientID: 
+      clientSecret: 
+      authorizationURL: https://github.com/login/oauth/authorize
+      tokenURL: https://github.com/login/oauth/access_token
+      userProfileURL: https://api.github.com/user
+      callbackURL: https://HOSTNAME/auth/github/callback # set hostname
+  port: 3000
+
+gate: 
+  api:
+    token: # token required for sending reports
+  plugins:
+    junit:
+      enabled: true
+      base: "http://plugin-junit:3000"
+      insecure: false
+    nebula:
+      enabled: true
+      base: "http://plugin-nebula:3000"
+      insecure: false
+    sonar:
+      enabled: true
+      base: "http://plugin-sonar:3000"
+      insecure: false
+    testng:
+      enabled: true
+      base: "http://plugin-testng:3000"
+      insecure: false
+    twistlock:
+      enabled: true
+      base: "http://plugin-twistlock:3000"
+      insecure: false
+    zap:
+      enabled: true
+      base: "http://plugin-zap:3000"
+      insecure: false
+  port: 3000
+
+scotty:
+  provider: gitea # scm provider to use
+  storage:
+    host: redis
+  elastic:
+    auth:
+      apiKey: null
+      password: null
+      username: null
+    enabled: true
+    index: swingletree
+    node: http://elastic:9200
+  gitea:
+    baseurl: http://gitea:3000/ # gitea base url
+    token: REPLACE_TOKEN_WITH_VALID_ONE # gitea api token
+  github:
+    app:
+      id: 0
+      keyfile: gh-app.pem
+      page: null
+    authorizationURL: https://github.com/login/oauth/authorize
+    base: https://api.github.com
+    callbackURL: http://HOSTNAME/auth/github/callback  # set hostname
+    clientID: null # github oauth app clientid
+    clientSecret: null # github oauth app secret
+    debug: false
+    secret: # webhook secret
+    tokenURL: https://github.com/login/oauth/access_token
+    userProfileURL: https://api.github.com/user
+  port: 3000
+
+#####
+## Plugin configurations
+
+nebula:
+  context: gradle/nebula
+  urls:
+    scotty: "http://scotty:3000"
+  port: 3000
+
+zap:
+  context: security/zap
+  urls:
+    scotty: "http://scotty:3000"
+  port: 3000
+
+twistlock:
+  context: security/twistlock
+  urls:
+    scotty: "http://scotty:3000"
+  port: 3000
+
+sonar:
+  base: # sonarqube url
+  context: sonarqube
+  token: # sonarqube token
+  urls:
+    scotty: "http://scotty:3000"
+  port: 3000
+
+testng:
+  urls:
+    scotty: "http://scotty:3000"
+  port: 3000
+
+junit:
+  urls:
+    scotty: "http://scotty:3000"
+  port: 3000
