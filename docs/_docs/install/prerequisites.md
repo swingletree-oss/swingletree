@@ -9,7 +9,9 @@ Swingletree needs a Redis Database for caching purposes. SonarQube offers a bran
 obtain information about the quality of branches in relation to the `master` branch.
 
 * Redis Database (provided with k8s installation)
-* GitHub or GitHub Enterprise
+* One of the supported SCM Providers
+  * GitHub or GitHub Enterprise
+  * Gitea
 
 If you intend to use ElasticSearch to store your analysis reports you will need
 
