@@ -38,7 +38,10 @@ cookies:
 jwt:
   secret: # if you do not set this a random secret will be generated on startup of deck (not compatible when running more than one deck instance)
 
-## GitHub configuration
+# SCM Provider to use
+provider: github # can be "github" or "gitea"
+
+## GitHub configuration (required when provider is set to "github")
 github:
   app:
     id: # The AppId of your GitHub app instance (not installation!)
@@ -53,6 +56,11 @@ github:
   userProfileURL: https://api.github.com/user # adjust this, if you are running GitHub Enterprise
   callbackURL: http://localhost:3020/auth/github/callback # adjust this, if you are running GitHub Enterprise
   debug: false # runs octokit in debug mode. Use this only for debug, since this can reveal secret tokens in the logs!
+
+# Gitea configuration (required when provider is set to "gitea")
+gitea:
+  token:  # API token
+  baseurl:  # gitea instance baseurl (without /api/v1/)
 
 ## SonarQube configuration
 sonar:
@@ -75,7 +83,7 @@ gate:
     token: # authentication secret for gate plugin endpoints. Set this to a value.
 
 ### scotty configuration
-scotty: # not needed yet :)
+scotty: # not required (yet) :)
 
 
 # github app key file content

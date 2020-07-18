@@ -37,10 +37,13 @@ scotty:
   storage:
     host: {{ .Values.redis.fullnameOverride }}-master.{{ .Release.Namespace }}
     password: {{ .Values.redis.password }}
+  provider: {{ .Values.provider }}
   elastic:
 {{ toYaml .Values.elastic | indent 4 }}
   github:
 {{ toYaml .Values.github | indent 4 }}
+  gitea:
+{{ toYaml .Values.gitea | indent 4 }}
   port: 3000
 
 {{ if .Values.plugins.nebula.enabled -}}
