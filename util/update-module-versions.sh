@@ -12,6 +12,7 @@ function addCommit {
   echo " > adding commit:   $CMESSAGE"
 
   git add $VALUES_YAML
+  git add $COMPOSE_YAML
   git commit -m "$CMESSAGE"
 }
 
