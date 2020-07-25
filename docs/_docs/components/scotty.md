@@ -11,4 +11,5 @@ Scotty handles communications with Swingletree backends, like GitHub or ElasticS
 * Retrieves and caches `.swingletree.yml` repository configuration files
 * Manages GitHub App authentication
 * Sends Analysis Reports to GitHub using Check Run API
+* Sends Analysis states to Gitea using Commit Status API
 * Persists Analysis Reports to ElasticSearch

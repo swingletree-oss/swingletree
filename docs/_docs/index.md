@@ -29,7 +29,7 @@ Yoke simpifies collecting and sending reports to Swingletree. It can be used to 
       yoke[yoke cli]
     end
 
-    gh(GitHub)
+    gh(SCM Provider)
     elastic(ElasticSearch)
 
     subgraph Swingletree
