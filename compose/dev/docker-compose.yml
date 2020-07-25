@@ -22,7 +22,7 @@ services:
       SCOTTY_PORT: 3000
       SCOTTY_STORAGE_HOST: redis
       SCOTTY_GITHUB_APP_ID: ${GH_APPID}
-      LOG_LEVEL: info
+      SCOTTY_GITEA_TOKEN: ${GITEA_TOKEN}
       SCOTTY_GITHUB_DEBUG: "false"
     build:
       context: ../../../scotty/
@@ -79,7 +79,8 @@ services:
 
   plugin-twistlock:
     container_name: plugin-twistlock
-    image: 
+    build:
+      context: ../../../plugin-twistlock/
     env_file: 
       - ./compose.env
     environment:
