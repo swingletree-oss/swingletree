@@ -24,10 +24,11 @@ services:
       SCOTTY_GITHUB_APP_ID: ${GH_APPID}
       SCOTTY_GITEA_TOKEN: ${GITEA_TOKEN}
       SCOTTY_GITHUB_DEBUG: "false"
+      SCOTTY_PROVIDER: gitea
     build:
       context: ../../../scotty/
     volumes:
-      - ../scotty/gh-app.pem:/opt/scotty/gh-app.pem
+      - ../../../scotty/gh-app.pem:/opt/scotty/gh-app.pem
     expose:
       - "3000"
   gate:
