@@ -162,7 +162,7 @@ images:
     version: 1.2.1                 #scotty_VERSION
   plugin-nebula:
     repo: plugin-nebula/plugin-nebula
-    version: 1.2.4                 #plugin-nebula_VERSION
+    version: 1.2.5                 #plugin-nebula_VERSION
   plugin-sonarqube:
     repo: plugin-sonarqube/plugin-sonarqube
     version: 1.1.6                 #plugin-sonarqube_VERSION
