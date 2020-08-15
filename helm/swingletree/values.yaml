@@ -159,7 +159,7 @@ images:
     version: 1.4.4                 #gate_VERSION
   scotty:
     repo: scotty/scotty
-    version: 1.2.0                 #scotty_VERSION
+    version: 1.2.1                 #scotty_VERSION
   plugin-nebula:
     repo: plugin-nebula/plugin-nebula
     version: 1.2.4                 #plugin-nebula_VERSION

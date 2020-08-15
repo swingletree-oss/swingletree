@@ -20,7 +20,7 @@ services:
     env_file: 
       - ./compose.env
     environment: []
-    image: docker.pkg.github.com/swingletree-oss/scotty/scotty:1.2.0                        #scotty_VERSION
+    image: docker.pkg.github.com/swingletree-oss/scotty/scotty:1.2.1                        #scotty_VERSION
     restart: always
     volumes:
       - ./swingletree.conf.yaml:/opt/scotty/swingletree.conf.yaml
