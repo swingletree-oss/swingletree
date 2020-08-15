@@ -177,7 +177,7 @@ images:
     version: 1.1.4                 #plugin-testng_VERSION
   plugin-junit:
     repo: plugin-junit/plugin-junit
-    version: 1.0.1                 #plugin-junit_VERSION
+    version: 1.0.2                 #plugin-junit_VERSION
 pullPolicy: IfNotPresent
 registry: docker.pkg.github.com/swingletree-oss/ # set this to your procy registry, if you have no direct access to GitHub Package Registry (mosty in enterprise environments)
 
