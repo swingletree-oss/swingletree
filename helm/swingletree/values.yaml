@@ -165,7 +165,7 @@ images:
     version: 1.2.5                 #plugin-nebula_VERSION
   plugin-sonarqube:
     repo: plugin-sonarqube/plugin-sonarqube
-    version: 1.1.6                 #plugin-sonarqube_VERSION
+    version: 1.1.7                 #plugin-sonarqube_VERSION
   plugin-twistlock:
     repo: plugin-twistlock/plugin-twistlock
     version: 1.1.5                 #plugin-twistlock_VERSION

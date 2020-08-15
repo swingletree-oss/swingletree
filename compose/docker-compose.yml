@@ -68,7 +68,7 @@ services:
     env_file: 
       - ./compose.env
     environment: []
-    image: docker.pkg.github.com/swingletree-oss/plugin-sonarqube/plugin-sonarqube:1.1.6    #plugin-sonarqube_VERSION
+    image: docker.pkg.github.com/swingletree-oss/plugin-sonarqube/plugin-sonarqube:1.1.7    #plugin-sonarqube_VERSION
     restart: always
     volumes:
       - ./swingletree.conf.yaml:/opt/plugin-sonarqube/swingletree.conf.yaml
