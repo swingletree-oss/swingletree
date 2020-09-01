@@ -174,7 +174,7 @@ images:
     version: 1.2.0                 #plugin-zap_VERSION
   plugin-testng:
     repo: plugin-testng/plugin-testng
-    version: 1.1.4                 #plugin-testng_VERSION
+    version: 1.2.0                 #plugin-testng_VERSION
   plugin-junit:
     repo: plugin-junit/plugin-junit
     version: 1.0.2                 #plugin-junit_VERSION
