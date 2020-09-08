@@ -37,6 +37,6 @@ sequenceDiagram
 Gate ->> +Plugin: Prepared Report
 Plugin ->> Scotty: Request Repository configuration 
 Plugin -x +Scotty: Send Analysis Report
-Scotty -->> GitHub: Send Check Run
+Scotty -->> SCM Provider: Send Check Run
 Scotty -->> -ElasticSearch: Store History
 </div>
