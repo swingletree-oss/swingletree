@@ -80,7 +80,7 @@ services:
     env_file: 
       - ./compose.env
     environment: []
-    image: docker.pkg.github.com/swingletree-oss/plugin-twistlock/plugin-twistlock:1.2.0    #plugin-twistlock_VERSION
+    image: docker.pkg.github.com/swingletree-oss/plugin-twistlock/plugin-twistlock:1.2.1    #plugin-twistlock_VERSION
     restart: always
     volumes:
       - ./swingletree.conf.yaml:/opt/plugin-twistlock/swingletree.conf.yaml
