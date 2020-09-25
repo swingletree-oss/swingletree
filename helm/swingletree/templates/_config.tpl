@@ -1,4 +1,6 @@
 {{- define "swingletree.config" -}}
+urls:
+  scotty: "http://swing-scotty.{{ .Release.Namespace }}:3000"
 deck:
   path: {{ .Values.deck.path }}
   elastic:
