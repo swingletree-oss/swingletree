@@ -9,7 +9,7 @@ services:
     env_file:
       - ./compose.env
     environment: []
-    image: docker.pkg.github.com/swingletree-oss/deck:1.7.0                                 #deck_VERSION
+    image: docker.pkg.github.com/swingletree-oss/deck:1.7.1                                 #deck_VERSION
     restart: always
     volumes:
       - ./swingletree.conf.yaml:/opt/deck/swingletree.conf.yaml
