@@ -33,7 +33,7 @@ services:
     env_file: 
       - ./compose.env
     environment: []
-    image: docker.pkg.github.com/swingletree-oss/gate/gate:1.5.0                            #gate_VERSION
+    image: docker.pkg.github.com/swingletree-oss/gate/gate:1.5.1                            #gate_VERSION
     restart: always
     volumes:
       - ./swingletree.conf.yaml:/opt/gate/swingletree.conf.yaml
