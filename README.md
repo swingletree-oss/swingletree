@@ -2,7 +2,7 @@
 
 # Swingletree
 
-Swingletree enables you to integrate a variety of software quality tools into GitHub to secure the quality of your software.
+Swingletree enables you to integrate a variety of software quality tools into SCM Providers like Github or Gitea to secure the quality of your software.
 
 ## Management Repository
 
